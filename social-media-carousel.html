@@ -1,0 +1,330 @@
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        padding: 20px;
+        background: #f8f9fa;
+    }
+    
+    .carousel-container {
+        max-width: 900px;
+        margin: 0 auto;
+        position: relative;
+    }
+    
+    .carousel-header {
+        text-align: center;
+        margin-bottom: 30px;
+    }
+    
+    .carousel-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 10px;
+    }
+    
+    .carousel-subtitle {
+        font-size: 16px;
+        color: #666;
+    }
+    
+    .card-wrapper {
+        perspective: 1000px;
+        margin: 0 auto 30px;
+        max-width: 600px;
+    }
+    
+    .flip-card {
+        width: 100%;
+        height: 400px;
+        position: relative;
+        transform-style: preserve-3d;
+        transition: transform 0.6s;
+        cursor: pointer;
+    }
+    
+    .flip-card.flipped {
+        transform: rotateY(180deg);
+    }
+    
+    .card-face {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        backface-visibility: hidden;
+        border-radius: 16px;
+        box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        padding: 40px;
+        background: white;
+    }
+    
+    .card-front {
+        z-index: 2;
+    }
+    
+    .card-back {
+        transform: rotateY(180deg);
+        padding: 30px;
+        justify-content: flex-start;
+    }
+    
+    .card-icon {
+        width: 120px;
+        height: 120px;
+        margin-bottom: 30px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    
+    .card-icon img {
+        max-width: 100%;
+        max-height: 100%;
+        object-fit: contain;
+    }
+    
+    .card-title {
+        font-size: 24px;
+        font-weight: 700;
+        color: #C6A906;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    
+    .card-hint {
+        font-size: 14px;
+        color: #999;
+        font-style: italic;
+        text-align: center;
+    }
+    
+    .card-content {
+        font-size: 16px;
+        line-height: 1.8;
+        color: #333;
+        text-align: left;
+        overflow-y: auto;
+        max-height: 100%;
+    }
+    
+    .card-back-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #C6A906;
+        margin-bottom: 20px;
+        text-align: center;
+    }
+    
+    .navigation {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+        margin-top: 20px;
+    }
+    
+    .nav-button {
+        background: #C6A906;
+        color: white;
+        border: none;
+        padding: 12px 24px;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: background 0.3s ease;
+    }
+    
+    .nav-button:hover {
+        background: #a08905;
+    }
+    
+    .nav-button:disabled {
+        background: #ccc;
+        cursor: not-allowed;
+    }
+    
+    .card-counter {
+        font-size: 18px;
+        font-weight: 600;
+        color: #333;
+    }
+    
+    .progress-dots {
+        display: flex;
+        justify-content: center;
+        gap: 10px;
+        margin-top: 15px;
+    }
+    
+    .dot {
+        width: 12px;
+        height: 12px;
+        border-radius: 50%;
+        background: #ddd;
+        transition: background 0.3s ease;
+        cursor: pointer;
+    }
+    
+    .dot.active {
+        background: #C6A906;
+    }
+    
+    @media (max-width: 768px) {
+        .flip-card {
+            height: 450px;
+        }
+        
+        .card-title {
+            font-size: 20px;
+        }
+        
+        .card-content {
+            font-size: 15px;
+        }
+        
+        .card-face {
+            padding: 25px;
+        }
+    }
+</style>
+
+<div class="carousel-container">
+    <div class="carousel-header">
+        <h2 class="carousel-title">Current Social Media Trends</h2>
+        <p class="carousel-subtitle">Click each card to reveal details</p>
+    </div>
+    
+    <div class="card-wrapper">
+        <div class="flip-card" id="flipCard">
+            <div class="card-face card-front" id="cardFront">
+                <div class="card-icon" id="cardIcon"></div>
+                <h3 class="card-title" id="cardTitle"></h3>
+                <p class="card-hint">Click to flip</p>
+            </div>
+            <div class="card-face card-back">
+                <h3 class="card-back-title" id="cardBackTitle"></h3>
+                <div class="card-content" id="cardContent"></div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="navigation">
+        <button class="nav-button" id="prevBtn" onclick="previousCard()">← Previous</button>
+        <span class="card-counter"><span id="currentCard">1</span> / <span id="totalCards">5</span></span>
+        <button class="nav-button" id="nextBtn" onclick="nextCard()">Next →</button>
+    </div>
+    
+    <div class="progress-dots" id="progressDots"></div>
+</div>
+
+<script>
+    const cards = [
+        {
+            title: "Short-Form Video Dominance",
+            icon: "tiktok.png",
+            content: "Platforms prioritising short-form video content, particularly Instagram Reels, TikTok, and YouTube Shorts, have become the primary vehicles for fitness content discovery. These formats favour quick demonstrations, transformation highlights, and educational snippets delivered in 15-90 second formats."
+        },
+        {
+            title: "Authenticity Over Perfection",
+            icon: "authentic.png",
+            content: "Audiences increasingly favour genuine, relatable content over highly polished, professionally produced material. Trainers who share their own fitness challenges, learning processes, and behind-the-scenes glimpses of their professional lives generate stronger engagement and trust than those presenting only idealised imagery."
+        },
+        {
+            title: "Educational Content Prioritisation",
+            icon: "graduation.png",
+            content: "Algorithm changes across major platforms now favour content that keeps users engaged for longer periods. In-depth educational content‚ such as technique breakdowns, nutrition explanations, and training principle discussions receives preferential distribution compared to purely promotional material."
+        },
+        {
+            title: "Niche Specialisation",
+            icon: "pregnant.png",
+            content: "Broad, general fitness content faces increasing competition, whilst highly specialised content targeting specific demographics or training methodologies (e.g., post-natal fitness, strength training for older adults, or athletic performance for specific sports) achieves better engagement and conversion rates."
+        },
+        {
+            title: "Interactive and Community-Driven Features",
+            icon: "poll.png",
+            content: "Platform features such as polls, question stickers, live streaming, and community posts enable trainers to create two-way dialogues with their audiences, fostering deeper relationships and providing valuable insights into client needs and preferences."
+        }
+    ];
+    
+    let currentIndex = 0;
+    let isFlipped = false;
+    
+    function loadCard(index) {
+        const card = cards[index];
+        const flipCard = document.getElementById('flipCard');
+        
+        // Reset flip state
+        if (isFlipped) {
+            flipCard.classList.remove('flipped');
+            isFlipped = false;
+        }
+        
+        // Update content
+        document.getElementById('cardTitle').textContent = card.title;
+        document.getElementById('cardBackTitle').textContent = card.title;
+        document.getElementById('cardContent').textContent = card.content;
+        document.getElementById('cardIcon').innerHTML = `<img src="${card.icon}" alt="${card.title}">`;
+        
+        // Update counter
+        document.getElementById('currentCard').textContent = index + 1;
+        
+        // Update navigation buttons
+        document.getElementById('prevBtn').disabled = index === 0;
+        document.getElementById('nextBtn').disabled = index === cards.length - 1;
+        
+        // Update progress dots
+        updateProgressDots(index);
+    }
+    
+    function updateProgressDots(activeIndex) {
+        const dotsContainer = document.getElementById('progressDots');
+        dotsContainer.innerHTML = '';
+        
+        cards.forEach((_, index) => {
+            const dot = document.createElement('div');
+            dot.className = 'dot' + (index === activeIndex ? ' active' : '');
+            dot.onclick = () => goToCard(index);
+            dotsContainer.appendChild(dot);
+        });
+    }
+    
+    function goToCard(index) {
+        currentIndex = index;
+        loadCard(currentIndex);
+    }
+    
+    function nextCard() {
+        if (currentIndex < cards.length - 1) {
+            currentIndex++;
+            loadCard(currentIndex);
+        }
+    }
+    
+    function previousCard() {
+        if (currentIndex > 0) {
+            currentIndex--;
+            loadCard(currentIndex);
+        }
+    }
+    
+    // Flip card on click
+    document.getElementById('flipCard').addEventListener('click', function() {
+        this.classList.toggle('flipped');
+        isFlipped = !isFlipped;
+    });
+    
+    // Initialize
+    document.getElementById('totalCards').textContent = cards.length;
+    loadCard(0);
+</script>
