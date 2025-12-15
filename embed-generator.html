@@ -145,7 +145,6 @@
         <h1>🚀 GitHub Pages Embed Generator</h1>
         <p class="subtitle">Generate fast GitHub Pages embed links for 360 Learning</p>
 
-```
     <div class="info-box">
         <div class="info-title">💡 Pro Tip: Minify Your Files!</div>
         Before uploading to GitHub, minify your HTML files for 30-40% faster loading. Use the HTML Minifier tool (link in outputs folder) to compress your files.
@@ -313,8 +312,8 @@
         // Generate GitHub Pages URL
         const ghPagesUrl = `https://${username}.github.io/${repo}/${filepath}`;
         
-        // Generate iframe code
-        const iframeCode = `<iframe src="${ghPagesUrl}" width="100%" height="${height}" frameborder="0" style="border:none;"></iframe>`;
+        // Generate iframe code with anti-black-screen optimizations
+        const iframeCode = `<iframe src="${ghPagesUrl}" width="100%" height="${height}" frameborder="0" loading="eager" style="border:none; background:#f8f9fa; display:block;"></iframe>`;
         
         // Display outputs
         document.getElementById('ghPagesOutput').value = ghPagesUrl;
@@ -339,7 +338,6 @@
         }
     }
 </script>
-```
 
 </body>
 </html>
