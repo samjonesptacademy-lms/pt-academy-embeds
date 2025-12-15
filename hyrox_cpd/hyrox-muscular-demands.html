@@ -124,24 +124,24 @@
     
     @keyframes pulse {
         0%, 100% {
-            transform: scale(1);
+            transform: translateX(-50%) scale(1);
             box-shadow: 0 4px 12px rgba(0,0,0,0.2);
         }
         50% {
-            transform: scale(1.1);
+            transform: translateX(-50%) scale(1.1);
             box-shadow: 0 6px 20px rgba(198, 169, 6, 0.4);
         }
     }
     
     .hotspot:hover {
-        transform: scale(1.2);
+        transform: translateX(-50%) scale(1.2);
         background: #C6A906;
         animation: none;
     }
     
     .hotspot.active {
         background: #C6A906;
-        transform: scale(1.15);
+        transform: translateX(-50%) scale(1.15);
         animation: none;
     }
     
@@ -149,19 +149,16 @@
     .hotspot.upper {
         top: 20%;
         left: 50%;
-        transform: translateX(-50%);
     }
     
     .hotspot.core {
         top: 45%;
         left: 50%;
-        transform: translateX(-50%);
     }
     
     .hotspot.lower {
         top: 70%;
         left: 50%;
-        transform: translateX(-50%);
     }
     
     .instruction-text {
