@@ -1,0 +1,417 @@
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        padding: 20px;
+        background: #f8f9fa;
+    }
+    
+    .tracker-container {
+        max-width: 1000px;
+        margin: 0 auto;
+    }
+    
+    .tracker-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .tracker-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 15px;
+    }
+    
+    .tracker-description {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #555;
+        max-width: 700px;
+        margin: 0 auto 20px;
+    }
+    
+    .progress-overview {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 15px;
+        margin-bottom: 30px;
+    }
+    
+    .stat-card {
+        background: white;
+        padding: 15px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        text-align: center;
+    }
+    
+    .stat-label {
+        font-size: 12px;
+        color: #666;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 5px;
+    }
+    
+    .stat-value {
+        font-size: 24px;
+        font-weight: 700;
+        color: #C6A906;
+    }
+    
+    .progress-bar-container {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+    }
+    
+    .progress-bar {
+        height: 30px;
+        background: #e9ecef;
+        border-radius: 15px;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .progress-fill {
+        height: 100%;
+        background: linear-gradient(90deg, #C6A906, #d4b507);
+        border-radius: 15px;
+        transition: width 0.5s ease;
+        display: flex;
+        align-items: center;
+        justify-content: flex-end;
+        padding-right: 10px;
+    }
+    
+    .progress-percentage {
+        font-size: 14px;
+        font-weight: 700;
+        color: white;
+    }
+    
+    .course-track {
+        background: white;
+        padding: 30px 20px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        overflow-x: auto;
+        margin-bottom: 30px;
+    }
+    
+    .track-grid {
+        display: grid;
+        grid-template-columns: repeat(16, 1fr);
+        gap: 10px;
+        min-width: 900px;
+    }
+    
+    .stage-marker {
+        text-align: center;
+        cursor: pointer;
+        transition: transform 0.3s ease;
+    }
+    
+    .stage-marker:hover {
+        transform: translateY(-5px);
+    }
+    
+    .stage-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin: 0 auto 8px;
+        font-size: 12px;
+        font-weight: 700;
+        border: 3px solid transparent;
+        transition: all 0.3s ease;
+    }
+    
+    .stage-marker.run .stage-icon {
+        background: #e9ecef;
+        color: #6c757d;
+    }
+    
+    .stage-marker.station .stage-icon {
+        background: #fff8e1;
+        color: #C6A906;
+    }
+    
+    .stage-marker.completed .stage-icon {
+        background: #C6A906;
+        color: white;
+        border-color: #a08905;
+    }
+    
+    .stage-marker.active .stage-icon {
+        border-color: #C6A906;
+        box-shadow: 0 0 0 3px rgba(198, 169, 6, 0.2);
+    }
+    
+    .stage-number {
+        font-size: 11px;
+        color: #999;
+        margin-bottom: 5px;
+    }
+    
+    .stage-label {
+        font-size: 11px;
+        font-weight: 600;
+        color: #333;
+        line-height: 1.2;
+        min-height: 30px;
+    }
+    
+    .stage-distance {
+        font-size: 10px;
+        color: #666;
+        margin-top: 3px;
+    }
+    
+    .stage-detail-panel {
+        background: white;
+        padding: 25px;
+        border-radius: 8px;
+        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        margin-bottom: 20px;
+    }
+    
+    .detail-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 15px;
+    }
+    
+    .detail-title {
+        font-size: 22px;
+        font-weight: 700;
+        color: #C6A906;
+    }
+    
+    .detail-stage-number {
+        font-size: 14px;
+        color: #999;
+    }
+    
+    .detail-content {
+        font-size: 15px;
+        line-height: 1.7;
+        color: #555;
+        margin-bottom: 20px;
+    }
+    
+    .action-buttons {
+        display: flex;
+        gap: 10px;
+        justify-content: center;
+    }
+    
+    .btn {
+        padding: 12px 24px;
+        border: none;
+        border-radius: 6px;
+        font-size: 14px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .btn-primary {
+        background: #C6A906;
+        color: white;
+    }
+    
+    .btn-primary:hover {
+        background: #a08905;
+    }
+    
+    .btn-secondary {
+        background: #e9ecef;
+        color: #333;
+    }
+    
+    .btn-secondary:hover {
+        background: #dee2e6;
+    }
+    
+    .btn:disabled {
+        opacity: 0.5;
+        cursor: not-allowed;
+    }
+    
+    @media (max-width: 768px) {
+        .progress-overview {
+            grid-template-columns: 1fr;
+        }
+        
+        .stat-value {
+            font-size: 20px;
+        }
+        
+        .track-grid {
+            gap: 5px;
+        }
+        
+        .stage-icon {
+            width: 40px;
+            height: 40px;
+            font-size: 10px;
+        }
+    }
+</style>
+
+<div class="tracker-container">
+    <div class="tracker-header">
+        <h2 class="tracker-title">HYROX Course Tracker</h2>
+        <p class="tracker-description">Follow the complete HYROX race structure from start to finish. Click on any stage to learn more about it.</p>
+    </div>
+    
+    <div class="progress-overview">
+        <div class="stat-card">
+            <div class="stat-label">Current Stage</div>
+            <div class="stat-value" id="currentStage">1/16</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Progress</div>
+            <div class="stat-value" id="progressPercent">0%</div>
+        </div>
+        <div class="stat-card">
+            <div class="stat-label">Total Distance</div>
+            <div class="stat-value">8km + Stations</div>
+        </div>
+    </div>
+    
+    <div class="progress-bar-container">
+        <div class="progress-bar">
+            <div class="progress-fill" id="progressFill" style="width: 0%">
+                <span class="progress-percentage" id="progressPercentBar"></span>
+            </div>
+        </div>
+    </div>
+    
+    <div class="course-track">
+        <div class="track-grid" id="trackGrid"></div>
+    </div>
+    
+    <div class="stage-detail-panel" id="detailPanel">
+        <div class="detail-header">
+            <h3 class="detail-title" id="detailTitle">1km Run</h3>
+            <span class="detail-stage-number" id="detailStageNum">Stage 1 of 16</span>
+        </div>
+        <div class="detail-content" id="detailContent">
+            Click on any stage above to view details. Use the buttons below to progress through the course.
+        </div>
+        <div class="action-buttons">
+            <button class="btn btn-secondary" id="prevBtn" onclick="previousStage()">← Previous</button>
+            <button class="btn btn-primary" id="nextBtn" onclick="nextStage()">Next Stage →</button>
+            <button class="btn btn-secondary" id="resetBtn" onclick="resetTracker()">Reset</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    const stages = [
+        { number: 1, type: 'run', name: '1km Run', distance: '1km', description: 'Opening run segment to establish your pace and settle into race rhythm.' },
+        { number: 2, type: 'station', name: 'SkiErg', distance: '1000m', description: 'First station targeting upper body and core endurance. Maintain consistent stroke rate.' },
+        { number: 3, type: 'run', name: '1km Run', distance: '1km', description: 'Transition run to recover from SkiErg whilst maintaining forward momentum.' },
+        { number: 4, type: 'station', name: 'Sled Push', distance: '50m', description: 'Explosive lower body power station. Drive through your legs and maintain low body position.' },
+        { number: 5, type: 'run', name: '1km Run', distance: '1km', description: 'Mid-race run segment. Monitor pacing and breathing as fatigue begins to accumulate.' },
+        { number: 6, type: 'station', name: 'Sled Pull', distance: '50m', description: 'Pulling movement targeting posterior chain. Control the tempo and avoid rushing.' },
+        { number: 7, type: 'run', name: '1km Run', distance: '1km', description: 'Critical mid-race run. Mental toughness becomes increasingly important.' },
+        { number: 8, type: 'station', name: 'Burpee Broad Jumps', distance: '80m', description: 'Challenging full-body movement combining cardiovascular and explosive demands.' },
+        { number: 9, type: 'run', name: '1km Run', distance: '1km', description: 'Post-burpee recovery run. Focus on regaining rhythm and composure.' },
+        { number: 10, type: 'station', name: 'Rowing', distance: '1000m', description: 'Endurance pulling station. Maintain stroke efficiency as fatigue increases.' },
+        { number: 11, type: 'run', name: '1km Run', distance: '1km', description: 'Begin final push. Three stations remaining after this run.' },
+        { number: 12, type: 'station', name: 'Farmers Carry', distance: '200m', description: 'Grip and core endurance challenge. Minimize rest breaks and maintain posture.' },
+        { number: 13, type: 'run', name: '1km Run', distance: '1km', description: 'Penultimate run segment. Final opportunities to make up time.' },
+        { number: 14, type: 'station', name: 'Sandbag Lunges', distance: '100m', description: 'Lower body and stability test. Control each rep and maintain balance throughout.' },
+        { number: 15, type: 'run', name: '1km Run', distance: '1km', description: 'Final run before the last station. Give everything you have left.' },
+        { number: 16, type: 'station', name: 'Wall Balls', distance: '100 reps', description: 'Final station - 100 wall balls to the finish. Break into manageable sets and finish strong.' }
+    ];
+    
+    let currentStageIndex = 0;
+    
+    function renderTrack() {
+        const grid = document.getElementById('trackGrid');
+        grid.innerHTML = '';
+        
+        stages.forEach((stage, index) => {
+            const marker = document.createElement('div');
+            marker.className = `stage-marker ${stage.type}`;
+            if (index < currentStageIndex) marker.classList.add('completed');
+            if (index === currentStageIndex) marker.classList.add('active');
+            
+            marker.innerHTML = `
+                <div class="stage-number">Stage ${stage.number}</div>
+                <div class="stage-icon">${stage.type === 'run' ? '🏃' : '💪'}</div>
+                <div class="stage-label">${stage.name}</div>
+                <div class="stage-distance">${stage.distance}</div>
+            `;
+            
+            marker.addEventListener('click', () => {
+                currentStageIndex = index;
+                updateDisplay();
+            });
+            
+            grid.appendChild(marker);
+        });
+    }
+    
+    function updateDisplay() {
+        const current = stages[currentStageIndex];
+        const progress = ((currentStageIndex) / stages.length) * 100;
+        
+        // Update stats
+        document.getElementById('currentStage').textContent = `${currentStageIndex + 1}/16`;
+        document.getElementById('progressPercent').textContent = `${Math.round(progress)}%`;
+        document.getElementById('progressPercentBar').textContent = `${Math.round(progress)}%`;
+        document.getElementById('progressFill').style.width = `${progress}%`;
+        
+        // Update detail panel
+        document.getElementById('detailTitle').textContent = `${current.name} - ${current.distance}`;
+        document.getElementById('detailStageNum').textContent = `Stage ${current.number} of 16`;
+        document.getElementById('detailContent').textContent = current.description;
+        
+        // Update buttons
+        document.getElementById('prevBtn').disabled = currentStageIndex === 0;
+        document.getElementById('nextBtn').disabled = currentStageIndex === stages.length - 1;
+        
+        // Re-render track
+        renderTrack();
+    }
+    
+    function nextStage() {
+        if (currentStageIndex < stages.length - 1) {
+            currentStageIndex++;
+            updateDisplay();
+        }
+    }
+    
+    function previousStage() {
+        if (currentStageIndex > 0) {
+            currentStageIndex--;
+            updateDisplay();
+        }
+    }
+    
+    function resetTracker() {
+        currentStageIndex = 0;
+        updateDisplay();
+    }
+    
+    // Initialize
+    renderTrack();
+    updateDisplay();
+</script>
