@@ -664,7 +664,7 @@
     // Initialize
     renderStationGrid();
     
-    // Hide loading - V2 method
+    // Hide loading - multiple methods for reliability
     function hideLoader() {
         const overlay = document.getElementById('loadingOverlay');
         if (overlay) {
@@ -675,11 +675,13 @@
         }
     }
     
+    // Try multiple events to ensure it fires
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', hideLoader);
     } else {
-        hideLoader();
+        hideLoader(); // DOM already loaded
     }
     
+    // Backup: hide after a short timeout regardless
     setTimeout(hideLoader, 500);
 </script>
