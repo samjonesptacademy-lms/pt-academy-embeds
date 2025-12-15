@@ -5,6 +5,41 @@
         padding: 0;
     }
     
+    /* Loading Spinner */
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #f8f9fa;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    
+    .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid #e9ecef;
+        border-top-color: #C6A906;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    .loading-text {
+        margin-top: 20px;
+        font-size: 16px;
+        color: #666;
+        font-weight: 500;
+    }
+    
     body {
         font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
         padding: 20px;
@@ -272,6 +307,11 @@
     }
 </style>
 
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <div class="loading-text">Loading content...</div>
+</div>
+
 <div class="tracker-container">
     <div class="tracker-header">
         <h2 class="tracker-title">HYROX Course Structure</h2>
@@ -414,4 +454,25 @@
     // Initialize
     renderTrack();
     updateDisplay();
+    
+    // Hide loading - multiple methods for reliability
+    function hideLoader() {
+        const overlay = document.getElementById('loadingOverlay');
+        if (overlay) {
+            overlay.style.opacity = '0';
+            setTimeout(function() {
+                overlay.style.display = 'none';
+            }, 500);
+        }
+    }
+    
+    // Try multiple events to ensure it fires
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', hideLoader);
+    } else {
+        hideLoader(); // DOM already loaded
+    }
+    
+    // Backup: hide after a short timeout regardless
+    setTimeout(hideLoader, 500);
 </script>
