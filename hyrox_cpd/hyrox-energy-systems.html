@@ -1,0 +1,551 @@
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    
+    /* Loading Spinner */
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #f8f9fa;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    
+    .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid #e9ecef;
+        border-top-color: #C6A906;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    .loading-text {
+        margin-top: 20px;
+        font-size: 16px;
+        color: #666;
+        font-weight: 500;
+    }
+    
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        padding: 20px;
+        background: #f8f9fa;
+    }
+    
+    .energy-container {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    
+    .header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 15px;
+    }
+    
+    .description {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #555;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    /* Event Duration Display */
+    .duration-display {
+        background: white;
+        padding: 25px;
+        border-radius: 12px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        margin-bottom: 30px;
+        text-align: center;
+    }
+    
+    .duration-title {
+        font-size: 18px;
+        font-weight: 600;
+        color: #666;
+        margin-bottom: 15px;
+    }
+    
+    .duration-range {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        gap: 20px;
+    }
+    
+    .duration-time {
+        font-size: 36px;
+        font-weight: 700;
+        color: #C6A906;
+    }
+    
+    .duration-separator {
+        font-size: 24px;
+        color: #999;
+    }
+    
+    /* Energy System Cards */
+    .energy-systems-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .energy-card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 3px solid transparent;
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .energy-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+    
+    .energy-card.aerobic {
+        border-color: #4caf50;
+    }
+    
+    .energy-card.aerobic.active {
+        background: #e8f5e9;
+        border-color: #2e7d32;
+    }
+    
+    .energy-card.anaerobic {
+        border-color: #ff9800;
+    }
+    
+    .energy-card.anaerobic.active {
+        background: #fff3e0;
+        border-color: #e65100;
+    }
+    
+    .energy-card.phosphagen {
+        border-color: #f44336;
+    }
+    
+    .energy-card.phosphagen.active {
+        background: #ffebee;
+        border-color: #c62828;
+    }
+    
+    .energy-icon {
+        font-size: 48px;
+        margin-bottom: 15px;
+        text-align: center;
+    }
+    
+    .energy-name {
+        font-size: 20px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 10px;
+        text-align: center;
+    }
+    
+    .energy-dominance {
+        font-size: 14px;
+        color: #666;
+        text-align: center;
+        margin-bottom: 15px;
+    }
+    
+    .contribution-bar {
+        height: 8px;
+        background: #e9ecef;
+        border-radius: 4px;
+        overflow: hidden;
+        margin-bottom: 10px;
+    }
+    
+    .contribution-fill {
+        height: 100%;
+        border-radius: 4px;
+        transition: width 1s ease;
+    }
+    
+    .energy-card.aerobic .contribution-fill {
+        background: linear-gradient(90deg, #4caf50, #66bb6a);
+    }
+    
+    .energy-card.anaerobic .contribution-fill {
+        background: linear-gradient(90deg, #ff9800, #ffa726);
+    }
+    
+    .energy-card.phosphagen .contribution-fill {
+        background: linear-gradient(90deg, #f44336, #ef5350);
+    }
+    
+    .contribution-label {
+        font-size: 12px;
+        color: #999;
+        text-align: center;
+    }
+    
+    /* Detail Panel */
+    .detail-panel {
+        background: white;
+        border-radius: 12px;
+        padding: 35px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        display: none;
+        animation: fadeIn 0.4s ease;
+    }
+    
+    .detail-panel.active {
+        display: block;
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .detail-header {
+        display: flex;
+        align-items: center;
+        gap: 20px;
+        margin-bottom: 25px;
+        padding-bottom: 20px;
+        border-bottom: 3px solid #e9ecef;
+    }
+    
+    .detail-header.aerobic {
+        border-bottom-color: #4caf50;
+    }
+    
+    .detail-header.anaerobic {
+        border-bottom-color: #ff9800;
+    }
+    
+    .detail-header.phosphagen {
+        border-bottom-color: #f44336;
+    }
+    
+    .detail-icon {
+        font-size: 56px;
+    }
+    
+    .detail-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #333;
+    }
+    
+    .detail-content {
+        font-size: 16px;
+        line-height: 1.8;
+        color: #555;
+        margin-bottom: 25px;
+    }
+    
+    .info-section {
+        background: #f8f9fa;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    
+    .info-section-title {
+        font-size: 18px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 12px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .info-list {
+        list-style: none;
+    }
+    
+    .info-list li {
+        padding: 10px 0 10px 25px;
+        position: relative;
+        font-size: 15px;
+        line-height: 1.6;
+        color: #555;
+    }
+    
+    .info-list li::before {
+        content: '→';
+        position: absolute;
+        left: 0;
+        color: #C6A906;
+        font-weight: 700;
+    }
+    
+    .hyrox-examples {
+        background: #fff8e1;
+        border-left: 4px solid #C6A906;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    
+    .hyrox-examples-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #856404;
+        margin-bottom: 10px;
+    }
+    
+    .hyrox-examples-content {
+        font-size: 14px;
+        line-height: 1.7;
+        color: #856404;
+    }
+    
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        background: #e9ecef;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .back-button:hover {
+        background: #dee2e6;
+    }
+    
+    @media (max-width: 768px) {
+        .energy-systems-grid {
+            grid-template-columns: 1fr;
+        }
+        
+        .duration-time {
+            font-size: 28px;
+        }
+        
+        .detail-panel {
+            padding: 25px 20px;
+        }
+        
+        .detail-header {
+            flex-direction: column;
+            text-align: center;
+        }
+    }
+</style>
+
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <div class="loading-text">Loading content...</div>
+</div>
+
+<div class="energy-container">
+    <div class="header">
+        <h1 class="title">HYROX Energy System Requirements</h1>
+        <p class="description">HYROX demands sustained energy output across multiple systems. Click on each energy system below to understand its role and training implications.</p>
+    </div>
+    
+    <div class="duration-display">
+        <div class="duration-title">Typical Event Duration</div>
+        <div class="duration-range">
+            <div class="duration-time">60</div>
+            <div class="duration-separator">-</div>
+            <div class="duration-time">120+</div>
+            <div style="font-size: 18px; color: #666; font-weight: 600;">minutes</div>
+        </div>
+    </div>
+    
+    <div class="energy-systems-grid" id="energyGrid">
+        <!-- Cards will be generated by JavaScript -->
+    </div>
+    
+    <div class="detail-panel" id="detailPanel">
+        <button class="back-button" onclick="closeDetail()" style="margin-bottom: 20px;">← Back to Overview</button>
+        <div id="detailContent"></div>
+        <button class="back-button" onclick="closeDetail()">← Back to Overview</button>
+    </div>
+</div>
+
+<script>
+    const energySystems = [
+        {
+            name: "Aerobic System",
+            icon: "🫁",
+            type: "aerobic",
+            dominance: "Primary Energy System",
+            contribution: 70,
+            description: "The extended event duration positions HYROX primarily as an aerobic endurance event. The running segments alone (8km total) require substantial aerobic capacity, whilst the sustained effort during workout stations despite rest-pause patterns still relies predominantly on aerobic metabolism for ATP production.",
+            advantages: [
+                "Faster running segment completion with less relative fatigue",
+                "Superior recovery between workout stations",
+                "Sustained power output across entire event duration",
+                "Resistance to dramatic performance decline in later stations"
+            ],
+            hyroxApplication: "Developing aerobic capacity through consistent endurance training forms the foundation of HYROX preparation. While workout station demands require other capacities, the aerobic system provides the base supporting entire event performance.",
+            trainingFocus: "Long steady-state runs, tempo work, and aerobic interval training should dominate training volume for HYROX athletes."
+        },
+        {
+            name: "Anaerobic System",
+            icon: "🔥",
+            type: "anaerobic",
+            dominance: "Significant Contributor",
+            contribution: 25,
+            description: "Whilst aerobic metabolism dominates overall energy provision, anaerobic systems contribute significantly during high-intensity workout station efforts. Stations like sled push, burpee broad jumps, and wall balls require power outputs exceeding purely aerobic capacity, necessitating anaerobic glycolysis contribution.",
+            advantages: [
+                "Enables high-intensity efforts at workout stations",
+                "Supports power output above aerobic threshold",
+                "Critical for competitive station performance",
+                "Allows strategic intensity increases when needed"
+            ],
+            hyroxApplication: "The accumulated anaerobic demand across eight workout stations creates significant metabolic stress evidenced by progressive lactate accumulation, increasing perceived exertion, and performance decline in later stations even when pacing attempts were conservative.",
+            trainingFocus: "Athletes attempting to complete workout stations at maximal intensity experience severe performance degradation in later stations and often slower overall times than those maintaining slightly sub-maximal station pace."
+        },
+        {
+            name: "Phosphagen System",
+            icon: "⚡",
+            type: "phosphagen",
+            dominance: "Brief Contributor",
+            contribution: 5,
+            description: "The immediate energy system (ATP-PC/phosphagen) contributes during explosive efforts like burpee broad jumps, sled push initiation, and wall ball sets. While contribution duration is brief (seconds), optimal phosphagen system capacity and recovery between efforts influences performance quality.",
+            advantages: [
+                "Enables explosive movement initiation",
+                "Supports maximal power output for brief efforts",
+                "Critical for technical movement quality",
+                "Influences set-to-set performance consistency"
+            ],
+            hyroxApplication: "Unlike shorter, purely explosive events, HYROX's extended duration means phosphagen recovery must occur in partially aerobic conditions (athletes never achieve complete rest enabling full phosphagen restoration).",
+            trainingFocus: "Training both phosphagen capacity and recovery rate under aerobic stress specifically benefits HYROX performance."
+        }
+    ];
+    
+    function renderEnergyCards() {
+        const grid = document.getElementById('energyGrid');
+        grid.innerHTML = '';
+        
+        energySystems.forEach((system, index) => {
+            const card = document.createElement('div');
+            card.className = `energy-card ${system.type}`;
+            card.innerHTML = `
+                <div class="energy-icon">${system.icon}</div>
+                <div class="energy-name">${system.name}</div>
+                <div class="energy-dominance">${system.dominance}</div>
+                <div class="contribution-bar">
+                    <div class="contribution-fill" style="width: ${system.contribution}%"></div>
+                </div>
+                <div class="contribution-label">~${system.contribution}% Overall Contribution</div>
+            `;
+            card.onclick = () => showDetail(index);
+            grid.appendChild(card);
+        });
+    }
+    
+    function showDetail(index) {
+        const system = energySystems[index];
+        const panel = document.getElementById('detailPanel');
+        const content = document.getElementById('detailContent');
+        
+        content.innerHTML = `
+            <div class="detail-header ${system.type}">
+                <div class="detail-icon">${system.icon}</div>
+                <div>
+                    <h2 class="detail-title">${system.name}</h2>
+                    <div style="color: #666; font-size: 16px;">${system.dominance}</div>
+                </div>
+            </div>
+            
+            <div class="detail-content">
+                ${system.description}
+            </div>
+            
+            <div class="info-section">
+                <div class="info-section-title">💪 Performance Advantages</div>
+                <ul class="info-list">
+                    ${system.advantages.map(adv => `<li>${adv}</li>`).join('')}
+                </ul>
+            </div>
+            
+            <div class="hyrox-examples">
+                <div class="hyrox-examples-title">🎯 HYROX Application</div>
+                <div class="hyrox-examples-content">${system.hyroxApplication}</div>
+            </div>
+            
+            <div class="info-section">
+                <div class="info-section-title">🏋️ Training Focus for Clients</div>
+                <div style="font-size: 15px; line-height: 1.7; color: #555; padding: 10px 0;">
+                    ${system.trainingFocus}
+                </div>
+            </div>
+        `;
+        
+        document.getElementById('energyGrid').style.display = 'none';
+        document.querySelector('.duration-display').style.display = 'none';
+        panel.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
+    function closeDetail() {
+        document.getElementById('detailPanel').classList.remove('active');
+        document.getElementById('energyGrid').style.display = 'grid';
+        document.querySelector('.duration-display').style.display = 'block';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
+    // Initialize
+    renderEnergyCards();
+    
+    // Hide loading - V2 method
+    function hideLoader() {
+        const overlay = document.getElementById('loadingOverlay');
+        if (overlay) {
+            overlay.style.opacity = '0';
+            setTimeout(function() {
+                overlay.style.display = 'none';
+            }, 500);
+        }
+    }
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', hideLoader);
+    } else {
+        hideLoader();
+    }
+    
+    setTimeout(hideLoader, 500);
+</script>
