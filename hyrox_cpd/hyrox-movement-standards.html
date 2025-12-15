@@ -1,0 +1,685 @@
+<style>
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
+    
+    /* Loading Spinner */
+    .loading-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: #f8f9fa;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        z-index: 9999;
+    }
+    
+    .spinner {
+        width: 50px;
+        height: 50px;
+        border: 4px solid #e9ecef;
+        border-top-color: #C6A906;
+        border-radius: 50%;
+        animation: spin 0.8s linear infinite;
+    }
+    
+    @keyframes spin {
+        to { transform: rotate(360deg); }
+    }
+    
+    .loading-text {
+        margin-top: 20px;
+        font-size: 16px;
+        color: #666;
+        font-weight: 500;
+    }
+    
+    body {
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        padding: 20px;
+        background: #f8f9fa;
+    }
+    
+    .standards-container {
+        max-width: 1100px;
+        margin: 0 auto;
+    }
+    
+    .header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+    
+    .title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 15px;
+    }
+    
+    .description {
+        font-size: 16px;
+        line-height: 1.6;
+        color: #555;
+        max-width: 800px;
+        margin: 0 auto;
+    }
+    
+    .station-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 20px;
+        margin-bottom: 30px;
+    }
+    
+    .station-card {
+        background: white;
+        border-radius: 12px;
+        padding: 25px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        cursor: pointer;
+        transition: all 0.3s ease;
+        border: 3px solid transparent;
+        text-align: center;
+    }
+    
+    .station-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+        border-color: #C6A906;
+    }
+    
+    .station-card.active {
+        border-color: #C6A906;
+        background: #fff8e1;
+    }
+    
+    .station-icon {
+        font-size: 48px;
+        margin-bottom: 15px;
+    }
+    
+    .station-name {
+        font-size: 18px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 5px;
+    }
+    
+    .station-distance {
+        font-size: 14px;
+        color: #666;
+    }
+    
+    .detail-panel {
+        background: white;
+        border-radius: 12px;
+        padding: 35px;
+        box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+        display: none;
+        animation: fadeIn 0.4s ease;
+    }
+    
+    .detail-panel.active {
+        display: block;
+    }
+    
+    @keyframes fadeIn {
+        from {
+            opacity: 0;
+            transform: translateY(20px);
+        }
+        to {
+            opacity: 1;
+            transform: translateY(0);
+        }
+    }
+    
+    .detail-header {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+        margin-bottom: 30px;
+        padding-bottom: 20px;
+        border-bottom: 3px solid #C6A906;
+    }
+    
+    .detail-icon {
+        font-size: 56px;
+    }
+    
+    .detail-title-group {
+        flex: 1;
+    }
+    
+    .detail-title {
+        font-size: 28px;
+        font-weight: 700;
+        color: #333;
+        margin-bottom: 5px;
+    }
+    
+    .detail-subtitle {
+        font-size: 16px;
+        color: #666;
+    }
+    
+    .section {
+        margin-bottom: 30px;
+    }
+    
+    .section-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #C6A906;
+        margin-bottom: 15px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+    
+    .section-icon {
+        font-size: 24px;
+    }
+    
+    .standards-list {
+        list-style: none;
+        margin-bottom: 20px;
+    }
+    
+    .standards-list li {
+        padding: 12px 0 12px 30px;
+        position: relative;
+        font-size: 15px;
+        line-height: 1.7;
+        color: #555;
+        border-bottom: 1px solid #f0f0f0;
+    }
+    
+    .standards-list li:last-child {
+        border-bottom: none;
+    }
+    
+    .standards-list li::before {
+        content: '✓';
+        position: absolute;
+        left: 0;
+        color: #C6A906;
+        font-weight: 700;
+        font-size: 18px;
+    }
+    
+    .penalty-box {
+        background: #fff3cd;
+        border-left: 4px solid #ffc107;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+    }
+    
+    .penalty-box-title {
+        font-size: 16px;
+        font-weight: 700;
+        color: #856404;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .penalty-list {
+        list-style: none;
+    }
+    
+    .penalty-list li {
+        padding: 8px 0 8px 25px;
+        position: relative;
+        font-size: 14px;
+        line-height: 1.6;
+        color: #856404;
+    }
+    
+    .penalty-list li::before {
+        content: '⚠';
+        position: absolute;
+        left: 0;
+        color: #ffc107;
+        font-size: 16px;
+    }
+    
+    .weights-table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 15px;
+    }
+    
+    .weights-table th,
+    .weights-table td {
+        padding: 12px 15px;
+        text-align: left;
+        border-bottom: 1px solid #e9ecef;
+    }
+    
+    .weights-table th {
+        background: #f8f9fa;
+        font-weight: 700;
+        color: #333;
+        font-size: 14px;
+    }
+    
+    .weights-table td {
+        font-size: 14px;
+        color: #555;
+    }
+    
+    .weights-table tr:last-child td {
+        border-bottom: none;
+    }
+    
+    .info-note {
+        background: #e7f3ff;
+        border-left: 4px solid #2196f3;
+        padding: 15px;
+        border-radius: 6px;
+        font-size: 14px;
+        line-height: 1.6;
+        color: #0d47a1;
+        margin-top: 15px;
+    }
+    
+    .back-button {
+        display: inline-flex;
+        align-items: center;
+        gap: 8px;
+        padding: 12px 24px;
+        background: #e9ecef;
+        border: none;
+        border-radius: 8px;
+        font-size: 14px;
+        font-weight: 600;
+        color: #333;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-top: 20px;
+    }
+    
+    .back-button:hover {
+        background: #dee2e6;
+    }
+    
+    @media (max-width: 768px) {
+        .station-grid {
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+        }
+        
+        .station-card {
+            padding: 20px 15px;
+        }
+        
+        .station-icon {
+            font-size: 36px;
+        }
+        
+        .station-name {
+            font-size: 16px;
+        }
+        
+        .detail-panel {
+            padding: 25px 20px;
+        }
+        
+        .detail-header {
+            flex-direction: column;
+            text-align: center;
+        }
+        
+        .detail-title {
+            font-size: 24px;
+        }
+    }
+</style>
+
+<div class="loading-overlay" id="loadingOverlay">
+    <div class="spinner"></div>
+    <div class="loading-text">Loading content...</div>
+</div>
+
+<div class="standards-container">
+    <div class="header">
+        <h1 class="title">HYROX Movement Standards</h1>
+        <p class="description">Select a station below to view official movement standards, penalty protocols, and weight specifications for each HYROX workout station.</p>
+    </div>
+    
+    <div class="station-grid" id="stationGrid"></div>
+    
+    <div class="detail-panel" id="detailPanel">
+        <div id="detailContent"></div>
+        <button class="back-button" onclick="closeDetail()">← Back to Stations</button>
+    </div>
+</div>
+
+<script>
+    const stations = [
+        {
+            name: "SkiErg",
+            distance: "1000m",
+            icon: "⛷️",
+            standards: [
+                "Prior to starting, the monitor will be reset by a Judge",
+                "Both feet MUST be on the SkiErg platform at all times during the exercise",
+                "Lifting the feet during execution is allowed, but feet must remain on the platform",
+                "Heels are permitted to hang over the edge but must NOT contact the floor",
+                "After completing 1000m, remain on platform and raise arm to signal completion",
+                "May only leave SkiErg upon receiving Judge's confirmation",
+                "Damper setting preset to resistance 6 but may be adjusted as desired"
+            ],
+            penalties: [
+                "Feet moving from platform (contacting floor): Formal warning",
+                "Second infringement: 15-second penalty",
+                "Each subsequent infringement: Additional 15-second penalty",
+                "Leaving before completing 1000m: Time penalty or disqualification"
+            ],
+            weights: null
+        },
+        {
+            name: "Sled Push",
+            distance: "50m (4×12.5m)",
+            icon: "🛷",
+            standards: [
+                "Use assigned sled lane only",
+                "Both sled and racer must be completely behind white line before starting",
+                "Stay within designated lane, do not interfere with neighbouring lanes",
+                "Sled must completely pass 12.5m mark before changing direction",
+                "Complete 4 × 12.5m laps",
+                "Hands must remain on designated push surfaces throughout",
+                "Sled must remain in contact with ground (no lifting)"
+            ],
+            penalties: [
+                "First infringement: Formal warning",
+                "Second infringement: 15-second penalty",
+                "Each subsequent infringement: Additional 15-second penalty",
+                "Each missing lane: 3-minute penalty"
+            ],
+            weights: [
+                { division: "Women's Open", weight: "102kg" },
+                { division: "Women's Pro", weight: "152kg" },
+                { division: "Men's Open", weight: "152kg" },
+                { division: "Men's Pro", weight: "202kg" }
+            ],
+            note: "All weights include the weight of the sled"
+        },
+        {
+            name: "Sled Pull",
+            distance: "50m (4×12.5m)",
+            icon: "🪢",
+            standards: [
+                "Use assigned sled lane only",
+                "Both sled and racer must be completely behind white line before starting",
+                "Stay within designated lane",
+                "Sled must completely pass 12.5m mark before changing direction",
+                "Complete 4 × 12.5m laps",
+                "Pull hand-over-hand without wrapping rope around body, equipment, or limbs",
+                "Remain behind designated pull line until sled crosses",
+                "Sled must remain in contact with ground (no lifting or throwing)"
+            ],
+            penalties: [
+                "First infringement: Formal warning",
+                "Second infringement: 15-second penalty",
+                "Each subsequent infringement: Additional 15-second penalty",
+                "Each missing lane: 3-minute penalty"
+            ],
+            weights: [
+                { division: "Women's Open", weight: "78kg" },
+                { division: "Women's Pro", weight: "103kg" },
+                { division: "Men's Open", weight: "103kg" },
+                { division: "Men's Pro", weight: "153kg" }
+            ],
+            note: "All weights include the weight of the sled"
+        },
+        {
+            name: "Burpee Broad Jump",
+            distance: "80m",
+            icon: "🦘",
+            standards: [
+                "Start each burpee with chest on ground (nipple line contact)",
+                "NO requirement for thighs to touch ground",
+                "Hands placed no more than 30cm forward of toes for subsequent burpees",
+                "Once hands placed, cannot move forward",
+                "Permitted to use knee when coming out of burpee",
+                "Feet cannot go beyond fingertips when jumping/stepping out",
+                "Both feet must be parallel for taking off and landing",
+                "No staggered positions, steps, or shuffles permitted",
+                "Both feet must fully cross finish line to complete"
+            ],
+            penalties: [
+                "First infringement: Formal warning",
+                "Second infringement: 15-second penalty",
+                "Each subsequent infringement: Additional 15-second penalty"
+            ],
+            weights: null
+        },
+        {
+            name: "Rowing",
+            distance: "1000m",
+            icon: "🚣",
+            standards: [
+                "Monitor will be reset by Judging Team before starting",
+                "Feet must be on foot plates and backside on seat before taking handle",
+                "Feet must remain on foot plates at all times",
+                "After completing 1000m, remain seated and raise arm for Judge confirmation",
+                "May only dismount after receiving Judge's confirmation",
+                "Damper preset to Resistance 6, may be adjusted as desired",
+                "Footplates preset to Position 4, may be adjusted before beginning"
+            ],
+            penalties: [
+                "First infringement: Formal warning",
+                "Second infringement: 15-second penalty",
+                "Each subsequent infringement: Additional 15-second penalty",
+                "Leaving before completing 1000m: Time penalty or disqualification (severity dependent)"
+            ],
+            weights: null
+        },
+        {
+            name: "Farmers Carry",
+            distance: "200m (4×50m)",
+            icon: "🏋️",
+            standards: [
+                "Maintain grip on both kettlebells throughout movement",
+                "Both kettlebells must be carried simultaneously",
+                "If dropped, pick up from exact drop location before continuing",
+                "Complete full 200m distance",
+                "Stay within designated course boundaries"
+            ],
+            penalties: [
+                "Each missing lap: 3-minute penalty",
+                "Failing to return kettlebells to correct area or not upright: 30-second penalty",
+                "Using incorrect weight: Must repeat entire station with correct weight or DQ"
+            ],
+            weights: [
+                { division: "Women's Open", weight: "2 × 16kg (WHITE)" },
+                { division: "Women's Pro", weight: "2 × 24kg (GREY)" },
+                { division: "Men's Open", weight: "2 × 24kg (GREY)" },
+                { division: "Men's Pro", weight: "2 × 32kg (BLACK)" }
+            ]
+        },
+        {
+            name: "Sandbag Lunges",
+            distance: "100m",
+            icon: "🎒",
+            standards: [
+                "Begin and end with removal/return of sandbag from marked area",
+                "Start standing tall with both feet behind line",
+                "Sandbag must remain on BOTH shoulders at all times",
+                "Cannot put sandbag down at any time during station",
+                "Trailing knee must clearly touch ground each lunge",
+                "Stand tall with knees and hips fully extended after each rep",
+                "Lunges must be alternating (alternating knees)",
+                "Can lunge continuously OR stop with both feet parallel",
+                "NO steps or shuffles between repetitions",
+                "Front foot must completely cross white line at end of each lane"
+            ],
+            penalties: [
+                "Failing to return sandbag to correct area: 30-second penalty",
+                "Using incorrect weight: Must repeat entire station or DQ",
+                "Removing sandbag from shoulders: 15-second penalty (no warning)",
+                "Second infringement: Disqualification"
+            ],
+            weights: [
+                { division: "Women's Open", weight: "10kg (WHITE)" },
+                { division: "Women's Pro", weight: "20kg (GREY)" },
+                { division: "Men's Open", weight: "20kg (GREY)" },
+                { division: "Men's Pro", weight: "30kg (BLACK)" }
+            ]
+        },
+        {
+            name: "Wall Balls",
+            distance: "100 reps",
+            icon: "🎯",
+            standards: [
+                "Racer's responsibility to select correct weight for division",
+                "Start standing tall (hips and knees extended), ball in both hands",
+                "NOT permitted to pick ball from ground and immediately throw",
+                "Squat below parallel (hips lower than knees)",
+                "Throw ball with both hands while standing up",
+                "Ball must strike designated target in strike zone",
+                "Either catch ball and continue OR let ball hit ground first",
+                "NOT permitted to catch ball after bounce and continue",
+                "Complete 100 reps for ALL divisions",
+                "May only proceed to finish after Judge confirms 100 valid reps"
+            ],
+            penalties: [
+                "Invalid rep: 'No rep' (no warnings given)",
+                "Each missing rep: 15-second penalty",
+                "Leaving before 100 reps (digital targets): 15-second penalty per incomplete rep",
+                "Using powdered chalk at the station: 2-minute penalty"
+            ],
+            weights: [
+                { division: "Women's Open", weight: "4kg (WHITE) - 2.70m target" },
+                { division: "Women's Pro", weight: "6kg (GREY) - 2.70m target" },
+                { division: "Men's Open", weight: "6kg (GREY) - 3.00m target" },
+                { division: "Men's Pro", weight: "9kg (BLACK) - 3.00m target" }
+            ],
+            note: "All divisions complete 100 reps"
+        }
+    ];
+    
+    function renderStationGrid() {
+        const grid = document.getElementById('stationGrid');
+        grid.innerHTML = '';
+        
+        stations.forEach((station, index) => {
+            const card = document.createElement('div');
+            card.className = 'station-card';
+            card.innerHTML = `
+                <div class="station-icon">${station.icon}</div>
+                <div class="station-name">${station.name}</div>
+                <div class="station-distance">${station.distance}</div>
+            `;
+            card.onclick = () => showDetail(index);
+            grid.appendChild(card);
+        });
+    }
+    
+    function showDetail(index) {
+        const station = stations[index];
+        const panel = document.getElementById('detailPanel');
+        const content = document.getElementById('detailContent');
+        
+        let weightsHTML = '';
+        if (station.weights) {
+            weightsHTML = `
+                <div class="section">
+                    <h3 class="section-title"><span class="section-icon">⚖️</span>Weight Specifications</h3>
+                    <table class="weights-table">
+                        <thead>
+                            <tr>
+                                <th>Division</th>
+                                <th>Weight</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${station.weights.map(w => `
+                                <tr>
+                                    <td>${w.division}</td>
+                                    <td><strong>${w.weight}</strong></td>
+                                </tr>
+                            `).join('')}
+                        </tbody>
+                    </table>
+                    ${station.note ? `<div class="info-note">${station.note}</div>` : ''}
+                </div>
+            `;
+        }
+        
+        let penaltiesHTML = '';
+        if (station.penalties.length > 0) {
+            penaltiesHTML = `
+                <div class="penalty-box">
+                    <div class="penalty-box-title">⚠️ Penalty Protocol</div>
+                    <ul class="penalty-list">
+                        ${station.penalties.map(p => `<li>${p}</li>`).join('')}
+                    </ul>
+                </div>
+            `;
+        }
+        
+        content.innerHTML = `
+            <div class="detail-header">
+                <div class="detail-icon">${station.icon}</div>
+                <div class="detail-title-group">
+                    <h2 class="detail-title">${station.name}</h2>
+                    <div class="detail-subtitle">${station.distance}</div>
+                </div>
+            </div>
+            
+            <div class="section">
+                <h3 class="section-title"><span class="section-icon">📋</span>Official Movement Standards</h3>
+                <ul class="standards-list">
+                    ${station.standards.map(s => `<li>${s}</li>`).join('')}
+                </ul>
+            </div>
+            
+            ${penaltiesHTML}
+            ${weightsHTML}
+        `;
+        
+        document.getElementById('stationGrid').style.display = 'none';
+        panel.classList.add('active');
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
+    function closeDetail() {
+        document.getElementById('detailPanel').classList.remove('active');
+        document.getElementById('stationGrid').style.display = 'grid';
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+    
+    // Initialize
+    renderStationGrid();
+    
+    // Hide loading - V2 method
+    function hideLoader() {
+        const overlay = document.getElementById('loadingOverlay');
+        if (overlay) {
+            overlay.style.opacity = '0';
+            setTimeout(function() {
+                overlay.style.display = 'none';
+            }, 500);
+        }
+    }
+    
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', hideLoader);
+    } else {
+        hideLoader();
+    }
+    
+    setTimeout(hideLoader, 500);
+</script>
