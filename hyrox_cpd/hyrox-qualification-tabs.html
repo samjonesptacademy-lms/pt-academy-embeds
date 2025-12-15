@@ -474,16 +474,24 @@
         document.getElementById(tabId).classList.add('active');
     }
     
-    // Hide loading overlay once DOM is ready
-    document.addEventListener('DOMContentLoaded', function() {
+    // Hide loading - multiple methods for reliability
+    function hideLoader() {
         const overlay = document.getElementById('loadingOverlay');
-        // Give a brief moment for rendering, then hide
-        setTimeout(function() {
-            overlay.classList.add('hidden');
-            // After fade out, hide completely
+        if (overlay) {
+            overlay.style.opacity = '0';
             setTimeout(function() {
                 overlay.style.display = 'none';
             }, 500);
-        }, 200);
-    });
+        }
+    }
+    
+    // Try multiple events to ensure it fires
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', hideLoader);
+    } else {
+        hideLoader(); // DOM already loaded
+    }
+    
+    // Backup: hide after a short timeout regardless
+    setTimeout(hideLoader, 500);
 </script>
