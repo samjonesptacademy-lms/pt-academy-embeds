@@ -631,6 +631,8 @@
         }
         
         content.innerHTML = `
+            <button class="back-button" onclick="closeDetail()" style="margin-bottom: 20px; margin-top: 0;">← Back to Stations</button>
+            
             <div class="detail-header">
                 <div class="detail-icon">${station.icon}</div>
                 <div class="detail-title-group">
@@ -664,7 +666,7 @@
     // Initialize
     renderStationGrid();
     
-    // Hide loading - multiple methods for reliability
+    // Hide loading - V2 method
     function hideLoader() {
         const overlay = document.getElementById('loadingOverlay');
         if (overlay) {
@@ -675,13 +677,11 @@
         }
     }
     
-    // Try multiple events to ensure it fires
     if (document.readyState === 'loading') {
         document.addEventListener('DOMContentLoaded', hideLoader);
     } else {
-        hideLoader(); // DOM already loaded
+        hideLoader();
     }
     
-    // Backup: hide after a short timeout regardless
     setTimeout(hideLoader, 500);
 </script>
