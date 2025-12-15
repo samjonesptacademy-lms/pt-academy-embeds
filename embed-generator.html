@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>jsDelivr & iframe Generator</title>
+    <title>GitHub Pages Embed Generator</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
@@ -125,14 +125,32 @@
             margin-top: 10px;
             font-size: 13px;
         }
+        .info-box {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 13px;
+            color: #0c5460;
+        }
+        .info-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🚀 jsDelivr & iframe Generator</h1>
-        <p class="subtitle">Convert any GitHub URL to fast jsDelivr CDN links</p>
+        <h1>🚀 GitHub Pages Embed Generator</h1>
+        <p class="subtitle">Generate fast GitHub Pages embed links for 360 Learning</p>
 
 ```
+    <div class="info-box">
+        <div class="info-title">💡 Pro Tip: Minify Your Files!</div>
+        Before uploading to GitHub, minify your HTML files for 30-40% faster loading. Use the HTML Minifier tool (link in outputs folder) to compress your files.
+    </div>
+    
     <div class="example">
         <div class="example-title">✅ Accepted formats:</div>
         <code>https://username.github.io/repo/file.html</code>
@@ -162,10 +180,10 @@
     </div>
     
     <div class="output-section" id="outputSection">
-        <label>jsDelivr CDN Link:</label>
+        <label>GitHub Pages Link:</label>
         <div class="output-box">
-            <button class="copy-btn" id="copyJsdelivr">Copy</button>
-            <textarea id="jsdelivrOutput" readonly></textarea>
+            <button class="copy-btn" id="copyGhPages">Copy</button>
+            <textarea id="ghPagesOutput" readonly></textarea>
         </div>
         
         <label style="margin-top: 20px;">iframe Code for 360 Learning:</label>
@@ -200,8 +218,8 @@
         
         // Add event listeners
         document.getElementById('generateBtn').addEventListener('click', convert);
-        document.getElementById('copyJsdelivr').addEventListener('click', function() {
-            copyToClipboard('jsdelivrOutput', this);
+        document.getElementById('copyGhPages').addEventListener('click', function() {
+            copyToClipboard('ghPagesOutput', this);
         });
         document.getElementById('copyIframe').addEventListener('click', function() {
             copyToClipboard('iframeOutput', this);
@@ -292,14 +310,14 @@
         detectedDiv.textContent = `✓ Detected: ${detectedType} | User: ${username} | Repo: ${repo} | File: ${filepath}`;
         detectedDiv.style.display = 'block';
         
-        // Generate jsDelivr URL
-        const jsdelivrUrl = `https://cdn.jsdelivr.net/gh/${username}/${repo}@main/${filepath}`;
+        // Generate GitHub Pages URL
+        const ghPagesUrl = `https://${username}.github.io/${repo}/${filepath}`;
         
         // Generate iframe code
-        const iframeCode = `<iframe src="${jsdelivrUrl}" width="100%" height="${height}" frameborder="0" style="border:none;"></iframe>`;
+        const iframeCode = `<iframe src="${ghPagesUrl}" width="100%" height="${height}" frameborder="0" style="border:none;"></iframe>`;
         
         // Display outputs
-        document.getElementById('jsdelivrOutput').value = jsdelivrUrl;
+        document.getElementById('ghPagesOutput').value = ghPagesUrl;
         document.getElementById('iframeOutput').value = iframeCode;
         document.getElementById('outputSection').style.display = 'block';
     }
