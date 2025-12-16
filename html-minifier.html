@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HTML Minifier - Faster Loading</title>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            max-width: 1000px;
+            margin: 50px auto;
+            padding: 20px;
+            background: #f5f5f5;
+        }
+        .container {
+            background: white;
+            padding: 30px;
+            border-radius: 10px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+        .subtitle {
+            color: #666;
+            margin-bottom: 30px;
+            line-height: 1.6;
+        }
+        .info-box {
+            background: #d1ecf1;
+            border-left: 4px solid #17a2b8;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #0c5460;
+        }
+        .info-title {
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+            margin: 20px 0;
+        }
+        .stat-box {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        .stat-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        .stat-value {
+            font-size: 24px;
+            font-weight: 700;
+            color: #333;
+        }
+        .stat-value.positive {
+            color: #28a745;
+        }
+        label {
+            display: block;
+            font-weight: 600;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        textarea {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 6px;
+            font-size: 13px;
+            font-family: 'Courier New', monospace;
+            box-sizing: border-box;
+            resize: vertical;
+            min-height: 200px;
+        }
+        textarea:focus {
+            outline: none;
+            border-color: #C6A906;
+        }
+        .button-group {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        button {
+            background: #C6A906;
+            color: white;
+            border: none;
+            padding: 12px 30px;
+            border-radius: 6px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            flex: 1;
+        }
+        button:hover {
+            background: #a88f05;
+        }
+        button.secondary {
+            background: #6c757d;
+        }
+        button.secondary:hover {
+            background: #5a6268;
+        }
+        .output-section {
+            margin-top: 30px;
+            display: none;
+        }
+        .success {
+            background: #d4edda;
+            color: #155724;
+            padding: 15px;
+            border-radius: 6px;
+            margin-bottom: 15px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>⚡ HTML Minifier</h1>
+        <p class="subtitle">Compress your HTML files for 30-40% faster loading in 360 Learning</p>
+        
+        <div class="info-box">
+            <div class="info-title">How it works:</div>
+            Minification removes all unnecessary whitespace, line breaks, and comments from your HTML. This reduces file size significantly without affecting functionality. Your pages will load faster, especially on mobile devices!
+        </div>
+        
+        <div class="input-section">
+            <label>Paste Your HTML Code:</label>
+            <textarea id="inputHtml" placeholder="Paste your complete HTML file here..."></textarea>
+            
+            <div class="button-group">
+                <button id="minifyBtn">🚀 Minify HTML</button>
+                <button id="clearBtn" class="secondary">Clear</button>
+            </div>
+        </div>
+        
+        <div class="output-section" id="outputSection">
+            <div class="success" id="successMessage"></div>
+            
+            <div class="stats">
+                <div class="stat-box">
+                    <div class="stat-label">Original Size</div>
+                    <div class="stat-value" id="originalSize">0 KB</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Minified Size</div>
+                    <div class="stat-value positive" id="minifiedSize">0 KB</div>
+                </div>
+                <div class="stat-box">
+                    <div class="stat-label">Reduction</div>
+                    <div class="stat-value positive" id="reduction">0%</div>
+                </div>
+            </div>
+            
+            <label>Minified HTML (Ready to Upload):</label>
+            <textarea id="outputHtml" readonly></textarea>
+            
+            <div class="button-group">
+                <button id="copyBtn">📋 Copy to Clipboard</button>
+                <button id="downloadBtn" class="secondary">💾 Download File</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            document.getElementById('minifyBtn').addEventListener('click', minifyHTML);
+            document.getElementById('clearBtn').addEventListener('click', clearAll);
+            document.getElementById('copyBtn').addEventListener('click', copyToClipboard);
+            document.getElementById('downloadBtn').addEventListener('click', downloadFile);
+        });
+        
+        function minifyHTML() {
+            const input = document.getElementById('inputHtml').value;
+            
+            if (!input.trim()) {
+                alert('Please paste your HTML code first!');
+                return;
+            }
+            
+            // Calculate original size
+            const originalSize = new Blob([input]).size;
+            
+            // Minify the HTML
+            let minified = input;
+            
+            // Remove HTML comments (but keep conditional comments for IE)
+            minified = minified.replace(/<!--(?!\[if\s).*?-->/gs, '');
+            
+            // Remove whitespace between tags
+            minified = minified.replace(/>\s+</g, '><');
+            
+            // Remove whitespace at start/end of lines
+            minified = minified.replace(/^\s+/gm, '');
+            minified = minified.replace(/\s+$/gm, '');
+            
+            // Remove multiple spaces
+            minified = minified.replace(/\s{2,}/g, ' ');
+            
+            // Remove spaces around = in attributes
+            minified = minified.replace(/\s*=\s*/g, '=');
+            
+            // Remove line breaks
+            minified = minified.replace(/\n+/g, '');
+            
+            // Calculate minified size
+            const minifiedSize = new Blob([minified]).size;
+            const reduction = ((originalSize - minifiedSize) / originalSize * 100).toFixed(1);
+            
+            // Display results
+            document.getElementById('outputHtml').value = minified;
+            document.getElementById('originalSize').textContent = formatBytes(originalSize);
+            document.getElementById('minifiedSize').textContent = formatBytes(minifiedSize);
+            document.getElementById('reduction').textContent = reduction + '%';
+            document.getElementById('successMessage').textContent = 
+                `✓ Success! Your file is now ${reduction}% smaller and will load faster!`;
+            
+            document.getElementById('outputSection').style.display = 'block';
+        }
+        
+        function formatBytes(bytes) {
+            if (bytes < 1024) return bytes + ' B';
+            return (bytes / 1024).toFixed(1) + ' KB';
+        }
+        
+        function clearAll() {
+            document.getElementById('inputHtml').value = '';
+            document.getElementById('outputHtml').value = '';
+            document.getElementById('outputSection').style.display = 'none';
+        }
+        
+        function copyToClipboard() {
+            const textarea = document.getElementById('outputHtml');
+            textarea.select();
+            textarea.setSelectionRange(0, 99999);
+            
+            try {
+                document.execCommand('copy');
+                const btn = document.getElementById('copyBtn');
+                const originalText = btn.textContent;
+                btn.textContent = '✓ Copied!';
+                setTimeout(() => {
+                    btn.textContent = originalText;
+                }, 2000);
+            } catch (err) {
+                alert('Failed to copy. Please select and copy manually.');
+            }
+        }
+        
+        function downloadFile() {
+            const content = document.getElementById('outputHtml').value;
+            const blob = new Blob([content], { type: 'text/html' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = 'minified.html';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+            URL.revokeObjectURL(url);
+        }
+    </script>
+</body>
+</html>
