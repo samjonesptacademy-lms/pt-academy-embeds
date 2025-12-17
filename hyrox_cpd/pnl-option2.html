@@ -181,176 +181,200 @@
 </div>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const root = document.getElementById('pt-pnl-tabs-widget');
-    if (!root) {
-      console.error('PT P&L widget: root element not found.');
-      return;
-    }
+document.addEventListener("DOMContentLoaded", function () {
+  var root = document.getElementById("pt-pnl-tabs-widget");
+  if (!root) {
+    console.error("PT P&L widget: root element not found (pt-pnl-tabs-widget).");
+    return;
+  }
 
-    // If you see this change, JS is running.
-    root.querySelector('#debugLine').textContent = 'Debug: JS is running ✔';
+  var debug = root.querySelector("#debugLine");
+  if (debug) debug.textContent = "Debug: JS is running OK";
 
-    const £ = (n) => (isFinite(n) ? n : 0).toLocaleString('en-GB', { style:'currency', currency:'GBP', maximumFractionDigits:0 });
-    const getNum = (id) => {
-      const el = root.querySelector('#' + id);
-      if (!el) return 0;
-      const v = parseFloat(el.value);
-      return isFinite(v) ? v : 0;
-    };
-    const setText = (id, text) => {
-      const el = root.querySelector('#' + id);
-      if (el) el.textContent = text;
-    };
+  function fmtGBP(n) {
+    var x = isFinite(n) ? n : 0;
+    return x.toLocaleString("en-GB", {
+      style: "currency",
+      currency: "GBP",
+      maximumFractionDigits: 0
+    });
+  }
 
-    const scenarios = {
-      gym_flat: {
-        note: 'Flat facility cost each month. Profit swings with utilisation (busy vs quiet months).',
-        defaults: { sessionsPerWeek:18, pricePerSession:45, weeksPerMonth:4.0, otherIncome:120, facilityCost:450, processingFees:55, insurance:18, marketing:120, software:45, cpd:35, travel:40, equipment:40 }
-      },
-      gym_split: {
-        note: 'Facility cost modelled as a % of revenue (variable). Upside is limited, downside cushioned.',
-        defaults: { sessionsPerWeek:18, pricePerSession:45, weeksPerMonth:4.0, otherIncome:80, facilityCost:0, processingFees:55, insurance:18, marketing:120, software:45, cpd:35, travel:40, equipment:40 },
-        facilitySplitPct: 0.30
-      },
-      mobile: {
-        note: 'Lower facility cost, higher travel. Pricing usually needs to reflect travel overhead.',
-        defaults: { sessionsPerWeek:14, pricePerSession:60, weeksPerMonth:3.8, otherIncome:60, facilityCost:30, processingFees:45, insurance:22, marketing:160, software:45, cpd:35, travel:180, equipment:55 }
-      },
-      hybrid: {
-        note: 'Adds scalable income but may increase software and marketing. Watch delivery time creep.',
-        defaults: { sessionsPerWeek:14, pricePerSession:55, weeksPerMonth:4.0, otherIncome:350, facilityCost:350, processingFees:65, insurance:18, marketing:180, software:65, cpd:35, travel:50, equipment:40 }
+  function getNum(id) {
+    var el = root.querySelector("#" + id);
+    if (!el) return 0;
+    var v = parseFloat(el.value);
+    return isFinite(v) ? v : 0;
+  }
+
+  function setText(id, text) {
+    var el = root.querySelector("#" + id);
+    if (el) el.textContent = text;
+  }
+
+  var scenarios = {
+    gym_flat: {
+      note: "Flat facility cost each month. Profit swings with utilisation.",
+      defaults: {
+        sessionsPerWeek: 18, pricePerSession: 45, weeksPerMonth: 4.0, otherIncome: 120,
+        facilityCost: 450, processingFees: 55, insurance: 18, marketing: 120, software: 45, cpd: 35, travel: 40, equipment: 40
       }
-    };
-
-    const topics = {
-      revenue: { title:'Revenue', meta:'Total income before costs.', body:'Revenue is what comes in. It is not take-home pay.', bullets:['Separate revenue streams so you can see what drives profit.'] },
-      sessions: { title:'1:1 session income', meta:'Sessions × price × billable weeks.', body:'Main driver for many PTs; hardest to scale without changing the model.', bullets:['Billable weeks are rarely a perfect 4.0.'] },
-      otherIncome: { title:'Other income', meta:'Online coaching, small group, programmes.', body:'Can improve margin if it scales without matching time increases.', bullets:['Be honest about delivery time.'] },
-      directCosts: { title:'Direct costs', meta:'Costs tied to delivering service.', body:'Often facility costs + transaction fees for PTs.', bullets:['Facility terms are a major profit lever.'] },
-      facility: { title:'Facility cost', meta:'Rent / floor fee / revenue split.', body:'The structure changes risk: flat rent = more fixed cost; split = more variable.', bullets:['Compare what you get for the fee (leads, facilities, admin).'] },
-      processing: { title:'Processing fees', meta:'Card/direct debit fees.', body:'Often ignored, but they scale with revenue.', bullets:['Reconcile fees so you know true net receipts.'] },
-      overheads: { title:'Overheads', meta:'Running costs not “per client”.', body:'Insurance, tools, marketing, CPD, travel, supplies.', bullets:['Subscriptions creep—review quarterly.'] },
-      insurance: { title:'Insurance', meta:'Protection for you and clients.', body:'Low monthly cost, high downside protection.', bullets:['Check coverage matches your services.'] },
-      marketing: { title:'Marketing', meta:'Paid ads, platforms, brand assets.', body:'Should link to leads, conversions, or retention.', bullets:['Track cost per lead and cost per client.'] },
-      software: { title:'Software', meta:'Booking, coaching apps, CRM.', body:'Should save time or improve service quality.', bullets:['Audit tools regularly.'] },
-      cpd: { title:'CPD', meta:'Education, mentoring, courses.', body:'Best when it removes a current business constraint.', bullets:['Apply learning quickly to see commercial impact.'] },
-      travel: { title:'Travel', meta:'Fuel, parking, public transport—and time.', body:'Travel time reduces effective hourly rate.', bullets:['Cluster sessions geographically.'] },
-      equipment: { title:'Equipment', meta:'Kit, replacements, supplies.', body:'Costs can be steady or “lumpy” with upgrades.', bullets:['Plan replacement cycles.'] },
-      profit: { title:'Net profit', meta:'Before tax.', body:'Profit is not the same as cash; timing matters.', bullets:['Set aside tax as you go.'] },
-      margin: { title:'Net margin', meta:'Profit ÷ revenue.', body:'Helps compare performance across months and models.', bullets:['Look at trends, not one month.'] }
-    };
-
-    function showTopic(key){
-      const t = topics[key] || topics.revenue;
-      root.querySelector('#expTitle').textContent = t.title;
-      root.querySelector('#expMeta').textContent = t.meta;
-      root.querySelector('#expBody').textContent = t.body;
-      const ul = root.querySelector('#expBullets');
-      ul.innerHTML = '';
-      (t.bullets || []).forEach(b => {
-        const li = document.createElement('li');
-        li.textContent = b;
-        ul.appendChild(li);
-      });
-    }
-
-    let activeScenarioKey = 'gym_flat';
-
-    function setInputs(defaults){
-      Object.entries(defaults).forEach(([id, value]) => {
-        const el = root.querySelector('#' + id);
-        if (el) el.value = value;
-      });
-    }
-
-    function recalc(){
-      const s = scenarios[activeScenarioKey];
-
-      const sessionsPerWeek = getNum('sessionsPerWeek');
-      const pricePerSession = getNum('pricePerSession');
-      const weeksPerMonth = getNum('weeksPerMonth');
-      const otherIncome = getNum('otherIncome');
-
-      const processingFees = getNum('processingFees');
-
-      const insurance = getNum('insurance');
-      const marketing = getNum('marketing');
-      const software = getNum('software');
-      const cpd = getNum('cpd');
-      const travel = getNum('travel');
-      const equipment = getNum('equipment');
-
-      const revSessions = sessionsPerWeek * pricePerSession * weeksPerMonth;
-      const revTotal = revSessions + otherIncome;
-
-      let facilityCost = getNum('facilityCost');
-      const facilityEl = root.querySelector('#facilityCost');
-
-      if (activeScenarioKey === 'gym_split') {
-        const pct = (s && s.facilitySplitPct != null) ? s.facilitySplitPct : 0.30;
-        facilityCost = revTotal * pct;
-        if (facilityEl) {
-          facilityEl.value = Math.round(facilityCost);
-          facilityEl.readOnly = true;
-          facilityEl.title = 'In this scenario, facility cost is calculated as a % of revenue.';
-        }
-      } else {
-        if (facilityEl) {
-          facilityEl.readOnly = false;
-          facilityEl.title = '';
-        }
+    },
+    gym_split: {
+      note: "Facility cost is calculated as a percent of revenue (variable).",
+      defaults: {
+        sessionsPerWeek: 18, pricePerSession: 45, weeksPerMonth: 4.0, otherIncome: 80,
+        facilityCost: 0, processingFees: 55, insurance: 18, marketing: 120, software: 45, cpd: 35, travel: 40, equipment: 40
+      },
+      facilitySplitPct: 0.30
+    },
+    mobile: {
+      note: "Lower facility cost, higher travel. Pricing should reflect travel overhead.",
+      defaults: {
+        sessionsPerWeek: 14, pricePerSession: 60, weeksPerMonth: 3.8, otherIncome: 60,
+        facilityCost: 30, processingFees: 45, insurance: 22, marketing: 160, software: 45, cpd: 35, travel: 180, equipment: 55
       }
+    },
+    hybrid: {
+      note: "Adds scalable income but can increase software and marketing.",
+      defaults: {
+        sessionsPerWeek: 14, pricePerSession: 55, weeksPerMonth: 4.0, otherIncome: 350,
+        facilityCost: 350, processingFees: 65, insurance: 18, marketing: 180, software: 65, cpd: 35, travel: 50, equipment: 40
+      }
+    }
+  };
 
-      const directTotal = facilityCost + processingFees;
-      const overheadTotal = insurance + marketing + software + cpd + travel + equipment;
+  var topics = {
+    revenue: { title: "Revenue", meta: "Total income before costs.", body: "Revenue is what comes in. It is not take-home pay.", bullets: ["Split revenue streams to see what drives profit."] },
+    sessions: { title: "1:1 session income", meta: "Sessions x price x billable weeks.", body: "Main driver for many PTs; hardest to scale without changing the model.", bullets: ["Billable weeks are rarely a perfect 4.0."] },
+    otherIncome: { title: "Other income", meta: "Online coaching, small group, programmes.", body: "Can improve margin if it scales without matching time increases.", bullets: ["Be honest about delivery time."] },
+    directCosts: { title: "Direct costs", meta: "Costs tied to delivering service.", body: "Often facility costs plus transaction fees for PTs.", bullets: ["Facility terms are a major profit lever."] },
+    facility: { title: "Facility cost", meta: "Rent, floor fee, or revenue split.", body: "Structure changes risk: flat rent is fixed; split is variable.", bullets: ["Compare what you get for the fee."] },
+    processing: { title: "Processing fees", meta: "Card/direct debit fees.", body: "Often ignored, but they scale with revenue.", bullets: ["Reconcile fees to know true net receipts."] },
+    overheads: { title: "Overheads", meta: "Running costs not per client.", body: "Insurance, marketing, tools, CPD, travel, supplies.", bullets: ["Subscriptions creep; review quarterly."] },
+    insurance: { title: "Insurance", meta: "Protection for you and clients.", body: "Low monthly cost, high downside protection.", bullets: ["Check coverage matches your services."] },
+    marketing: { title: "Marketing", meta: "Ads, platforms, brand assets.", body: "Should link to leads, conversions, or retention.", bullets: ["Track cost per lead and cost per client."] },
+    software: { title: "Software", meta: "Booking/coaching tools.", body: "Should save time or improve service quality.", bullets: ["Audit tools regularly."] },
+    cpd: { title: "CPD", meta: "Education and mentoring.", body: "Best when it removes a current business constraint.", bullets: ["Apply learning quickly for commercial impact."] },
+    travel: { title: "Travel", meta: "Fuel/transport/parking plus time.", body: "Travel time reduces effective hourly rate.", bullets: ["Cluster sessions geographically."] },
+    equipment: { title: "Equipment", meta: "Kit and supplies.", body: "Costs can be steady or lumpy with upgrades.", bullets: ["Plan replacement cycles."] },
+    profit: { title: "Net profit", meta: "Before tax.", body: "Profit is not the same as cash; timing matters.", bullets: ["Set aside tax as you go."] },
+    margin: { title: "Net margin", meta: "Profit divided by revenue.", body: "Helps compare performance across months and models.", bullets: ["Look at trends, not one month."] }
+  };
 
-      const netProfit = revTotal - directTotal - overheadTotal;
-      const margin = revTotal > 0 ? (netProfit / revTotal) : 0;
+  function showTopic(key) {
+    var t = topics[key] || topics.revenue;
+    root.querySelector("#expTitle").textContent = t.title;
+    root.querySelector("#expMeta").textContent = t.meta;
+    root.querySelector("#expBody").textContent = t.body;
+    var ul = root.querySelector("#expBullets");
+    ul.innerHTML = "";
+    (t.bullets || []).forEach(function (b) {
+      var li = document.createElement("li");
+      li.textContent = b;
+      ul.appendChild(li);
+    });
+  }
 
-      setText('revSessions', £(revSessions));
-      setText('revOther', £(otherIncome));
-      setText('revTotal', £(revTotal));
-      setText('directTotal', £(directTotal));
-      setText('overheadTotal', £(overheadTotal));
+  var activeScenarioKey = "gym_flat";
 
-      const profitEl = root.querySelector('#netProfit');
-      profitEl.textContent = £(netProfit);
-      profitEl.classList.toggle('good', netProfit >= 0);
-      profitEl.classList.toggle('bad', netProfit < 0);
+  function setInputs(defaults) {
+    Object.keys(defaults).forEach(function (id) {
+      var el = root.querySelector("#" + id);
+      if (el) el.value = defaults[id];
+    });
+  }
 
-      const pill = root.querySelector('#netMarginPill');
-      const pct = margin * 100;
-      pill.textContent = isFinite(pct) ? pct.toFixed(0) + '%' : '—';
-      pill.classList.remove('good','mid','bad');
-      if (pct >= 35) pill.classList.add('good');
-      else if (pct >= 15) pill.classList.add('mid');
-      else pill.classList.add('bad');
+  function recalc() {
+    var s = scenarios[activeScenarioKey];
+
+    var sessionsPerWeek = getNum("sessionsPerWeek");
+    var pricePerSession = getNum("pricePerSession");
+    var weeksPerMonth = getNum("weeksPerMonth");
+    var otherIncome = getNum("otherIncome");
+
+    var processingFees = getNum("processingFees");
+
+    var insurance = getNum("insurance");
+    var marketing = getNum("marketing");
+    var software = getNum("software");
+    var cpd = getNum("cpd");
+    var travel = getNum("travel");
+    var equipment = getNum("equipment");
+
+    var revSessions = sessionsPerWeek * pricePerSession * weeksPerMonth;
+    var revTotal = revSessions + otherIncome;
+
+    var facilityEl = root.querySelector("#facilityCost");
+    var facilityCost = getNum("facilityCost");
+
+    if (activeScenarioKey === "gym_split") {
+      var pct = (s && typeof s.facilitySplitPct === "number") ? s.facilitySplitPct : 0.30;
+      facilityCost = revTotal * pct;
+      if (facilityEl) {
+        facilityEl.value = Math.round(facilityCost);
+        facilityEl.readOnly = true;
+      }
+    } else {
+      if (facilityEl) facilityEl.readOnly = false;
     }
 
-    function applyScenario(key){
-      const s = scenarios[key] || scenarios.gym_flat;
-      activeScenarioKey = key;
+    var directTotal = facilityCost + processingFees;
+    var overheadTotal = insurance + marketing + software + cpd + travel + equipment;
 
-      setInputs(s.defaults);
-      root.querySelector('#scenarioNote').textContent = 'Scenario note: ' + s.note;
+    var netProfit = revTotal - directTotal - overheadTotal;
+    var margin = (revTotal > 0) ? (netProfit / revTotal) : 0;
 
-      root.querySelectorAll('.tab').forEach(btn => {
-        btn.setAttribute('aria-selected', btn.dataset.scn === key ? 'true' : 'false');
-      });
+    setText("revSessions", fmtGBP(revSessions));
+    setText("revOther", fmtGBP(otherIncome));
+    setText("revTotal", fmtGBP(revTotal));
+    setText("directTotal", fmtGBP(directTotal));
+    setText("overheadTotal", fmtGBP(overheadTotal));
 
-      recalc();
-    }
+    var profitEl = root.querySelector("#netProfit");
+    profitEl.textContent = fmtGBP(netProfit);
+    profitEl.classList.toggle("good", netProfit >= 0);
+    profitEl.classList.toggle("bad", netProfit < 0);
 
-    // Event wiring
-    root.querySelectorAll('input').forEach(inp => inp.addEventListener('input', recalc));
-    root.querySelectorAll('.hs').forEach(btn => btn.addEventListener('click', () => showTopic(btn.dataset.topic)));
-    root.querySelectorAll('.tab').forEach(btn => btn.addEventListener('click', () => applyScenario(btn.dataset.scn)));
+    var pill = root.querySelector("#netMarginPill");
+    var pctMargin = margin * 100;
+    pill.textContent = isFinite(pctMargin) ? pctMargin.toFixed(0) + "%" : "-";
+    pill.classList.remove("good", "mid", "bad");
+    if (pctMargin >= 35) pill.classList.add("good");
+    else if (pctMargin >= 15) pill.classList.add("mid");
+    else pill.classList.add("bad");
+  }
 
-    // Start
-    applyScenario('gym_flat');
-    showTopic('revenue');
+  function applyScenario(key) {
+    var s = scenarios[key] || scenarios.gym_flat;
+    activeScenarioKey = key;
+
+    setInputs(s.defaults);
+    var note = root.querySelector("#scenarioNote");
+    if (note) note.textContent = "Scenario note: " + s.note;
+
+    root.querySelectorAll(".tab").forEach(function (btn) {
+      btn.setAttribute("aria-selected", btn.dataset.scn === key ? "true" : "false");
+    });
+
+    recalc();
+  }
+
+  // Wire events
+  root.querySelectorAll("input").forEach(function (inp) {
+    inp.addEventListener("input", recalc);
   });
+  root.querySelectorAll(".hs").forEach(function (btn) {
+    btn.addEventListener("click", function () { showTopic(btn.dataset.topic); });
+  });
+  root.querySelectorAll(".tab").forEach(function (btn) {
+    btn.addEventListener("click", function () { applyScenario(btn.dataset.scn); });
+  });
+
+  // Start
+  applyScenario("gym_flat");
+  showTopic("revenue");
+});
 </script>
 
 </body>
