@@ -1,0 +1,677 @@
+<div id="pt-pnl-widget" class="ptpnl" role="region" aria-label="PT Academy: Interactive Profit & Loss">
+  <style>
+    .ptpnl{
+      --bg:#ffffff;
+      --ink:#1f2937;
+      --muted:#6b7280;
+      --line:#e5e7eb;
+      --accent:#2563eb;
+      --accent2:#10b981;
+      --warn:#f59e0b;
+      --danger:#ef4444;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      color:var(--ink);
+      background:var(--bg);
+      border:1px solid var(--line);
+      border-radius:14px;
+      padding:16px;
+      max-width:980px;
+      box-sizing:border-box;
+    }
+    .ptpnl *{box-sizing:border-box;}
+    .ptpnl h2{
+      margin:0 0 6px 0;
+      font-size:18px;
+      line-height:1.2;
+    }
+    .ptpnl .sub{
+      margin:0 0 14px 0;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    .ptpnl .layout{
+      display:grid;
+      grid-template-columns: 1.6fr 1fr;
+      gap:14px;
+    }
+    @media (max-width: 820px){
+      .ptpnl .layout{grid-template-columns:1fr;}
+    }
+
+    .ptpnl .card{
+      border:1px solid var(--line);
+      border-radius:12px;
+      padding:12px;
+      background:#fff;
+    }
+
+    .ptpnl .assumptions{
+      display:grid;
+      grid-template-columns: 1fr 1fr;
+      gap:10px;
+    }
+    @media (max-width: 520px){
+      .ptpnl .assumptions{grid-template-columns:1fr;}
+    }
+    .ptpnl label{
+      display:block;
+      font-size:12px;
+      color:var(--muted);
+      margin-bottom:4px;
+    }
+    .ptpnl input{
+      width:100%;
+      border:1px solid var(--line);
+      border-radius:10px;
+      padding:10px 10px;
+      font-size:14px;
+      outline:none;
+      background:#fff;
+    }
+    .ptpnl input:focus{
+      border-color: var(--accent);
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.15);
+    }
+
+    .ptpnl table{
+      width:100%;
+      border-collapse:collapse;
+      font-size:14px;
+    }
+    .ptpnl th, .ptpnl td{
+      border-bottom:1px solid var(--line);
+      padding:10px 8px;
+      vertical-align:middle;
+    }
+    .ptpnl th{
+      text-align:left;
+      font-size:12px;
+      color:var(--muted);
+      font-weight:600;
+    }
+    .ptpnl td.amount{
+      text-align:right;
+      white-space:nowrap;
+      font-variant-numeric: tabular-nums;
+    }
+
+    /* Hotspot buttons (look like inline info dots) */
+    .ptpnl .hs{
+      appearance:none;
+      border:none;
+      background:transparent;
+      cursor:pointer;
+      padding:0;
+      margin-left:6px;
+      vertical-align:middle;
+      border-radius:999px;
+    }
+    .ptpnl .hs:focus{
+      outline:none;
+      box-shadow: 0 0 0 3px rgba(37,99,235,0.18);
+    }
+    .ptpnl .dot{
+      display:inline-grid;
+      place-items:center;
+      width:18px;
+      height:18px;
+      border-radius:999px;
+      border:1px solid var(--accent);
+      color:var(--accent);
+      font-size:12px;
+      font-weight:700;
+      line-height:1;
+    }
+    .ptpnl .rowhead{
+      display:flex;
+      align-items:center;
+      gap:6px;
+    }
+
+    .ptpnl .section{
+      background:#f9fafb;
+      font-weight:700;
+      color:#111827;
+    }
+    .ptpnl .total{
+      font-weight:800;
+    }
+    .ptpnl .total.good{color: #065f46;}
+    .ptpnl .total.bad{color: #7f1d1d;}
+    .ptpnl .pill{
+      display:inline-block;
+      padding:4px 10px;
+      border-radius:999px;
+      font-size:12px;
+      font-weight:700;
+      border:1px solid var(--line);
+      background:#fff;
+      color:var(--muted);
+    }
+    .ptpnl .pill.good{border-color: rgba(16,185,129,.35); color:#065f46; background: rgba(16,185,129,.08);}
+    .ptpnl .pill.mid{border-color: rgba(245,158,11,.35); color:#7c2d12; background: rgba(245,158,11,.08);}
+    .ptpnl .pill.bad{border-color: rgba(239,68,68,.35); color:#7f1d1d; background: rgba(239,68,68,.08);}
+
+    .ptpnl .explain h3{
+      margin:0 0 6px 0;
+      font-size:15px;
+    }
+    .ptpnl .explain .meta{
+      margin:0 0 10px 0;
+      color:var(--muted);
+      font-size:12px;
+    }
+    .ptpnl .explain p{
+      margin:0 0 10px 0;
+      font-size:13px;
+      color:#111827;
+      line-height:1.4;
+    }
+    .ptpnl .explain ul{
+      margin:0;
+      padding-left:18px;
+      color:#111827;
+      font-size:13px;
+      line-height:1.4;
+    }
+    .ptpnl .hint{
+      margin-top:10px;
+      font-size:12px;
+      color:var(--muted);
+    }
+    .ptpnl .kbd{
+      font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", monospace;
+      border:1px solid var(--line);
+      border-bottom-width:2px;
+      padding:1px 6px;
+      border-radius:6px;
+      background:#fff;
+      color:#111827;
+      font-size:11px;
+    }
+
+    .ptpnl .footer{
+      margin-top:12px;
+      font-size:12px;
+      color:var(--muted);
+    }
+  </style>
+
+  <h2>Interactive Profit &amp; Loss (Personal Trainer)</h2>
+  <p class="sub">Click the <span class="dot" aria-hidden="true">i</span> hotspots to learn what each line means. Adjust assumptions to see how profit changes.</p>
+
+  <div class="layout">
+    <!-- LEFT: P&L -->
+    <div class="card">
+      <div class="assumptions" aria-label="Assumptions">
+        <div>
+          <label for="sessionsPerWeek">Sessions per week</label>
+          <input id="sessionsPerWeek" type="number" min="0" step="1" value="18" inputmode="numeric" />
+        </div>
+        <div>
+          <label for="pricePerSession">Average price per session (£)</label>
+          <input id="pricePerSession" type="number" min="0" step="1" value="45" inputmode="decimal" />
+        </div>
+        <div>
+          <label for="weeksPerMonth">Billable weeks per month</label>
+          <input id="weeksPerMonth" type="number" min="0" step="0.1" value="4.0" inputmode="decimal" />
+        </div>
+        <div>
+          <label for="otherIncome">Other income (monthly) (£)</label>
+          <input id="otherIncome" type="number" min="0" step="1" value="120" inputmode="decimal" />
+        </div>
+      </div>
+
+      <div style="margin-top:12px;">
+        <table aria-label="P&L table">
+          <thead>
+            <tr>
+              <th>Line item</th>
+              <th class="amount">Monthly (£)</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr class="section">
+              <td>
+                <span class="rowhead">
+                  Revenue
+                  <button class="hs" type="button" data-topic="revenue" aria-label="Learn more about Revenue">
+                    <span class="dot">i</span>
+                  </button>
+                </span>
+              </td>
+              <td class="amount" id="revTotal">—</td>
+            </tr>
+            <tr>
+              <td>
+                <span class="rowhead">
+                  1:1 session income
+                  <button class="hs" type="button" data-topic="sessions" aria-label="Learn more about 1 to 1 session income">
+                    <span class="dot">i</span>
+                  </button>
+                </span>
+              </td>
+              <td class="amount" id="revSessions">—</td>
+            </tr>
+            <tr>
+              <td>
+                <span class="rowhead">
+                  Other income (online plans, small group, etc.)
+                  <button class="hs" type="button" data-topic="otherIncome" aria-label="Learn more about other income">
+                    <span class="dot">i</span>
+                  </button>
+                </span>
+              </td>
+              <td class="amount" id="revOther">—</td>
+            </tr>
+
+            <tr class="section">
+              <td>
+                <span class="rowhead">
+                  Cost of sales / Direct costs
+                  <button class="hs" type="button" data-topic="directCosts" aria-label="Learn more about direct costs">
+                    <span class="dot">i</span>
+                  </button>
+                </span>
+              </td>
+              <td class="amount" id="directTotal">—</td>
+            </tr>
+            <tr>
+              <td>
+                <span class="rowhead">
+                  Gym rent / PT floor fee
+                  <button class="hs" type="button" data-topic="rent" aria-label="Learn more about gym rent or floor fee">
+                    <span class="dot">i</span>
+                  </button>
+                </span>
+              </td>
+              <td class="amount"><input id="rentFee" type="number" min="0" step="1" value="450" aria-label="Gym rent or PT floor fee monthly pounds" /></td>
+            </tr>
+            <tr>
+              <td>
+                <span class="rowhead">
+                  Payment processing fees
+                  <button class="hs" type="button" data-topic="processing" aria-label="Learn more about payment processing fees">
+                    <span class="dot">i</span>
+                  </button>
+                </span>
+              </td>
+              <td class="amount"><input id="processingFees" type="number" min="0" step="1" value="55" aria-label="Payment processing fees monthly pounds" /></td>
+            </tr>
+
+            <tr class="section">
+              <td>
+                <span class="rowhead">
+                  Operating expenses (Overheads)
+                  <button class="hs" type="button" data-topic="overheads" aria-label="Learn more about operating expenses">
+                    <span class="dot">i</span>
+                  </button>
+                </span>
+              </td>
+              <td class="amount" id="overheadTotal">—</td>
+            </tr>
+            <tr>
+              <td>
+                <span class="rowhead">
+                  Insurance
+                  <button class="hs" type="button" data-topic="insurance" aria-label="Learn more about insurance">
+                    <span class="dot">i</span>
+                  </button>
+                </span>
+              </td>
+              <td class="amount"><input id="insurance" type="number" min="0" step="1" value="18" aria-label="Insurance monthly pounds" /></td>
+            </tr>
+            <tr>
+              <td>
+                <span class="rowhead">
+                  Marketing &amp; advertising
+                  <button class="hs" type="button" data-topic="marketing" aria-label="Learn more about marketing and advertising">
+                    <span class="dot">i</span>
+                  </button>
+                </span>
+              </td>
+              <td class="amount"><input id="marketing" type="number" min="0" step="1" value="120" aria-label="Marketing monthly pounds" /></td>
+            </tr>
+            <tr>
+              <td>
+                <span class="rowhead">
+                  Software &amp; tools (booking, coaching app)
+                  <button class="hs" type="button" data-topic="software" aria-label="Learn more about software and tools">
+                    <span class="dot">i</span>
+                  </button>
+                </span>
+              </td>
+              <td class="amount"><input id="software" type="number" min="0" step="1" value="45" aria-label="Software monthly pounds" /></td>
+            </tr>
+            <tr>
+              <td>
+                <span class="rowhead">
+                  CPD / education
+                  <button class="hs" type="button" data-topic="cpd" aria-label="Learn more about CPD">
+                    <span class="dot">i</span>
+                  </button>
+                </span>
+              </td>
+              <td class="amount"><input id="cpd" type="number" min="0" step="1" value="35" aria-label="CPD monthly pounds" /></td>
+            </tr>
+            <tr>
+              <td>
+                <span class="rowhead">
+                  Travel
+                  <button class="hs" type="button" data-topic="travel" aria-label="Learn more about travel costs">
+                    <span class="dot">i</span>
+                  </button>
+                </span>
+              </td>
+              <td class="amount"><input id="travel" type="number" min="0" step="1" value="60" aria-label="Travel monthly pounds" /></td>
+            </tr>
+            <tr>
+              <td>
+                <span class="rowhead">
+                  Equipment &amp; supplies
+                  <button class="hs" type="button" data-topic="equipment" aria-label="Learn more about equipment and supplies">
+                    <span class="dot">i</span>
+                  </button>
+                </span>
+              </td>
+              <td class="amount"><input id="equipment" type="number" min="0" step="1" value="40" aria-label="Equipment monthly pounds" /></td>
+            </tr>
+
+            <tr class="section total">
+              <td>
+                <span class="rowhead">
+                  Net profit (before tax)
+                  <button class="hs" type="button" data-topic="profit" aria-label="Learn more about net profit">
+                    <span class="dot">i</span>
+                  </button>
+                </span>
+              </td>
+              <td class="amount" id="netProfit">—</td>
+            </tr>
+            <tr>
+              <td>
+                <span class="rowhead">
+                  Net margin
+                  <button class="hs" type="button" data-topic="margin" aria-label="Learn more about net margin">
+                    <span class="dot">i</span>
+                  </button>
+                </span>
+              </td>
+              <td class="amount"><span id="netMarginPill" class="pill">—</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="footer">
+        Tip: try changing <strong>sessions per week</strong> or <strong>price per session</strong> and see which costs stay fixed vs which scale with revenue.
+      </div>
+    </div>
+
+    <!-- RIGHT: Explain panel -->
+    <div class="card explain" aria-live="polite">
+      <h3 id="expTitle">Hotspot explanations</h3>
+      <p class="meta" id="expMeta">Click any <span class="dot" aria-hidden="true">i</span> to load an explanation here.</p>
+      <p id="expBody">
+        Use this panel for short “what it is / why it matters / what good looks like”.
+      </p>
+      <ul id="expBullets"></ul>
+      <div class="hint">Keyboard: use <span class="kbd">Tab</span> to focus a hotspot, then <span class="kbd">Enter</span> to open it.</div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const root = document.getElementById('pt-pnl-widget');
+
+      // --- Helpers ---
+      const £ = (n) => {
+        const x = isFinite(n) ? n : 0;
+        return x.toLocaleString('en-GB', { style:'currency', currency:'GBP', maximumFractionDigits:0 });
+      };
+      const num = (id) => {
+        const el = root.querySelector('#' + id);
+        const v = parseFloat(el.value);
+        return isFinite(v) ? v : 0;
+      };
+      const setText = (id, text) => root.querySelector('#' + id).textContent = text;
+
+      // --- Explanations ---
+      const topics = {
+        revenue: {
+          title: "Revenue",
+          meta: "Your total income for the month.",
+          body: "Revenue is what comes in before you subtract any costs. For PTs, it’s often a mix of 1:1 sessions plus add-ons like online coaching or small groups.",
+          bullets: [
+            "Make sure your pricing reflects your time, prep, and admin—not just session time.",
+            "Separate predictable income (retainers/memberships) from variable income (pay-as-you-go).",
+            "Track revenue by product (1:1, small group, online) so you know what drives profit."
+          ]
+        },
+        sessions: {
+          title: "1:1 session income",
+          meta: "Sessions × price × billable weeks.",
+          body: "This line typically dominates a trainer’s revenue. If you sell sessions ad hoc, your month-to-month income can swing with cancellations and holidays.",
+          bullets: [
+            "Billable weeks per month is rarely a perfect 4.0—holidays and sickness reduce it.",
+            "Consider packages or memberships to stabilise cashflow.",
+            "Capacity matters: there’s a ceiling on sessions you can deliver sustainably."
+          ]
+        },
+        otherIncome: {
+          title: "Other income",
+          meta: "Small group, online plans, nutrition add-ons, etc.",
+          body: "This can lift profit because it often scales better than 1:1 time. But it may require marketing, systems, and support.",
+          bullets: [
+            "Check whether it creates extra delivery time (then it isn’t truly ‘passive’).",
+            "Bundle add-ons carefully so you don’t over-serve for free.",
+            "Track churn and retention for recurring online income."
+          ]
+        },
+        directCosts: {
+          title: "Direct costs (Cost of sales)",
+          meta: "Costs that are closely tied to delivering the service.",
+          body: "These are the costs you generally wouldn’t have if you had zero clients. For many PTs, the biggest is gym rent or a floor fee.",
+          bullets: [
+            "If a cost rises as revenue rises, it’s often a direct cost.",
+            "Direct costs are useful for calculating gross profit (Revenue − Direct costs).",
+            "Negotiating a fee structure can materially change profitability."
+          ]
+        },
+        rent: {
+          title: "Gym rent / PT floor fee",
+          meta: "Often the biggest single cost for in-gym PTs.",
+          body: "This might be a flat monthly rent, a per-session split, or a percentage of revenue. The structure changes how ‘risky’ your month is.",
+          bullets: [
+            "Flat rent = higher risk in quiet months, higher reward in busy months.",
+            "Revenue split = more flexible, but can cap upside.",
+            "Ask: what support do you get for the fee (leads, facilities, admin)?"
+          ]
+        },
+        processing: {
+          title: "Payment processing fees",
+          meta: "Card fees, PayPal/Stripe, direct debit provider fees.",
+          body: "Small individually, but they scale with revenue. People often forget them in pricing.",
+          bullets: [
+            "Fees can be a % + fixed amount per transaction.",
+            "Fewer, larger payments may reduce fixed-per-transaction costs.",
+            "Always reconcile fees so you understand the true net receipts."
+          ]
+        },
+        overheads: {
+          title: "Operating expenses (Overheads)",
+          meta: "Costs that exist even if client numbers change.",
+          body: "Overheads include the ‘keep the business running’ costs—tools, marketing, insurance, and development.",
+          bullets: [
+            "Overheads are easier to cut quickly than rent, but cutting too hard can slow growth.",
+            "Treat marketing like an investment—measure leads and conversions.",
+            "A good P&L helps you spot creeping subscriptions and waste."
+          ]
+        },
+        insurance: {
+          title: "Insurance",
+          meta: "Professional indemnity/public liability (varies by country/provider).",
+          body: "Insurance protects you and your clients. It’s usually small monthly, but high impact if something goes wrong.",
+          bullets: [
+            "Check what activities are covered (e.g., outdoor bootcamps, equipment use).",
+            "Keep certificates up to date if gyms require proof.",
+            "Review limits and exclusions annually."
+          ]
+        },
+        marketing: {
+          title: "Marketing & advertising",
+          meta: "Paid ads, content tools, photography, lead platforms, etc.",
+          body: "Marketing spend should be tied to outcomes. If you can’t link spend to leads or retention, you’re guessing.",
+          bullets: [
+            "Track cost per lead and cost per client (not just likes).",
+            "Retention and referrals often beat acquisition costs.",
+            "Consistency usually outperforms occasional ‘big pushes’."
+          ]
+        },
+        software: {
+          title: "Software & tools",
+          meta: "Booking, programming apps, CRM, accounting, messaging tools.",
+          body: "Software should save time or improve service quality. If it adds admin, it’s costing twice—money and attention.",
+          bullets: [
+            "Audit subscriptions quarterly: keep what you use, cancel what you don’t.",
+            "Automations (booking, reminders) can reduce no-shows.",
+            "Consider data portability if you ever change platforms."
+          ]
+        },
+        cpd: {
+          title: "CPD / education",
+          meta: "Courses, mentorship, conferences, books.",
+          body: "CPD can increase earning power—if it improves outcomes, confidence, or differentiation. But it can become ‘busy learning’ with no commercial return.",
+          bullets: [
+            "Choose CPD that solves a current business constraint.",
+            "Apply it quickly (offer changes, new service, better retention).",
+            "Budget for CPD intentionally rather than ad hoc."
+          ]
+        },
+        travel: {
+          title: "Travel",
+          meta: "Fuel, public transport, parking (and time).",
+          body: "Travel costs are easy to underestimate. For mobile PTs, travel time is also an opportunity cost that can reduce effective hourly rate.",
+          bullets: [
+            "Group sessions geographically to reduce dead time.",
+            "Factor travel into pricing for home visits.",
+            "Track mileage/expenses consistently."
+          ]
+        },
+        equipment: {
+          title: "Equipment & supplies",
+          meta: "Bands, mats, small kit, replacement items, cleaning supplies.",
+          body: "Equipment spend can be low and steady or spiky (big purchases). Treat larger kit as capital expenditure if your accounting approach separates it.",
+          bullets: [
+            "Plan replacement cycles so costs don’t surprise you.",
+            "Match kit spend to the services you actually sell.",
+            "Keep receipts and warranties organised."
+          ]
+        },
+        profit: {
+          title: "Net profit (before tax)",
+          meta: "What’s left after all expenses, before tax.",
+          body: "Net profit is not the same as cash in the bank. Timing (when you get paid vs when you pay bills) affects cashflow.",
+          bullets: [
+            "Profit tells you sustainability; cashflow tells you survivability.",
+            "Set aside money for tax as you go to avoid surprises.",
+            "Use profit to decide whether to reinvest, save, or pay yourself."
+          ]
+        },
+        margin: {
+          title: "Net margin",
+          meta: "Net profit ÷ revenue.",
+          body: "Margin helps you compare performance across months even when revenue changes. Higher margin isn’t always better if growth is your goal—sometimes you spend to expand.",
+          bullets: [
+            "If margin is low, check rent structure, pricing, and marketing efficiency.",
+            "If margin is high but revenue is flat, growth constraints may be capacity or leads.",
+            "Use margin trends over time, not one month in isolation."
+          ]
+        }
+      };
+
+      function showTopic(key){
+        const t = topics[key] || topics.revenue;
+        root.querySelector('#expTitle').textContent = t.title;
+        root.querySelector('#expMeta').textContent = t.meta;
+        root.querySelector('#expBody').textContent = t.body;
+        const ul = root.querySelector('#expBullets');
+        ul.innerHTML = '';
+        (t.bullets || []).forEach(b => {
+          const li = document.createElement('li');
+          li.textContent = b;
+          ul.appendChild(li);
+        });
+      }
+
+      // --- Calculations ---
+      function recalc(){
+        const sessionsPerWeek = num('sessionsPerWeek');
+        const pricePerSession = num('pricePerSession');
+        const weeksPerMonth = num('weeksPerMonth');
+        const otherIncome = num('otherIncome');
+
+        const rentFee = num('rentFee');
+        const processingFees = num('processingFees');
+
+        const insurance = num('insurance');
+        const marketing = num('marketing');
+        const software = num('software');
+        const cpd = num('cpd');
+        const travel = num('travel');
+        const equipment = num('equipment');
+
+        const revSessions = sessionsPerWeek * pricePerSession * weeksPerMonth;
+        const revTotal = revSessions + otherIncome;
+
+        const directTotal = rentFee + processingFees;
+
+        const overheadTotal = insurance + marketing + software + cpd + travel + equipment;
+
+        const netProfit = revTotal - directTotal - overheadTotal;
+        const margin = revTotal > 0 ? (netProfit / revTotal) : 0;
+
+        setText('revSessions', £(revSessions));
+        setText('revOther', £(otherIncome));
+        setText('revTotal', £(revTotal));
+
+        setText('directTotal', £(directTotal));
+        setText('overheadTotal', £(overheadTotal));
+
+        const profitEl = root.querySelector('#netProfit');
+        profitEl.textContent = £(netProfit);
+        profitEl.classList.toggle('good', netProfit >= 0);
+        profitEl.classList.toggle('bad', netProfit < 0);
+
+        const pill = root.querySelector('#netMarginPill');
+        const pct = (margin * 100);
+        pill.textContent = isFinite(pct) ? (pct.toFixed(0) + '%') : '—';
+        pill.classList.remove('good','mid','bad');
+        // Simple heuristic bands (feel free to change)
+        if (pct >= 35) pill.classList.add('good');
+        else if (pct >= 15) pill.classList.add('mid');
+        else pill.classList.add('bad');
+      }
+
+      // Wire up inputs
+      const inputs = root.querySelectorAll('input');
+      inputs.forEach(i => i.addEventListener('input', recalc));
+
+      // Wire up hotspots
+      root.querySelectorAll('.hs').forEach(btn => {
+        btn.addEventListener('click', () => showTopic(btn.dataset.topic));
+        btn.addEventListener('keydown', (e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            showTopic(btn.dataset.topic);
+          }
+        });
+      });
+
+      // Initial state
+      recalc();
+      showTopic('revenue');
+    })();
+  </script>
+</div>
