@@ -1,14 +1,13 @@
 <!DOCTYPE html>
-
 <html>
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitHub Pages Embed Generator</title>
+    <title>Embed Generator - GitHub & Cloudflare</title>
     <style>
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
-            max-width: 800px;
+            max-width: 900px;
             margin: 50px auto;
             padding: 20px;
             background: #f5f5f5;
@@ -28,26 +27,18 @@
             margin-bottom: 30px;
             line-height: 1.6;
         }
-        .example {
-            background: #f8f9fa;
+        .info-box {
+            background: #e7f3ff;
+            border-left: 4px solid #2196f3;
             padding: 15px;
             border-radius: 6px;
             margin-bottom: 20px;
             font-size: 13px;
-            color: #666;
+            color: #0d47a1;
         }
-        .example-title {
+        .info-title {
             font-weight: 600;
-            color: #333;
             margin-bottom: 8px;
-        }
-        .example code {
-            background: white;
-            padding: 2px 6px;
-            border-radius: 3px;
-            font-family: 'Courier New', monospace;
-            display: block;
-            margin: 4px 0;
         }
         label {
             display: block;
@@ -70,7 +61,7 @@
         }
         textarea {
             resize: vertical;
-            min-height: 80px;
+            min-height: 70px;
         }
         button {
             background: #C6A906;
@@ -90,21 +81,61 @@
             margin-top: 30px;
             display: none;
         }
-        .output-box {
+        .platform-section {
             background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            border-left: 4px solid #C6A906;
+        }
+        .platform-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .badge {
+            font-size: 11px;
+            padding: 3px 8px;
+            border-radius: 12px;
+            font-weight: 600;
+        }
+        .badge-testing {
+            background: #fff3cd;
+            color: #856404;
+        }
+        .badge-production {
+            background: #d4edda;
+            color: #155724;
+        }
+        .output-box {
+            background: white;
             padding: 15px;
             border-radius: 6px;
             margin-top: 10px;
             position: relative;
+        }
+        .output-label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #666;
+            margin-bottom: 8px;
         }
         .copy-btn {
             position: absolute;
             top: 10px;
             right: 10px;
             background: #6c757d;
+            color: white;
+            border: none;
             padding: 6px 12px;
+            border-radius: 4px;
             font-size: 12px;
-            margin: 0;
+            cursor: pointer;
+            font-weight: 600;
         }
         .copy-btn:hover {
             background: #5a6268;
@@ -125,219 +156,195 @@
             margin-top: 10px;
             font-size: 13px;
         }
-        .info-box {
-            background: #d1ecf1;
-            border-left: 4px solid #17a2b8;
-            padding: 15px;
-            border-radius: 6px;
-            margin-bottom: 20px;
-            font-size: 13px;
-            color: #0c5460;
-        }
-        .info-title {
-            font-weight: 600;
-            margin-bottom: 8px;
-        }
     </style>
 </head>
 <body>
     <div class="container">
-        <h1>🚀 GitHub Pages Embed Generator</h1>
-        <p class="subtitle">Generate fast GitHub Pages embed links for 360 Learning</p>
-
-    <div class="info-box">
-        <div class="info-title">💡 Pro Tip: Minify Your Files!</div>
-        Before uploading to GitHub, minify your HTML files for 30-40% faster loading. Use the HTML Minifier tool (link in outputs folder) to compress your files.
-    </div>
-    
-    <div class="example">
-        <div class="example-title">✅ Accepted formats:</div>
-        <code>https://username.github.io/repo/file.html</code>
-        <code>https://raw.githubusercontent.com/username/repo/main/file.html</code>
-        <code>https://github.com/username/repo/blob/main/file.html</code>
-        <code>username/repo/file.html</code>
-        <code>file.html (if defaults set below)</code>
-    </div>
-    
-    <div class="input-section">
-        <label>GitHub URL or Path:</label>
-        <input type="text" id="githubUrl" placeholder="Paste any GitHub URL or just the filename">
+        <h1>🚀 Embed Generator</h1>
+        <p class="subtitle">Generate both GitHub Pages (testing) and Cloudflare Pages (production) embed codes</p>
         
-        <div id="detectedInfo" class="detected" style="display:none;"></div>
-        <div id="errorInfo" class="error" style="display:none;"></div>
-        
-        <label style="margin-top: 20px;">Default Username:</label>
-        <input type="text" id="defaultUsername" placeholder="your-github-username" value="samjonesptacademy-lms">
-        
-        <label style="margin-top: 15px;">Default Repo:</label>
-        <input type="text" id="defaultRepo" placeholder="your-repo-name" value="pt-academy-embeds">
-        
-        <label style="margin-top: 20px;">iframe Height:</label>
-        <input type="text" id="iframeHeight" placeholder="800" value="800">
-        
-        <button id="generateBtn">Generate Links</button>
-    </div>
-    
-    <div class="output-section" id="outputSection">
-        <label>GitHub Pages Link:</label>
-        <div class="output-box">
-            <button class="copy-btn" id="copyGhPages">Copy</button>
-            <textarea id="ghPagesOutput" readonly></textarea>
+        <div class="info-box">
+            <div class="info-title">💡 Workflow Tip:</div>
+            Use GitHub Pages links for testing during development, then switch to Cloudflare Pages links in 360 Learning for final production (faster, no black screens).
         </div>
         
-        <label style="margin-top: 20px;">iframe Code for 360 Learning:</label>
-        <div class="output-box">
-            <button class="copy-btn" id="copyIframe">Copy</button>
-            <textarea id="iframeOutput" readonly></textarea>
+        <div class="input-section">
+            <label>File Path or URL:</label>
+            <input type="text" id="fileInput" placeholder="hyrox_cpd/hyrox-muscular-demands.html">
+            
+            <div id="detectedInfo" class="detected" style="display:none;"></div>
+            <div id="errorInfo" class="error" style="display:none;"></div>
+            
+            <label style="margin-top: 20px;">GitHub Username:</label>
+            <input type="text" id="githubUsername" value="samjonesptacademy-lms">
+            
+            <label style="margin-top: 15px;">GitHub Repo:</label>
+            <input type="text" id="githubRepo" value="pt-academy-embeds">
+            
+            <label style="margin-top: 15px;">Cloudflare Pages URL:</label>
+            <input type="text" id="cloudflareUrl" value="https://pt-academy-embeds.pages.dev">
+            
+            <label style="margin-top: 20px;">iframe Height:</label>
+            <input type="text" id="iframeHeight" value="800">
+            
+            <button id="generateBtn">Generate Both Links</button>
+        </div>
+        
+        <div class="output-section" id="outputSection">
+            <!-- GitHub Pages Section -->
+            <div class="platform-section">
+                <div class="platform-title">
+                    <span>GitHub Pages</span>
+                    <span class="badge badge-testing">TESTING</span>
+                </div>
+                
+                <div class="output-box">
+                    <div class="output-label">Direct Link:</div>
+                    <button class="copy-btn" onclick="copyToClipboard('githubLink', this)">Copy</button>
+                    <textarea id="githubLink" readonly></textarea>
+                </div>
+                
+                <div class="output-box">
+                    <div class="output-label">iframe Code:</div>
+                    <button class="copy-btn" onclick="copyToClipboard('githubIframe', this)">Copy</button>
+                    <textarea id="githubIframe" readonly></textarea>
+                </div>
+            </div>
+            
+            <!-- Cloudflare Pages Section -->
+            <div class="platform-section">
+                <div class="platform-title">
+                    <span>Cloudflare Pages</span>
+                    <span class="badge badge-production">PRODUCTION</span>
+                </div>
+                
+                <div class="output-box">
+                    <div class="output-label">Direct Link:</div>
+                    <button class="copy-btn" onclick="copyToClipboard('cloudflareLink', this)">Copy</button>
+                    <textarea id="cloudflareLink" readonly></textarea>
+                </div>
+                
+                <div class="output-box">
+                    <div class="output-label">iframe Code (Use in 360 Learning):</div>
+                    <button class="copy-btn" onclick="copyToClipboard('cloudflareIframe', this)">Copy</button>
+                    <textarea id="cloudflareIframe" readonly></textarea>
+                </div>
+            </div>
         </div>
     </div>
-</div>
 
-<script>
-    // Load saved defaults on page load
-    document.addEventListener('DOMContentLoaded', function() {
-        const savedUsername = localStorage.getItem('defaultUsername');
-        const savedRepo = localStorage.getItem('defaultRepo');
-        
-        if (savedUsername) {
-            document.getElementById('defaultUsername').value = savedUsername;
-        }
-        if (savedRepo) {
-            document.getElementById('defaultRepo').value = savedRepo;
-        }
-        
-        // Save defaults on change
-        document.getElementById('defaultUsername').addEventListener('input', function() {
-            localStorage.setItem('defaultUsername', this.value);
+    <script>
+        // Load saved settings
+        document.addEventListener('DOMContentLoaded', function() {
+            const savedGithubUsername = localStorage.getItem('githubUsername');
+            const savedGithubRepo = localStorage.getItem('githubRepo');
+            const savedCloudflareUrl = localStorage.getItem('cloudflareUrl');
+            
+            if (savedGithubUsername) document.getElementById('githubUsername').value = savedGithubUsername;
+            if (savedGithubRepo) document.getElementById('githubRepo').value = savedGithubRepo;
+            if (savedCloudflareUrl) document.getElementById('cloudflareUrl').value = savedCloudflareUrl;
+            
+            // Save on change
+            document.getElementById('githubUsername').addEventListener('input', function() {
+                localStorage.setItem('githubUsername', this.value);
+            });
+            document.getElementById('githubRepo').addEventListener('input', function() {
+                localStorage.setItem('githubRepo', this.value);
+            });
+            document.getElementById('cloudflareUrl').addEventListener('input', function() {
+                localStorage.setItem('cloudflareUrl', this.value);
+            });
+            
+            // Generate button
+            document.getElementById('generateBtn').addEventListener('click', generate);
+            
+            // Enter key
+            document.getElementById('fileInput').addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') generate();
+            });
         });
         
-        document.getElementById('defaultRepo').addEventListener('input', function() {
-            localStorage.setItem('defaultRepo', this.value);
-        });
-        
-        // Add event listeners
-        document.getElementById('generateBtn').addEventListener('click', convert);
-        document.getElementById('copyGhPages').addEventListener('click', function() {
-            copyToClipboard('ghPagesOutput', this);
-        });
-        document.getElementById('copyIframe').addEventListener('click', function() {
-            copyToClipboard('iframeOutput', this);
-        });
-        
-        // Allow Enter key
-        document.getElementById('githubUrl').addEventListener('keypress', function(e) {
-            if (e.key === 'Enter') {
-                convert();
+        function generate() {
+            // Hide previous messages
+            document.getElementById('detectedInfo').style.display = 'none';
+            document.getElementById('errorInfo').style.display = 'none';
+            
+            let input = document.getElementById('fileInput').value.trim();
+            const height = document.getElementById('iframeHeight').value.trim() || '800';
+            const githubUsername = document.getElementById('githubUsername').value.trim();
+            const githubRepo = document.getElementById('githubRepo').value.trim();
+            const cloudflareUrl = document.getElementById('cloudflareUrl').value.trim();
+            
+            if (!input) {
+                showError('Please enter a file path or URL');
+                return;
             }
-        });
-    });
-    
-    function convert() {
-        // Hide previous messages
-        document.getElementById('detectedInfo').style.display = 'none';
-        document.getElementById('errorInfo').style.display = 'none';
-        
-        let input = document.getElementById('githubUrl').value.trim();
-        const height = document.getElementById('iframeHeight').value.trim() || '800';
-        const defaultUsername = document.getElementById('defaultUsername').value.trim();
-        const defaultRepo = document.getElementById('defaultRepo').value.trim();
-        
-        let username, repo, filepath, detectedType;
-        
-        // Pattern 1: GitHub Pages URL (username.github.io/repo/file.html)
-        let match = input.match(/https?:\/\/([^.]+)\.github\.io\/([^\/]+)\/(.+)/);
-        if (match) {
-            username = match[1];
-            repo = match[2];
-            filepath = match[3];
-            detectedType = "GitHub Pages URL";
+            
+            if (!githubUsername || !githubRepo || !cloudflareUrl) {
+                showError('Please fill in all configuration fields');
+                return;
+            }
+            
+            // Clean up input - extract just the file path
+            let filepath = input;
+            
+            // Remove any GitHub Pages URL parts
+            filepath = filepath.replace(/https?:\/\/[^\/]+\.github\.io\/[^\/]+\//, '');
+            // Remove any Cloudflare Pages URL parts
+            filepath = filepath.replace(/https?:\/\/[^\/]+\.pages\.dev\//, '');
+            // Remove any raw GitHub URLs
+            filepath = filepath.replace(/https?:\/\/raw\.githubusercontent\.com\/[^\/]+\/[^\/]+\/[^\/]+\//, '');
+            // Remove leading slash
+            filepath = filepath.replace(/^\//, '');
+            
+            // Show what was detected
+            showDetected(`File path: ${filepath}`);
+            
+            // Generate GitHub Pages URLs
+            const githubPagesUrl = `https://${githubUsername}.github.io/${githubRepo}/${filepath}`;
+            const githubIframeCode = `<iframe src="${githubPagesUrl}" width="100%" height="${height}" frameborder="0" loading="eager" style="border:none; background:#f8f9fa; display:block;"></iframe>`;
+            
+            // Generate Cloudflare Pages URLs
+            const cloudflareFullUrl = `${cloudflareUrl}/${filepath}`;
+            const cloudflareIframeCode = `<iframe src="${cloudflareFullUrl}" width="100%" height="${height}" frameborder="0" loading="eager" style="border:none; background:#f8f9fa; display:block;"></iframe>`;
+            
+            // Display outputs
+            document.getElementById('githubLink').value = githubPagesUrl;
+            document.getElementById('githubIframe').value = githubIframeCode;
+            document.getElementById('cloudflareLink').value = cloudflareFullUrl;
+            document.getElementById('cloudflareIframe').value = cloudflareIframeCode;
+            
+            document.getElementById('outputSection').style.display = 'block';
         }
         
-        // Pattern 2: raw.githubusercontent.com
-        if (!match) {
-            match = input.match(/https?:\/\/raw\.githubusercontent\.com\/([^\/]+)\/([^\/]+)\/[^\/]+\/(.+)/);
-            if (match) {
-                username = match[1];
-                repo = match[2];
-                filepath = match[3];
-                detectedType = "Raw GitHub URL";
-            }
+        function showDetected(message) {
+            const div = document.getElementById('detectedInfo');
+            div.textContent = '✓ ' + message;
+            div.style.display = 'block';
         }
         
-        // Pattern 3: github.com/user/repo/blob/branch/file
-        if (!match) {
-            match = input.match(/https?:\/\/github\.com\/([^\/]+)\/([^\/]+)\/blob\/[^\/]+\/(.+)/);
-            if (match) {
-                username = match[1];
-                repo = match[2];
-                filepath = match[3];
-                detectedType = "GitHub File URL";
-            }
+        function showError(message) {
+            const div = document.getElementById('errorInfo');
+            div.textContent = '❌ ' + message;
+            div.style.display = 'block';
         }
         
-        // Pattern 4: username/repo/file.html
-        if (!match) {
-            match = input.match(/^([^\/]+)\/([^\/]+)\/(.+)$/);
-            if (match) {
-                username = match[1];
-                repo = match[2];
-                filepath = match[3];
-                detectedType = "Short path (username/repo/file)";
-            }
-        }
-        
-        // Pattern 5: Just filename or path (use defaults)
-        if (!match && input) {
-            if (defaultUsername && defaultRepo) {
-                username = defaultUsername;
-                repo = defaultRepo;
-                filepath = input;
-                detectedType = "Using default username/repo";
+        function copyToClipboard(textareaId, button) {
+            const textarea = document.getElementById(textareaId);
+            textarea.select();
+            textarea.setSelectionRange(0, 99999);
+            
+            try {
+                document.execCommand('copy');
+                const originalText = button.textContent;
+                button.textContent = '✓ Copied!';
+                setTimeout(() => {
+                    button.textContent = originalText;
+                }, 2000);
+            } catch (err) {
+                alert('Failed to copy. Please select and copy manually.');
             }
         }
-        
-        // Validate
-        if (!username || !repo || !filepath) {
-            const errorDiv = document.getElementById('errorInfo');
-            errorDiv.textContent = '❌ Could not parse URL. Please check the format or ensure default username/repo are set.';
-            errorDiv.style.display = 'block';
-            return;
-        }
-        
-        // Show what was detected
-        const detectedDiv = document.getElementById('detectedInfo');
-        detectedDiv.textContent = `✓ Detected: ${detectedType} | User: ${username} | Repo: ${repo} | File: ${filepath}`;
-        detectedDiv.style.display = 'block';
-        
-        // Generate GitHub Pages URL
-        const ghPagesUrl = `https://${username}.github.io/${repo}/${filepath}`;
-        
-        // Generate iframe code with anti-black-screen optimizations
-        const iframeCode = `<iframe src="${ghPagesUrl}" width="100%" height="${height}" frameborder="0" loading="eager" style="border:none; background:#f8f9fa; display:block;"></iframe>`;
-        
-        // Display outputs
-        document.getElementById('ghPagesOutput').value = ghPagesUrl;
-        document.getElementById('iframeOutput').value = iframeCode;
-        document.getElementById('outputSection').style.display = 'block';
-    }
-    
-    function copyToClipboard(textareaId, button) {
-        const textarea = document.getElementById(textareaId);
-        textarea.select();
-        textarea.setSelectionRange(0, 99999); // For mobile
-        
-        try {
-            document.execCommand('copy');
-            const originalText = button.textContent;
-            button.textContent = '✓ Copied!';
-            setTimeout(() => {
-                button.textContent = originalText;
-            }, 2000);
-        } catch (err) {
-            alert('Failed to copy. Please select and copy manually.');
-        }
-    }
-</script>
-
+    </script>
 </body>
 </html>
