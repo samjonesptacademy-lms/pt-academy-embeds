@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html style="background: #f8f9fa;">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Tone Considerations for Fitness Content</title>
+<style>
+ * {
+ box-sizing: border-box;
+ margin: 0;
+ padding: 0;
+ }
+ 
+ html, body {
+ background: #f8f9fa;
+ min-height: 100vh;
+ }
+ 
+ body {
+ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+ padding: 20px;
+ opacity: 1;
+ visibility: visible;
+ }
+ 
+ .tone-container {
+ max-width: 900px;
+ margin: 0 auto;
+ }
+ 
+ .header {
+ text-align: center;
+ margin-bottom: 30px;
+ }
+ 
+ .title {
+ font-size: 28px;
+ font-weight: 700;
+ color: #333;
+ margin-bottom: 10px;
+ }
+ 
+ .subtitle {
+ font-size: 15px;
+ color: #666;
+ line-height: 1.6;
+ }
+ 
+ .accordion {
+ display: grid;
+ gap: 12px;
+ }
+ 
+ .accordion-item {
+ background: white;
+ border-radius: 12px;
+ border: 2px solid #e9ecef;
+ overflow: hidden;
+ box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+ }
+ 
+ .accordion-header {
+ padding: 20px 25px;
+ cursor: pointer;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ background: #fafafa;
+ transition: background 0.3s ease;
+ }
+ 
+ .accordion-header:hover {
+ background: #f5f5f5;
+ }
+ 
+ .accordion-item.active .accordion-header {
+ background: #fff8e1;
+ }
+ 
+ .accordion-title {
+ font-size: 18px;
+ font-weight: 700;
+ color: #333;
+ flex: 1;
+ }
+ 
+ .accordion-icon {
+ font-size: 20px;
+ color: #C6A906;
+ transition: transform 0.3s ease;
+ flex-shrink: 0;
+ margin-left: 15px;
+ }
+ 
+ .accordion-item.active .accordion-icon {
+ transform: rotate(180deg);
+ }
+ 
+ .accordion-content {
+ max-height: 0;
+ overflow: hidden;
+ transition: max-height 0.4s ease;
+ }
+ 
+ .accordion-content-inner {
+ padding: 25px;
+ }
+ 
+ .content-text {
+ font-size: 15px;
+ line-height: 1.8;
+ color: #555;
+ margin-bottom: 20px;
+ }
+ 
+ .examples-section {
+ background: #f8f9fa;
+ border-left: 4px solid #e74c3c;
+ padding: 15px;
+ border-radius: 6px;
+ margin-bottom: 15px;
+ }
+ 
+ .examples-label {
+ font-size: 13px;
+ font-weight: 700;
+ color: #c0392b;
+ text-transform: uppercase;
+ margin-bottom: 10px;
+ display: flex;
+ align-items: center;
+ gap: 6px;
+ }
+ 
+ .example-text {
+ font-size: 14px;
+ line-height: 1.6;
+ color: #555;
+ font-style: italic;
+ }
+ 
+ .better-section {
+ background: #e8f5e9;
+ border-left: 4px solid #4caf50;
+ padding: 15px;
+ border-radius: 6px;
+ }
+ 
+ .better-label {
+ font-size: 13px;
+ font-weight: 700;
+ color: #2e7d32;
+ text-transform: uppercase;
+ margin-bottom: 10px;
+ display: flex;
+ align-items: center;
+ gap: 6px;
+ }
+ 
+ .better-text {
+ font-size: 14px;
+ line-height: 1.6;
+ color: #2e7d32;
+ font-style: italic;
+ }
+ 
+ @media (max-width: 768px) {
+ .accordion-header {
+ padding: 18px 20px;
+ }
+ 
+ .accordion-title {
+ font-size: 16px;
+ }
+ }
+</style>
+</head>
+<body>
+
+<div class="tone-container">
+ <div class="header">
+ <h1 class="title">Tone Considerations for Fitness Content</h1>
+ <p class="subtitle">Click each consideration to explore appropriate tone and language choices</p>
+ </div>
+ 
+ <div class="accordion">
+ <!-- Avoiding Shame-Based Messaging -->
+ <div class="accordion-item">
+ <div class="accordion-header" onclick="toggleAccordion(this)">
+ <div class="accordion-title">Avoiding Shame-Based Messaging</div>
+ <div class="accordion-icon">▼</div>
+ </div>
+ <div class="accordion-content">
+ <div class="accordion-content-inner">
+ <div class="content-text">
+ Fitness content should never employ guilt, shame, or fear as motivational tactics. Language such as "work off that weekend," "earn your meals," or "summer bodies are made in winter" reinforces harmful relationships with exercise and food.
+ </div>
+ <div class="examples-section">
+ <div class="examples-label">❌ Avoid</div>
+ <div class="example-text">
+ "Work off that weekend" • "Earn your meals" • "Summer bodies are made in winter"
+ </div>
+ </div>
+ <div class="better-section">
+ <div class="better-label">✓ Instead Use</div>
+ <div class="better-text">
+ "Build strength that improves your daily life" • "Fuel your training for better performance" • "Feel more energised and confident"
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- Inclusive and Body-Neutral Language -->
+ <div class="accordion-item">
+ <div class="accordion-header" onclick="toggleAccordion(this)">
+ <div class="accordion-title">Inclusive and Body-Neutral Language</div>
+ <div class="accordion-icon">▼</div>
+ </div>
+ <div class="accordion-content">
+ <div class="accordion-content-inner">
+ <div class="content-text">
+ Content should avoid language that assumes universal aesthetic goals or values certain body types over others. Terms such as "bikini body," "problem areas," or "trouble zones" alienate many potential clients and reinforce narrow beauty standards.
+ </div>
+ <div class="examples-section">
+ <div class="examples-label">❌ Avoid</div>
+ <div class="example-text">
+ "Bikini body" • "Problem areas" • "Trouble zones" • Assumptions about universal aesthetic goals
+ </div>
+ </div>
+ <div class="better-section">
+ <div class="better-label">✓ Instead Use</div>
+ <div class="better-text">
+ "Strengthen your posterior chain" • "Improve your movement quality" • "Increase your training capacity" • Focus on function, capability, and health
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- Empowering Rather than Prescriptive -->
+ <div class="accordion-item">
+ <div class="accordion-header" onclick="toggleAccordion(this)">
+ <div class="accordion-title">Empowering Rather than Prescriptive</div>
+ <div class="accordion-icon">▼</div>
+ </div>
+ <div class="accordion-content">
+ <div class="accordion-content-inner">
+ <div class="content-text">
+ Tone should position clients as capable decision-makers rather than passive recipients of instructions. Language patterns should respect client autonomy rather than feeling restrictive and disempowering.
+ </div>
+ <div class="examples-section">
+ <div class="examples-label">❌ Avoid</div>
+ <div class="example-text">
+ "You must" • "Never" • "Always" • Dictatorial language that feels restrictive
+ </div>
+ </div>
+ <div class="better-section">
+ <div class="better-label">✓ Instead Use</div>
+ <div class="better-text">
+ "You can choose" • "Options include" • "Consider whether" • Language that respects autonomy
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- Balancing Motivation with Realism -->
+ <div class="accordion-item">
+ <div class="accordion-header" onclick="toggleAccordion(this)">
+ <div class="accordion-title">Balancing Motivation with Realism</div>
+ <div class="accordion-icon">▼</div>
+ </div>
+ <div class="accordion-content">
+ <div class="accordion-content-inner">
+ <div class="content-text">
+ Whilst motivational content has value, overly hyperbolic language sets unrealistic expectations and can damage trust when reality fails to match promises. Effective tone balances encouragement with honesty about effort requirements and realistic timelines.
+ </div>
+ <div class="examples-section">
+ <div class="examples-label">❌ Avoid</div>
+ <div class="example-text">
+ "Transform your life in 30 days" • "Achieve the body of your dreams" • Overly hyperbolic promises
+ </div>
+ </div>
+ <div class="better-section">
+ <div class="better-label">✓ Instead Use</div>
+ <div class="better-text">
+ Balanced encouragement with honest effort requirements • Realistic timelines • Build trust through honesty
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- Professional Boundaries in Personal Sharing -->
+ <div class="accordion-item">
+ <div class="accordion-header" onclick="toggleAccordion(this)">
+ <div class="accordion-title">Professional Boundaries in Personal Sharing</div>
+ <div class="accordion-icon">▼</div>
+ </div>
+ <div class="accordion-content">
+ <div class="accordion-content-inner">
+ <div class="content-text">
+ When sharing personal experiences, trainers should maintain appropriate boundaries between relatable honesty and oversharing that may make followers uncomfortable or undermine professional credibility.
+ </div>
+ <div class="better-section">
+ <div class="better-label">✓ Appropriate Sharing</div>
+ <div class="better-text">
+ Discussing challenges with training consistency demonstrates relatability and builds connection with followers
+ </div>
+ </div>
+ <div class="examples-section">
+ <div class="examples-label">❌ Oversharing</div>
+ <div class="example-text">
+ Extensive discussion of personal problems unrelated to fitness may be inappropriate for professional platforms and can undermine credibility
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+</div>
+
+<script>
+ (function() {
+ document.documentElement.style.visibility = 'visible';
+ document.body.style.visibility = 'visible';
+ })();
+
+ window.toggleAccordion = function(header) {
+ const item = header.parentElement;
+ const content = item.querySelector('.accordion-content');
+ const isActive = item.classList.contains('active');
+ 
+ if (isActive) {
+ item.classList.remove('active');
+ content.style.maxHeight = null;
+ } else {
+ item.classList.add('active');
+ content.style.maxHeight = content.scrollHeight + 'px';
+ }
+ };
+</script>
+
+</body>
+</html>
