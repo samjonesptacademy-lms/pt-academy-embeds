@@ -1,0 +1,579 @@
+<!DOCTYPE html>
+<html style="background: #f8f9fa;">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Using Analytics for Strategy Refinement</title>
+<style>
+ * {
+ box-sizing: border-box;
+ margin: 0;
+ padding: 0;
+ }
+ 
+ html, body {
+ background: #f8f9fa;
+ min-height: 100vh;
+ }
+ 
+ body {
+ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+ padding: 20px;
+ opacity: 1;
+ visibility: visible;
+ }
+ 
+ .analytics-container {
+ max-width: 1100px;
+ margin: 0 auto;
+ }
+ 
+ .header {
+ text-align: center;
+ margin-bottom: 40px;
+ }
+ 
+ .title {
+ font-size: 28px;
+ font-weight: 700;
+ color: #333;
+ margin-bottom: 10px;
+ }
+ 
+ .subtitle {
+ font-size: 15px;
+ color: #666;
+ line-height: 1.6;
+ max-width: 800px;
+ margin: 0 auto;
+ }
+ 
+ .cards-grid {
+ display: flex;
+ height: 600px;
+ background: white;
+ border-radius: 12px;
+ box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+ overflow: hidden;
+ }
+ 
+ .strategy-card {
+ transition: flex 0.6s ease;
+ flex: 0 0 100px;
+ position: relative;
+ overflow: hidden;
+ cursor: pointer;
+ border: none;
+ box-shadow: none;
+ }
+ 
+ .strategy-card.active {
+ flex: 1;
+ cursor: default;
+ }
+ 
+ .strategy-card:hover:not(.active) .card-header {
+ opacity: 1;
+ }
+ 
+ .card-header {
+ position: absolute;
+ left: 0;
+ top: 0;
+ width: 100px;
+ height: 100%;
+ display: flex;
+ flex-direction: column;
+ align-items: center;
+ justify-content: center;
+ color: white;
+ gap: 15px;
+ writing-mode: vertical-rl;
+ transform: rotate(180deg);
+ transition: all 0.3s ease;
+ }
+ 
+ /* Distinct colors for each panel - matching training cycle style */
+ .strategy-card:nth-child(1) {
+ background: linear-gradient(135deg, #ffffff 0%, #f8f9fa 100%);
+ }
+ 
+ .strategy-card:nth-child(1) .card-header {
+ background: rgba(0, 0, 0, 0.05);
+ color: #333;
+ }
+ 
+ .strategy-card:nth-child(1):hover:not(.active) .card-header {
+ background: rgba(198, 169, 6, 0.2);
+ }
+ 
+ .strategy-card:nth-child(1).active .card-header {
+ background: rgba(198, 169, 6, 0.3);
+ }
+ 
+ .strategy-card:nth-child(2) {
+ background: linear-gradient(135deg, #fff8e1 0%, #fffbea 100%);
+ }
+ 
+ .strategy-card:nth-child(2) .card-header {
+ background: rgba(0, 0, 0, 0.05);
+ color: #333;
+ }
+ 
+ .strategy-card:nth-child(2):hover:not(.active) .card-header {
+ background: rgba(198, 169, 6, 0.2);
+ }
+ 
+ .strategy-card:nth-child(2).active .card-header {
+ background: rgba(198, 169, 6, 0.3);
+ }
+ 
+ .strategy-card:nth-child(3) {
+ background: linear-gradient(135deg, #f8f9fa 0%, #ffffff 100%);
+ }
+ 
+ .strategy-card:nth-child(3) .card-header {
+ background: rgba(0, 0, 0, 0.05);
+ color: #333;
+ }
+ 
+ .strategy-card:nth-child(3):hover:not(.active) .card-header {
+ background: rgba(198, 169, 6, 0.2);
+ }
+ 
+ .strategy-card:nth-child(3).active .card-header {
+ background: rgba(198, 169, 6, 0.3);
+ }
+ 
+ .strategy-card:nth-child(4) {
+ background: linear-gradient(135deg, #fffbea 0%, #fff8e1 100%);
+ }
+ 
+ .strategy-card:nth-child(4) .card-header {
+ background: rgba(0, 0, 0, 0.05);
+ color: #333;
+ }
+ 
+ .strategy-card:nth-child(4):hover:not(.active) .card-header {
+ background: rgba(198, 169, 6, 0.2);
+ }
+ 
+ .strategy-card:nth-child(4).active .card-header {
+ background: rgba(198, 169, 6, 0.3);
+ }
+ 
+ .strategy-card:nth-child(5) {
+ background: linear-gradient(135deg, #333333 0%, #555555 100%);
+ }
+ 
+ .strategy-card:nth-child(5) .card-header {
+ background: rgba(0, 0, 0, 0.05);
+ color: #C6A906;
+ }
+ 
+ .strategy-card:nth-child(5):hover:not(.active) .card-header {
+ background: rgba(198, 169, 6, 0.2);
+ }
+ 
+ .strategy-card:nth-child(5).active .card-header {
+ background: rgba(198, 169, 6, 0.3);
+ }
+ 
+ .strategy-card:nth-child(5) .card-body {
+ color: white;
+ }
+ 
+ .strategy-card:nth-child(5) .strategy-description,
+ .strategy-card:nth-child(5) .action-list,
+ .strategy-card:nth-child(5) .example-item {
+ color: white;
+ }
+ 
+ .strategy-card:nth-child(5) .examples-section {
+ background: rgba(0, 0, 0, 0.3);
+ border-left-color: #C6A906;
+ }
+ 
+ .strategy-card:nth-child(5) .key-insight {
+ background: rgba(0, 0, 0, 0.3);
+ border-left-color: #ffc107;
+ }
+ 
+ .card-icon {
+ font-size: 40px;
+ flex-shrink: 0;
+ margin: 0;
+ }
+ 
+ .card-header-text {
+ text-align: center;
+ }
+ 
+ .card-title {
+ font-size: 20px;
+ font-weight: 700;
+ margin-bottom: 0;
+ white-space: nowrap;
+ }
+ 
+ .card-subtitle {
+ display: none;
+ }
+ 
+ .card-body {
+ margin-left: 100px;
+ padding: 30px;
+ opacity: 0;
+ transform: translateX(-20px);
+ transition: opacity 0.4s ease 0.2s, transform 0.4s ease 0.2s;
+ height: 100%;
+ overflow-y: auto;
+ }
+ 
+ .strategy-card.active .card-body {
+ opacity: 1;
+ transform: translateX(0);
+ }
+ 
+ .content-header-section {
+ margin-bottom: 25px;
+ }
+ 
+ .content-number {
+ display: inline-block;
+ width: 50px;
+ height: 50px;
+ background: linear-gradient(135deg, #C6A906, #e0c040);
+ color: white;
+ border-radius: 50%;
+ font-size: 24px;
+ font-weight: 700;
+ line-height: 50px;
+ text-align: center;
+ margin-bottom: 15px;
+ }
+ 
+ .content-main-title {
+ font-size: 28px;
+ font-weight: 700;
+ color: #333;
+ margin-bottom: 5px;
+ }
+ 
+ .strategy-card:nth-child(5) .content-main-title {
+ color: #C6A906;
+ }
+ 
+ .content-subtitle {
+ font-size: 14px;
+ color: #C6A906;
+ font-weight: 600;
+ text-transform: uppercase;
+ }
+ 
+ .strategy-description {
+ font-size: 15px;
+ line-height: 1.8;
+ color: #555;
+ margin-bottom: 20px;
+ padding-bottom: 20px;
+ border-bottom: 2px solid #f0f0f0;
+ }
+ 
+ .examples-section {
+ background: #f8f9fa;
+ border-left: 4px solid #C6A906;
+ padding: 18px;
+ border-radius: 6px;
+ }
+ 
+ .examples-title {
+ font-size: 14px;
+ font-weight: 700;
+ color: #C6A906;
+ text-transform: uppercase;
+ letter-spacing: 0.5px;
+ margin-bottom: 12px;
+ }
+ 
+ .example-item {
+ font-size: 14px;
+ line-height: 1.8;
+ color: #555;
+ padding: 6px 0 6px 22px;
+ position: relative;
+ }
+ 
+ .example-item::before {
+ content: '→';
+ position: absolute;
+ left: 0;
+ color: #C6A906;
+ font-weight: 700;
+ font-size: 16px;
+ }
+ 
+ .key-insight {
+ background: #fff8e1;
+ border-left: 4px solid #ffc107;
+ padding: 15px;
+ border-radius: 6px;
+ margin-top: 15px;
+ }
+ 
+ .insight-label {
+ font-size: 12px;
+ font-weight: 700;
+ color: #856404;
+ text-transform: uppercase;
+ margin-bottom: 6px;
+ display: flex;
+ align-items: center;
+ gap: 6px;
+ }
+ 
+ .insight-text {
+ font-size: 14px;
+ line-height: 1.7;
+ color: #856404;
+ }
+ 
+ .bottom-callout {
+ display: none;
+ }
+ 
+ @media (max-width: 1024px) {
+ .cards-grid {
+ flex-direction: column;
+ height: auto;
+ }
+ 
+ .strategy-card {
+ flex: 0 0 60px;
+ }
+ 
+ .strategy-card.active {
+ flex: 0 0 auto;
+ }
+ 
+ .card-header {
+ width: 100%;
+ height: 60px;
+ writing-mode: horizontal-tb;
+ transform: none;
+ flex-direction: row;
+ }
+ 
+ .card-body {
+ margin-left: 0;
+ margin-top: 60px;
+ }
+ 
+ .card-subtitle {
+ display: block;
+ font-size: 13px;
+ opacity: 0.95;
+ }
+ }
+ 
+ @media (max-width: 768px) {
+ .card-title {
+ font-size: 16px;
+ }
+ 
+ .card-icon {
+ font-size: 32px;
+ }
+ }
+</style>
+</head>
+<body>
+
+<div class="analytics-container">
+ <div class="header">
+ <h1 class="title">Using Analytics for Strategy Refinement</h1>
+ <p class="subtitle">Analytics should directly inform content strategy evolution rather than serving merely as performance reporting</p>
+ </div>
+ 
+ <div class="cards-grid">
+ <!-- Double Down -->
+ <div class="strategy-card active" onclick="activateCard(0)">
+ <div class="card-header">
+ <div class="card-icon">📈</div>
+ <div class="card-header-text">
+ <div class="card-title">Double Down on What Works</div>
+ <div class="card-subtitle">Amplify successful content patterns</div>
+ </div>
+ </div>
+ <div class="card-body">
+ <div class="content-header-section">
+ <div class="content-number">1</div>
+ <div class="content-main-title">Double Down on What Works</div>
+ <div class="content-subtitle">Amplify successful content patterns</div>
+ </div>
+ <div class="strategy-description">
+ When specific content types, topics, or formats consistently outperform averages, increase their frequency within content calendars. Replicating successful content characteristics whilst avoiding exact repetition maintains audience interest whilst leveraging proven approaches.
+ </div>
+ <div class="examples-section">
+ <div class="examples-title">Implementation Examples</div>
+ <div class="example-item">If exercise demonstration Reels consistently achieve 2x average reach, increase from 1 to 2-3 per week</div>
+ <div class="example-item">When nutrition myth-busting posts generate high engagement, create a regular series</div>
+ <div class="example-item">If client transformation posts drive consultation bookings, prioritise weekly showcases</div>
+ </div>
+ <div class="key-insight">
+ <div class="insight-label">💡 Key Insight</div>
+ <div class="insight-text">Success patterns reveal what your specific audience values—double down without becoming repetitive by varying angles and examples</div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- Experiment Systematically -->
+ <div class="strategy-card" onclick="activateCard(1)">
+ <div class="card-header">
+ <div class="card-icon">🔬</div>
+ <div class="card-header-text">
+ <div class="card-title">Experiment Systematically</div>
+ <div class="card-subtitle">Test variables methodically for actionable insights</div>
+ </div>
+ </div>
+ <div class="card-body">
+ <div class="content-header-section">
+ <div class="content-number">2</div>
+ <div class="content-main-title">Experiment Systematically</div>
+ <div class="content-subtitle">Test variables methodically for actionable insights</div>
+ </div>
+ <div class="strategy-description">
+ Rather than random experimentation, test specific variables methodically. Systematic testing generates actionable insights that can be reliably applied to future content.
+ </div>
+ <div class="examples-section">
+ <div class="examples-title">Testing Scenarios</div>
+ <div class="example-item">Test whether educational content performs better as carousel posts versus Reels</div>
+ <div class="example-item">Compare whether captions with questions generate more comments than statements</div>
+ <div class="example-item">Evaluate whether posting morning versus evening impacts reach</div>
+ <div class="example-item">Test different CTA styles (direct vs. soft sell) for conversion rates</div>
+ </div>
+ <div class="key-insight">
+ <div class="insight-label">💡 Key Insight</div>
+ <div class="insight-text">Change one variable at a time and track results over multiple posts to identify genuine patterns versus random fluctuations</div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- Adjust Underperforming -->
+ <div class="strategy-card" onclick="activateCard(2)">
+ <div class="card-header">
+ <div class="card-icon">🔧</div>
+ <div class="card-header-text">
+ <div class="card-title">Adjust Underperforming Elements</div>
+ <div class="card-subtitle">Diagnose issues and implement corrections</div>
+ </div>
+ </div>
+ <div class="card-body">
+ <div class="content-header-section">
+ <div class="content-number">3</div>
+ <div class="content-main-title">Adjust Underperforming Elements</div>
+ <div class="content-subtitle">Diagnose issues and implement corrections</div>
+ </div>
+ <div class="strategy-description">
+ When metrics indicate consistent underperformance, investigate potential causes and implement corrections. Different metrics require different intervention strategies.
+ </div>
+ <div class="examples-section">
+ <div class="examples-title">Correction Strategies</div>
+ <div class="example-item"><strong>Declining reach:</strong> Increase posting consistency, use trending audio, incorporate more video content</div>
+ <div class="example-item"><strong>Low engagement:</strong> Improve hooks, add clearer calls-to-action, refine audience targeting</div>
+ <div class="example-item"><strong>Poor saves/shares:</strong> Create more actionable, valuable content worth revisiting</div>
+ <div class="example-item"><strong>High views but low follows:</strong> Strengthen brand presence and value proposition</div>
+ </div>
+ <div class="key-insight">
+ <div class="insight-label">💡 Key Insight</div>
+ <div class="insight-text">Distinguish between temporary dips (algorithm changes, seasonal factors) and genuine performance issues requiring strategy adjustment</div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- Track Conversions -->
+ <div class="strategy-card" onclick="activateCard(3)">
+ <div class="card-header">
+ <div class="card-icon">💰</div>
+ <div class="card-header-text">
+ <div class="card-title">Track Conversion Metrics</div>
+ <div class="card-subtitle">Beyond engagement to business results</div>
+ </div>
+ </div>
+ <div class="card-body">
+ <div class="content-header-section">
+ <div class="content-number">4</div>
+ <div class="content-main-title">Track Conversion Metrics</div>
+ <div class="content-subtitle">Beyond engagement to business results</div>
+ </div>
+ <div class="strategy-description">
+ Ultimately, social media should generate business results. Track enquiries, consultation bookings, and client acquisitions attributable to social media, calculating approximate return on time invested.
+ </div>
+ <div class="examples-section">
+ <div class="examples-title">Business Metrics to Track</div>
+ <div class="example-item">DM enquiries per week and their conversion rate to consultations</div>
+ <div class="example-item">Link clicks to booking pages or lead magnets</div>
+ <div class="example-item">New clients citing social media as discovery source</div>
+ <div class="example-item">Time invested versus client acquisition cost through social media</div>
+ </div>
+ <div class="key-insight">
+ <div class="insight-label">💡 Key Insight</div>
+ <div class="insight-text">This business-focused analysis ensures that engagement optimisation aligns with revenue generation rather than vanity metrics alone</div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- From Data to Action -->
+ <div class="strategy-card" onclick="activateCard(4)">
+ <div class="card-header">
+ <div class="card-icon">📊</div>
+ <div class="card-header-text">
+ <div class="card-title">From Data to Action</div>
+ <div class="card-subtitle">Transforming insights into strategy</div>
+ </div>
+ </div>
+ <div class="card-body">
+ <div class="content-header-section">
+ <div class="content-number">5</div>
+ <div class="content-main-title">From Data to Action</div>
+ <div class="content-subtitle">Transforming insights into strategy</div>
+ </div>
+ <div class="strategy-description">
+ Effective analytics use transforms numbers into strategic decisions. Regular review of these four areas—amplifying success, testing systematically, correcting underperformance, and tracking business outcomes—creates a continuous improvement cycle that evolves your content strategy based on evidence rather than assumption.
+ </div>
+ <div class="examples-section">
+ <div class="examples-title">Continuous Improvement Cycle</div>
+ <div class="example-item">Weekly: Review performance metrics and adjust upcoming content</div>
+ <div class="example-item">Monthly: Analyse trends and evaluate content pillar balance</div>
+ <div class="example-item">Quarterly: Assess business alignment and strategic direction</div>
+ <div class="example-item">Ongoing: Test, measure, learn, and refine based on data</div>
+ </div>
+ <div class="key-insight">
+ <div class="insight-label">💡 Key Insight</div>
+ <div class="insight-text">Success in social media comes from treating analytics as a strategic tool for continuous evolution, not just a performance report. Data-driven decisions consistently outperform assumptions.</div>
+ </div>
+ </div>
+ </div>
+ </div>
+</div>
+
+<script>
+ (function() {
+ document.documentElement.style.visibility = 'visible';
+ document.body.style.visibility = 'visible';
+ })();
+
+ window.activateCard = function(index) {
+ const cards = document.querySelectorAll('.strategy-card');
+ cards.forEach(function(card, i) {
+ if (i === index) {
+ card.classList.add('active');
+ } else {
+ card.classList.remove('active');
+ }
+ });
+ };
+</script>
+
+</body>
+</html>
