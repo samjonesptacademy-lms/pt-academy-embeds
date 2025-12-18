@@ -1,0 +1,411 @@
+<!DOCTYPE html>
+<html style="background: #f8f9fa;">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Review, Adaptation and Continuous Improvement</title>
+<style>
+ * {
+ box-sizing: border-box;
+ margin: 0;
+ padding: 0;
+ }
+ 
+ html, body {
+ background: #f8f9fa;
+ min-height: 100vh;
+ }
+ 
+ body {
+ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+ padding: 20px;
+ opacity: 1;
+ visibility: visible;
+ }
+ 
+ .review-container {
+ max-width: 1000px;
+ margin: 0 auto;
+ }
+ 
+ .header {
+ text-align: center;
+ margin-bottom: 40px;
+ }
+ 
+ .title {
+ font-size: 28px;
+ font-weight: 700;
+ color: #333;
+ margin-bottom: 10px;
+ }
+ 
+ .subtitle {
+ font-size: 15px;
+ color: #666;
+ line-height: 1.6;
+ max-width: 750px;
+ margin: 0 auto;
+ }
+ 
+ .timeline {
+ position: relative;
+ padding: 20px 0;
+ }
+ 
+ .timeline::before {
+ content: '';
+ position: absolute;
+ left: 50%;
+ top: 0;
+ bottom: 0;
+ width: 4px;
+ background: linear-gradient(to bottom, #C6A906, #e0c040);
+ transform: translateX(-50%);
+ }
+ 
+ .timeline-item {
+ position: relative;
+ margin-bottom: 50px;
+ }
+ 
+ .timeline-item:last-child {
+ margin-bottom: 0;
+ }
+ 
+ .timeline-marker {
+ position: absolute;
+ left: 50%;
+ top: 30px;
+ width: 60px;
+ height: 60px;
+ background: white;
+ border: 4px solid #C6A906;
+ border-radius: 50%;
+ transform: translateX(-50%);
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ font-size: 24px;
+ z-index: 2;
+ box-shadow: 0 2px 12px rgba(0,0,0,0.15);
+ }
+ 
+ .timeline-content {
+ width: calc(50% - 60px);
+ background: white;
+ border-radius: 12px;
+ padding: 25px;
+ box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+ border: 2px solid #e9ecef;
+ cursor: pointer;
+ transition: all 0.3s ease;
+ }
+ 
+ .timeline-content:hover {
+ border-color: #C6A906;
+ transform: translateY(-3px);
+ box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+ }
+ 
+ .timeline-item.expanded .timeline-content {
+ border-color: #C6A906;
+ }
+ 
+ .timeline-item:nth-child(odd) .timeline-content {
+ margin-left: auto;
+ }
+ 
+ .timeline-item:nth-child(even) .timeline-content {
+ margin-right: auto;
+ }
+ 
+ .content-header {
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ margin-bottom: 15px;
+ }
+ 
+ .review-title {
+ font-size: 22px;
+ font-weight: 700;
+ color: #333;
+ }
+ 
+ .frequency-badge {
+ padding: 6px 12px;
+ background: linear-gradient(135deg, #C6A906, #e0c040);
+ color: white;
+ border-radius: 20px;
+ font-size: 12px;
+ font-weight: 700;
+ text-transform: uppercase;
+ letter-spacing: 0.5px;
+ }
+ 
+ .review-intro {
+ font-size: 14px;
+ color: #666;
+ line-height: 1.6;
+ margin-bottom: 15px;
+ }
+ 
+ .expand-toggle {
+ color: #C6A906;
+ font-size: 14px;
+ font-weight: 600;
+ display: flex;
+ align-items: center;
+ gap: 8px;
+ }
+ 
+ .expand-icon {
+ font-size: 16px;
+ transition: transform 0.3s ease;
+ }
+ 
+ .timeline-item.expanded .expand-icon {
+ transform: rotate(180deg);
+ }
+ 
+ .review-details {
+ max-height: 0;
+ overflow: hidden;
+ transition: max-height 0.4s ease;
+ margin-top: 15px;
+ }
+ 
+ .review-section {
+ background: #f8f9fa;
+ border-left: 3px solid #C6A906;
+ padding: 15px;
+ border-radius: 6px;
+ margin-bottom: 12px;
+ }
+ 
+ .review-section:last-child {
+ margin-bottom: 0;
+ }
+ 
+ .section-title {
+ font-size: 14px;
+ font-weight: 700;
+ color: #C6A906;
+ margin-bottom: 10px;
+ text-transform: uppercase;
+ letter-spacing: 0.5px;
+ }
+ 
+ .action-list {
+ font-size: 14px;
+ line-height: 1.8;
+ color: #555;
+ }
+ 
+ .action-item {
+ padding: 5px 0 5px 20px;
+ position: relative;
+ }
+ 
+ .action-item::before {
+ content: '✓';
+ position: absolute;
+ left: 0;
+ color: #C6A906;
+ font-weight: 700;
+ }
+ 
+ .conclusion-box {
+ background: white;
+ border: 3px solid #C6A906;
+ border-radius: 12px;
+ padding: 25px;
+ margin-top: 40px;
+ text-align: center;
+ }
+ 
+ .conclusion-icon {
+ font-size: 48px;
+ margin-bottom: 15px;
+ }
+ 
+ .conclusion-text {
+ font-size: 15px;
+ line-height: 1.8;
+ color: #555;
+ font-weight: 500;
+ }
+ 
+ @media (max-width: 768px) {
+ .timeline::before {
+ left: 30px;
+ }
+ 
+ .timeline-marker {
+ left: 30px;
+ width: 50px;
+ height: 50px;
+ font-size: 20px;
+ }
+ 
+ .timeline-content {
+ width: calc(100% - 90px);
+ margin-left: 90px !important;
+ margin-right: 0 !important;
+ }
+ }
+</style>
+</head>
+<body>
+
+<div class="review-container">
+ <div class="header">
+ <h1 class="title">Review, Adaptation and Continuous Improvement</h1>
+ <p class="subtitle">Content planning should incorporate regular review cycles enabling data-driven strategy refinement. Click each review period to explore the specific processes and actions.</p>
+ </div>
+ 
+ <div class="timeline">
+ <!-- Weekly Review -->
+ <div class="timeline-item" onclick="toggleReview(this)">
+ <div class="timeline-marker">📅</div>
+ <div class="timeline-content">
+ <div class="content-header">
+ <div class="review-title">Weekly Review</div>
+ <div class="frequency-badge">Every Week</div>
+ </div>
+ <div class="review-intro">
+ Quick tactical review focusing on immediate content performance and near-term adjustments.
+ </div>
+ <div class="expand-toggle">
+ <span>View review process</span>
+ <span class="expand-icon">▼</span>
+ </div>
+ <div class="review-details">
+ <div class="review-section">
+ <div class="section-title">Key Actions</div>
+ <div class="action-list">
+ <div class="action-item">Review performance metrics for all published content</div>
+ <div class="action-item">Identify top and bottom performers</div>
+ <div class="action-item">Note unexpected successes or failures</div>
+ <div class="action-item">Adjust upcoming planned content based on insights</div>
+ <div class="action-item">Ensure planned content remains relevant and timely</div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- Monthly Review -->
+ <div class="timeline-item" onclick="toggleReview(this)">
+ <div class="timeline-marker">📊</div>
+ <div class="timeline-content">
+ <div class="content-header">
+ <div class="review-title">Monthly Review</div>
+ <div class="frequency-badge">Every Month</div>
+ </div>
+ <div class="review-intro">
+ Comprehensive monthly analysis examining trends, growth patterns, and operational effectiveness.
+ </div>
+ <div class="expand-toggle">
+ <span>View review process</span>
+ <span class="expand-icon">▼</span>
+ </div>
+ <div class="review-details">
+ <div class="review-section">
+ <div class="section-title">Performance Analysis</div>
+ <div class="action-list">
+ <div class="action-item">Analyse overall monthly performance trends</div>
+ <div class="action-item">Review follower growth and engagement rate trajectories</div>
+ <div class="action-item">Assess content pillar balance effectiveness</div>
+ </div>
+ </div>
+ <div class="review-section">
+ <div class="section-title">Operational Review</div>
+ <div class="action-list">
+ <div class="action-item">Evaluate whether content calendar workload proved sustainable</div>
+ <div class="action-item">Identify needed adjustments to batching and scheduling processes</div>
+ </div>
+ </div>
+ <div class="review-section">
+ <div class="section-title">Forward Planning</div>
+ <div class="action-list">
+ <div class="action-item">Establish priorities for the upcoming month based on performance patterns and business objectives</div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- Quarterly Review -->
+ <div class="timeline-item" onclick="toggleReview(this)">
+ <div class="timeline-marker">🎯</div>
+ <div class="timeline-content">
+ <div class="content-header">
+ <div class="review-title">Quarterly Strategic Review</div>
+ <div class="frequency-badge">Every Quarter</div>
+ </div>
+ <div class="review-intro">
+ High-level strategic assessment examining alignment with business goals and long-term effectiveness.
+ </div>
+ <div class="expand-toggle">
+ <span>View review process</span>
+ <span class="expand-icon">▼</span>
+ </div>
+ <div class="review-details">
+ <div class="review-section">
+ <div class="section-title">Business Alignment</div>
+ <div class="action-list">
+ <div class="action-item">Assess whether social media efforts support business growth objectives</div>
+ <div class="action-item">Evaluate time investment versus business outcomes</div>
+ </div>
+ </div>
+ <div class="review-section">
+ <div class="section-title">Strategic Assessment</div>
+ <div class="action-list">
+ <div class="action-item">Consider whether platform mix remains optimal or if changes are warranted</div>
+ <div class="action-item">Review whether target persona definitions remain accurate</div>
+ <div class="action-item">Determine if brand positioning and messaging require refinement</div>
+ </div>
+ </div>
+ <div class="review-section">
+ <div class="section-title">Strategic Planning</div>
+ <div class="action-list">
+ <div class="action-item">Establish strategic priorities for the upcoming quarter</div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="conclusion-box">
+ <div class="conclusion-icon">🔄</div>
+ <div class="conclusion-text">
+ Systematic review processes transform content planning from static frameworks into dynamic, evolving strategies that improve continuously based on evidence and experience, effectively supporting your growth in the fitness industry.
+ </div>
+ </div>
+</div>
+
+<script>
+ (function() {
+ document.documentElement.style.visibility = 'visible';
+ document.body.style.visibility = 'visible';
+ })();
+
+ window.toggleReview = function(item) {
+ const details = item.querySelector('.review-details');
+ const isExpanded = item.classList.contains('expanded');
+ 
+ if (isExpanded) {
+ item.classList.remove('expanded');
+ details.style.maxHeight = null;
+ } else {
+ item.classList.add('expanded');
+ details.style.maxHeight = details.scrollHeight + 'px';
+ }
+ };
+</script>
+
+</body>
+</html>
