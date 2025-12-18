@@ -671,6 +671,22 @@
  item.classList.add('expanded');
  details.style.maxHeight = details.scrollHeight + 'px';
  }
+ 
+ // Recalculate parent category height to accommodate expanded item
+ const category = item.closest('.checklist-category');
+ if (category && category.classList.contains('active')) {
+ const wrapper = category.querySelector('.category-items-wrapper');
+ // Recalculate multiple times to ensure proper height after animations
+ setTimeout(function() {
+ wrapper.style.maxHeight = (wrapper.scrollHeight + 50) + 'px';
+ }, 50);
+ setTimeout(function() {
+ wrapper.style.maxHeight = (wrapper.scrollHeight + 50) + 'px';
+ }, 200);
+ setTimeout(function() {
+ wrapper.style.maxHeight = (wrapper.scrollHeight + 50) + 'px';
+ }, 450);
+ }
  }
  
  function checkCategoryCompletion(item) {
