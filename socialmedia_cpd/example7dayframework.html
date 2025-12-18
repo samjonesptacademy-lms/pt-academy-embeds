@@ -1,0 +1,638 @@
+<!DOCTYPE html>
+<html style="background: #f8f9fa;">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>7-Day Content Planning Framework</title>
+<style>
+ * {
+ box-sizing: border-box;
+ margin: 0;
+ padding: 0;
+ }
+ 
+ html, body {
+ background: #f8f9fa;
+ min-height: 100vh;
+ }
+ 
+ body {
+ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+ padding: 20px;
+ opacity: 1;
+ visibility: visible;
+ }
+ 
+ .calendar-container {
+ max-width: 1100px;
+ margin: 0 auto;
+ }
+ 
+ .header {
+ text-align: center;
+ margin-bottom: 30px;
+ }
+ 
+ .title {
+ font-size: 28px;
+ font-weight: 700;
+ color: #333;
+ margin-bottom: 10px;
+ }
+ 
+ .subtitle {
+ font-size: 15px;
+ color: #666;
+ line-height: 1.6;
+ max-width: 800px;
+ margin: 0 auto;
+ }
+ 
+ .legend {
+ display: flex;
+ justify-content: center;
+ gap: 20px;
+ flex-wrap: wrap;
+ margin-bottom: 30px;
+ }
+ 
+ .legend-item {
+ display: flex;
+ align-items: center;
+ gap: 8px;
+ font-size: 13px;
+ color: #555;
+ }
+ 
+ .legend-badge {
+ width: 18px;
+ height: 18px;
+ border-radius: 4px;
+ }
+ 
+ .legend-badge.educational {
+ background: #e3f2fd;
+ border: 2px solid #2196f3;
+ }
+ 
+ .legend-badge.engagement {
+ background: #fff8e1;
+ border: 2px solid #ffc107;
+ }
+ 
+ .legend-badge.authority {
+ background: #f3e5f5;
+ border: 2px solid #9c27b0;
+ }
+ 
+ .legend-badge.hybrid {
+ background: #e8f5e9;
+ border: 2px solid #4caf50;
+ }
+ 
+ .calendar-grid {
+ display: grid;
+ gap: 15px;
+ }
+ 
+ .day-card {
+ background: white;
+ border-radius: 12px;
+ overflow: hidden;
+ box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+ border: 2px solid #e9ecef;
+ cursor: pointer;
+ transition: all 0.3s ease;
+ }
+ 
+ .day-card:hover {
+ transform: translateY(-3px);
+ box-shadow: 0 4px 16px rgba(0,0,0,0.15);
+ }
+ 
+ .day-card.educational {
+ border-left: 6px solid #2196f3;
+ }
+ 
+ .day-card.engagement {
+ border-left: 6px solid #ffc107;
+ }
+ 
+ .day-card.authority {
+ border-left: 6px solid #9c27b0;
+ }
+ 
+ .day-card.hybrid {
+ border-left: 6px solid #4caf50;
+ }
+ 
+ .day-card.expanded {
+ border-color: #C6A906;
+ }
+ 
+ .day-header {
+ padding: 20px;
+ display: flex;
+ justify-content: space-between;
+ align-items: flex-start;
+ gap: 15px;
+ }
+ 
+ .day-info {
+ flex: 1;
+ }
+ 
+ .day-name {
+ font-size: 20px;
+ font-weight: 700;
+ color: #333;
+ margin-bottom: 8px;
+ }
+ 
+ .day-meta {
+ display: flex;
+ gap: 12px;
+ flex-wrap: wrap;
+ margin-bottom: 8px;
+ }
+ 
+ .meta-badge {
+ padding: 4px 10px;
+ border-radius: 12px;
+ font-size: 12px;
+ font-weight: 600;
+ text-transform: uppercase;
+ }
+ 
+ .pillar-badge.educational {
+ background: #e3f2fd;
+ color: #1565c0;
+ }
+ 
+ .pillar-badge.engagement {
+ background: #fff8e1;
+ color: #f57c00;
+ }
+ 
+ .pillar-badge.authority {
+ background: #f3e5f5;
+ color: #7b1fa2;
+ }
+ 
+ .pillar-badge.hybrid {
+ background: #e8f5e9;
+ color: #2e7d32;
+ }
+ 
+ .format-badge {
+ background: #f5f5f5;
+ color: #666;
+ }
+ 
+ .day-objective-preview {
+ font-size: 14px;
+ color: #666;
+ line-height: 1.5;
+ }
+ 
+ .expand-icon {
+ font-size: 24px;
+ color: #C6A906;
+ transition: transform 0.3s ease;
+ flex-shrink: 0;
+ }
+ 
+ .day-card.expanded .expand-icon {
+ transform: rotate(180deg);
+ }
+ 
+ .day-details {
+ max-height: 0;
+ overflow: hidden;
+ transition: max-height 0.4s ease;
+ }
+ 
+ .day-details-inner {
+ padding: 0 20px 20px 20px;
+ }
+ 
+ .detail-section {
+ margin-bottom: 20px;
+ }
+ 
+ .detail-section:last-child {
+ margin-bottom: 0;
+ }
+ 
+ .detail-label {
+ font-size: 13px;
+ font-weight: 700;
+ color: #C6A906;
+ text-transform: uppercase;
+ letter-spacing: 0.5px;
+ margin-bottom: 8px;
+ }
+ 
+ .detail-text {
+ font-size: 14px;
+ line-height: 1.7;
+ color: #555;
+ }
+ 
+ .cta-box {
+ background: #fff8e1;
+ border-left: 3px solid #C6A906;
+ padding: 12px 15px;
+ border-radius: 6px;
+ }
+ 
+ .cta-label {
+ font-size: 12px;
+ font-weight: 700;
+ color: #856404;
+ text-transform: uppercase;
+ margin-bottom: 6px;
+ }
+ 
+ .cta-text {
+ font-size: 14px;
+ color: #856404;
+ font-style: italic;
+ }
+ 
+ .summary-box {
+ background: white;
+ border: 2px solid #C6A906;
+ border-radius: 12px;
+ padding: 25px;
+ margin-top: 30px;
+ }
+ 
+ .summary-title {
+ font-size: 18px;
+ font-weight: 700;
+ color: #333;
+ margin-bottom: 15px;
+ text-align: center;
+ }
+ 
+ .summary-stats {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+ gap: 15px;
+ }
+ 
+ .stat-item {
+ text-align: center;
+ padding: 15px;
+ background: #f8f9fa;
+ border-radius: 8px;
+ }
+ 
+ .stat-number {
+ font-size: 28px;
+ font-weight: 700;
+ color: #C6A906;
+ margin-bottom: 5px;
+ }
+ 
+ .stat-label {
+ font-size: 13px;
+ color: #666;
+ }
+ 
+ @media (max-width: 768px) {
+ .day-meta {
+ flex-direction: column;
+ gap: 6px;
+ }
+ 
+ .summary-stats {
+ grid-template-columns: 1fr;
+ }
+ }
+</style>
+</head>
+<body>
+
+<div class="calendar-container">
+ <div class="header">
+ <h1 class="title">7-Day Content Planning Framework</h1>
+ <p class="subtitle">A balanced weekly posting schedule incorporating all content pillars and varied formats. Click each day to view full details including objectives, content examples, and calls-to-action.</p>
+ </div>
+ 
+ <div class="legend">
+ <div class="legend-item">
+ <div class="legend-badge educational"></div>
+ <span>Educational</span>
+ </div>
+ <div class="legend-item">
+ <div class="legend-badge engagement"></div>
+ <span>Engagement</span>
+ </div>
+ <div class="legend-item">
+ <div class="legend-badge authority"></div>
+ <span>Authority</span>
+ </div>
+ <div class="legend-item">
+ <div class="legend-badge hybrid"></div>
+ <span>Educational/Sales Hybrid</span>
+ </div>
+ </div>
+ 
+ <div class="calendar-grid">
+ <!-- Monday -->
+ <div class="day-card educational" onclick="toggleDay(this)">
+ <div class="day-header">
+ <div class="day-info">
+ <div class="day-name">Monday</div>
+ <div class="day-meta">
+ <span class="meta-badge pillar-badge educational">Educational</span>
+ <span class="meta-badge format-badge">Reel</span>
+ </div>
+ <div class="day-objective-preview">
+ Provide valuable technique instruction that positions trainer as knowledgeable expert...
+ </div>
+ </div>
+ <div class="expand-icon">▼</div>
+ </div>
+ <div class="day-details">
+ <div class="day-details-inner">
+ <div class="detail-section">
+ <div class="detail-label">Objective</div>
+ <div class="detail-text">Provide valuable technique instruction that positions trainer as knowledgeable expert whilst encouraging content saves.</div>
+ </div>
+ <div class="detail-section">
+ <div class="detail-label">Content Example</div>
+ <div class="detail-text">"3 Common Deadlift Mistakes That Limit Your Progress" - 30-second Reel demonstrating common technical errors with correction cues.</div>
+ </div>
+ <div class="detail-section">
+ <div class="cta-box">
+ <div class="cta-label">Call-to-Action</div>
+ <div class="cta-text">"Save this for your next deadlift session. Which mistake do you see most often?"</div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- Tuesday -->
+ <div class="day-card engagement" onclick="toggleDay(this)">
+ <div class="day-header">
+ <div class="day-info">
+ <div class="day-name">Tuesday</div>
+ <div class="day-meta">
+ <span class="meta-badge pillar-badge engagement">Engagement</span>
+ <span class="meta-badge format-badge">Story Series</span>
+ </div>
+ <div class="day-objective-preview">
+ Foster interaction and gather audience insights whilst maintaining consistent visibility...
+ </div>
+ </div>
+ <div class="expand-icon">▼</div>
+ </div>
+ <div class="day-details">
+ <div class="day-details-inner">
+ <div class="detail-section">
+ <div class="detail-label">Objective</div>
+ <div class="detail-text">Foster interaction and gather audience insights whilst maintaining consistent visibility.</div>
+ </div>
+ <div class="detail-section">
+ <div class="detail-label">Content Example</div>
+ <div class="detail-text">Behind-the-scenes content showing programme design process, followed by poll asking followers about their current training focus (strength, endurance, mobility, or general fitness).</div>
+ </div>
+ <div class="detail-section">
+ <div class="cta-box">
+ <div class="cta-label">Call-to-Action</div>
+ <div class="cta-text">Interactive poll and question sticker encouraging DM responses.</div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- Wednesday -->
+ <div class="day-card educational" onclick="toggleDay(this)">
+ <div class="day-header">
+ <div class="day-info">
+ <div class="day-name">Wednesday</div>
+ <div class="day-meta">
+ <span class="meta-badge pillar-badge educational">Educational</span>
+ <span class="meta-badge format-badge">Carousel</span>
+ </div>
+ <div class="day-objective-preview">
+ Deliver comprehensive educational value in multi-slide format encouraging extended engagement...
+ </div>
+ </div>
+ <div class="expand-icon">▼</div>
+ </div>
+ <div class="day-details">
+ <div class="day-details-inner">
+ <div class="detail-section">
+ <div class="detail-label">Objective</div>
+ <div class="detail-text">Deliver comprehensive educational value in multi-slide format encouraging extended engagement.</div>
+ </div>
+ <div class="detail-section">
+ <div class="detail-label">Content Example</div>
+ <div class="detail-text">"Understanding Progressive Overload: 5 Methods Beyond Adding Weight" - carousel explaining varied progression strategies including increased volume, improved technique, tempo manipulation, reduced rest periods, and exercise advancement.</div>
+ </div>
+ <div class="detail-section">
+ <div class="cta-box">
+ <div class="cta-label">Call-to-Action</div>
+ <div class="cta-text">"Which progression method are you currently using? Let me know in the comments."</div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- Thursday -->
+ <div class="day-card authority" onclick="toggleDay(this)">
+ <div class="day-header">
+ <div class="day-info">
+ <div class="day-name">Thursday</div>
+ <div class="day-meta">
+ <span class="meta-badge pillar-badge authority">Authority</span>
+ <span class="meta-badge format-badge">Feed Post</span>
+ </div>
+ <div class="day-objective-preview">
+ Showcase client success whilst building credibility through results demonstration...
+ </div>
+ </div>
+ <div class="expand-icon">▼</div>
+ </div>
+ <div class="day-details">
+ <div class="day-details-inner">
+ <div class="detail-section">
+ <div class="detail-label">Objective</div>
+ <div class="detail-text">Showcase client success whilst building credibility through results demonstration.</div>
+ </div>
+ <div class="detail-section">
+ <div class="detail-label">Content Example</div>
+ <div class="detail-text">Client transformation or achievement with detailed caption explaining the process, timeline, and approach used. Include both visual and performance-based achievements.</div>
+ </div>
+ <div class="detail-section">
+ <div class="cta-box">
+ <div class="cta-label">Call-to-Action</div>
+ <div class="cta-text">"Want to achieve similar results? DM me 'READY' to discuss availability."</div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- Friday -->
+ <div class="day-card educational" onclick="toggleDay(this)">
+ <div class="day-header">
+ <div class="day-info">
+ <div class="day-name">Friday</div>
+ <div class="day-meta">
+ <span class="meta-badge pillar-badge educational">Educational</span>
+ <span class="meta-badge format-badge">Reel</span>
+ </div>
+ <div class="day-objective-preview">
+ Provide quick, actionable tip that viewers can immediately implement...
+ </div>
+ </div>
+ <div class="expand-icon">▼</div>
+ </div>
+ <div class="day-details">
+ <div class="day-details-inner">
+ <div class="detail-section">
+ <div class="detail-label">Objective</div>
+ <div class="detail-text">Provide quick, actionable tip that viewers can immediately implement.</div>
+ </div>
+ <div class="detail-section">
+ <div class="detail-label">Content Example</div>
+ <div class="detail-text">"The One Cue That Fixed My Client's Shoulder Press" - 15-20 second demonstration of common shoulder press fault with simple correction cue.</div>
+ </div>
+ <div class="detail-section">
+ <div class="cta-box">
+ <div class="cta-label">Call-to-Action</div>
+ <div class="cta-text">"Try this next shoulder session and let me know if it helps."</div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- Saturday -->
+ <div class="day-card engagement" onclick="toggleDay(this)">
+ <div class="day-header">
+ <div class="day-info">
+ <div class="day-name">Saturday</div>
+ <div class="day-meta">
+ <span class="meta-badge pillar-badge engagement">Engagement</span>
+ <span class="meta-badge format-badge">Feed Post</span>
+ </div>
+ <div class="day-objective-preview">
+ Build community through relatable content encouraging conversation...
+ </div>
+ </div>
+ <div class="expand-icon">▼</div>
+ </div>
+ <div class="day-details">
+ <div class="day-details-inner">
+ <div class="detail-section">
+ <div class="detail-label">Objective</div>
+ <div class="detail-text">Build community through relatable content encouraging conversation.</div>
+ </div>
+ <div class="detail-section">
+ <div class="detail-label">Content Example</div>
+ <div class="detail-text">Personal training moment or observation with caption discussing common training challenges and requesting audience experiences.</div>
+ </div>
+ <div class="detail-section">
+ <div class="cta-box">
+ <div class="cta-label">Call-to-Action</div>
+ <div class="cta-text">"Can you relate? What's your biggest training challenge right now?"</div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- Sunday -->
+ <div class="day-card hybrid" onclick="toggleDay(this)">
+ <div class="day-header">
+ <div class="day-info">
+ <div class="day-name">Sunday</div>
+ <div class="day-meta">
+ <span class="meta-badge pillar-badge hybrid">Educational/Sales Hybrid</span>
+ <span class="meta-badge format-badge">Carousel or Reel</span>
+ </div>
+ <div class="day-objective-preview">
+ Provide value whilst promoting services, positioned as solution to discussed problem...
+ </div>
+ </div>
+ <div class="expand-icon">▼</div>
+ </div>
+ <div class="day-details">
+ <div class="day-details-inner">
+ <div class="detail-section">
+ <div class="detail-label">Objective</div>
+ <div class="detail-text">Provide value whilst promoting services, positioned as solution to discussed problem.</div>
+ </div>
+ <div class="detail-section">
+ <div class="detail-label">Content Example</div>
+ <div class="detail-text">"Why Your Training Isn't Delivering Results" discussing common programming mistakes, concluding with invitation to explore structured coaching.</div>
+ </div>
+ <div class="detail-section">
+ <div class="cta-box">
+ <div class="cta-label">Call-to-Action</div>
+ <div class="cta-text">"Link in bio for consultation bookings" or "DM me to chat about your training goals."</div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ 
+ <div class="summary-box">
+ <div class="summary-title">Weekly Framework Summary</div>
+ <div class="summary-stats">
+ <div class="stat-item">
+ <div class="stat-number">7</div>
+ <div class="stat-label">Weekly Posts</div>
+ </div>
+ <div class="stat-item">
+ <div class="stat-number">4</div>
+ <div class="stat-label">Educational</div>
+ </div>
+ <div class="stat-item">
+ <div class="stat-number">2</div>
+ <div class="stat-label">Engagement</div>
+ </div>
+ <div class="stat-item">
+ <div class="stat-number">1</div>
+ <div class="stat-label">Authority</div>
+ </div>
+ <div class="stat-item">
+ <div class="stat-number">1</div>
+ <div class="stat-label">Hybrid Sales</div>
+ </div>
+ </div>
+ </div>
+</div>
+
+<script>
+ (function() {
+ document.documentElement.style.visibility = 'visible';
+ document.body.style.visibility = 'visible';
+ })();
+
+ window.toggleDay = function(card) {
+ const details = card.querySelector('.day-details');
+ const isExpanded = card.classList.contains('expanded');
+ 
+ if (isExpanded) {
+ card.classList.remove('expanded');
+ details.style.maxHeight = null;
+ } else {
+ card.classList.add('expanded');
+ details.style.maxHeight = details.scrollHeight + 'px';
+ }
+ };
+</script>
+
+</body>
+</html>
