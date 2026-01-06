@@ -785,6 +785,11 @@
                         <div class="table-info">
                             Showing <span id="filtered-count">0</span> of <span id="total-count">0</span> records
                         </div>
+                        <div id="pagination-controls" style="display: flex; gap: 0.5rem; align-items: center;">
+                            <button class="btn btn-secondary" onclick="changePage(-1)" id="prev-page" disabled>← Previous</button>
+                            <span id="page-info" style="font-size: 0.9rem; color: #030303;">Page <span id="current-page">1</span> of <span id="total-pages">1</span></span>
+                            <button class="btn btn-secondary" onclick="changePage(1)" id="next-page" disabled>Next →</button>
+                        </div>
                     </div>
                     <div class="table-wrapper">
                         <table>
@@ -861,6 +866,10 @@
         let overviewFilteredData = []; // New: for overview tab
         let mentorData = [];
         let customFields = new Set();
+        
+        // Pagination state
+        let currentPage = 1;
+        let itemsPerPage = 100;
 
         // Chart instances
         let trendsChart, aiHumanChart, turnaroundChart, analyticsChart;
@@ -949,7 +958,8 @@
             const json = JSON.parse(text.substring(47, text.length - 2));
             const rows = json.table.rows;
             
-            return rows.map((row, index) => {
+            // Skip the first row (header row)
+            return rows.slice(1).map((row, index) => {
                 const cells = row.c || [];
                 // Google Sheets returns dates with .f (formatted) and .v (value) properties
                 // For dates, we want the formatted string (.f) which is like "06/01/2026"
@@ -1783,6 +1793,7 @@
                 return true;
             });
 
+            currentPage = 1; // Reset to first page when filters change
             renderDataTable(filteredData);
         }
 
@@ -1792,8 +1803,15 @@
 
             if (data.length === 0) {
                 tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 2rem;">No data matches the selected filters</td></tr>';
+                updatePaginationControls(0);
             } else {
-                data.slice(0, 100).forEach(row => {
+                // Calculate pagination
+                const totalPages = Math.ceil(data.length / itemsPerPage);
+                const startIndex = (currentPage - 1) * itemsPerPage;
+                const endIndex = Math.min(startIndex + itemsPerPage, data.length);
+                const pageData = data.slice(startIndex, endIndex);
+                
+                pageData.forEach(row => {
                     // Color code turnaround time
                     let turnaroundBadge = '-';
                     if (row.turnaroundDays !== null) {
@@ -1828,15 +1846,40 @@
                     tbody.appendChild(tr);
                 });
 
-                if (data.length > 100) {
-                    const tr = document.createElement('tr');
-                    tr.innerHTML = `<td colspan="9" style="text-align: center; padding: 1rem; color: #7f8c8d;">Showing first 100 of ${data.length} records. Use filters to narrow results.</td>`;
-                    tbody.appendChild(tr);
-                }
+                updatePaginationControls(totalPages);
             }
 
-            document.getElementById('filtered-count').textContent = data.length.toLocaleString();
-            document.getElementById('total-count').textContent = allData.length.toLocaleString();
+            const displayStart = data.length > 0 ? (currentPage - 1) * itemsPerPage + 1 : 0;
+            const displayEnd = Math.min(currentPage * itemsPerPage, data.length);
+            document.getElementById('filtered-count').textContent = `${displayStart}-${displayEnd}`;
+            document.getElementById('total-count').textContent = data.length.toLocaleString();
+        }
+
+        function updatePaginationControls(totalPages) {
+            document.getElementById('current-page').textContent = currentPage;
+            document.getElementById('total-pages').textContent = totalPages;
+            
+            const prevBtn = document.getElementById('prev-page');
+            const nextBtn = document.getElementById('next-page');
+            
+            prevBtn.disabled = currentPage <= 1;
+            nextBtn.disabled = currentPage >= totalPages || totalPages === 0;
+            
+            // Show/hide pagination controls
+            const paginationControls = document.getElementById('pagination-controls');
+            if (totalPages <= 1) {
+                paginationControls.style.display = 'none';
+            } else {
+                paginationControls.style.display = 'flex';
+            }
+        }
+
+        function changePage(direction) {
+            currentPage += direction;
+            renderDataTable(filteredData);
+            
+            // Scroll to top of table
+            document.querySelector('#tab-explorer .table-wrapper').scrollTop = 0;
         }
 
         function sortDataTable(columnIndex) {
@@ -1874,6 +1917,7 @@
                 }
             });
 
+            currentPage = 1; // Reset to first page after sorting
             renderDataTable(filteredData);
         }
 
@@ -1895,6 +1939,7 @@
             });
 
             filteredData = [...allData];
+            currentPage = 1; // Reset to first page
             renderDataTable(filteredData);
         }
 
