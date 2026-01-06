@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PT Academy Validation Dashboard</title>
+    <title>PT Academy Assessor Activity Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
@@ -496,7 +496,7 @@
     <div class="header">
         <img src="https://pt-academy-embeds.pages.dev/reporting/logo_o_background.png" alt="PT Academy" class="header-logo">
         <div class="header-content">
-            <h1>Validation Dashboard</h1>
+            <h1>Assessor Activity Dashboard</h1>
             <p>Real-time validation queue analytics and mentor performance tracking</p>
         </div>
     </div>
@@ -931,21 +931,41 @@
             const json = JSON.parse(text.substring(47, text.length - 2));
             const rows = json.table.rows;
             
-            return rows.map(row => {
+            return rows.map((row, index) => {
                 const cells = row.c || [];
                 const exportDate = cells[0]?.v || '';
                 const fullDate = cells[9]?.v || '';
                 const container = cells[1]?.v || '';
                 
+                // Debug first row
+                if (index === 0) {
+                    console.log('DEBUG First Row:');
+                    console.log('Export Date (cells[0]):', cells[0]);
+                    console.log('Full Date (cells[9]):', cells[9]);
+                    console.log('Container:', container);
+                }
+                
                 // Calculate turnaround/wait time
                 let turnaroundDays = null;
                 if (exportDate && fullDate) {
                     const questionDate = parseQuestionDate(fullDate);
+                    
+                    if (index === 0) {
+                        console.log('Parsed Question Date:', questionDate);
+                    }
+                    
                     if (questionDate) {
                         const exportDateObj = new Date(exportDate);
                         const questionDateObj = new Date(questionDate);
                         const diffTime = exportDateObj - questionDateObj;
                         turnaroundDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                        
+                        if (index === 0) {
+                            console.log('Export Date Object:', exportDateObj);
+                            console.log('Question Date Object:', questionDateObj);
+                            console.log('Diff Time (ms):', diffTime);
+                            console.log('Turnaround Days:', turnaroundDays);
+                        }
                         
                         // For pending items, calculate wait time from today
                         if (container === 'Pending') {
