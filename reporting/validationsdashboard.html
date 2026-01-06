@@ -869,6 +869,18 @@
             }
         };
 
+        function parseQuestionDate(fullDate) {
+            // Parse "Monday, January 06, 2026" format to YYYY-MM-DD
+            if (!fullDate) return null;
+            try {
+                const date = new Date(fullDate);
+                if (isNaN(date.getTime())) return null;
+                return date.toISOString().split('T')[0];
+            } catch (e) {
+                return null;
+            }
+        }
+        
         async function loadData() {
             const pendingUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(PENDING_SHEET)}`;
             const doneUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(DONE_SHEET)}`;
@@ -1593,18 +1605,6 @@
             createTrendsChart();
             createTurnaroundChart();
             createAIHumanChart();
-        }
-
-        function parseQuestionDate(fullDate) {
-            // Parse "Monday, January 06, 2026" format to YYYY-MM-DD
-            if (!fullDate) return null;
-            try {
-                const date = new Date(fullDate);
-                if (isNaN(date.getTime())) return null;
-                return date.toISOString().split('T')[0];
-            } catch (e) {
-                return null;
-            }
         }
 
         function applyFilters() {
