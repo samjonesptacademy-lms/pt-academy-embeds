@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PT Academy Validation Dashboard</title>
+    <title>PT Academy Assessor Activity Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
@@ -14,26 +14,40 @@
 
         body {
             font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
-            background: #f5f7fa;
-            color: #2c3e50;
+            background: #FFFFFF;
+            color: #030303;
             line-height: 1.6;
         }
 
         .header {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            background: #030303;
             color: white;
-            padding: 2rem;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 1.5rem 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.15);
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+
+        .header-logo {
+            height: 60px;
+            width: auto;
+        }
+
+        .header-content {
+            flex: 1;
         }
 
         .header h1 {
-            font-size: 2rem;
-            margin-bottom: 0.5rem;
+            font-size: 1.8rem;
+            margin-bottom: 0.3rem;
+            color: #C6A906;
         }
 
         .header p {
-            opacity: 0.9;
-            font-size: 0.95rem;
+            opacity: 0.8;
+            font-size: 0.9rem;
+            color: #D8D8D8;
         }
 
         .container {
@@ -46,12 +60,12 @@
             text-align: center;
             padding: 4rem;
             font-size: 1.2rem;
-            color: #667eea;
+            color: #C6A906;
         }
 
         .loading-spinner {
-            border: 4px solid #f3f3f3;
-            border-top: 4px solid #667eea;
+            border: 4px solid #D8D8D8;
+            border-top: 4px solid #C6A906;
             border-radius: 50%;
             width: 50px;
             height: 50px;
@@ -68,29 +82,31 @@
             display: flex;
             gap: 0.5rem;
             margin-bottom: 2rem;
-            border-bottom: 2px solid #e1e8ed;
+            border-bottom: 3px solid #D8D8D8;
             flex-wrap: wrap;
+            background: #FFFFFF;
         }
 
         .tab {
             padding: 1rem 1.5rem;
-            background: white;
+            background: #FFFFFF;
             border: none;
             cursor: pointer;
             font-size: 1rem;
-            color: #667eea;
+            color: #030303;
             border-bottom: 3px solid transparent;
             transition: all 0.3s;
         }
 
         .tab:hover {
-            background: #f8f9fa;
+            background: #D8D8D8;
         }
 
         .tab.active {
-            color: #764ba2;
-            border-bottom-color: #764ba2;
+            color: #C6A906;
+            border-bottom-color: #C6A906;
             font-weight: 600;
+            background: #FFFFFF;
         }
 
         .tab-content {
@@ -111,57 +127,66 @@
         .metric-card {
             background: white;
             padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             transition: transform 0.3s;
+            border-left: 4px solid #C6A906;
         }
 
         .metric-card:hover {
             transform: translateY(-5px);
-            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
         }
 
         .metric-label {
             font-size: 0.85rem;
-            color: #7f8c8d;
+            color: #030303;
             text-transform: uppercase;
             letter-spacing: 0.5px;
             margin-bottom: 0.5rem;
+            font-weight: 600;
         }
 
         .metric-value {
             font-size: 2.5rem;
             font-weight: 700;
-            color: #667eea;
+            color: #C6A906;
         }
 
         .metric-subtext {
             font-size: 0.9rem;
-            color: #95a5a6;
+            color: #666;
             margin-top: 0.5rem;
         }
 
         .chart-container {
             background: white;
             padding: 2rem;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             margin-bottom: 2rem;
+            border-top: 3px solid #C6A906;
         }
 
         .chart-title {
             font-size: 1.3rem;
             font-weight: 600;
             margin-bottom: 1.5rem;
-            color: #2c3e50;
+            color: #030303;
         }
 
         .filters {
             background: white;
             padding: 1.5rem;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             margin-bottom: 2rem;
+            border-left: 4px solid #C6A906;
+        }
+
+        .filters h3 {
+            color: #030303;
+            margin-bottom: 1rem;
         }
 
         .filters-grid {
@@ -178,51 +203,57 @@
         .filter-label {
             font-size: 0.85rem;
             font-weight: 600;
-            color: #2c3e50;
+            color: #030303;
             margin-bottom: 0.5rem;
         }
 
         select, input {
             padding: 0.7rem;
-            border: 1px solid #ddd;
-            border-radius: 8px;
+            border: 2px solid #D8D8D8;
+            border-radius: 4px;
             font-size: 0.95rem;
             transition: border-color 0.3s;
+            background: white;
         }
 
         select:focus, input:focus {
             outline: none;
-            border-color: #667eea;
+            border-color: #C6A906;
         }
 
         .btn {
             padding: 0.7rem 1.5rem;
-            background: #667eea;
-            color: white;
+            background: #C6A906;
+            color: #030303;
             border: none;
-            border-radius: 8px;
+            border-radius: 4px;
             cursor: pointer;
             font-size: 0.95rem;
-            transition: background 0.3s;
+            font-weight: 600;
+            transition: all 0.3s;
         }
 
         .btn:hover {
-            background: #764ba2;
+            background: #A88C05;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(198, 169, 6, 0.3);
         }
 
         .btn-secondary {
-            background: #95a5a6;
+            background: #030303;
+            color: white;
         }
 
         .btn-secondary:hover {
-            background: #7f8c8d;
+            background: #333;
         }
 
         .data-table {
             background: white;
-            border-radius: 12px;
-            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
             overflow: hidden;
+            border-top: 3px solid #C6A906;
         }
 
         .table-controls {
@@ -230,12 +261,14 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            border-bottom: 1px solid #e1e8ed;
+            border-bottom: 2px solid #D8D8D8;
+            background: #FFFFFF;
         }
 
         .table-info {
             font-size: 0.9rem;
-            color: #7f8c8d;
+            color: #030303;
+            font-weight: 600;
         }
 
         table {
@@ -246,13 +279,13 @@
         th, td {
             padding: 1rem;
             text-align: left;
-            border-bottom: 1px solid #e1e8ed;
+            border-bottom: 1px solid #D8D8D8;
         }
 
         th {
-            background: #f8f9fa;
+            background: #030303;
             font-weight: 600;
-            color: #2c3e50;
+            color: #C6A906;
             position: sticky;
             top: 0;
             cursor: pointer;
@@ -260,26 +293,26 @@
         }
 
         th:hover {
-            background: #e9ecef;
+            background: #1a1a1a;
         }
 
         th.sortable::after {
             content: ' ⇅';
-            color: #ccc;
+            color: #666;
         }
 
         th.sorted-asc::after {
             content: ' ↑';
-            color: #667eea;
+            color: #C6A906;
         }
 
         th.sorted-desc::after {
             content: ' ↓';
-            color: #667eea;
+            color: #C6A906;
         }
 
         tr:hover {
-            background: #f8f9fa;
+            background: #f8f8f8;
         }
 
         .table-wrapper {
@@ -290,34 +323,34 @@
         .badge {
             display: inline-block;
             padding: 0.3rem 0.7rem;
-            border-radius: 12px;
+            border-radius: 4px;
             font-size: 0.8rem;
             font-weight: 600;
         }
 
         .badge-ai {
-            background: #e3f2fd;
-            color: #1976d2;
+            background: #D8D8D8;
+            color: #030303;
         }
 
         .badge-human {
-            background: #f3e5f5;
-            color: #7b1fa2;
+            background: #C6A906;
+            color: #030303;
         }
 
         .badge-confirmed {
-            background: #e8f5e9;
-            color: #388e3c;
+            background: #4caf50;
+            color: white;
         }
 
         .badge-retry {
-            background: #fff3e0;
-            color: #f57c00;
+            background: #ff9800;
+            color: white;
         }
 
         .badge-unknown {
-            background: #f5f5f5;
-            color: #616161;
+            background: #D8D8D8;
+            color: #030303;
         }
 
         @media (max-width: 768px) {
@@ -357,8 +390,11 @@
 </head>
 <body>
     <div class="header">
-        <h1>🎯 PT Academy Validation Dashboard</h1>
-        <p>Real-time validation queue analytics and mentor performance tracking</p>
+        <img src="https://pt-academy-embeds.pages.dev/reporting/logo_o_background.png" alt="PT Academy" class="header-logo">
+        <div class="header-content">
+            <h1>Validation Dashboard</h1>
+            <p>Real-time validation queue analytics and mentor performance tracking</p>
+        </div>
     </div>
 
     <div class="container">
@@ -377,6 +413,78 @@
 
             <!-- Overview Tab -->
             <div id="tab-overview" class="tab-content active">
+                <div class="filters">
+                    <h3>🔍 Filter Data</h3>
+                    <div class="filters-grid">
+                        <div class="filter-group">
+                            <label class="filter-label">Learner Name</label>
+                            <select id="filter-overview-learner" onchange="applyOverviewFilters()">
+                                <option value="">All Learners</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Manager Name</label>
+                            <select id="filter-overview-manager" onchange="applyOverviewFilters()">
+                                <option value="">All Managers</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Group</label>
+                            <select id="filter-overview-group" onchange="applyOverviewFilters()">
+                                <option value="">All Groups</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Status</label>
+                            <select id="filter-overview-status" onchange="applyOverviewFilters()">
+                                <option value="">All Statuses</option>
+                                <option value="Confirmed">Confirmed</option>
+                                <option value="Retry">Retry</option>
+                                <option value="Unknown">Unknown</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Marked By</label>
+                            <select id="filter-overview-marked" onchange="applyOverviewFilters()">
+                                <option value="">All</option>
+                                <option value="AI">AI</option>
+                                <option value="Human">Human</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Container</label>
+                            <select id="filter-overview-container" onchange="applyOverviewFilters()">
+                                <option value="">All</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Done">Done</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Export Date From</label>
+                            <input type="date" id="filter-overview-export-date-from" onchange="applyOverviewFilters()">
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Export Date To</label>
+                            <input type="date" id="filter-overview-export-date-to" onchange="applyOverviewFilters()">
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Question Date From</label>
+                            <input type="date" id="filter-overview-question-date-from" onchange="applyOverviewFilters()">
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Question Date To</label>
+                            <input type="date" id="filter-overview-question-date-to" onchange="applyOverviewFilters()">
+                        </div>
+                    </div>
+                    <div id="custom-field-filters-overview" style="margin-top: 1rem;">
+                        <!-- Custom field filters will be added dynamically -->
+                    </div>
+                    <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+                        <button class="btn" onclick="applyOverviewFilters()">Apply Filters</button>
+                        <button class="btn btn-secondary" onclick="resetOverviewFilters()">Reset Filters</button>
+                    </div>
+                </div>
+
                 <div class="metrics-grid">
                     <div class="metric-card">
                         <div class="metric-label">Total Pending</div>
@@ -499,12 +607,20 @@
                             </select>
                         </div>
                         <div class="filter-group">
-                            <label class="filter-label">Date From</label>
-                            <input type="date" id="filter-date-from" onchange="applyFilters()">
+                            <label class="filter-label">Export Date From</label>
+                            <input type="date" id="filter-export-date-from" onchange="applyFilters()">
                         </div>
                         <div class="filter-group">
-                            <label class="filter-label">Date To</label>
-                            <input type="date" id="filter-date-to" onchange="applyFilters()">
+                            <label class="filter-label">Export Date To</label>
+                            <input type="date" id="filter-export-date-to" onchange="applyFilters()">
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Question Date From</label>
+                            <input type="date" id="filter-question-date-from" onchange="applyFilters()">
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Question Date To</label>
+                            <input type="date" id="filter-question-date-to" onchange="applyFilters()">
                         </div>
                     </div>
                     <div id="custom-field-filters" style="margin-top: 1rem;">
@@ -593,6 +709,7 @@
         // Global data storage
         let allData = [];
         let filteredData = [];
+        let overviewFilteredData = []; // New: for overview tab
         let mentorData = [];
         let customFields = new Set();
 
@@ -671,19 +788,22 @@
         }
 
         function initializeDashboard() {
+            overviewFilteredData = [...allData]; // Initialize overview filtered data
             updateMetrics();
             createTrendsChart();
             createAIHumanChart();
             populateFilters();
+            populateOverviewFilters(); // New function
             buildMentorPerformance();
             populateAnalyticsField();
         }
 
         function updateMetrics() {
-            const pending = allData.filter(d => d.container === 'Pending').length;
-            const done = allData.filter(d => d.container === 'Done').length;
-            const ai = allData.filter(d => d.markedBy === 'AI').length;
-            const human = allData.filter(d => d.markedBy === 'Human').length;
+            const data = overviewFilteredData; // Use filtered data instead of allData
+            const pending = data.filter(d => d.container === 'Pending').length;
+            const done = data.filter(d => d.container === 'Done').length;
+            const ai = data.filter(d => d.markedBy === 'AI').length;
+            const human = data.filter(d => d.markedBy === 'Human').length;
 
             document.getElementById('metric-pending').textContent = pending.toLocaleString();
             document.getElementById('metric-done').textContent = done.toLocaleString();
@@ -700,9 +820,9 @@
         function createTrendsChart() {
             const ctx = document.getElementById('trendsChart').getContext('2d');
             
-            // Group by date
+            // Group by date using overview filtered data
             const dateGroups = {};
-            allData.forEach(row => {
+            overviewFilteredData.forEach(row => {
                 const date = row.exportDate;
                 if (!dateGroups[date]) {
                     dateGroups[date] = { pending: 0, done: 0 };
@@ -725,14 +845,14 @@
                     datasets: [{
                         label: 'Pending',
                         data: pendingCounts,
-                        borderColor: '#ff6b6b',
-                        backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                        borderColor: '#030303',
+                        backgroundColor: 'rgba(3, 3, 3, 0.1)',
                         tension: 0.4
                     }, {
                         label: 'Done',
                         data: doneCounts,
-                        borderColor: '#51cf66',
-                        backgroundColor: 'rgba(81, 207, 102, 0.1)',
+                        borderColor: '#C6A906',
+                        backgroundColor: 'rgba(198, 169, 6, 0.1)',
                         tension: 0.4
                     }]
                 },
@@ -756,9 +876,9 @@
         function createAIHumanChart() {
             const ctx = document.getElementById('aiHumanChart').getContext('2d');
             
-            // Group by date for done items only
+            // Group by date for done items only using overview filtered data
             const dateGroups = {};
-            allData.filter(d => d.container === 'Done').forEach(row => {
+            overviewFilteredData.filter(d => d.container === 'Done').forEach(row => {
                 const date = row.exportDate;
                 if (!dateGroups[date]) {
                     dateGroups[date] = { ai: 0, human: 0 };
@@ -781,14 +901,14 @@
                     datasets: [{
                         label: 'AI Marked',
                         data: aiCounts,
-                        borderColor: '#667eea',
-                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        borderColor: '#D8D8D8',
+                        backgroundColor: 'rgba(216, 216, 216, 0.1)',
                         tension: 0.4
                     }, {
                         label: 'Human Marked',
                         data: humanCounts,
-                        borderColor: '#764ba2',
-                        backgroundColor: 'rgba(118, 75, 162, 0.1)',
+                        borderColor: '#C6A906',
+                        backgroundColor: 'rgba(198, 169, 6, 0.1)',
                         tension: 0.4
                     }]
                 },
@@ -839,6 +959,44 @@
                     filterDiv.innerHTML = `
                         <label class="filter-label">${field}</label>
                         <select id="filter-cf-${sanitizeId(field)}" onchange="applyFilters()">
+                            <option value="">All</option>
+                            ${[...values].sort().map(v => `<option value="${v}">${v}</option>`).join('')}
+                        </select>
+                    `;
+                    customFieldFilters.appendChild(filterDiv);
+                }
+            });
+        }
+
+        function populateOverviewFilters() {
+            // Get unique values
+            const learners = [...new Set(allData.map(d => d.learnerName))].sort();
+            const managers = [...new Set(allData.map(d => d.managerName))].sort();
+            const groups = [...new Set(allData.flatMap(d => d.group.split(', ')))].sort();
+
+            populateSelect('filter-overview-learner', learners);
+            populateSelect('filter-overview-manager', managers);
+            populateSelect('filter-overview-group', groups);
+
+            // Create custom field filters for overview
+            const customFieldFilters = document.getElementById('custom-field-filters-overview');
+            customFields.forEach(field => {
+                const values = new Set();
+                allData.forEach(row => {
+                    try {
+                        const fields = JSON.parse(row.customFields);
+                        if (fields[field]) {
+                            values.add(fields[field]);
+                        }
+                    } catch (e) {}
+                });
+
+                if (values.size > 0) {
+                    const filterDiv = document.createElement('div');
+                    filterDiv.className = 'filter-group';
+                    filterDiv.innerHTML = `
+                        <label class="filter-label">${field}</label>
+                        <select id="filter-overview-cf-${sanitizeId(field)}" onchange="applyOverviewFilters()">
                             <option value="">All</option>
                             ${[...values].sort().map(v => `<option value="${v}">${v}</option>`).join('')}
                         </select>
@@ -969,6 +1127,107 @@
             renderMentorTable(mentorData);
         }
 
+        function applyOverviewFilters() {
+            const learner = document.getElementById('filter-overview-learner').value;
+            const manager = document.getElementById('filter-overview-manager').value;
+            const group = document.getElementById('filter-overview-group').value;
+            const status = document.getElementById('filter-overview-status').value;
+            const marked = document.getElementById('filter-overview-marked').value;
+            const container = document.getElementById('filter-overview-container').value;
+            const exportDateFrom = document.getElementById('filter-overview-export-date-from').value;
+            const exportDateTo = document.getElementById('filter-overview-export-date-to').value;
+            const questionDateFrom = document.getElementById('filter-overview-question-date-from').value;
+            const questionDateTo = document.getElementById('filter-overview-question-date-to').value;
+
+            // Get custom field filters
+            const customFieldFilters = {};
+            customFields.forEach(field => {
+                const select = document.getElementById(`filter-overview-cf-${sanitizeId(field)}`);
+                if (select && select.value) {
+                    customFieldFilters[field] = select.value;
+                }
+            });
+
+            overviewFilteredData = allData.filter(row => {
+                if (learner && row.learnerName !== learner) return false;
+                if (manager && row.managerName !== manager) return false;
+                if (group && !row.group.split(', ').includes(group)) return false;
+                if (status && row.status !== status) return false;
+                if (marked && row.markedBy !== marked) return false;
+                if (container && row.container !== container) return false;
+                if (exportDateFrom && row.exportDate < exportDateFrom) return false;
+                if (exportDateTo && row.exportDate > exportDateTo) return false;
+                
+                // Question date filtering
+                if (questionDateFrom || questionDateTo) {
+                    const questionDate = parseQuestionDate(row.fullDate);
+                    if (questionDate) {
+                        if (questionDateFrom && questionDate < questionDateFrom) return false;
+                        if (questionDateTo && questionDate > questionDateTo) return false;
+                    }
+                }
+
+                // Check custom fields
+                for (const [field, value] of Object.entries(customFieldFilters)) {
+                    try {
+                        const fields = JSON.parse(row.customFields);
+                        if (fields[field] !== value) return false;
+                    } catch (e) {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+
+            // Update metrics and charts
+            updateMetrics();
+            
+            // Destroy and recreate charts
+            if (trendsChart) trendsChart.destroy();
+            if (aiHumanChart) aiHumanChart.destroy();
+            createTrendsChart();
+            createAIHumanChart();
+        }
+
+        function resetOverviewFilters() {
+            document.getElementById('filter-overview-learner').value = '';
+            document.getElementById('filter-overview-manager').value = '';
+            document.getElementById('filter-overview-group').value = '';
+            document.getElementById('filter-overview-status').value = '';
+            document.getElementById('filter-overview-marked').value = '';
+            document.getElementById('filter-overview-container').value = '';
+            document.getElementById('filter-overview-export-date-from').value = '';
+            document.getElementById('filter-overview-export-date-to').value = '';
+            document.getElementById('filter-overview-question-date-from').value = '';
+            document.getElementById('filter-overview-question-date-to').value = '';
+
+            customFields.forEach(field => {
+                const select = document.getElementById(`filter-overview-cf-${sanitizeId(field)}`);
+                if (select) select.value = '';
+            });
+
+            overviewFilteredData = [...allData];
+            updateMetrics();
+            
+            if (trendsChart) trendsChart.destroy();
+            if (aiHumanChart) aiHumanChart.destroy();
+            createTrendsChart();
+            createAIHumanChart();
+        }
+
+        function parseQuestionDate(fullDate) {
+            // Parse "Monday, January 06, 2026" format to YYYY-MM-DD
+            if (!fullDate) return null;
+            try {
+                const date = new Date(fullDate);
+                if (isNaN(date.getTime())) return null;
+                return date.toISOString().split('T')[0];
+            } catch (e) {
+                return null;
+            }
+        }
+
         function applyFilters() {
             const learner = document.getElementById('filter-learner').value;
             const manager = document.getElementById('filter-manager').value;
@@ -976,8 +1235,10 @@
             const status = document.getElementById('filter-status').value;
             const marked = document.getElementById('filter-marked').value;
             const container = document.getElementById('filter-container').value;
-            const dateFrom = document.getElementById('filter-date-from').value;
-            const dateTo = document.getElementById('filter-date-to').value;
+            const exportDateFrom = document.getElementById('filter-export-date-from').value;
+            const exportDateTo = document.getElementById('filter-export-date-to').value;
+            const questionDateFrom = document.getElementById('filter-question-date-from').value;
+            const questionDateTo = document.getElementById('filter-question-date-to').value;
 
             // Get custom field filters
             const customFieldFilters = {};
@@ -995,8 +1256,17 @@
                 if (status && row.status !== status) return false;
                 if (marked && row.markedBy !== marked) return false;
                 if (container && row.container !== container) return false;
-                if (dateFrom && row.exportDate < dateFrom) return false;
-                if (dateTo && row.exportDate > dateTo) return false;
+                if (exportDateFrom && row.exportDate < exportDateFrom) return false;
+                if (exportDateTo && row.exportDate > exportDateTo) return false;
+                
+                // Question date filtering
+                if (questionDateFrom || questionDateTo) {
+                    const questionDate = parseQuestionDate(row.fullDate);
+                    if (questionDate) {
+                        if (questionDateFrom && questionDate < questionDateFrom) return false;
+                        if (questionDateTo && questionDate > questionDateTo) return false;
+                    }
+                }
 
                 // Check custom fields
                 for (const [field, value] of Object.entries(customFieldFilters)) {
@@ -1084,8 +1354,10 @@
             document.getElementById('filter-status').value = '';
             document.getElementById('filter-marked').value = '';
             document.getElementById('filter-container').value = '';
-            document.getElementById('filter-date-from').value = '';
-            document.getElementById('filter-date-to').value = '';
+            document.getElementById('filter-export-date-from').value = '';
+            document.getElementById('filter-export-date-to').value = '';
+            document.getElementById('filter-question-date-from').value = '';
+            document.getElementById('filter-question-date-to').value = '';
 
             customFields.forEach(field => {
                 const select = document.getElementById(`filter-cf-${sanitizeId(field)}`);
