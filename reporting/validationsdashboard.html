@@ -597,6 +597,11 @@
                     </div>
                 </div>
 
+                <div style="background: #fff3cd; border-left: 4px solid #ffc107; padding: 1rem; border-radius: 4px; margin-bottom: 2rem;">
+                    <strong>📊 Turnaround Tracking Started:</strong> 06/01/2026<br>
+                    <small>Historical "Done" items (marked before tracking started) are excluded from turnaround averages but visible in data tables with a "Historical" badge.</small>
+                </div>
+
                 <div class="metrics-grid">
                     <div class="metric-card">
                         <div class="metric-label">Total Pending</div>
@@ -841,6 +846,7 @@
         const SHEET_ID = '14wIg72mL7kURuuWg060uMdexrd8amYht_KpUJA-03w4';
         const PENDING_SHEET = 'Enriched Pending Data';
         const DONE_SHEET = 'Enriched Done Data';
+        const FIRST_EXPORT_DATE = '2026-01-06'; // Tracking started on 6th January 2026
 
         // Global data storage
         let allData = [];
@@ -954,6 +960,8 @@
                 
                 // Calculate turnaround/wait time
                 let turnaroundDays = null;
+                let isTracked = true; // Default to tracked
+                
                 if (exportDate && fullDate) {
                     const questionDate = parseQuestionDate(fullDate);
                     
@@ -981,11 +989,19 @@
                         const diffTime = exportDateObj - questionDateObj;
                         turnaroundDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
                         
+                        // Determine if this is tracked data
+                        // Historical = Done on first export date but question created before first export
+                        const exportDateStr = exportDateObj.toISOString().split('T')[0];
+                        if (container === 'Done' && exportDateStr === FIRST_EXPORT_DATE && questionDate < FIRST_EXPORT_DATE) {
+                            isTracked = false; // Historical data - we don't know actual marking date
+                        }
+                        
                         if (index === 0) {
                             console.log('Export Date Object:', exportDateObj);
                             console.log('Question Date Object:', questionDateObj);
                             console.log('Diff Time (ms):', diffTime);
                             console.log('Turnaround Days:', turnaroundDays);
+                            console.log('Is Tracked:', isTracked);
                         }
                         
                         // For pending items, calculate wait time from today
@@ -994,6 +1010,29 @@
                             today.setHours(0, 0, 0, 0);
                             const waitTime = today - questionDateObj;
                             turnaroundDays = Math.floor(waitTime / (1000 * 60 * 60 * 24));
+                        }
+                    }
+                }
+                
+                // Determine if this is historical data (only for Done items)
+                // Historical = Done on first export date BUT question created before first export
+                let isHistorical = false;
+                if (container === 'Done') {
+                    const questionDate = parseQuestionDate(fullDate);
+                    if (questionDate && exportDate) {
+                        // Parse export date to YYYY-MM-DD format for comparison
+                        const dateParts = exportDate.split('/');
+                        let exportDateYYYYMMDD;
+                        if (dateParts.length === 3) {
+                            const day = dateParts[0].padStart(2, '0');
+                            const month = dateParts[1].padStart(2, '0');
+                            const year = dateParts[2];
+                            exportDateYYYYMMDD = `${year}-${month}-${day}`;
+                        }
+                        
+                        // Historical if: exported on first export date AND created before first export
+                        if (exportDateYYYYMMDD === FIRST_EXPORT_DATE && questionDate < FIRST_EXPORT_DATE) {
+                            isHistorical = true;
                         }
                     }
                 }
@@ -1011,7 +1050,8 @@
                     fullDate: fullDate,
                     status: cells[10]?.v || 'Unknown',
                     markedBy: cells[11]?.v || 'Unknown',
-                    turnaroundDays: turnaroundDays
+                    turnaroundDays: turnaroundDays,
+                    isTracked: isTracked
                 };
             });
         }
@@ -1049,15 +1089,25 @@
             document.getElementById('metric-ai-percent').textContent = `${aiPercent}% of done`;
             document.getElementById('metric-human-percent').textContent = `${humanPercent}% of done`;
             
-            // Calculate average turnaround time for Done items
-            const doneWithTurnaround = doneItems.filter(d => d.turnaroundDays !== null);
-            const avgTurnaround = doneWithTurnaround.length > 0 
-                ? (doneWithTurnaround.reduce((sum, d) => sum + d.turnaroundDays, 0) / doneWithTurnaround.length).toFixed(1)
+            // Calculate average turnaround time for Done items (ONLY TRACKED DATA)
+            const trackedDoneItems = doneItems.filter(d => d.isTracked && d.turnaroundDays !== null);
+            const avgTurnaround = trackedDoneItems.length > 0 
+                ? (trackedDoneItems.reduce((sum, d) => sum + d.turnaroundDays, 0) / trackedDoneItems.length).toFixed(1)
                 : 0;
             
-            document.getElementById('metric-avg-turnaround').textContent = avgTurnaround;
-            document.getElementById('metric-avg-turnaround').parentElement.querySelector('.metric-subtext').textContent = 
-                avgTurnaround > 7 ? '⚠️ Over 7 days average' : 'Days to mark completed questions';
+            const turnaroundText = trackedDoneItems.length > 0 
+                ? avgTurnaround 
+                : 'N/A';
+            
+            document.getElementById('metric-avg-turnaround').textContent = turnaroundText;
+            
+            if (trackedDoneItems.length === 0) {
+                document.getElementById('metric-avg-turnaround').parentElement.querySelector('.metric-subtext').textContent = 
+                    'No tracked data yet (starts from tomorrow)';
+            } else {
+                document.getElementById('metric-avg-turnaround').parentElement.querySelector('.metric-subtext').textContent = 
+                    avgTurnaround > 7 ? '⚠️ Over 7 days average' : `Based on ${trackedDoneItems.length} tracked questions`;
+            }
             
             // Calculate average wait time for Pending items
             const pendingItems = data.filter(d => d.container === 'Pending');
@@ -1186,7 +1236,7 @@
         function createTurnaroundChart() {
             const ctx = document.getElementById('turnaroundChart').getContext('2d');
             
-            // Group done items by turnaround time buckets
+            // Group done items by turnaround time buckets (ONLY TRACKED DATA)
             const buckets = {
                 'Same Day': 0,
                 '1 Day': 0,
@@ -1195,7 +1245,9 @@
                 '7+ Days': 0
             };
             
-            overviewFilteredData.filter(d => d.container === 'Done' && d.turnaroundDays !== null).forEach(row => {
+            const trackedDoneItems = overviewFilteredData.filter(d => d.container === 'Done' && d.isTracked && d.turnaroundDays !== null);
+            
+            trackedDoneItems.forEach(row => {
                 const days = row.turnaroundDays;
                 if (days === 0) buckets['Same Day']++;
                 else if (days === 1) buckets['1 Day']++;
@@ -1234,6 +1286,13 @@
                     plugins: {
                         legend: {
                             display: false
+                        },
+                        title: {
+                            display: trackedDoneItems.length === 0,
+                            text: 'No tracked data yet - will populate from tomorrow onwards',
+                            font: {
+                                size: 14
+                            }
                         },
                         tooltip: {
                             callbacks: {
@@ -1375,7 +1434,7 @@
                         pending: 0,
                         done: 0,
                         waitTimes: [],
-                        turnaroundTimes: []
+                        turnaroundTimes: [] // Only tracked turnarounds
                     };
                 }
 
@@ -1393,7 +1452,8 @@
                     } else {
                         mentorStats[mentor].human++;
                     }
-                    if (row.turnaroundDays !== null) {
+                    // Only include tracked turnaround times in averages
+                    if (row.isTracked && row.turnaroundDays !== null) {
                         mentorStats[mentor].learners[learner].turnaroundTimes.push(row.turnaroundDays);
                     }
                 }
@@ -1407,7 +1467,7 @@
                         : 0;
                     learner.avgTurnaround = learner.turnaroundTimes.length > 0
                         ? (learner.turnaroundTimes.reduce((a, b) => a + b, 0) / learner.turnaroundTimes.length).toFixed(1)
-                        : 0;
+                        : 'N/A'; // N/A if no tracked data yet
                 });
             });
 
@@ -1469,7 +1529,15 @@
                 
                 learners.forEach(learner => {
                     const waitBadgeClass = learner.avgWait >= 7 ? 'badge-retry' : (learner.avgWait >= 4 ? 'badge-unknown' : 'badge-confirmed');
-                    const turnaroundBadgeClass = learner.avgTurnaround >= 7 ? 'badge-retry' : (learner.avgTurnaround >= 4 ? 'badge-unknown' : 'badge-confirmed');
+                    
+                    // Handle N/A turnaround (no tracked data yet)
+                    let turnaroundDisplay = '';
+                    if (learner.avgTurnaround === 'N/A') {
+                        turnaroundDisplay = '<span class="badge badge-unknown">N/A</span>';
+                    } else {
+                        const turnaroundBadgeClass = learner.avgTurnaround >= 7 ? 'badge-retry' : (learner.avgTurnaround >= 4 ? 'badge-unknown' : 'badge-confirmed');
+                        turnaroundDisplay = `<span class="badge ${turnaroundBadgeClass}">${learner.avgTurnaround}d</span>`;
+                    }
                     
                     const learnerRow = document.createElement('tr');
                     learnerRow.innerHTML = `
@@ -1477,7 +1545,7 @@
                         <td>${learner.pending}</td>
                         <td><span class="badge ${waitBadgeClass}">${learner.avgWait}d</span> ${learner.avgWait >= 7 ? '⚠️' : ''}</td>
                         <td>${learner.done}</td>
-                        <td><span class="badge ${turnaroundBadgeClass}">${learner.avgTurnaround}d</span></td>
+                        <td>${turnaroundDisplay}</td>
                     `;
                     learnerTbody.appendChild(learnerRow);
                 });
@@ -1721,7 +1789,14 @@
                         if (days >= 7) badgeClass = 'badge-retry'; // red for 7+ days
                         else if (days >= 4) badgeClass = 'badge-unknown'; // grey/amber for 4-7 days
                         
-                        const label = row.container === 'Pending' ? `${days}d waiting` : `${days}d to mark`;
+                        let label = row.container === 'Pending' ? `${days}d waiting` : `${days}d to mark`;
+                        
+                        // Add Historical badge for untracked done items
+                        if (row.container === 'Done' && !row.isTracked) {
+                            label = `${days}d <small>(Historical)</small>`;
+                            badgeClass = 'badge-unknown'; // Grey for historical
+                        }
+                        
                         turnaroundBadge = `<span class="badge ${badgeClass}">${label}</span>`;
                     }
                     
