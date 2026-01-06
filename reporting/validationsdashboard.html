@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PT Academy Validation Dashboard</title>
+    <title>PT Academy Assessor Activity Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
@@ -496,7 +496,7 @@
     <div class="header">
         <img src="https://pt-academy-embeds.pages.dev/reporting/logo_o_background.png" alt="PT Academy" class="header-logo">
         <div class="header-content">
-            <h1>Validation Dashboard</h1>
+            <h1>Assessor Activity Dashboard</h1>
             <p>Real-time validation queue analytics and mentor performance tracking</p>
         </div>
     </div>
@@ -653,6 +653,13 @@
 
             <!-- Mentor Performance Tab -->
             <div id="tab-mentors" class="tab-content">
+                <div style="background: #f8f8f8; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #C6A906;">
+                    <p style="margin: 0; font-size: 0.9rem; color: #030303;">
+                        <strong>ℹ️ Note:</strong> Learners with multiple managers are shown under a combined "Shared" entry (e.g., "John Smith, Jane Doe"). 
+                        Click any mentor row to see individual learner breakdowns and prioritize by wait time.
+                    </p>
+                </div>
+
                 <div class="filters">
                     <div class="filters-grid">
                         <div class="filter-group">
@@ -1482,13 +1489,19 @@
             data.forEach((mentor, index) => {
                 const humanPercent = mentor.done > 0 ? ((mentor.human / mentor.done) * 100).toFixed(1) : 0;
                 
+                // Check if this is a shared manager (contains comma)
+                const isShared = mentor.name.includes(', ');
+                const managerDisplay = isShared 
+                    ? `<strong>${mentor.name}</strong> <span style="font-size: 0.8rem; color: #C6A906;">👥 Shared</span>`
+                    : `<strong>${mentor.name}</strong>`;
+                
                 // Main mentor row
                 const row = document.createElement('tr');
                 row.className = 'mentor-row';
                 row.id = `mentor-${index}`;
                 row.onclick = () => toggleMentorBreakdown(index);
                 row.innerHTML = `
-                    <td><span class="expand-icon" id="expand-icon-${index}">▶</span><strong>${mentor.name}</strong></td>
+                    <td><span class="expand-icon" id="expand-icon-${index}">▶</span>${managerDisplay}</td>
                     <td>${mentor.pending}</td>
                     <td>${mentor.done}</td>
                     <td><span class="badge badge-ai">${mentor.ai}</span></td>
