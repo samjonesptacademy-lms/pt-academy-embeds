@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PT Academy Assessor Activity Dashboard</title>
+    <title>PT Academy Validation Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
@@ -496,7 +496,7 @@
     <div class="header">
         <img src="https://pt-academy-embeds.pages.dev/reporting/logo_o_background.png" alt="PT Academy" class="header-logo">
         <div class="header-content">
-            <h1>Assessor Activity Dashboard</h1>
+            <h1>Validation Dashboard</h1>
             <p>Real-time validation queue analytics and mentor performance tracking</p>
         </div>
     </div>
@@ -854,10 +854,15 @@
 
         // Utility function to parse question dates - MUST be defined before parseGoogleSheetData
         function parseQuestionDate(fullDate) {
-            // Parse "Monday, January 06, 2026" format to YYYY-MM-DD
+            // Parse formats like "Tuesday, 6 January 2026 at 12:05"
             if (!fullDate) return null;
             try {
-                const date = new Date(fullDate);
+                // Remove day name and "at" time portion, keep date parts
+                // "Tuesday, 6 January 2026 at 12:05" -> "6 January 2026"
+                let cleaned = fullDate.replace(/^[A-Za-z]+,\s*/, ''); // Remove "Tuesday, "
+                cleaned = cleaned.replace(/\s+at\s+.+$/, ''); // Remove " at 12:05"
+                
+                const date = new Date(cleaned);
                 if (isNaN(date.getTime())) return null;
                 return date.toISOString().split('T')[0];
             } catch (e) {
@@ -933,15 +938,17 @@
             
             return rows.map((row, index) => {
                 const cells = row.c || [];
-                const exportDate = cells[0]?.v || '';
+                // Google Sheets returns dates with .f (formatted) and .v (value) properties
+                // For dates, we want the formatted string (.f) which is like "06/01/2026"
+                const exportDate = cells[0]?.f || cells[0]?.v || '';
                 const fullDate = cells[9]?.v || '';
                 const container = cells[1]?.v || '';
                 
                 // Debug first row
                 if (index === 0) {
                     console.log('DEBUG First Row:');
-                    console.log('Export Date (cells[0]):', cells[0]);
-                    console.log('Full Date (cells[9]):', cells[9]);
+                    console.log('Export Date:', exportDate);
+                    console.log('Full Date:', fullDate);
                     console.log('Container:', container);
                 }
                 
@@ -952,10 +959,24 @@
                     
                     if (index === 0) {
                         console.log('Parsed Question Date:', questionDate);
+                        console.log('Export Date to parse:', exportDate);
                     }
                     
                     if (questionDate) {
-                        const exportDateObj = new Date(exportDate);
+                        // Parse export date (format: "06/01/2026" = DD/MM/YYYY)
+                        const dateParts = exportDate.split('/');
+                        let exportDateObj;
+                        
+                        if (dateParts.length === 3) {
+                            // Assume DD/MM/YYYY format (UK format)
+                            const day = parseInt(dateParts[0]);
+                            const month = parseInt(dateParts[1]) - 1; // Months are 0-indexed
+                            const year = parseInt(dateParts[2]);
+                            exportDateObj = new Date(year, month, day);
+                        } else {
+                            exportDateObj = new Date(exportDate);
+                        }
+                        
                         const questionDateObj = new Date(questionDate);
                         const diffTime = exportDateObj - questionDateObj;
                         turnaroundDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
