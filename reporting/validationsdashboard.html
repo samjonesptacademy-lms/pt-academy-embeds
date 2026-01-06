@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PT Academy Assessor Activity Dashboard</title>
+    <title>PT Academy Validation Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
@@ -365,6 +365,60 @@
             background: #f8f8f8;
         }
 
+        .mentor-row {
+            cursor: pointer;
+            transition: background 0.2s;
+        }
+
+        .mentor-row:hover {
+            background: #f0f0f0;
+        }
+
+        .mentor-row.expanded {
+            background: #e8e8e8;
+            font-weight: 600;
+        }
+
+        .learner-breakdown-row {
+            display: none;
+            background: #f8f8f8;
+        }
+
+        .learner-breakdown-row.visible {
+            display: table-row;
+        }
+
+        .learner-breakdown-cell {
+            padding: 0 !important;
+        }
+
+        .learner-breakdown-table {
+            width: 100%;
+            margin: 0;
+        }
+
+        .learner-breakdown-table th {
+            background: #e0e0e0;
+            font-size: 0.85rem;
+            padding: 0.7rem;
+        }
+
+        .learner-breakdown-table td {
+            padding: 0.7rem;
+            font-size: 0.9rem;
+        }
+
+        .expand-icon {
+            display: inline-block;
+            margin-right: 0.5rem;
+            transition: transform 0.3s;
+            color: #C6A906;
+        }
+
+        .expand-icon.expanded {
+            transform: rotate(90deg);
+        }
+
         .table-wrapper {
             max-height: 600px;
             overflow-y: auto;
@@ -442,7 +496,7 @@
     <div class="header">
         <img src="https://pt-academy-embeds.pages.dev/reporting/logo_o_background.png" alt="PT Academy" class="header-logo">
         <div class="header-content">
-            <h1>Assessor Activity Dashboard</h1>
+            <h1>Validation Dashboard</h1>
             <p>Real-time validation queue analytics and mentor performance tracking</p>
         </div>
     </div>
@@ -564,11 +618,26 @@
                         <div class="metric-value" id="metric-human">-</div>
                         <div class="metric-subtext" id="metric-human-percent">-</div>
                     </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Avg Turnaround (Done)</div>
+                        <div class="metric-value" id="metric-avg-turnaround">-</div>
+                        <div class="metric-subtext">Days to mark completed questions</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Avg Wait Time (Pending)</div>
+                        <div class="metric-value" id="metric-avg-wait">-</div>
+                        <div class="metric-subtext">Days questions waiting</div>
+                    </div>
                 </div>
 
                 <div class="chart-container">
                     <div class="chart-title">📈 Validation Trends Over Time</div>
                     <canvas id="trendsChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title">⏱️ Turnaround Time Distribution</div>
+                    <canvas id="turnaroundChart"></canvas>
                 </div>
 
                 <div class="chart-container">
@@ -717,10 +786,11 @@
                                     <th class="sortable" onclick="sortDataTable(5)">Question</th>
                                     <th class="sortable" onclick="sortDataTable(6)">Status</th>
                                     <th class="sortable" onclick="sortDataTable(7)">Marked By</th>
+                                    <th class="sortable" onclick="sortDataTable(8)">Turnaround</th>
                                 </tr>
                             </thead>
                             <tbody id="data-table-body">
-                                <tr><td colspan="8" style="text-align: center; padding: 2rem;">Apply filters to view data</td></tr>
+                                <tr><td colspan="9" style="text-align: center; padding: 2rem;">Apply filters to view data</td></tr>
                             </tbody>
                         </table>
                     </div>
@@ -780,7 +850,7 @@
         let customFields = new Set();
 
         // Chart instances
-        let trendsChart, aiHumanChart, analyticsChart;
+        let trendsChart, aiHumanChart, turnaroundChart, analyticsChart;
 
         // Load data on page load
         window.onload = async function() {
@@ -850,9 +920,33 @@
             
             return rows.map(row => {
                 const cells = row.c || [];
+                const exportDate = cells[0]?.v || '';
+                const fullDate = cells[9]?.v || '';
+                const container = cells[1]?.v || '';
+                
+                // Calculate turnaround/wait time
+                let turnaroundDays = null;
+                if (exportDate && fullDate) {
+                    const questionDate = parseQuestionDate(fullDate);
+                    if (questionDate) {
+                        const exportDateObj = new Date(exportDate);
+                        const questionDateObj = new Date(questionDate);
+                        const diffTime = exportDateObj - questionDateObj;
+                        turnaroundDays = Math.floor(diffTime / (1000 * 60 * 60 * 24));
+                        
+                        // For pending items, calculate wait time from today
+                        if (container === 'Pending') {
+                            const today = new Date();
+                            today.setHours(0, 0, 0, 0);
+                            const waitTime = today - questionDateObj;
+                            turnaroundDays = Math.floor(waitTime / (1000 * 60 * 60 * 24));
+                        }
+                    }
+                }
+                
                 return {
-                    exportDate: cells[0]?.v || '',
-                    container: cells[1]?.v || '',
+                    exportDate: exportDate,
+                    container: container,
                     learnerId: cells[2]?.v || '',
                     learnerName: cells[3]?.v || 'Unknown',
                     managerName: cells[4]?.v || 'Unknown',
@@ -860,9 +954,10 @@
                     customFields: cells[6]?.v || '{}',
                     questionTitle: cells[7]?.v || '',
                     date: cells[8]?.v || '',
-                    fullDate: cells[9]?.v || '',
+                    fullDate: fullDate,
                     status: cells[10]?.v || 'Unknown',
-                    markedBy: cells[11]?.v || 'Unknown'
+                    markedBy: cells[11]?.v || 'Unknown',
+                    turnaroundDays: turnaroundDays
                 };
             });
         }
@@ -871,6 +966,7 @@
             overviewFilteredData = [...allData]; // Initialize overview filtered data
             updateMetrics();
             createTrendsChart();
+            createTurnaroundChart();
             createAIHumanChart();
             populateFilters();
             populateOverviewFilters(); // New function
@@ -898,6 +994,27 @@
 
             document.getElementById('metric-ai-percent').textContent = `${aiPercent}% of done`;
             document.getElementById('metric-human-percent').textContent = `${humanPercent}% of done`;
+            
+            // Calculate average turnaround time for Done items
+            const doneWithTurnaround = doneItems.filter(d => d.turnaroundDays !== null);
+            const avgTurnaround = doneWithTurnaround.length > 0 
+                ? (doneWithTurnaround.reduce((sum, d) => sum + d.turnaroundDays, 0) / doneWithTurnaround.length).toFixed(1)
+                : 0;
+            
+            document.getElementById('metric-avg-turnaround').textContent = avgTurnaround;
+            document.getElementById('metric-avg-turnaround').parentElement.querySelector('.metric-subtext').textContent = 
+                avgTurnaround > 7 ? '⚠️ Over 7 days average' : 'Days to mark completed questions';
+            
+            // Calculate average wait time for Pending items
+            const pendingItems = data.filter(d => d.container === 'Pending');
+            const pendingWithWait = pendingItems.filter(d => d.turnaroundDays !== null);
+            const avgWait = pendingWithWait.length > 0
+                ? (pendingWithWait.reduce((sum, d) => sum + d.turnaroundDays, 0) / pendingWithWait.length).toFixed(1)
+                : 0;
+            
+            document.getElementById('metric-avg-wait').textContent = avgWait;
+            document.getElementById('metric-avg-wait').parentElement.querySelector('.metric-subtext').textContent = 
+                avgWait > 7 ? '⚠️ Over 7 days waiting' : 'Days questions waiting';
         }
 
         function createTrendsChart() {
@@ -1012,6 +1129,82 @@
             });
         }
 
+        function createTurnaroundChart() {
+            const ctx = document.getElementById('turnaroundChart').getContext('2d');
+            
+            // Group done items by turnaround time buckets
+            const buckets = {
+                'Same Day': 0,
+                '1 Day': 0,
+                '2-3 Days': 0,
+                '4-7 Days': 0,
+                '7+ Days': 0
+            };
+            
+            overviewFilteredData.filter(d => d.container === 'Done' && d.turnaroundDays !== null).forEach(row => {
+                const days = row.turnaroundDays;
+                if (days === 0) buckets['Same Day']++;
+                else if (days === 1) buckets['1 Day']++;
+                else if (days >= 2 && days <= 3) buckets['2-3 Days']++;
+                else if (days >= 4 && days <= 7) buckets['4-7 Days']++;
+                else buckets['7+ Days']++;
+            });
+            
+            const labels = Object.keys(buckets);
+            const counts = Object.values(buckets);
+            
+            // Color code: green for fast, amber for medium, red for slow
+            const backgroundColors = [
+                '#4caf50', // Same Day - green
+                '#8bc34a', // 1 Day - light green
+                '#ffc107', // 2-3 Days - amber
+                '#ff9800', // 4-7 Days - orange
+                '#f44336'  // 7+ Days - red (flagged)
+            ];
+            
+            turnaroundChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Number of Questions',
+                        data: counts,
+                        backgroundColor: backgroundColors,
+                        borderColor: backgroundColors.map(c => c),
+                        borderWidth: 1
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            display: false
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    const label = context.label;
+                                    const value = context.parsed.y;
+                                    const total = counts.reduce((a, b) => a + b, 0);
+                                    const percent = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                    return `${value} questions (${percent}%)`;
+                                }
+                            }
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true,
+                            ticks: {
+                                stepSize: 1
+                            }
+                        }
+                    }
+                }
+            });
+        }
+
         function populateFilters() {
             // Get unique values
             const learners = [...new Set(allData.map(d => d.learnerName))].sort();
@@ -1108,26 +1301,60 @@
 
             allData.forEach(row => {
                 const mentor = row.managerName;
+                const learner = row.learnerName;
+                
                 if (!mentorStats[mentor]) {
                     mentorStats[mentor] = {
                         name: mentor,
                         pending: 0,
                         done: 0,
                         ai: 0,
-                        human: 0
+                        human: 0,
+                        learners: {}
+                    };
+                }
+
+                // Learner-level tracking
+                if (!mentorStats[mentor].learners[learner]) {
+                    mentorStats[mentor].learners[learner] = {
+                        name: learner,
+                        pending: 0,
+                        done: 0,
+                        waitTimes: [],
+                        turnaroundTimes: []
                     };
                 }
 
                 if (row.container === 'Pending') {
                     mentorStats[mentor].pending++;
+                    mentorStats[mentor].learners[learner].pending++;
+                    if (row.turnaroundDays !== null) {
+                        mentorStats[mentor].learners[learner].waitTimes.push(row.turnaroundDays);
+                    }
                 } else {
                     mentorStats[mentor].done++;
+                    mentorStats[mentor].learners[learner].done++;
                     if (row.markedBy === 'AI') {
                         mentorStats[mentor].ai++;
                     } else {
                         mentorStats[mentor].human++;
                     }
+                    if (row.turnaroundDays !== null) {
+                        mentorStats[mentor].learners[learner].turnaroundTimes.push(row.turnaroundDays);
+                    }
                 }
+            });
+
+            // Calculate averages for each learner
+            Object.values(mentorStats).forEach(mentor => {
+                Object.values(mentor.learners).forEach(learner => {
+                    learner.avgWait = learner.waitTimes.length > 0
+                        ? (learner.waitTimes.reduce((a, b) => a + b, 0) / learner.waitTimes.length).toFixed(1)
+                        : 0;
+                    learner.avgTurnaround = learner.turnaroundTimes.length > 0
+                        ? (learner.turnaroundTimes.reduce((a, b) => a + b, 0) / learner.turnaroundTimes.length).toFixed(1)
+                        : 0;
+                });
             });
 
             mentorData = Object.values(mentorStats);
@@ -1138,12 +1365,16 @@
             const tbody = document.getElementById('mentor-table-body');
             tbody.innerHTML = '';
 
-            data.forEach(mentor => {
+            data.forEach((mentor, index) => {
                 const humanPercent = mentor.done > 0 ? ((mentor.human / mentor.done) * 100).toFixed(1) : 0;
                 
+                // Main mentor row
                 const row = document.createElement('tr');
+                row.className = 'mentor-row';
+                row.id = `mentor-${index}`;
+                row.onclick = () => toggleMentorBreakdown(index);
                 row.innerHTML = `
-                    <td><strong>${mentor.name}</strong></td>
+                    <td><span class="expand-icon" id="expand-icon-${index}">▶</span><strong>${mentor.name}</strong></td>
                     <td>${mentor.pending}</td>
                     <td>${mentor.done}</td>
                     <td><span class="badge badge-ai">${mentor.ai}</span></td>
@@ -1151,9 +1382,70 @@
                     <td>${humanPercent}%</td>
                 `;
                 tbody.appendChild(row);
+                
+                // Learner breakdown row (hidden by default)
+                const breakdownRow = document.createElement('tr');
+                breakdownRow.className = 'learner-breakdown-row';
+                breakdownRow.id = `breakdown-${index}`;
+                breakdownRow.innerHTML = `
+                    <td colspan="6" class="learner-breakdown-cell">
+                        <table class="learner-breakdown-table">
+                            <thead>
+                                <tr>
+                                    <th>Learner Name</th>
+                                    <th>Pending</th>
+                                    <th>Avg Wait Time</th>
+                                    <th>Done</th>
+                                    <th>Avg Turnaround</th>
+                                </tr>
+                            </thead>
+                            <tbody id="learner-breakdown-${index}">
+                            </tbody>
+                        </table>
+                    </td>
+                `;
+                tbody.appendChild(breakdownRow);
+                
+                // Pre-populate learner breakdown (but keep hidden)
+                const learnerTbody = document.getElementById(`learner-breakdown-${index}`);
+                const learners = Object.values(mentor.learners);
+                
+                // Sort by average wait time (descending) to prioritize
+                learners.sort((a, b) => parseFloat(b.avgWait) - parseFloat(a.avgWait));
+                
+                learners.forEach(learner => {
+                    const waitBadgeClass = learner.avgWait >= 7 ? 'badge-retry' : (learner.avgWait >= 4 ? 'badge-unknown' : 'badge-confirmed');
+                    const turnaroundBadgeClass = learner.avgTurnaround >= 7 ? 'badge-retry' : (learner.avgTurnaround >= 4 ? 'badge-unknown' : 'badge-confirmed');
+                    
+                    const learnerRow = document.createElement('tr');
+                    learnerRow.innerHTML = `
+                        <td><strong>${learner.name}</strong></td>
+                        <td>${learner.pending}</td>
+                        <td><span class="badge ${waitBadgeClass}">${learner.avgWait}d</span> ${learner.avgWait >= 7 ? '⚠️' : ''}</td>
+                        <td>${learner.done}</td>
+                        <td><span class="badge ${turnaroundBadgeClass}">${learner.avgTurnaround}d</span></td>
+                    `;
+                    learnerTbody.appendChild(learnerRow);
+                });
             });
 
             document.getElementById('mentor-count').textContent = data.length;
+        }
+
+        function toggleMentorBreakdown(index) {
+            const breakdownRow = document.getElementById(`breakdown-${index}`);
+            const mentorRow = document.getElementById(`mentor-${index}`);
+            const icon = document.getElementById(`expand-icon-${index}`);
+            
+            if (breakdownRow.classList.contains('visible')) {
+                breakdownRow.classList.remove('visible');
+                mentorRow.classList.remove('expanded');
+                icon.classList.remove('expanded');
+            } else {
+                breakdownRow.classList.add('visible');
+                mentorRow.classList.add('expanded');
+                icon.classList.add('expanded');
+            }
         }
 
         function filterMentorPerformance() {
@@ -1268,8 +1560,10 @@
             
             // Destroy and recreate charts
             if (trendsChart) trendsChart.destroy();
+            if (turnaroundChart) turnaroundChart.destroy();
             if (aiHumanChart) aiHumanChart.destroy();
             createTrendsChart();
+            createTurnaroundChart();
             createAIHumanChart();
         }
 
@@ -1294,8 +1588,10 @@
             updateMetrics();
             
             if (trendsChart) trendsChart.destroy();
+            if (turnaroundChart) turnaroundChart.destroy();
             if (aiHumanChart) aiHumanChart.destroy();
             createTrendsChart();
+            createTurnaroundChart();
             createAIHumanChart();
         }
 
@@ -1372,9 +1668,21 @@
             tbody.innerHTML = '';
 
             if (data.length === 0) {
-                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 2rem;">No data matches the selected filters</td></tr>';
+                tbody.innerHTML = '<tr><td colspan="9" style="text-align: center; padding: 2rem;">No data matches the selected filters</td></tr>';
             } else {
                 data.slice(0, 100).forEach(row => {
+                    // Color code turnaround time
+                    let turnaroundBadge = '-';
+                    if (row.turnaroundDays !== null) {
+                        const days = row.turnaroundDays;
+                        let badgeClass = 'badge-confirmed'; // green
+                        if (days >= 7) badgeClass = 'badge-retry'; // red for 7+ days
+                        else if (days >= 4) badgeClass = 'badge-unknown'; // grey/amber for 4-7 days
+                        
+                        const label = row.container === 'Pending' ? `${days}d waiting` : `${days}d to mark`;
+                        turnaroundBadge = `<span class="badge ${badgeClass}">${label}</span>`;
+                    }
+                    
                     const tr = document.createElement('tr');
                     tr.innerHTML = `
                         <td>${row.exportDate}</td>
@@ -1385,13 +1693,14 @@
                         <td>${row.questionTitle.substring(0, 50)}${row.questionTitle.length > 50 ? '...' : ''}</td>
                         <td><span class="badge badge-${row.status.toLowerCase()}">${row.status}</span></td>
                         <td><span class="badge badge-${row.markedBy.toLowerCase()}">${row.markedBy}</span></td>
+                        <td>${turnaroundBadge}</td>
                     `;
                     tbody.appendChild(tr);
                 });
 
                 if (data.length > 100) {
                     const tr = document.createElement('tr');
-                    tr.innerHTML = `<td colspan="8" style="text-align: center; padding: 1rem; color: #7f8c8d;">Showing first 100 of ${data.length} records. Use filters to narrow results.</td>`;
+                    tr.innerHTML = `<td colspan="9" style="text-align: center; padding: 1rem; color: #7f8c8d;">Showing first 100 of ${data.length} records. Use filters to narrow results.</td>`;
                     tbody.appendChild(tr);
                 }
             }
@@ -1413,12 +1722,20 @@
             headers.forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
             currentHeader.classList.add(ascending ? 'sorted-asc' : 'sorted-desc');
 
-            const fields = ['exportDate', 'container', 'learnerName', 'managerName', 'group', 'questionTitle', 'status', 'markedBy'];
+            const fields = ['exportDate', 'container', 'learnerName', 'managerName', 'group', 'questionTitle', 'status', 'markedBy', 'turnaroundDays'];
             const field = fields[columnIndex];
 
             filteredData.sort((a, b) => {
                 const aVal = a[field];
                 const bVal = b[field];
+                
+                // Handle null turnaround values
+                if (field === 'turnaroundDays') {
+                    if (aVal === null && bVal === null) return 0;
+                    if (aVal === null) return ascending ? 1 : -1;
+                    if (bVal === null) return ascending ? -1 : 1;
+                    return ascending ? aVal - bVal : bVal - aVal;
+                }
                 
                 if (typeof aVal === 'string') {
                     return ascending ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
