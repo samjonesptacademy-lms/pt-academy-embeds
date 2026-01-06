@@ -1,0 +1,1239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PT Academy Validation Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+            background: #f5f7fa;
+            color: #2c3e50;
+            line-height: 1.6;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 2rem;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 0.95rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            font-size: 1.2rem;
+            color: #667eea;
+        }
+
+        .loading-spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #667eea;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 2rem auto;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e1e8ed;
+            flex-wrap: wrap;
+        }
+
+        .tab {
+            padding: 1rem 1.5rem;
+            background: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #667eea;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s;
+        }
+
+        .tab:hover {
+            background: #f8f9fa;
+        }
+
+        .tab.active {
+            color: #764ba2;
+            border-bottom-color: #764ba2;
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .metric-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            transition: transform 0.3s;
+        }
+
+        .metric-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+
+        .metric-label {
+            font-size: 0.85rem;
+            color: #7f8c8d;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .metric-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #667eea;
+        }
+
+        .metric-subtext {
+            font-size: 0.9rem;
+            color: #95a5a6;
+            margin-top: 0.5rem;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        .chart-title {
+            font-size: 1.3rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #2c3e50;
+        }
+
+        .filters {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            margin-bottom: 2rem;
+        }
+
+        .filters-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+        }
+
+        .filter-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .filter-label {
+            font-size: 0.85rem;
+            font-weight: 600;
+            color: #2c3e50;
+            margin-bottom: 0.5rem;
+        }
+
+        select, input {
+            padding: 0.7rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #667eea;
+        }
+
+        .btn {
+            padding: 0.7rem 1.5rem;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            transition: background 0.3s;
+        }
+
+        .btn:hover {
+            background: #764ba2;
+        }
+
+        .btn-secondary {
+            background: #95a5a6;
+        }
+
+        .btn-secondary:hover {
+            background: #7f8c8d;
+        }
+
+        .data-table {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+            overflow: hidden;
+        }
+
+        .table-controls {
+            padding: 1rem 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            border-bottom: 1px solid #e1e8ed;
+        }
+
+        .table-info {
+            font-size: 0.9rem;
+            color: #7f8c8d;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e1e8ed;
+        }
+
+        th {
+            background: #f8f9fa;
+            font-weight: 600;
+            color: #2c3e50;
+            position: sticky;
+            top: 0;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        th:hover {
+            background: #e9ecef;
+        }
+
+        th.sortable::after {
+            content: ' ⇅';
+            color: #ccc;
+        }
+
+        th.sorted-asc::after {
+            content: ' ↑';
+            color: #667eea;
+        }
+
+        th.sorted-desc::after {
+            content: ' ↓';
+            color: #667eea;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .table-wrapper {
+            max-height: 600px;
+            overflow-y: auto;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.3rem 0.7rem;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .badge-ai {
+            background: #e3f2fd;
+            color: #1976d2;
+        }
+
+        .badge-human {
+            background: #f3e5f5;
+            color: #7b1fa2;
+        }
+
+        .badge-confirmed {
+            background: #e8f5e9;
+            color: #388e3c;
+        }
+
+        .badge-retry {
+            background: #fff3e0;
+            color: #f57c00;
+        }
+
+        .badge-unknown {
+            background: #f5f5f5;
+            color: #616161;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+
+            .metrics-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .filters-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            table {
+                font-size: 0.85rem;
+            }
+
+            th, td {
+                padding: 0.7rem 0.5rem;
+            }
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 1rem;
+            border-radius: 8px;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <h1>🎯 PT Academy Validation Dashboard</h1>
+        <p>Real-time validation queue analytics and mentor performance tracking</p>
+    </div>
+
+    <div class="container">
+        <div id="loading" class="loading">
+            <div class="loading-spinner"></div>
+            <p>Loading data from Google Sheets...</p>
+        </div>
+
+        <div id="dashboard" style="display: none;">
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('overview')">📊 Overview</button>
+                <button class="tab" onclick="switchTab('mentors')">👥 Mentor Performance</button>
+                <button class="tab" onclick="switchTab('explorer')">🔍 Data Explorer</button>
+                <button class="tab" onclick="switchTab('analytics')">📈 Custom Field Analytics</button>
+            </div>
+
+            <!-- Overview Tab -->
+            <div id="tab-overview" class="tab-content active">
+                <div class="metrics-grid">
+                    <div class="metric-card">
+                        <div class="metric-label">Total Pending</div>
+                        <div class="metric-value" id="metric-pending">-</div>
+                        <div class="metric-subtext">Questions awaiting validation</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Total Done</div>
+                        <div class="metric-value" id="metric-done">-</div>
+                        <div class="metric-subtext">Questions validated</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">AI Marked</div>
+                        <div class="metric-value" id="metric-ai">-</div>
+                        <div class="metric-subtext" id="metric-ai-percent">-</div>
+                    </div>
+                    <div class="metric-card">
+                        <div class="metric-label">Human Marked</div>
+                        <div class="metric-value" id="metric-human">-</div>
+                        <div class="metric-subtext" id="metric-human-percent">-</div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title">📈 Validation Trends Over Time</div>
+                    <canvas id="trendsChart"></canvas>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title">🤖 AI vs Human Marking Trends</div>
+                    <canvas id="aiHumanChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Mentor Performance Tab -->
+            <div id="tab-mentors" class="tab-content">
+                <div class="filters">
+                    <div class="filters-grid">
+                        <div class="filter-group">
+                            <label class="filter-label">Filter by Mentor</label>
+                            <select id="filter-mentor-performance" onchange="filterMentorPerformance()">
+                                <option value="">All Mentors</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="data-table">
+                    <div class="table-controls">
+                        <div class="table-info">
+                            <span id="mentor-count">0</span> mentors
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="sortable" onclick="sortMentorTable(0)">Mentor Name</th>
+                                    <th class="sortable" onclick="sortMentorTable(1)">Pending</th>
+                                    <th class="sortable" onclick="sortMentorTable(2)">Done (Total)</th>
+                                    <th class="sortable" onclick="sortMentorTable(3)">AI Marked</th>
+                                    <th class="sortable" onclick="sortMentorTable(4)">Human Marked</th>
+                                    <th class="sortable" onclick="sortMentorTable(5)">Human %</th>
+                                </tr>
+                            </thead>
+                            <tbody id="mentor-table-body">
+                                <tr><td colspan="6" style="text-align: center; padding: 2rem;">Loading...</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Data Explorer Tab -->
+            <div id="tab-explorer" class="tab-content">
+                <div class="filters">
+                    <h3 style="margin-bottom: 1rem;">🔍 Filter Data</h3>
+                    <div class="filters-grid">
+                        <div class="filter-group">
+                            <label class="filter-label">Learner Name</label>
+                            <select id="filter-learner" onchange="applyFilters()">
+                                <option value="">All Learners</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Manager Name</label>
+                            <select id="filter-manager" onchange="applyFilters()">
+                                <option value="">All Managers</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Group</label>
+                            <select id="filter-group" onchange="applyFilters()">
+                                <option value="">All Groups</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Status</label>
+                            <select id="filter-status" onchange="applyFilters()">
+                                <option value="">All Statuses</option>
+                                <option value="Confirmed">Confirmed</option>
+                                <option value="Retry">Retry</option>
+                                <option value="Unknown">Unknown</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Marked By</label>
+                            <select id="filter-marked" onchange="applyFilters()">
+                                <option value="">All</option>
+                                <option value="AI">AI</option>
+                                <option value="Human">Human</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Container</label>
+                            <select id="filter-container" onchange="applyFilters()">
+                                <option value="">All</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Done">Done</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Date From</label>
+                            <input type="date" id="filter-date-from" onchange="applyFilters()">
+                        </div>
+                        <div class="filter-group">
+                            <label class="filter-label">Date To</label>
+                            <input type="date" id="filter-date-to" onchange="applyFilters()">
+                        </div>
+                    </div>
+                    <div id="custom-field-filters" style="margin-top: 1rem;">
+                        <!-- Custom field filters will be added dynamically -->
+                    </div>
+                    <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+                        <button class="btn" onclick="applyFilters()">Apply Filters</button>
+                        <button class="btn btn-secondary" onclick="resetFilters()">Reset Filters</button>
+                        <button class="btn" onclick="exportToCSV()">Export to CSV</button>
+                    </div>
+                </div>
+
+                <div class="data-table">
+                    <div class="table-controls">
+                        <div class="table-info">
+                            Showing <span id="filtered-count">0</span> of <span id="total-count">0</span> records
+                        </div>
+                    </div>
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th class="sortable" onclick="sortDataTable(0)">Date</th>
+                                    <th class="sortable" onclick="sortDataTable(1)">Container</th>
+                                    <th class="sortable" onclick="sortDataTable(2)">Learner</th>
+                                    <th class="sortable" onclick="sortDataTable(3)">Manager</th>
+                                    <th class="sortable" onclick="sortDataTable(4)">Group</th>
+                                    <th class="sortable" onclick="sortDataTable(5)">Question</th>
+                                    <th class="sortable" onclick="sortDataTable(6)">Status</th>
+                                    <th class="sortable" onclick="sortDataTable(7)">Marked By</th>
+                                </tr>
+                            </thead>
+                            <tbody id="data-table-body">
+                                <tr><td colspan="8" style="text-align: center; padding: 2rem;">Apply filters to view data</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Custom Field Analytics Tab -->
+            <div id="tab-analytics" class="tab-content">
+                <div class="filters">
+                    <div class="filters-grid">
+                        <div class="filter-group">
+                            <label class="filter-label">Select Custom Field</label>
+                            <select id="analytics-field" onchange="updateAnalytics()">
+                                <option value="">Select a field...</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="chart-container">
+                    <div class="chart-title" id="analytics-title">Select a custom field to view analytics</div>
+                    <canvas id="analyticsChart"></canvas>
+                </div>
+
+                <div class="data-table">
+                    <div class="table-wrapper">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Value</th>
+                                    <th>Pending</th>
+                                    <th>Done</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="analytics-table-body">
+                                <tr><td colspan="4" style="text-align: center; padding: 2rem;">Select a custom field above</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration
+        const SHEET_ID = '14wIg72mL7kURuuWg060uMdexrd8amYht_KpUJA-03w4';
+        const PENDING_SHEET = 'Enriched Pending Data';
+        const DONE_SHEET = 'Enriched Done Data';
+
+        // Global data storage
+        let allData = [];
+        let filteredData = [];
+        let mentorData = [];
+        let customFields = new Set();
+
+        // Chart instances
+        let trendsChart, aiHumanChart, analyticsChart;
+
+        // Load data on page load
+        window.onload = async function() {
+            try {
+                await loadData();
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                initializeDashboard();
+            } catch (error) {
+                document.getElementById('loading').innerHTML = `
+                    <div class="error-message">
+                        <strong>Error loading data:</strong> ${error.message}<br>
+                        Please ensure the Google Sheet is publicly accessible.
+                    </div>
+                `;
+            }
+        };
+
+        async function loadData() {
+            const pendingUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(PENDING_SHEET)}`;
+            const doneUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(DONE_SHEET)}`;
+
+            const [pendingResponse, doneResponse] = await Promise.all([
+                fetch(pendingUrl),
+                fetch(doneUrl)
+            ]);
+
+            const pendingText = await pendingResponse.text();
+            const doneText = await doneResponse.text();
+
+            const pendingData = parseGoogleSheetData(pendingText);
+            const doneData = parseGoogleSheetData(doneText);
+
+            allData = [...pendingData, ...doneData];
+            filteredData = [...allData];
+
+            // Extract all custom field names
+            allData.forEach(row => {
+                if (row.customFields) {
+                    try {
+                        const fields = JSON.parse(row.customFields);
+                        Object.keys(fields).forEach(key => customFields.add(key));
+                    } catch (e) {
+                        // Invalid JSON, skip
+                    }
+                }
+            });
+        }
+
+        function parseGoogleSheetData(text) {
+            const json = JSON.parse(text.substring(47, text.length - 2));
+            const rows = json.table.rows;
+            
+            return rows.map(row => {
+                const cells = row.c || [];
+                return {
+                    exportDate: cells[0]?.v || '',
+                    container: cells[1]?.v || '',
+                    learnerId: cells[2]?.v || '',
+                    learnerName: cells[3]?.v || 'Unknown',
+                    managerName: cells[4]?.v || 'Unknown',
+                    group: cells[5]?.v || 'Unknown',
+                    customFields: cells[6]?.v || '{}',
+                    questionTitle: cells[7]?.v || '',
+                    date: cells[8]?.v || '',
+                    fullDate: cells[9]?.v || '',
+                    status: cells[10]?.v || 'Unknown',
+                    markedBy: cells[11]?.v || 'Unknown'
+                };
+            });
+        }
+
+        function initializeDashboard() {
+            updateMetrics();
+            createTrendsChart();
+            createAIHumanChart();
+            populateFilters();
+            buildMentorPerformance();
+            populateAnalyticsField();
+        }
+
+        function updateMetrics() {
+            const pending = allData.filter(d => d.container === 'Pending').length;
+            const done = allData.filter(d => d.container === 'Done').length;
+            const ai = allData.filter(d => d.markedBy === 'AI').length;
+            const human = allData.filter(d => d.markedBy === 'Human').length;
+
+            document.getElementById('metric-pending').textContent = pending.toLocaleString();
+            document.getElementById('metric-done').textContent = done.toLocaleString();
+            document.getElementById('metric-ai').textContent = ai.toLocaleString();
+            document.getElementById('metric-human').textContent = human.toLocaleString();
+
+            const aiPercent = done > 0 ? ((ai / done) * 100).toFixed(1) : 0;
+            const humanPercent = done > 0 ? ((human / done) * 100).toFixed(1) : 0;
+
+            document.getElementById('metric-ai-percent').textContent = `${aiPercent}% of done`;
+            document.getElementById('metric-human-percent').textContent = `${humanPercent}% of done`;
+        }
+
+        function createTrendsChart() {
+            const ctx = document.getElementById('trendsChart').getContext('2d');
+            
+            // Group by date
+            const dateGroups = {};
+            allData.forEach(row => {
+                const date = row.exportDate;
+                if (!dateGroups[date]) {
+                    dateGroups[date] = { pending: 0, done: 0 };
+                }
+                if (row.container === 'Pending') {
+                    dateGroups[date].pending++;
+                } else {
+                    dateGroups[date].done++;
+                }
+            });
+
+            const dates = Object.keys(dateGroups).sort();
+            const pendingCounts = dates.map(d => dateGroups[d].pending);
+            const doneCounts = dates.map(d => dateGroups[d].done);
+
+            trendsChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Pending',
+                        data: pendingCounts,
+                        borderColor: '#ff6b6b',
+                        backgroundColor: 'rgba(255, 107, 107, 0.1)',
+                        tension: 0.4
+                    }, {
+                        label: 'Done',
+                        data: doneCounts,
+                        borderColor: '#51cf66',
+                        backgroundColor: 'rgba(81, 207, 102, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function createAIHumanChart() {
+            const ctx = document.getElementById('aiHumanChart').getContext('2d');
+            
+            // Group by date for done items only
+            const dateGroups = {};
+            allData.filter(d => d.container === 'Done').forEach(row => {
+                const date = row.exportDate;
+                if (!dateGroups[date]) {
+                    dateGroups[date] = { ai: 0, human: 0 };
+                }
+                if (row.markedBy === 'AI') {
+                    dateGroups[date].ai++;
+                } else {
+                    dateGroups[date].human++;
+                }
+            });
+
+            const dates = Object.keys(dateGroups).sort();
+            const aiCounts = dates.map(d => dateGroups[d].ai);
+            const humanCounts = dates.map(d => dateGroups[d].human);
+
+            aiHumanChart = new Chart(ctx, {
+                type: 'line',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'AI Marked',
+                        data: aiCounts,
+                        borderColor: '#667eea',
+                        backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                        tension: 0.4
+                    }, {
+                        label: 'Human Marked',
+                        data: humanCounts,
+                        borderColor: '#764ba2',
+                        backgroundColor: 'rgba(118, 75, 162, 0.1)',
+                        tension: 0.4
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function populateFilters() {
+            // Get unique values
+            const learners = [...new Set(allData.map(d => d.learnerName))].sort();
+            const managers = [...new Set(allData.map(d => d.managerName))].sort();
+            const groups = [...new Set(allData.flatMap(d => d.group.split(', ')))].sort();
+
+            populateSelect('filter-learner', learners);
+            populateSelect('filter-manager', managers);
+            populateSelect('filter-group', groups);
+            populateSelect('filter-mentor-performance', managers);
+
+            // Create custom field filters
+            const customFieldFilters = document.getElementById('custom-field-filters');
+            customFields.forEach(field => {
+                const values = new Set();
+                allData.forEach(row => {
+                    try {
+                        const fields = JSON.parse(row.customFields);
+                        if (fields[field]) {
+                            values.add(fields[field]);
+                        }
+                    } catch (e) {}
+                });
+
+                if (values.size > 0) {
+                    const filterDiv = document.createElement('div');
+                    filterDiv.className = 'filter-group';
+                    filterDiv.innerHTML = `
+                        <label class="filter-label">${field}</label>
+                        <select id="filter-cf-${sanitizeId(field)}" onchange="applyFilters()">
+                            <option value="">All</option>
+                            ${[...values].sort().map(v => `<option value="${v}">${v}</option>`).join('')}
+                        </select>
+                    `;
+                    customFieldFilters.appendChild(filterDiv);
+                }
+            });
+        }
+
+        function populateSelect(id, values) {
+            const select = document.getElementById(id);
+            values.forEach(value => {
+                const option = document.createElement('option');
+                option.value = value;
+                option.textContent = value;
+                select.appendChild(option);
+            });
+        }
+
+        function sanitizeId(str) {
+            return str.replace(/[^a-zA-Z0-9]/g, '-');
+        }
+
+        function buildMentorPerformance() {
+            const mentorStats = {};
+
+            allData.forEach(row => {
+                const mentor = row.managerName;
+                if (!mentorStats[mentor]) {
+                    mentorStats[mentor] = {
+                        name: mentor,
+                        pending: 0,
+                        done: 0,
+                        ai: 0,
+                        human: 0
+                    };
+                }
+
+                if (row.container === 'Pending') {
+                    mentorStats[mentor].pending++;
+                } else {
+                    mentorStats[mentor].done++;
+                    if (row.markedBy === 'AI') {
+                        mentorStats[mentor].ai++;
+                    } else {
+                        mentorStats[mentor].human++;
+                    }
+                }
+            });
+
+            mentorData = Object.values(mentorStats);
+            renderMentorTable(mentorData);
+        }
+
+        function renderMentorTable(data) {
+            const tbody = document.getElementById('mentor-table-body');
+            tbody.innerHTML = '';
+
+            data.forEach(mentor => {
+                const humanPercent = mentor.done > 0 ? ((mentor.human / mentor.done) * 100).toFixed(1) : 0;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${mentor.name}</strong></td>
+                    <td>${mentor.pending}</td>
+                    <td>${mentor.done}</td>
+                    <td><span class="badge badge-ai">${mentor.ai}</span></td>
+                    <td><span class="badge badge-human">${mentor.human}</span></td>
+                    <td>${humanPercent}%</td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            document.getElementById('mentor-count').textContent = data.length;
+        }
+
+        function filterMentorPerformance() {
+            const selectedMentor = document.getElementById('filter-mentor-performance').value;
+            
+            if (selectedMentor === '') {
+                renderMentorTable(mentorData);
+            } else {
+                const filtered = mentorData.filter(m => m.name === selectedMentor);
+                renderMentorTable(filtered);
+            }
+        }
+
+        function sortMentorTable(columnIndex) {
+            const table = document.querySelector('#tab-mentors table');
+            const headers = table.querySelectorAll('th');
+            const currentHeader = headers[columnIndex];
+            
+            // Determine sort direction
+            let ascending = true;
+            if (currentHeader.classList.contains('sorted-asc')) {
+                ascending = false;
+            }
+
+            // Clear all sort indicators
+            headers.forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
+            
+            // Set new sort indicator
+            currentHeader.classList.add(ascending ? 'sorted-asc' : 'sorted-desc');
+
+            // Sort data
+            mentorData.sort((a, b) => {
+                let aVal, bVal;
+                
+                switch(columnIndex) {
+                    case 0: aVal = a.name; bVal = b.name; break;
+                    case 1: aVal = a.pending; bVal = b.pending; break;
+                    case 2: aVal = a.done; bVal = b.done; break;
+                    case 3: aVal = a.ai; bVal = b.ai; break;
+                    case 4: aVal = a.human; bVal = b.human; break;
+                    case 5: 
+                        aVal = a.done > 0 ? (a.human / a.done) : 0;
+                        bVal = b.done > 0 ? (b.human / b.done) : 0;
+                        break;
+                }
+
+                if (typeof aVal === 'string') {
+                    return ascending ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+                } else {
+                    return ascending ? aVal - bVal : bVal - aVal;
+                }
+            });
+
+            renderMentorTable(mentorData);
+        }
+
+        function applyFilters() {
+            const learner = document.getElementById('filter-learner').value;
+            const manager = document.getElementById('filter-manager').value;
+            const group = document.getElementById('filter-group').value;
+            const status = document.getElementById('filter-status').value;
+            const marked = document.getElementById('filter-marked').value;
+            const container = document.getElementById('filter-container').value;
+            const dateFrom = document.getElementById('filter-date-from').value;
+            const dateTo = document.getElementById('filter-date-to').value;
+
+            // Get custom field filters
+            const customFieldFilters = {};
+            customFields.forEach(field => {
+                const select = document.getElementById(`filter-cf-${sanitizeId(field)}`);
+                if (select && select.value) {
+                    customFieldFilters[field] = select.value;
+                }
+            });
+
+            filteredData = allData.filter(row => {
+                if (learner && row.learnerName !== learner) return false;
+                if (manager && row.managerName !== manager) return false;
+                if (group && !row.group.split(', ').includes(group)) return false;
+                if (status && row.status !== status) return false;
+                if (marked && row.markedBy !== marked) return false;
+                if (container && row.container !== container) return false;
+                if (dateFrom && row.exportDate < dateFrom) return false;
+                if (dateTo && row.exportDate > dateTo) return false;
+
+                // Check custom fields
+                for (const [field, value] of Object.entries(customFieldFilters)) {
+                    try {
+                        const fields = JSON.parse(row.customFields);
+                        if (fields[field] !== value) return false;
+                    } catch (e) {
+                        return false;
+                    }
+                }
+
+                return true;
+            });
+
+            renderDataTable(filteredData);
+        }
+
+        function renderDataTable(data) {
+            const tbody = document.getElementById('data-table-body');
+            tbody.innerHTML = '';
+
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="8" style="text-align: center; padding: 2rem;">No data matches the selected filters</td></tr>';
+            } else {
+                data.slice(0, 100).forEach(row => {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `
+                        <td>${row.exportDate}</td>
+                        <td>${row.container}</td>
+                        <td>${row.learnerName}</td>
+                        <td>${row.managerName}</td>
+                        <td>${row.group}</td>
+                        <td>${row.questionTitle.substring(0, 50)}${row.questionTitle.length > 50 ? '...' : ''}</td>
+                        <td><span class="badge badge-${row.status.toLowerCase()}">${row.status}</span></td>
+                        <td><span class="badge badge-${row.markedBy.toLowerCase()}">${row.markedBy}</span></td>
+                    `;
+                    tbody.appendChild(tr);
+                });
+
+                if (data.length > 100) {
+                    const tr = document.createElement('tr');
+                    tr.innerHTML = `<td colspan="8" style="text-align: center; padding: 1rem; color: #7f8c8d;">Showing first 100 of ${data.length} records. Use filters to narrow results.</td>`;
+                    tbody.appendChild(tr);
+                }
+            }
+
+            document.getElementById('filtered-count').textContent = data.length.toLocaleString();
+            document.getElementById('total-count').textContent = allData.length.toLocaleString();
+        }
+
+        function sortDataTable(columnIndex) {
+            const table = document.querySelector('#tab-explorer table');
+            const headers = table.querySelectorAll('th');
+            const currentHeader = headers[columnIndex];
+            
+            let ascending = true;
+            if (currentHeader.classList.contains('sorted-asc')) {
+                ascending = false;
+            }
+
+            headers.forEach(h => h.classList.remove('sorted-asc', 'sorted-desc'));
+            currentHeader.classList.add(ascending ? 'sorted-asc' : 'sorted-desc');
+
+            const fields = ['exportDate', 'container', 'learnerName', 'managerName', 'group', 'questionTitle', 'status', 'markedBy'];
+            const field = fields[columnIndex];
+
+            filteredData.sort((a, b) => {
+                const aVal = a[field];
+                const bVal = b[field];
+                
+                if (typeof aVal === 'string') {
+                    return ascending ? aVal.localeCompare(bVal) : bVal.localeCompare(aVal);
+                } else {
+                    return ascending ? aVal - bVal : bVal - aVal;
+                }
+            });
+
+            renderDataTable(filteredData);
+        }
+
+        function resetFilters() {
+            document.getElementById('filter-learner').value = '';
+            document.getElementById('filter-manager').value = '';
+            document.getElementById('filter-group').value = '';
+            document.getElementById('filter-status').value = '';
+            document.getElementById('filter-marked').value = '';
+            document.getElementById('filter-container').value = '';
+            document.getElementById('filter-date-from').value = '';
+            document.getElementById('filter-date-to').value = '';
+
+            customFields.forEach(field => {
+                const select = document.getElementById(`filter-cf-${sanitizeId(field)}`);
+                if (select) select.value = '';
+            });
+
+            filteredData = [...allData];
+            renderDataTable(filteredData);
+        }
+
+        function exportToCSV() {
+            const headers = ['Export Date', 'Container', 'Learner ID', 'Learner Name', 'Manager Name', 'Group', 'Custom Fields', 'Question Title', 'Date', 'Full Date', 'Status', 'Marked By'];
+            
+            let csv = headers.join(',') + '\n';
+            
+            filteredData.forEach(row => {
+                const values = [
+                    row.exportDate,
+                    row.container,
+                    row.learnerId,
+                    row.learnerName,
+                    row.managerName,
+                    `"${row.group}"`,
+                    `"${row.customFields.replace(/"/g, '""')}"`,
+                    `"${row.questionTitle.replace(/"/g, '""')}"`,
+                    row.date,
+                    row.fullDate,
+                    row.status,
+                    row.markedBy
+                ];
+                csv += values.join(',') + '\n';
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `pt-academy-export-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+        }
+
+        function populateAnalyticsField() {
+            const select = document.getElementById('analytics-field');
+            customFields.forEach(field => {
+                const option = document.createElement('option');
+                option.value = field;
+                option.textContent = field;
+                select.appendChild(option);
+            });
+        }
+
+        function updateAnalytics() {
+            const field = document.getElementById('analytics-field').value;
+            
+            if (!field) {
+                document.getElementById('analytics-title').textContent = 'Select a custom field to view analytics';
+                document.getElementById('analytics-table-body').innerHTML = '<tr><td colspan="4" style="text-align: center; padding: 2rem;">Select a custom field above</td></tr>';
+                if (analyticsChart) analyticsChart.destroy();
+                return;
+            }
+
+            document.getElementById('analytics-title').textContent = `${field} Distribution`;
+
+            // Aggregate data by field value
+            const stats = {};
+            allData.forEach(row => {
+                try {
+                    const fields = JSON.parse(row.customFields);
+                    const value = fields[field] || 'Not Set';
+                    
+                    if (!stats[value]) {
+                        stats[value] = { pending: 0, done: 0 };
+                    }
+
+                    if (row.container === 'Pending') {
+                        stats[value].pending++;
+                    } else {
+                        stats[value].done++;
+                    }
+                } catch (e) {}
+            });
+
+            // Render table
+            const tbody = document.getElementById('analytics-table-body');
+            tbody.innerHTML = '';
+
+            const sortedValues = Object.keys(stats).sort();
+            sortedValues.forEach(value => {
+                const total = stats[value].pending + stats[value].done;
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${value}</strong></td>
+                    <td>${stats[value].pending}</td>
+                    <td>${stats[value].done}</td>
+                    <td><strong>${total}</strong></td>
+                `;
+                tbody.appendChild(row);
+            });
+
+            // Render chart
+            const ctx = document.getElementById('analyticsChart').getContext('2d');
+            
+            if (analyticsChart) analyticsChart.destroy();
+
+            analyticsChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: sortedValues,
+                    datasets: [{
+                        label: 'Pending',
+                        data: sortedValues.map(v => stats[v].pending),
+                        backgroundColor: 'rgba(255, 107, 107, 0.7)'
+                    }, {
+                        label: 'Done',
+                        data: sortedValues.map(v => stats[v].done),
+                        backgroundColor: 'rgba(81, 207, 102, 0.7)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'top',
+                        }
+                    },
+                    scales: {
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+            document.querySelectorAll('.tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
