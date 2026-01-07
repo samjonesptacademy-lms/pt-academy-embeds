@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Achievement Converter</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8f9fa; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
+        .spinner { width: 50px; height: 50px; border: 4px solid #e9ecef; border-top-color: #C6A906; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { margin-top: 20px; font-size: 16px; color: #666; font-weight: 500; }
+        
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; padding: 20px; background: #f8f9fa; line-height: 1.6; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 30px; }
+        .title { font-size: 28px; font-weight: 700; color: #333; margin-bottom: 15px; }
+        .description { font-size: 16px; color: #555; line-height: 1.6; max-width: 700px; margin: 0 auto; }
+        
+        .main-card { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); border: 3px solid #e9ecef; overflow: hidden; min-height: 450px; position: relative; }
+        
+        /* Static Info View */
+        .static-info { padding: 35px; display: block; }
+        .static-info.hidden { display: none; }
+        .static-title { font-size: 20px; font-weight: 700; color: #333; margin-bottom: 10px; text-align: center; }
+        .static-subtitle { font-size: 14px; color: #666; text-align: center; margin-bottom: 25px; font-style: italic; }
+        .comparison-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 25px; margin-bottom: 30px; }
+        .comparison-box { padding: 25px; border-radius: 8px; border: 3px solid; }
+        .comparison-box.responsibility { background: #fff8f8; border-color: #dc3545; }
+        .comparison-box.achievement { background: #f8fff9; border-color: #28a745; }
+        .comparison-label { font-size: 15px; font-weight: 700; margin-bottom: 15px; text-transform: uppercase; letter-spacing: 0.5px; display: flex; align-items: center; gap: 8px; }
+        .comparison-box.responsibility .comparison-label { color: #dc3545; }
+        .comparison-box.achievement .comparison-label { color: #28a745; }
+        .comparison-text { font-size: 15px; line-height: 1.7; font-weight: 500; }
+        .comparison-box.responsibility .comparison-text { color: #721c24; }
+        .comparison-box.achievement .comparison-text { color: #155724; }
+        .start-button { background: #C6A906; color: white; padding: 15px 40px; border-radius: 8px; font-size: 16px; font-weight: 600; border: none; cursor: pointer; transition: all 0.3s ease; display: block; margin: 0 auto; }
+        .start-button:hover { background: #a88c05; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(198, 169, 6, 0.3); }
+        
+        /* Interactive Card View */
+        .card-view { display: none; }
+        .card-view.active { display: block; }
+        .progress-bar-top { background: #f8f9fa; padding: 15px 25px; border-bottom: 2px solid #e9ecef; display: flex; justify-content: space-between; align-items: center; }
+        .progress-text { font-size: 14px; color: #666; font-weight: 600; }
+        .card-counter { font-size: 14px; font-weight: 600; color: #333; }
+        
+        .flip-card { perspective: 1000px; cursor: pointer; min-height: 330px; padding: 30px; }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; min-height: 330px; }
+        .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; }
+        .flip-card-back { transform: rotateY(180deg); }
+        
+        .card-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 3px solid #f8f9fa; }
+        .card-number { background: #dc3545; color: white; width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; }
+        .flip-card-back .card-number { background: #28a745; }
+        .card-label { font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .flip-card-front .card-label { color: #dc3545; }
+        .flip-card-back .card-label { color: #28a745; }
+        .flip-icon { font-size: 24px; color: #C6A906; animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        .flip-card.flipped .flip-icon { animation: none; }
+        
+        .card-content { font-size: 16px; color: #333; line-height: 1.8; margin-bottom: 20px; padding: 25px; background: #f8f9fa; border-radius: 8px; min-height: 110px; display: flex; align-items: center; }
+        .flip-card-front .card-content { border-left: 4px solid #dc3545; }
+        .flip-card-back .card-content { border-left: 4px solid #28a745; background: #e8f5e9; }
+        
+        .card-explanation { background: #fffef8; border-left: 4px solid #C6A906; padding: 18px; border-radius: 8px; }
+        .explanation-title { font-size: 13px; font-weight: 700; color: #C6A906; margin-bottom: 8px; text-transform: uppercase; }
+        .explanation-text { font-size: 14px; color: #666; line-height: 1.6; }
+        
+        .flip-hint { text-align: center; margin-top: 15px; font-size: 14px; color: #999; font-style: italic; }
+        
+        .navigation-bar { background: #f8f9fa; padding: 20px 30px; border-top: 2px solid #e9ecef; display: flex; gap: 12px; justify-content: space-between; align-items: center; }
+        .nav-btn { padding: 10px 25px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid #C6A906; background: white; color: #C6A906; }
+        .nav-btn:hover:not(:disabled) { background: #C6A906; color: white; }
+        .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; background: #e9ecef; border-color: #ccc; color: #999; }
+        .nav-btn-primary { background: #C6A906; color: white; border-color: #C6A906; }
+        .nav-btn-primary:hover:not(:disabled) { background: #a88c05; }
+        .btn-reset { padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; background: #e9ecef; color: #666; }
+        .btn-reset:hover { background: #d4d8db; }
+        
+        @media (max-width: 768px) {
+            .comparison-grid { grid-template-columns: 1fr; }
+            .navigation-bar { flex-wrap: wrap; }
+            .nav-btn { flex: 1; min-width: 120px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading converter...</div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Achievement Converter</h1>
+            <p class="description">Transform responsibility-focused CV statements into achievement-focused powerhouses. See 10 examples and learn the technique.</p>
+        </div>
+
+        <div class="main-card">
+            <!-- Static Info (Initial View) -->
+            <div class="static-info" id="staticInfo">
+                <div class="static-title">Responsibility-Focused vs. Achievement-Focused</div>
+                <div class="static-subtitle">Most CVs list responsibilities. Strong CVs demonstrate achievements and impact.</div>
+                <div class="comparison-grid">
+                    <div class="comparison-box responsibility">
+                        <div class="comparison-label">❌ Responsibility-Focused</div>
+                        <div class="comparison-text">"Responsible for delivering personal training sessions to gym members"</div>
+                    </div>
+                    <div class="comparison-box achievement">
+                        <div class="comparison-label">✓ Achievement-Focused</div>
+                        <div class="comparison-text">"Delivered 200+ personal training sessions maintaining 95% client retention and generating £12K revenue through referrals and package renewals"</div>
+                    </div>
+                </div>
+                <button class="start-button" onclick="startExamples()">View 10 Examples →</button>
+            </div>
+
+            <!-- Interactive Card View -->
+            <div class="card-view" id="cardView">
+                <div class="progress-bar-top">
+                    <div class="progress-text">Reviewed: <strong><span id="reviewedCount">0</span>/10</strong></div>
+                    <div class="card-counter">Example <span id="currentNum">1</span> of 10</div>
+                </div>
+
+                <div class="flip-card" id="flipCard" onclick="flipCard()">
+                    <div class="flip-card-inner">
+                        <div class="flip-card-front">
+                            <div class="card-header">
+                                <div class="card-number" id="cardNumFront"></div>
+                                <div class="card-label">❌ Responsibility-Focused</div>
+                                <div class="flip-icon">🔄</div>
+                            </div>
+                            <div class="card-content" id="responsibilityText"></div>
+                            <div class="flip-hint">Click anywhere to see the achievement-focused version →</div>
+                        </div>
+                        <div class="flip-card-back">
+                            <div class="card-header">
+                                <div class="card-number" id="cardNumBack"></div>
+                                <div class="card-label">✓ Achievement-Focused</div>
+                                <div class="flip-icon">🔄</div>
+                            </div>
+                            <div class="card-content" id="achievementText"></div>
+                            <div class="card-explanation">
+                                <div class="explanation-title">💡 What Changed</div>
+                                <div class="explanation-text" id="techniqueText"></div>
+                            </div>
+                            <div class="flip-hint">Click to flip back</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="navigation-bar">
+                    <button class="nav-btn" id="prevBtn" onclick="previousCard()" disabled>← Previous</button>
+                    <button class="btn-reset" onclick="resetToStart()">Start Over</button>
+                    <button class="nav-btn nav-btn-primary" id="nextBtn" onclick="nextCard()" disabled>Next →</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const conversions = [
+            {
+                responsibility: "Responsible for supervising the gym floor during busy periods",
+                achievement: "Delivered gym floor supervision maintaining 98% member satisfaction scores and zero safety incidents across 500+ hours of peak-time coverage",
+                technique: "Added measurable outcome (satisfaction score), safety record (zero incidents), and quantified effort (500+ hours). Demonstrates both quality and volume."
+            },
+            {
+                responsibility: "Worked with clients to help them achieve their fitness goals",
+                achievement: "Supported 25+ clients to achieve measurable fitness goals including 15 clients losing 10+ kg, 8 clients completing their first 5K run, and 12 clients achieving strength milestones",
+                technique: "Specified number of clients served, categorized different achievement types with specific metrics. Shows variety of client success stories."
+            },
+            {
+                responsibility: "Created personal training programmes for different client types",
+                achievement: "Designed and delivered individualized training programmes for diverse client demographics including older adults (55+), pre/post-natal clients, and complete beginners, adapting evidence-based protocols to individual needs and limitations",
+                technique: "Specified client diversity with examples, referenced evidence-based practice, emphasized individualization. Shows sophistication and specialist capability."
+            },
+            {
+                responsibility: "Assisted with gym inductions for new members",
+                achievement: "Conducted 80+ comprehensive gym inductions over 6 months, receiving average 4.8/5 feedback rating and contributing to 85% new member retention in first 3 months",
+                technique: "Quantified volume (80+), added quality metric (4.8/5 rating), connected to business outcome (retention rate). Links individual work to facility success."
+            },
+            {
+                responsibility: "Maintained equipment and ensured safe gym environment",
+                achievement: "Implemented daily equipment safety checks and preventative maintenance schedule, identifying and resolving 15+ potential safety hazards and reducing equipment downtime by approximately 30%",
+                technique: "Showed initiative (implemented system), quantified impact (15+ hazards prevented, 30% reduction), demonstrated proactive approach rather than reactive."
+            },
+            {
+                responsibility: "Provided customer service to gym members and guests",
+                achievement: "Delivered exceptional customer service recognized through 'Employee of the Month' award and specifically mentioned in 12+ positive member feedback submissions for approachability and helpfulness",
+                technique: "Provided external validation (award), quantified positive feedback (12+ mentions), specified the praised qualities. Shows recognition by others."
+            },
+            {
+                responsibility: "Participated in team meetings and contributed to facility operations",
+                achievement: "Actively contributed to monthly team meetings proposing 3 implemented operational improvements including revised class schedule that increased attendance by 20% and equipment layout redesign improving flow",
+                technique: "Changed passive participation to active contribution, specified implemented ideas (not just suggested), added measurable impact (20% increase). Shows influence."
+            },
+            {
+                responsibility: "Completed continuing professional development courses",
+                achievement: "Invested 40+ CPD hours in specialist training including Level 4 Nutrition Coaching and Training for Older Adults certifications, immediately applying learning to enhance client programming and outcomes",
+                technique: "Quantified investment (40+ hours), specified relevant qualifications gained, emphasized practical application. Shows learning translates to improved practice."
+            },
+            {
+                responsibility: "Worked with clients who had various health conditions and injuries",
+                achievement: "Successfully adapted training for 18+ clients with health considerations including Type 2 diabetes, osteoarthritis, and previous injuries, working collaboratively with physiotherapists and GPs to ensure safe, effective programming",
+                technique: "Specified number and variety of conditions managed, emphasized professional collaboration, highlighted safety and effectiveness. Shows competence with complex clients."
+            },
+            {
+                responsibility: "Promoted personal training services and fitness classes to members",
+                achievement: "Generated 15+ new personal training client bookings and increased small group training participation by 35% through professional promotion, facility tours, and genuine relationship building rather than hard-sell tactics",
+                technique: "Quantified sales success (15+ bookings, 35% increase), specified approach (professional, relationship-based), distanced from aggressive sales. Shows commercial awareness with integrity."
+            }
+        ];
+
+        let currentIndex = 0;
+        let reviewedCards = new Set();
+        let currentCardFlipped = false;
+
+        function startExamples() {
+            document.getElementById('staticInfo').classList.add('hidden');
+            document.getElementById('cardView').classList.add('active');
+            loadCard(0);
+        }
+
+        function loadCard(index) {
+            const card = conversions[index];
+            currentIndex = index;
+            currentCardFlipped = false;
+            
+            document.getElementById('cardNumFront').textContent = index + 1;
+            document.getElementById('cardNumBack').textContent = index + 1;
+            document.getElementById('responsibilityText').textContent = card.responsibility;
+            document.getElementById('achievementText').textContent = card.achievement;
+            document.getElementById('techniqueText').textContent = card.technique;
+            document.getElementById('currentNum').textContent = index + 1;
+            
+            // Reset flip
+            document.getElementById('flipCard').classList.remove('flipped');
+            
+            // Update navigation
+            updateNavigation();
+        }
+
+        function flipCard() {
+            const flipCard = document.getElementById('flipCard');
+            flipCard.classList.toggle('flipped');
+            currentCardFlipped = flipCard.classList.contains('flipped');
+            
+            // Enable next button once flipped
+            if (currentCardFlipped) {
+                reviewedCards.add(currentIndex);
+                updateProgress();
+                updateNavigation();
+            }
+        }
+
+        function nextCard() {
+            if (currentCardFlipped && currentIndex < conversions.length - 1) {
+                loadCard(currentIndex + 1);
+            }
+        }
+
+        function previousCard() {
+            if (currentIndex > 0) {
+                loadCard(currentIndex - 1);
+            }
+        }
+
+        function updateNavigation() {
+            document.getElementById('prevBtn').disabled = currentIndex === 0;
+            // Next button only enabled if current card has been flipped
+            document.getElementById('nextBtn').disabled = !currentCardFlipped || currentIndex === conversions.length - 1;
+        }
+
+        function updateProgress() {
+            document.getElementById('reviewedCount').textContent = reviewedCards.size;
+        }
+
+        function resetToStart() {
+            if (confirm('Start over from the beginning?')) {
+                reviewedCards.clear();
+                currentIndex = 0;
+                currentCardFlipped = false;
+                document.getElementById('staticInfo').classList.remove('hidden');
+                document.getElementById('cardView').classList.remove('active');
+                updateProgress();
+            }
+        }
+
+        function hideLoader() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(function() { overlay.style.display = 'none'; }, 500);
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', hideLoader);
+        } else {
+            hideLoader();
+        }
+        setTimeout(hideLoader, 500);
+    </script>
+</body>
+</html>
