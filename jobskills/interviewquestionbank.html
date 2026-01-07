@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Question Bank</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8f9fa; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
+        .spinner { width: 50px; height: 50px; border: 4px solid #e9ecef; border-top-color: #C6A906; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { margin-top: 20px; font-size: 16px; color: #666; font-weight: 500; }
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; padding: 20px; background: #f8f9fa; line-height: 1.6; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .title { font-size: 28px; font-weight: 700; color: #333; margin-bottom: 15px; }
+        .description { font-size: 16px; color: #555; line-height: 1.6; max-width: 700px; margin: 0 auto 25px; }
+        
+        .categories-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 15px; margin-bottom: 40px; }
+        .category-card { background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); cursor: pointer; transition: all 0.3s ease; border: 2px solid transparent; }
+        .category-card:hover { transform: translateY(-4px); box-shadow: 0 6px 16px rgba(0,0,0,0.15); border-color: #C6A906; }
+        .category-card.active { border-color: #C6A906; background: #fffef8; }
+        .category-icon { font-size: 32px; margin-bottom: 12px; }
+        .category-name { font-size: 18px; font-weight: 700; color: #333; margin-bottom: 8px; }
+        .category-count { font-size: 14px; color: #666; }
+        
+        .questions-section { display: none; }
+        .questions-section.active { display: block; }
+        .section-header { background: white; border-radius: 12px; padding: 25px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .section-title { font-size: 24px; font-weight: 700; color: #333; margin-bottom: 10px; }
+        .section-subtitle { font-size: 15px; color: #666; line-height: 1.6; }
+        
+        .question-card { background: white; border-radius: 12px; padding: 0; margin-bottom: 20px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }
+        .question-header { padding: 20px; cursor: pointer; display: flex; align-items: center; gap: 15px; transition: background 0.3s ease; }
+        .question-header:hover { background: #f8f9fa; }
+        .question-number { background: #C6A906; color: white; width: 35px; height: 35px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 16px; flex-shrink: 0; }
+        .question-text { flex: 1; font-size: 16px; font-weight: 600; color: #333; }
+        .expand-icon { font-size: 20px; color: #C6A906; transition: transform 0.3s ease; }
+        .question-card.expanded .expand-icon { transform: rotate(180deg); }
+        
+        .question-content { padding: 0 20px 20px 20px; display: none; border-top: 2px solid #f8f9fa; margin-top: 0; }
+        .question-card.expanded .question-content { display: block; animation: slideDown 0.3s ease; }
+        @keyframes slideDown { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+        
+        .content-section { margin: 20px 0; }
+        .content-label { font-size: 14px; font-weight: 700; color: #C6A906; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .content-text { font-size: 15px; color: #333; line-height: 1.7; padding: 15px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #C6A906; }
+        .content-list { margin: 10px 0; padding-left: 25px; }
+        .content-list li { margin-bottom: 10px; font-size: 15px; color: #333; line-height: 1.6; }
+        .example-box { background: #e8f5e9; border-left: 4px solid #28a745; padding: 15px; border-radius: 8px; margin-top: 10px; }
+        .example-label { font-size: 13px; font-weight: 700; color: #28a745; margin-bottom: 8px; text-transform: uppercase; }
+        .example-text { font-size: 14px; color: #155724; line-height: 1.7; font-style: italic; }
+        .warning-box { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 8px; margin-top: 10px; }
+        .warning-label { font-size: 13px; font-weight: 700; color: #856404; margin-bottom: 8px; text-transform: uppercase; }
+        .warning-text { font-size: 14px; color: #856404; line-height: 1.7; }
+        
+        .back-button { background: #e9ecef; color: #333; padding: 12px 30px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; border: none; transition: all 0.3s ease; display: inline-block; margin-bottom: 30px; }
+        .back-button:hover { background: #d4d8db; }
+        
+        .nav-bottom { text-align: center; margin-top: 30px; padding: 20px; background: white; border-radius: 8px; }
+        
+        @media (max-width: 768px) {
+            .categories-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading questions...</div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Interview Question Bank</h1>
+            <p class="description">Explore common fitness industry interview questions organized by category. Click each question to see what interviewers are really asking, suggested frameworks, and example answers.</p>
+        </div>
+
+        <div id="categoriesView">
+            <div class="categories-grid" id="categoriesGrid"></div>
+        </div>
+
+        <div id="questionsView" class="questions-section">
+            <button class="back-button" onclick="showCategories()">← Back to Categories</button>
+            <div class="section-header">
+                <div class="section-title" id="sectionTitle"></div>
+                <div class="section-subtitle" id="sectionSubtitle"></div>
+            </div>
+            <div id="questionsContainer"></div>
+            <div class="nav-bottom">
+                <button class="back-button" onclick="showCategories()">← Back to Categories</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const categories = [
+            {
+                id: 'about',
+                name: 'About You',
+                icon: '👤',
+                subtitle: 'Questions exploring your background, motivation, and professional identity',
+                questions: [
+                    {
+                        q: "Tell me about yourself",
+                        asking: "Interviewers want a concise professional overview that demonstrates you can communicate clearly and highlight relevant experience. This is often the opening question and sets the tone for the interview.",
+                        framework: "Use a brief chronological approach: (1) Current professional status and qualifications, (2) Relevant experience and key skills, (3) Why you're interested in this specific opportunity. Keep it to 1-2 minutes maximum.",
+                        example: "I'm a newly qualified Level 3 Personal Trainer passionate about strength training and helping clients build confidence through progressive programming. During my 6-month placement at FitLife Gym, I worked with diverse clients from complete beginners to experienced gym-goers, focusing on movement quality and sustainable habit formation. I've also brought 5 years of customer service experience from retail management, which developed my communication skills and ability to understand individual client needs. I'm particularly excited about this opportunity at [Facility] because of your reputation for evidence-based programming and supportive team culture.",
+                        mistakes: ["Giving your complete life history from childhood", "Focusing on personal life rather than professional background", "Being too modest or too arrogant", "Taking more than 2-3 minutes", "Not tailoring response to fitness industry"]
+                    },
+                    {
+                        q: "Why do you want to work in the fitness industry?",
+                        asking: "They're assessing whether you have genuine passion for fitness or just see it as a convenient job. They want to understand your motivation and whether you'll be committed long-term.",
+                        framework: "Share your personal connection to fitness, demonstrate understanding of the profession's impact, show awareness of industry realities (not just glamorous aspects), and connect to helping others achieve their goals.",
+                        example: "My journey into fitness started when I used exercise to manage anxiety during university. That personal experience of how transformative regular training can be—not just physically but mentally and emotionally—made me want to help others discover those benefits. I'm motivated by the challenge of understanding each client's unique situation and creating programming that works for their real life, not just theoretical perfection. I'm realistic that it involves early mornings, challenging clients, and constant learning, but those aspects actually appeal to me because they keep the work dynamic and meaningful.",
+                        mistakes: ["Only mentioning that you 'love working out' or 'spend lots of time in the gym'", "Not connecting personal interest to helping others", "Seeming unaware of profession's challenges", "Making it entirely about personal fitness journey without client focus"]
+                    },
+                    {
+                        q: "Why do you want to work here specifically?",
+                        asking: "They're testing whether you've researched their facility or are just mass-applying. They want to know you're genuinely interested in their specific environment and culture.",
+                        framework: "Reference specific facility characteristics, connect to your values and interests, mention particular programs or approaches that appeal to you, and demonstrate you understand what makes them different from competitors.",
+                        example: "I've been following [Facility] on social media for several months and really appreciate your emphasis on inclusive fitness and beginners. I visited as a guest and noticed how welcoming the atmosphere was—staff were actively engaging members rather than staying behind the desk. That community-focused approach aligns with my training philosophy. I'm also excited about your specialist programmes for older adults, which is an area I'd like to develop expertise in through your mentorship structure. The fact that you invest in staff development through CPD support shows me you value professional growth, which is important to me long-term.",
+                        mistakes: ["Generic answers applicable to any gym", "Only mentioning location or schedule convenience", "Not demonstrating any facility knowledge", "Focusing solely on what you'll gain rather than what you'll contribute"]
+                    },
+                    {
+                        q: "What are your greatest strengths?",
+                        asking: "They want to understand what you do well and whether those strengths align with role requirements. They're also assessing your self-awareness and ability to support claims with evidence.",
+                        framework: "Select 2-3 genuinely relevant strengths, provide specific examples demonstrating each, connect to how they benefit employers and clients, and show some humility.",
+                        example: "I'd say my key strength is adaptability. In my previous retail role, I successfully managed constantly changing priorities and diverse customer needs, which translates directly to personal training where each client is different and sessions don't always go as planned. For example, during my placement, a client arrived with unexpected shoulder discomfort—I quickly modified the entire upper body programme using alternatives while maintaining workout effectiveness. I'm also told I'm a natural motivator. I focus on celebrating progress rather than dwelling on setbacks, which helps clients stay engaged even when results feel slow.",
+                        mistakes: ["Listing strengths without supporting examples", "Claiming strengths irrelevant to fitness work", "Being arrogant or falsely modest", "Using clichés like 'perfectionist' or 'works too hard'"]
+                    },
+                    {
+                        q: "What are your weaknesses?",
+                        asking: "They're testing your self-awareness, honesty, and whether you actively work on development areas. They want to see you can reflect critically without undermining your suitability.",
+                        framework: "Acknowledge a genuine developmental area, show self-awareness about why it's challenging, demonstrate active steps you're taking to improve, and frame positively where possible.",
+                        example: "Earlier in my career, I sometimes struggled with confidence when working with very experienced gym members, worrying they might know more than me. I've addressed this by deepening my knowledge through additional CPD, reminding myself that different expertise areas exist—I may not know everything about their specific sport, but I understand training principles and safety—and focusing on what I can offer rather than what I don't know. I'm much more confident now, but I remain mindful of this and use it as motivation to keep learning.",
+                        mistakes: ["Claiming no weaknesses", "Offering disguised strengths as weaknesses", "Mentioning fatal flaws for the role", "Not showing how you're addressing the weakness"]
+                    }
+                ]
+            },
+            {
+                id: 'skills',
+                name: 'Skills & Experience',
+                icon: '💪',
+                subtitle: 'Questions about your qualifications, capabilities, and practical experience',
+                questions: [
+                    {
+                        q: "What relevant experience do you have?",
+                        asking: "They want to understand what practical experience you bring beyond qualifications. For new trainers, they're interested in transferable skills and any hands-on practice.",
+                        framework: "Highlight practical training experience (placements, internships), emphasize transferable skills from other roles, mention any specialist areas or additional training, and demonstrate how experience prepares you for this specific role.",
+                        example: "Through my Level 3 qualification, I completed a 6-month placement at Core Fitness where I delivered 120+ supervised PT sessions with 15 different clients. This hands-on experience taught me programme design, session delivery, and client relationship management in real-world settings. Before becoming a trainer, I spent 4 years in hospitality management, which developed my customer service skills, ability to manage difficult situations professionally, and understanding of business operations. I've also completed additional CPD in Olympic weightlifting technique, which allows me to confidently coach barbell movements—an area many new trainers feel less comfortable with.",
+                        mistakes: ["Downplaying limited experience with excessive apologies", "Only mentioning qualifications without practical application", "Not connecting previous roles to transferable skills", "Exaggerating limited experience"]
+                    },
+                    {
+                        q: "What training methods or approaches do you specialize in?",
+                        asking: "They're assessing your technical knowledge, whether you have particular expertise that adds value, and if you can articulate your training philosophy clearly.",
+                        framework: "Mention specific methodologies you're trained in or prefer, explain why these approaches work well, acknowledge that different clients need different approaches, and show openness to learning new methods.",
+                        example: "I particularly enjoy strength-based programming using progressive overload principles. I find that building strength creates confidence and measurable progress for clients, regardless of their specific goals. However, I'm adaptable—I incorporate mobility work, conditioning, and functional training based on individual needs. I've completed additional training in kettlebell coaching and really value its versatility for home or small-space training. That said, I believe the best approach is always the one that matches the client's preferences, goals, and lifestyle—rigid adherence to one methodology doesn't serve everyone.",
+                        mistakes: ["Claiming expertise in everything", "Speaking negatively about other training approaches", "Using excessive jargon without clear explanation", "Not demonstrating flexibility in methodology"]
+                    },
+                    {
+                        q: "How do you stay current with fitness industry developments?",
+                        asking: "They want to know you're committed to ongoing professional development and staying informed about evolving evidence and best practices.",
+                        framework: "Mention specific CPD activities, reference credible information sources, show critical thinking about information quality, and demonstrate regular learning habits.",
+                        example: "I maintain active engagement with evidence-based fitness through several channels. I complete regular CPD courses through [specific providers], focusing recently on training older adults and nutrition coaching fundamentals. I follow reputable researchers and practitioners on social media—people like Dr. Mike Israetel and Dr. Brad Schoenfeld—who share accessible research summaries. I'm also part of a local PT study group where we discuss case studies and new research monthly. I'm careful to evaluate sources critically given how much misinformation exists in fitness, prioritizing peer-reviewed research and qualified professionals over influencer trends.",
+                        mistakes: ["Not having specific examples of continuing education", "Only mentioning social media without critical evaluation", "Seeming unaware of evidence-based practice importance", "Not demonstrating regular learning habits"]
+                    },
+                    {
+                        q: "How would you handle a client who isn't making progress?",
+                        asking: "They're assessing your problem-solving abilities, client relationship management, and understanding that progress isn't always linear.",
+                        framework: "Acknowledge progress plateaus are normal, describe systematic assessment approach, demonstrate collaboration with client, show willingness to adjust strategies, and maintain motivation while being realistic.",
+                        example: "First, I'd have an honest conversation with the client to understand their perspective on the lack of progress and review adherence to the programme outside our sessions—nutrition, sleep, stress levels, and whether they're completing any homework. I'd assess whether expectations were realistic to begin with. Then I'd systematically review the programme itself: are we progressing appropriately, do exercises still challenge them, might we need to try different approaches? I'd look for non-scale victories they might not be recognizing—strength improvements, energy levels, how clothes fit. Based on this assessment, I'd adjust the programme, potentially seek input from colleagues or refer to specialists if needed. Throughout, I'd emphasize that plateaus happen and problem-solving together is part of the process.",
+                        mistakes: ["Blaming the client for non-compliance", "Not having systematic approach to assessment", "Seeming defensive or taking it personally", "Only focusing on increasing workout intensity"]
+                    }
+                ]
+            },
+            {
+                id: 'scenarios',
+                name: 'Scenario-Based',
+                icon: '🎯',
+                subtitle: 'Behavioral questions requiring examples from your experience',
+                questions: [
+                    {
+                        q: "Tell me about a time you dealt with a difficult client",
+                        asking: "They want to assess your interpersonal skills, professionalism under pressure, and ability to maintain client relationships through challenges.",
+                        framework: "Use STAR technique: Describe the situation and client difficulty, explain your task/goal, detail specific actions you took, and share positive results. Focus on your professional response, not client-blaming.",
+                        example: "During my placement, I worked with a client who had trained with two previous instructors but stopped after a few sessions with each. The manager warned me they could be challenging. My task was building a positive relationship and keeping them engaged. I started with an extended consultation to really listen without judgment. I learned they had specific injuries previous trainers hadn't adequately accommodated, making them feel unsafe. I adapted every exercise with multiple modifications, gave them control over choosing which variation felt right, and checked in after each exercise rather than assuming. I documented everything carefully for consistency. The client attended regularly for my entire 8-week placement and told the manager they felt 'finally heard and understood.' This taught me that 'difficult' clients often have valid concerns that weren't properly addressed.",
+                        mistakes: ["Focusing on how difficult the client was", "Not taking responsibility for relationship management", "Lacking specific actions taken", "Not showing positive resolution"]
+                    },
+                    {
+                        q: "Give an example of when you had to adapt your approach",
+                        asking: "They're testing your flexibility, problem-solving, and ability to adjust plans based on circumstances rather than rigidly following programs.",
+                        framework: "Use STAR: Describe the planned approach, explain why adaptation was needed, detail how you modified your strategy, and show positive outcome from flexibility.",
+                        example: "I had a client following a structured strength programme. One morning they arrived visibly exhausted, mentioning only 3 hours sleep due to their baby being unwell. Rather than proceeding with the planned heavy lifting session, I immediately modified the approach. I explained that training hard on minimal sleep increases injury risk and impairs recovery, so we'd adjust to lighter weights focusing on technique refinement and mobility work. I framed it as 'perfect practice' day rather than skipping training, which maintained their commitment while being safe. The client was relieved and later thanked me for 'understanding real life.' This reinforced that intelligent adaptation is often the best training decision.",
+                        mistakes: ["Not showing why adaptation was necessary", "Seeming unprepared or disorganized", "Not explaining your reasoning to client", "Lacking positive outcome"]
+                    },
+                    {
+                        q: "Describe a time you worked effectively as part of a team",
+                        asking: "Fitness roles require collaboration with colleagues, management, and other health professionals. They want evidence you're a team player who contributes positively.",
+                        framework: "Use STAR: Describe the team situation, explain your role and contribution, show how you supported others, and highlight team success over personal achievement.",
+                        example: "During my placement, the facility hosted a health and fitness event showcasing services. As a student trainer, I wanted to contribute meaningfully while supporting permanent staff. I volunteered to create demonstration materials for proper form vs common mistakes for three popular exercises. I arrived early to help setup and offered to supervise the fitness assessment area when a staff member was delayed. Throughout the event, I directed interested members to permanent trainers for bookings rather than promoting myself, since I was temporary. I also helped with cleanup afterward. The event generated 12 new PT bookings, and the manager specifically thanked me for my 'team-first attitude' in my reference letter. This showed me that genuine helpfulness builds reputation and opportunities.",
+                        mistakes: ["Making it all about your individual contribution", "Not showing how you supported others", "Lacking concrete team outcome", "Not demonstrating collaborative attitude"]
+                    }
+                ]
+            },
+            {
+                id: 'goals',
+                name: 'Goals & Career',
+                icon: '🎓',
+                subtitle: 'Questions about your ambitions, development plans, and career vision',
+                questions: [
+                    {
+                        q: "Where do you see yourself in five years?",
+                        asking: "They want to assess your ambition, career planning, and likelihood of staying in the role and profession. They're checking if this position aligns with your trajectory.",
+                        framework: "Show ambition and growth orientation without suggesting role is just a stepping stone, demonstrate realistic understanding of career progression, express genuine interest in fitness profession long-term.",
+                        example: "In five years, I hope to be an experienced, sought-after personal trainer with an established client base and specialization in strength training for older adults. I'd like to have completed additional certifications in this area and be contributing to the facility's success through excellent client results and retention. Long-term, I'm interested in potentially mentoring newer trainers or contributing to programme development, though I recognize that expertise and proven success must come first. I see building a strong foundation through this role as essential to those future goals.",
+                        mistakes: ["Being too vague or too specific about unrelated ambitions", "Suggesting you'll quickly move to management or leave the industry", "Not showing genuine interest in developing as a trainer", "Seeming overly ambitious or entirely without ambition"]
+                    },
+                    {
+                        q: "What are your professional development goals?",
+                        asking: "They want to know you're committed to ongoing learning and improvement. This shows whether you understand that qualification is just the beginning.",
+                        framework: "Mention specific areas you want to develop, reference particular certifications or training you plan to pursue, show how development aligns with facility needs, demonstrate commitment to evidence-based practice.",
+                        example: "In the immediate term, I want to build my practical experience across diverse client types to develop confidence and competence broadly. Within the first year, I plan to complete nutrition coaching Level 4 to better support clients holistically, and training for special populations to work more effectively with older adults or those with health conditions. I'm also interested in Olympic lifting coaching eventually, as I find that style of training both effective and enjoyable. I'd welcome mentorship and guidance on which developments would be most valuable here, as I want my learning to align with facility needs and the client base I'll serve.",
+                        mistakes: ["Having no specific development plans", "Only mentioning trendy certifications without rationale", "Not connecting development to client benefit or facility value", "Seeming focused on credentials without practical application"]
+                    },
+                    {
+                        q: "Why should we hire you?",
+                        asking: "This is your opportunity to summarize your value proposition. They want you to clearly articulate what you offer and why you're the best candidate.",
+                        framework: "Summarize key qualifications and relevant experience, highlight unique strengths or specializations, demonstrate enthusiasm and cultural fit, reference specific facility needs you can address.",
+                        example: "You should hire me because I combine solid technical foundation through my Level 3 qualification with substantial practical experience from my placement, where I consistently received positive client feedback on my ability to explain concepts clearly and create welcoming environments. My previous customer service background means I understand that exceptional client experience drives business success—I won't just deliver good sessions, I'll contribute to retention and referrals. I'm particularly excited about your focus on beginner-friendly training, which aligns with my strength in making fitness accessible and non-intimidating. Finally, I'm genuinely committed to this profession long-term and to continuous improvement, so you're not just hiring for immediate needs but investing in someone who'll grow with your facility.",
+                        mistakes: ["Being arrogant or putting down other candidates", "Generic response applicable anywhere", "Not connecting capabilities to specific facility needs", "Being too modest or uncertain"]
+                    }
+                ]
+            }
+        ];
+
+        let currentCategory = null;
+
+        function init() {
+            renderCategories();
+        }
+
+        function renderCategories() {
+            const grid = document.getElementById('categoriesGrid');
+            grid.innerHTML = '';
+            
+            categories.forEach(cat => {
+                const card = document.createElement('div');
+                card.className = 'category-card';
+                card.onclick = () => showQuestions(cat.id);
+                card.innerHTML = `
+                    <div class="category-icon">${cat.icon}</div>
+                    <div class="category-name">${cat.name}</div>
+                    <div class="category-count">${cat.questions.length} questions</div>
+                `;
+                grid.appendChild(card);
+            });
+        }
+
+        function showQuestions(categoryId) {
+            currentCategory = categories.find(c => c.id === categoryId);
+            document.getElementById('sectionTitle').textContent = currentCategory.name;
+            document.getElementById('sectionSubtitle').textContent = currentCategory.subtitle;
+            
+            const container = document.getElementById('questionsContainer');
+            container.innerHTML = '';
+            
+            currentCategory.questions.forEach((q, idx) => {
+                const card = document.createElement('div');
+                card.className = 'question-card';
+                card.innerHTML = `
+                    <div class="question-header" onclick="toggleQuestion(${idx})">
+                        <div class="question-number">${idx + 1}</div>
+                        <div class="question-text">${q.q}</div>
+                        <div class="expand-icon">▼</div>
+                    </div>
+                    <div class="question-content">
+                        <div class="content-section">
+                            <div class="content-label">What They're Really Asking</div>
+                            <div class="content-text">${q.asking}</div>
+                        </div>
+                        <div class="content-section">
+                            <div class="content-label">Answer Framework</div>
+                            <div class="content-text">${q.framework}</div>
+                        </div>
+                        <div class="content-section">
+                            <div class="content-label">Example Answer</div>
+                            <div class="example-box">
+                                <div class="example-label">Sample Response</div>
+                                <div class="example-text">"${q.example}"</div>
+                            </div>
+                        </div>
+                        <div class="content-section">
+                            <div class="content-label">Common Mistakes to Avoid</div>
+                            <div class="warning-box">
+                                <div class="warning-label">⚠️ Don't Do This</div>
+                                <ul class="content-list">
+                                    ${q.mistakes.map(m => `<li>${m}</li>`).join('')}
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                `;
+                container.appendChild(card);
+            });
+            
+            document.getElementById('categoriesView').style.display = 'none';
+            document.getElementById('questionsView').classList.add('active');
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function toggleQuestion(index) {
+            const cards = document.querySelectorAll('.question-card');
+            cards[index].classList.toggle('expanded');
+        }
+
+        function showCategories() {
+            document.getElementById('questionsView').classList.remove('active');
+            document.getElementById('categoriesView').style.display = 'block';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function hideLoader() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(function() { overlay.style.display = 'none'; }, 500);
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                hideLoader();
+                init();
+            });
+        } else {
+            hideLoader();
+            init();
+        }
+        setTimeout(hideLoader, 500);
+    </script>
+</body>
+</html>
