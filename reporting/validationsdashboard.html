@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PT Academy Assessor Activity Dashboard</title>
+    <title>PT Academy Validation Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
@@ -599,7 +599,7 @@
     <div class="header">
         <img src="https://pt-academy-embeds.pages.dev/reporting/logo_o_background.png" alt="PT Academy" class="header-logo">
         <div class="header-content">
-            <h1>Assessor Activity Dashboard</h1>
+            <h1>Validation Dashboard</h1>
             <p>Real-time validation queue analytics and mentor performance tracking</p>
         </div>
     </div>
@@ -1281,8 +1281,8 @@
             document.getElementById('metric-ai-percent').textContent = `${aiPercent}% of done`;
             document.getElementById('metric-human-percent').textContent = `${humanPercent}% of done`;
             
-            // Calculate average turnaround time for Done items (ONLY TRACKED DATA)
-            const trackedDoneItems = doneItems.filter(d => d.isTracked && d.turnaroundDays !== null);
+            // Calculate average turnaround time for Done items (ONLY TRACKED, HUMAN-MARKED DATA)
+            const trackedDoneItems = doneItems.filter(d => d.isTracked && d.turnaroundDays !== null && d.markedBy === 'Human');
             const avgTurnaround = trackedDoneItems.length > 0 
                 ? (trackedDoneItems.reduce((sum, d) => sum + d.turnaroundDays, 0) / trackedDoneItems.length).toFixed(1)
                 : 0;
@@ -1295,10 +1295,10 @@
             
             if (trackedDoneItems.length === 0) {
                 document.getElementById('metric-avg-turnaround').parentElement.querySelector('.metric-subtext').textContent = 
-                    'No tracked data yet (starts from tomorrow)';
+                    'No tracked human-marked data yet';
             } else {
                 document.getElementById('metric-avg-turnaround').parentElement.querySelector('.metric-subtext').textContent = 
-                    avgTurnaround > 7 ? '⚠️ Over 7 days average' : `Based on ${trackedDoneItems.length} tracked questions`;
+                    avgTurnaround > 7 ? '⚠️ Over 7 days average' : `Based on ${trackedDoneItems.length} human-marked questions`;
             }
             
             // Calculate average wait time for Pending items (from latest snapshot only)
@@ -1491,7 +1491,7 @@
             const ctx = document.getElementById('turnaroundChart').getContext('2d');
             
             if (currentTurnaroundView === 'distribution') {
-                // Original: Group done items by turnaround time buckets (ONLY TRACKED DATA)
+                // Original: Group done items by turnaround time buckets (ONLY TRACKED DATA, HUMAN MARKED ONLY)
                 const buckets = {
                     'Same Day': 0,
                     '1 Day': 0,
@@ -1500,7 +1500,10 @@
                     '7+ Days': 0
                 };
                 
-                const trackedDoneItems = overviewFilteredData.filter(d => d.container === 'Done' && d.isTracked && d.turnaroundDays !== null);
+                // Only tracked, human-marked done items
+                const trackedDoneItems = overviewFilteredData.filter(
+                    d => d.container === 'Done' && d.isTracked && d.turnaroundDays !== null && d.markedBy === 'Human'
+                );
                 
                 trackedDoneItems.forEach(row => {
                     const days = row.turnaroundDays;
@@ -1537,7 +1540,7 @@
                             legend: { display: false },
                             title: {
                                 display: trackedDoneItems.length === 0,
-                                text: 'No tracked data yet - will populate from tomorrow onwards',
+                                text: 'No tracked human-marked data yet',
                                 font: { size: 14 }
                             },
                             tooltip: {
@@ -1558,11 +1561,13 @@
                 });
                 
             } else if (currentTurnaroundView === 'turnaround') {
-                // By Mentor - Average Turnaround Time
+                // By Mentor - Average Turnaround Time (HUMAN MARKED ONLY)
                 const mentorStats = {};
                 
-                // Calculate average turnaround per mentor (tracked data only)
-                overviewFilteredData.filter(d => d.container === 'Done' && d.isTracked && d.turnaroundDays !== null).forEach(row => {
+                // Calculate average turnaround per mentor (tracked, human-marked only)
+                overviewFilteredData.filter(
+                    d => d.container === 'Done' && d.isTracked && d.turnaroundDays !== null && d.markedBy === 'Human'
+                ).forEach(row => {
                     if (!mentorStats[row.managerName]) {
                         mentorStats[row.managerName] = { sum: 0, count: 0 };
                     }
@@ -1600,7 +1605,7 @@
                             tooltip: {
                                 callbacks: {
                                     label: function(context) {
-                                        return `${context.parsed.x} days average`;
+                                        return `${context.parsed.x} days average (human marked)`;
                                     }
                                 }
                             }
@@ -1805,8 +1810,8 @@
                     } else {
                         mentorStats[mentor].human++;
                     }
-                    // Only include tracked turnaround times in averages
-                    if (row.isTracked && row.turnaroundDays !== null) {
+                    // Only include tracked, human-marked turnaround times in averages
+                    if (row.isTracked && row.turnaroundDays !== null && row.markedBy === 'Human') {
                         mentorStats[mentor].learners[learner].turnaroundTimes.push(row.turnaroundDays);
                     }
                 }
