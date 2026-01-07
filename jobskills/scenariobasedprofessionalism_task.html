@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Professional Scenario Responses</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8f9fa; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
+        .spinner { width: 50px; height: 50px; border: 4px solid #e9ecef; border-top-color: #C6A906; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { margin-top: 20px; font-size: 16px; color: #666; font-weight: 500; }
+        
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; padding: 20px; background: #f8f9fa; line-height: 1.6; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .title { font-size: 28px; font-weight: 700; color: #333; margin-bottom: 15px; }
+        .description { font-size: 16px; color: #555; line-height: 1.6; max-width: 700px; margin: 0 auto; }
+        
+        .category-filter { background: white; border-radius: 12px; padding: 20px; margin-bottom: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .filter-title { font-size: 16px; font-weight: 700; color: #333; margin-bottom: 15px; }
+        .filter-buttons { display: flex; gap: 10px; flex-wrap: wrap; justify-content: center; }
+        .filter-btn { padding: 10px 20px; border-radius: 8px; border: 2px solid #e9ecef; background: #f8f9fa; color: #333; font-size: 14px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; }
+        .filter-btn:hover { border-color: #C6A906; }
+        .filter-btn.active { background: #C6A906; color: white; border-color: #C6A906; }
+        
+        .scenario-card { background: white; border-radius: 12px; padding: 25px; margin-bottom: 25px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: none; }
+        .scenario-card.active { display: block; }
+        .scenario-header { display: flex; align-items: center; gap: 15px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #f8f9fa; }
+        .scenario-number { background: #C6A906; color: white; width: 45px; height: 45px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; flex-shrink: 0; }
+        .scenario-category { display: inline-block; padding: 6px 12px; background: #f8f9fa; border-radius: 6px; font-size: 12px; font-weight: 600; color: #666; text-transform: uppercase; letter-spacing: 0.5px; }
+        .scenario-text { font-size: 16px; color: #333; line-height: 1.7; margin-bottom: 25px; padding: 20px; background: #f8f9fa; border-radius: 8px; border-left: 4px solid #C6A906; }
+        
+        .response-options { display: grid; gap: 12px; margin-bottom: 25px; }
+        .response-option { padding: 18px; border: 2px solid #e9ecef; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; position: relative; }
+        .response-option:hover { border-color: #C6A906; background: #fffef8; }
+        .response-option.selected { border-color: #C6A906; background: #fffef8; }
+        .response-option.correct { border-color: #28a745; background: #f8fff9; }
+        .response-option.incorrect { border-color: #dc3545; background: #fff8f8; }
+        .response-label { font-size: 14px; font-weight: 700; color: #C6A906; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .response-option.correct .response-label { color: #28a745; }
+        .response-option.incorrect .response-label { color: #dc3545; }
+        .response-text { font-size: 15px; color: #333; line-height: 1.6; }
+        .response-icon { position: absolute; top: 15px; right: 15px; font-size: 24px; display: none; }
+        .response-option.correct .response-icon, .response-option.incorrect .response-icon { display: block; }
+        
+        .feedback { display: none; margin-top: 20px; padding: 20px; border-radius: 8px; }
+        .feedback.active { display: block; }
+        .feedback.correct { background: #d4edda; border-left: 4px solid #28a745; }
+        .feedback.incorrect { background: #f8d7da; border-left: 4px solid: #dc3545; }
+        .feedback-title { font-size: 16px; font-weight: 700; margin-bottom: 10px; }
+        .feedback.correct .feedback-title { color: #155724; }
+        .feedback.incorrect .feedback-title { color: #721c24; }
+        .feedback-text { font-size: 14px; line-height: 1.7; }
+        .feedback.correct .feedback-text { color: #155724; }
+        .feedback.incorrect .feedback-text { color: #721c24; }
+        
+        .action-buttons { display: flex; gap: 12px; justify-content: center; margin-top: 25px; flex-wrap: wrap; }
+        .btn { padding: 12px 30px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: none; }
+        .btn-primary { background: #C6A906; color: white; }
+        .btn-primary:hover { background: #a88c05; }
+        .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+        .btn-secondary { background: #e9ecef; color: #333; }
+        .btn-secondary:hover { background: #d4d8db; }
+        
+        .progress-indicator { text-align: center; margin-bottom: 30px; padding: 15px; background: white; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .progress-text { font-size: 14px; color: #666; margin-bottom: 10px; }
+        .progress-bar-container { width: 100%; height: 10px; background: #e9ecef; border-radius: 5px; overflow: hidden; }
+        .progress-bar { height: 100%; background: linear-gradient(90deg, #C6A906, #e8c547); transition: width 0.5s ease; border-radius: 5px; }
+        
+        @media (max-width: 768px) {
+            .filter-buttons { flex-direction: column; }
+            .filter-btn { width: 100%; }
+            .action-buttons { flex-direction: column; }
+            .btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading scenarios...</div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Professional Scenario Responses</h1>
+            <p class="description">Test your professional judgment with real workplace scenarios. Choose the best response and discover why it works—or doesn't work.</p>
+        </div>
+
+        <div class="progress-indicator">
+            <div class="progress-text">Scenarios Completed: <strong><span id="completed">0</span>/10</strong></div>
+            <div class="progress-bar-container">
+                <div class="progress-bar" id="progressBar" style="width: 0%"></div>
+            </div>
+        </div>
+
+        <div class="category-filter">
+            <div class="filter-title">Filter by Category:</div>
+            <div class="filter-buttons">
+                <button class="filter-btn active" onclick="filterCategory('all')">All Scenarios</button>
+                <button class="filter-btn" onclick="filterCategory('scope')">Scope of Practice</button>
+                <button class="filter-btn" onclick="filterCategory('boundaries')">Client Boundaries</button>
+                <button class="filter-btn" onclick="filterCategory('conflict')">Colleague Conflict</button>
+                <button class="filter-btn" onclick="filterCategory('management')">Management Issues</button>
+            </div>
+        </div>
+
+        <div id="scenariosContainer"></div>
+    </div>
+
+    <script>
+        const scenarios = [
+            {
+                id: 1,
+                category: 'scope',
+                text: "A client asks you to create a specific meal plan to help with their digestive issues and inflammatory bowel disease.",
+                options: [
+                    { label: "Poor Response", text: "Create a basic meal plan focusing on anti-inflammatory foods since you've done research on nutrition.", correct: false, feedback: "This crosses scope of practice boundaries. Medical conditions require qualified healthcare professionals. You're not qualified to provide medical nutrition therapy." },
+                    { label: "Acceptable Response", text: "Tell them you can't help with medical conditions and suggest they see their GP.", correct: false, feedback: "While this maintains boundaries, it could be more helpful. The response is somewhat dismissive and doesn't offer alternatives within your scope." },
+                    { label: "Excellent Response", text: "Explain that specific medical nutrition therapy falls outside your scope of practice, recommend they consult a registered dietitian for their condition, and offer to coordinate training around any dietary recommendations they receive.", correct: true, feedback: "Perfect! This clearly states boundaries, provides appropriate referral to qualified professionals, demonstrates care for the client's needs, and offers continued support within your scope." }
+                ]
+            },
+            {
+                id: 2,
+                category: 'boundaries',
+                text: "A regular client starts making flirtatious comments during sessions and suggests meeting socially outside the gym.",
+                options: [
+                    { label: "Poor Response", text: "Laugh it off and change the subject, hoping they'll stop eventually.", correct: false, feedback: "Avoiding the issue allows inappropriate behavior to continue. Unclear boundaries create ongoing problems. Direct, professional communication is necessary." },
+                    { label: "Acceptable Response", text: "Politely decline the social invitation and keep interactions professional going forward.", correct: false, feedback: "This addresses the immediate situation but doesn't explicitly establish boundaries. The behavior might continue if expectations aren't clearly communicated." },
+                    { label: "Excellent Response", text: "Address it directly: 'I appreciate your friendliness, but I need to keep our relationship professional and focused on your training. I'm not comfortable with those comments or meeting outside of sessions.' Document the conversation and inform your manager.", correct: true, feedback: "Excellent! Direct, professional communication establishes clear boundaries. Documentation and management notification protect you if issues escalate. This respects both parties whilst maintaining professionalism." }
+                ]
+            },
+            {
+                id: 3,
+                category: 'scope',
+                text: "Your client mentions persistent knee pain and asks if you think they've torn their meniscus, and what treatment they should get.",
+                options: [
+                    { label: "Poor Response", text: "Based on your exercise science knowledge, explain what a meniscus tear is and suggest they try some strengthening exercises first before seeing anyone.", correct: false, feedback: "You're diagnosing a medical condition and recommending treatment, which is outside your scope. This could delay necessary medical care and potentially worsen injury." },
+                    { label: "Acceptable Response", text: "Say you can't diagnose injuries and they should see a physiotherapist or doctor.", correct: false, feedback: "This maintains appropriate boundaries but could be more helpful. You're not explaining why you can't diagnose or offering interim guidance within your scope." },
+                    { label: "Excellent Response", text: "Acknowledge their concern, explain you can't diagnose the cause of pain as that requires medical assessment, strongly recommend they consult their GP or a physiotherapist for proper diagnosis, and offer to modify training in the meantime to avoid aggravating the knee.", correct: true, feedback: "Perfect! This validates the client's concern, clearly explains scope limitations, provides appropriate professional referral, and offers continued support within your competence while prioritizing their health." }
+                ]
+            },
+            {
+                id: 4,
+                category: 'boundaries',
+                text: "A client you've developed good rapport with asks for your mobile number so they can 'text questions between sessions' rather than using the gym's booking system.",
+                options: [
+                    { label: "Poor Response", text: "Give them your number—you want to be helpful and accessible to your clients.", correct: false, feedback: "Personal mobile access blurs professional boundaries. You'll likely receive questions at inappropriate times without compensation for your availability. Use professional communication channels." },
+                    { label: "Acceptable Response", text: "Explain you prefer to keep all client communication through the gym's systems but they can always email you through the facility.", correct: false, feedback: "This maintains boundaries but doesn't fully explain the rationale or set clear response expectations. It's functional but could be clearer about professional standards." },
+                    { label: "Excellent Response", text: "Appreciate the trust but explain you maintain professional boundaries by keeping communication through official channels. This protects both of you with documented records and ensures you can respond during professional hours. Confirm they can message through the facility system and you'll respond within 24 hours.", correct: true, feedback: "Excellent! This clearly explains professional boundary rationale, protects both parties through documentation, sets clear expectations about response times, and demonstrates professionalism while remaining friendly and helpful." }
+                ]
+            },
+            {
+                id: 5,
+                category: 'conflict',
+                text: "You notice a colleague consistently using PT room during your booked time, requiring you to relocate clients at the last minute.",
+                options: [
+                    { label: "Poor Response", text: "Complain to other colleagues about how unprofessional they are and hope someone tells them to stop.", correct: false, feedback: "Gossip damages workplace relationships and is unprofessional. It doesn't address the problem directly and creates toxic environment. Always address issues directly first." },
+                    { label: "Acceptable Response", text: "Send them a polite text or email asking them to check the booking system before using the PT room.", correct: false, feedback: "Written communication without prior conversation can seem passive-aggressive. For workplace conflicts, direct professional conversation typically proves more effective for resolution and relationship maintenance." },
+                    { label: "Excellent Response", text: "Speak to them privately: 'I wanted to discuss the PT room bookings. My sessions have been interrupted several times when you've used the room during my booked times. I understand schedules run over, but I need to ensure my clients have the space they've paid for. Can we discuss how to prevent this going forward?'", correct: true, feedback: "Perfect! This addresses the specific behavior directly, acknowledges shared challenges, expresses needs clearly without attacking the person, and invites collaborative problem-solving. This approach maintains professional relationships while resolving issues." }
+                ]
+            },
+            {
+                id: 6,
+                category: 'management',
+                text: "Your manager implements a new policy requiring all trainers to sell a minimum number of supplement products monthly. You're uncomfortable with this sales pressure.",
+                options: [
+                    { label: "Poor Response", text: "Refuse to comply with the policy and tell your manager you won't do it because it's unethical.", correct: false, feedback: "While having ethical concerns is valid, refusing without discussion and labeling management decisions as unethical damages your professional relationship and may lead to employment issues. Express concerns professionally." },
+                    { label: "Acceptable Response", text: "Follow the policy but only suggest supplements to clients you genuinely believe would benefit from them.", correct: false, feedback: "This is a reasonable compromise but doesn't address your discomfort with the policy. Without expressing concerns professionally, management can't know staff concerns or potentially adjust the policy." },
+                    { label: "Excellent Response", text: "Request a private meeting with your manager. Explain you want to understand the policy rationale and express concerns about product-pushing potentially compromising client trust. Ask if there's flexibility in approach—such as education about products without hard sales tactics. Accept the final decision professionally even if disagreeing.", correct: true, feedback: "Excellent! This seeks to understand management perspective, expresses concerns professionally and constructively, suggests alternatives, and demonstrates respect for management authority whilst maintaining your professional standards. This approach can lead to policy adjustment or clarification." }
+                ]
+            },
+            {
+                id: 7,
+                category: 'boundaries',
+                text: "A client shares that they're going through a divorce and starts spending session time venting about their ex-partner rather than training.",
+                options: [
+                    { label: "Poor Response", text: "Let them talk through the whole session. They clearly need emotional support and they're paying for your time anyway.", correct: false, feedback: "While empathy is important, your role is fitness professional, not counselor. Extended personal discussions during training time isn't appropriate professional practice and doesn't address their training goals or emotional needs properly." },
+                    { label: "Acceptable Response", text: "Listen for a few minutes then redirect to training, saying you're not qualified to help with personal issues.", correct: false, feedback: "This maintains boundaries but could seem abrupt or uncaring. It's functional but doesn't acknowledge their emotional state or offer appropriate support resources." },
+                    { label: "Excellent Response", text: "Acknowledge their difficulty: 'That sounds really challenging. While I'm here to support you through training, extended counseling is beyond my qualification. If you need someone to talk to professionally, I can help you find resources. For today, why don't we use training as a positive focus and stress relief?' Offer to adjust session intensity if needed.", correct: true, feedback: "Perfect! This validates their emotions, clearly states professional boundaries without seeming cold, offers to help find appropriate resources, reframes training as beneficial stress management, and shows flexibility while maintaining your professional role." }
+                ]
+            },
+            {
+                id: 8,
+                category: 'conflict',
+                text: "Another trainer posted before/after photos of one of their clients on social media without visible consent, and you know the facility policy prohibits this without written permission.",
+                options: [
+                    { label: "Poor Response", text: "Comment on the post pointing out this violates facility policy and isn't professional.", correct: false, feedback: "Public criticism damages professional relationships and puts the colleague on defensive. This creates conflict rather than resolution. Address concerns privately or through proper channels." },
+                    { label: "Acceptable Response", text: "Send them a private message letting them know about the facility's consent policy for client photos.", correct: false, feedback: "While better than public criticism, peer-to-peer correction can still create defensiveness. Policy violations—especially those affecting client privacy—should typically be reported to management for proper handling." },
+                    { label: "Excellent Response", text: "Speak privately to your manager, expressing concern that client photos were shared without visible consent and this may violate facility policy and GDPR. Avoid accusatory language, focusing on policy compliance and client protection. Let management address it appropriately.", correct: true, feedback: "Excellent! Policy violations affecting client privacy should be reported through proper channels. This protects clients, maintains your professional integrity, avoids direct colleague conflict, and allows management to handle appropriately with full context and authority." }
+                ]
+            },
+            {
+                id: 9,
+                category: 'management',
+                text: "You're asked to cover last-minute for a colleague's client consultation, but you have personal plans immediately after your scheduled shift ends.",
+                options: [
+                    { label: "Poor Response", text: "Agree to do it even though it means canceling your plans. You need to be seen as a team player.", correct: false, feedback: "While flexibility is valuable, consistently sacrificing personal boundaries leads to resentment and burnout. Employers should respect reasonable work-life balance. You can be professional without always saying yes." },
+                    { label: "Acceptable Response", text: "Say you can't do it today but would be happy to help with future coverage when you have more notice.", correct: false, feedback: "This is honest but doesn't explore all options. There might be solutions that work for everyone with creative problem-solving." },
+                    { label: "Excellent Response", text: "Explain you have commitments after your shift but you'd like to help find a solution. Ask if the consultation could be scheduled for tomorrow when you have availability, or if there's another colleague who could cover today. Emphasize you're happy to help with advance notice in future and ask if there's a better system for managing coverage.", correct: true, feedback: "Perfect! This maintains professional boundaries while demonstrating genuine willingness to help, suggests alternatives showing problem-solving approach, and communicates you're reliable team member when given reasonable notice. This sets healthy precedents." }
+                ]
+            },
+            {
+                id: 10,
+                category: 'scope',
+                text: "A client mentions feeling consistently exhausted despite adequate sleep and asks if you think their thyroid might be the problem since they've heard that can affect metabolism and energy.",
+                options: [
+                    { label: "Poor Response", text: "Share what you know about thyroid function and metabolism from your Level 3 course and suggest they might want to get it checked, giving your opinion on whether you think that's likely the issue.", correct: false, feedback: "You're speculating about medical diagnosis based on non-medical training. Even framed as suggestion, this influences their healthcare decisions without appropriate medical knowledge. Always direct medical concerns to qualified professionals." },
+                    { label: "Acceptable Response", text: "Tell them you can't diagnose medical conditions and they should see their doctor if they're concerned about ongoing fatigue.", correct: false, feedback: "This maintains appropriate boundaries but offers limited support. You could provide more value by acknowledging their concern more fully whilst still maintaining professional boundaries." },
+                    { label: "Excellent Response", text: "Acknowledge persistent, unexplained fatigue warrants medical evaluation. Explain that while you understand exercise and general health, diagnosing medical conditions requires clinical assessment you're not qualified to provide. Strongly encourage them to see their GP who can run appropriate tests including thyroid function if indicated. Offer to adjust training intensity in the meantime.", correct: true, feedback: "Excellent! This validates their concern and emphasizes importance of medical evaluation, clearly explains scope of practice limitations without undermining your professional value, provides strong healthcare referral, and offers appropriate support within your competence. This demonstrates caring professionalism." }
+                ]
+            }
+        ];
+
+        let completedCount = 0;
+        let currentFilter = 'all';
+
+        function init() {
+            renderScenarios();
+        }
+
+        function renderScenarios() {
+            const container = document.getElementById('scenariosContainer');
+            container.innerHTML = '';
+            
+            scenarios.forEach(scenario => {
+                const card = document.createElement('div');
+                card.className = `scenario-card ${currentFilter === 'all' || currentFilter === scenario.category ? 'active' : ''}`;
+                card.setAttribute('data-category', scenario.category);
+                
+                let optionsHTML = '';
+                scenario.options.forEach((option, idx) => {
+                    optionsHTML += `
+                        <div class="response-option" onclick="selectOption(${scenario.id}, ${idx})">
+                            <div class="response-label">${option.label}</div>
+                            <div class="response-text">${option.text}</div>
+                            <div class="response-icon"></div>
+                        </div>
+                    `;
+                });
+                
+                card.innerHTML = `
+                    <div class="scenario-header">
+                        <div class="scenario-number">${scenario.id}</div>
+                        <div>
+                            <div class="scenario-category">${getCategoryLabel(scenario.category)}</div>
+                        </div>
+                    </div>
+                    <div class="scenario-text">${scenario.text}</div>
+                    <div class="response-options" id="options-${scenario.id}">
+                        ${optionsHTML}
+                    </div>
+                    <div class="feedback" id="feedback-${scenario.id}">
+                        <div class="feedback-title"></div>
+                        <div class="feedback-text"></div>
+                    </div>
+                `;
+                
+                container.appendChild(card);
+            });
+        }
+
+        function getCategoryLabel(cat) {
+            const labels = {
+                'scope': 'Scope of Practice',
+                'boundaries': 'Client Boundaries',
+                'conflict': 'Colleague Conflict',
+                'management': 'Management Issues'
+            };
+            return labels[cat] || cat;
+        }
+
+        function filterCategory(cat) {
+            currentFilter = cat;
+            document.querySelectorAll('.filter-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            document.querySelectorAll('.scenario-card').forEach(card => {
+                if (cat === 'all' || card.getAttribute('data-category') === cat) {
+                    card.classList.add('active');
+                } else {
+                    card.classList.remove('active');
+                }
+            });
+        }
+
+        function selectOption(scenarioId, optionIndex) {
+            const scenario = scenarios.find(s => s.id === scenarioId);
+            const option = scenario.options[optionIndex];
+            const optionsContainer = document.getElementById(`options-${scenarioId}`);
+            const options = optionsContainer.querySelectorAll('.response-option');
+            const feedback = document.getElementById(`feedback-${scenarioId}`);
+            
+            // Check if already answered
+            if (options[0].classList.contains('correct') || options[0].classList.contains('incorrect')) {
+                return;
+            }
+            
+            // Mark selected option
+            options.forEach((opt, idx) => {
+                if (idx === optionIndex) {
+                    opt.classList.add('selected');
+                    if (scenario.options[idx].correct) {
+                        opt.classList.add('correct');
+                        opt.querySelector('.response-icon').textContent = '✓';
+                    } else {
+                        opt.classList.add('incorrect');
+                        opt.querySelector('.response-icon').textContent = '✗';
+                    }
+                } else if (scenario.options[idx].correct) {
+                    opt.classList.add('correct');
+                    opt.querySelector('.response-icon').textContent = '✓';
+                }
+            });
+            
+            // Show feedback
+            feedback.classList.add('active');
+            if (option.correct) {
+                feedback.classList.add('correct');
+                feedback.querySelector('.feedback-title').textContent = '✓ Correct!';
+            } else {
+                feedback.classList.add('incorrect');
+                feedback.querySelector('.feedback-title').textContent = '✗ Not Quite';
+            }
+            feedback.querySelector('.feedback-text').textContent = option.feedback;
+            
+            // Update progress
+            completedCount++;
+            updateProgress();
+        }
+
+        function updateProgress() {
+            document.getElementById('completed').textContent = completedCount;
+            const percentage = (completedCount / scenarios.length) * 100;
+            document.getElementById('progressBar').style.width = percentage + '%';
+        }
+
+        function hideLoader() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(function() { overlay.style.display = 'none'; }, 500);
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', function() {
+                hideLoader();
+                init();
+            });
+        } else {
+            hideLoader();
+            init();
+        }
+        setTimeout(hideLoader, 500);
+    </script>
+</body>
+</html>
