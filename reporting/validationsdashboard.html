@@ -50,6 +50,104 @@
             color: #D8D8D8;
         }
 
+        /* Chart Modal Styles */
+        .chart-modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.6);
+            animation: fadeIn 0.3s;
+        }
+
+        .chart-modal.active {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+
+        .chart-modal-content {
+            background: white;
+            border-radius: 8px;
+            width: 90%;
+            max-width: 1200px;
+            max-height: 90vh;
+            display: flex;
+            flex-direction: column;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.3);
+            animation: slideDown 0.3s;
+        }
+
+        .chart-modal-header {
+            padding: 1.5rem;
+            border-bottom: 2px solid #D8D8D8;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #030303;
+            border-radius: 8px 8px 0 0;
+        }
+
+        .chart-modal-header h2 {
+            margin: 0;
+            color: #C6A906;
+            font-size: 1.5rem;
+        }
+
+        .chart-modal-close {
+            background: none;
+            border: none;
+            font-size: 2rem;
+            color: #D8D8D8;
+            cursor: pointer;
+            padding: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: color 0.3s;
+        }
+
+        .chart-modal-close:hover {
+            color: #C6A906;
+        }
+
+        .chart-modal-body {
+            padding: 1.5rem;
+            overflow-y: auto;
+            flex: 1;
+        }
+
+        .chart-modal-controls {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+            padding: 1rem;
+            background: #f8f8f8;
+            border-radius: 4px;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        @keyframes slideDown {
+            from { 
+                transform: translateY(-50px);
+                opacity: 0;
+            }
+            to { 
+                transform: translateY(0);
+                opacity: 1;
+            }
+        }
+
         .container {
             max-width: 1400px;
             margin: 0 auto;
@@ -653,7 +751,14 @@
                 </div>
                 
                 <div class="chart-container">
-                    <div class="chart-title">⏱️ Turnaround Time Distribution (Tracked Data Only)</div>
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1rem;">
+                        <div class="chart-title">⏱️ Turnaround Time Distribution</div>
+                        <div style="display: flex; gap: 0.5rem;">
+                            <button class="btn btn-secondary" onclick="switchTurnaroundView('distribution')" id="btn-view-distribution" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Distribution</button>
+                            <button class="btn btn-secondary" onclick="switchTurnaroundView('turnaround')" id="btn-view-turnaround" style="padding: 0.5rem 1rem; font-size: 0.85rem;">By Mentor (Turnaround)</button>
+                            <button class="btn btn-secondary" onclick="switchTurnaroundView('wait')" id="btn-view-wait" style="padding: 0.5rem 1rem; font-size: 0.85rem;">By Mentor (Wait)</button>
+                        </div>
+                    </div>
                     <canvas id="turnaroundChart"></canvas>
                 </div>
             </div>
@@ -860,6 +965,52 @@
         </div>
     </div>
 
+    <!-- Chart Drill-down Modal -->
+    <div id="chart-modal" class="chart-modal" onclick="closeChartModal(event)">
+        <div class="chart-modal-content" onclick="event.stopPropagation()">
+            <div class="chart-modal-header">
+                <h2 id="chart-modal-title">Data Details</h2>
+                <button class="chart-modal-close" onclick="closeChartModal()">&times;</button>
+            </div>
+            <div class="chart-modal-body">
+                <div class="chart-modal-controls">
+                    <span id="chart-modal-count">0 records</span>
+                    <button class="btn" onclick="exportModalData()">Export to CSV</button>
+                </div>
+                <div class="table-wrapper" style="max-height: 500px;">
+                    <table>
+                        <thead id="chart-modal-table-head">
+                            <!-- Dynamic headers -->
+                        </thead>
+                        <tbody id="chart-modal-table-body">
+                            <!-- Dynamic data -->
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Drill-down Modal -->
+    <div id="drilldown-modal" style="display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.5); z-index: 9999; overflow-y: auto;">
+        <div style="background: white; margin: 2rem auto; max-width: 1200px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+            <div style="padding: 1.5rem; border-bottom: 2px solid #D8D8D8; display: flex; justify-content: space-between; align-items: center; background: #030303; border-radius: 8px 8px 0 0;">
+                <h2 style="margin: 0; color: #C6A906;" id="modal-title">Data Details</h2>
+                <button onclick="closeDrilldownModal()" style="background: none; border: none; color: white; font-size: 1.5rem; cursor: pointer; padding: 0.5rem;">✕</button>
+            </div>
+            <div style="padding: 1.5rem; max-height: 70vh; overflow-y: auto;">
+                <div id="modal-content"></div>
+            </div>
+            <div style="padding: 1rem 1.5rem; border-top: 2px solid #D8D8D8; display: flex; justify-content: space-between; align-items: center;">
+                <span id="modal-count" style="color: #666; font-size: 0.9rem;"></span>
+                <div style="display: flex; gap: 1rem;">
+                    <button class="btn" onclick="exportModalToCSV()">Export to CSV</button>
+                    <button class="btn btn-secondary" onclick="closeDrilldownModal()">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
     <script>
         // Configuration
         const SHEET_ID = '14wIg72mL7kURuuWg060uMdexrd8amYht_KpUJA-03w4';
@@ -877,6 +1028,12 @@
         // Pagination state
         let currentPage = 1;
         let itemsPerPage = 100;
+        
+        // Turnaround chart view state
+        let currentTurnaroundView = 'distribution'; // 'distribution', 'turnaround', 'wait'
+        
+        // Modal drill-down data
+        let currentModalData = [];
 
         // Chart instances
         let dailyMarkedChart, clearanceRateChart, turnaroundChart, analyticsChart;
@@ -1192,6 +1349,13 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: true,
+                    onClick: (event, activeElements) => {
+                        if (activeElements.length > 0) {
+                            const index = activeElements[0].index;
+                            const clickedDate = dates[index];
+                            showDailyMarkedDrilldown(clickedDate);
+                        }
+                    },
                     plugins: {
                         legend: {
                             display: false
@@ -1276,6 +1440,13 @@
                 options: {
                     responsive: true,
                     maintainAspectRatio: true,
+                    onClick: (event, activeElements) => {
+                        if (activeElements.length > 0) {
+                            const index = activeElements[0].index;
+                            const clickedDate = dates[index];
+                            showClearanceRateDrilldown(clickedDate);
+                        }
+                    },
                     plugins: {
                         legend: {
                             display: false
@@ -1319,86 +1490,185 @@
         function createTurnaroundChart() {
             const ctx = document.getElementById('turnaroundChart').getContext('2d');
             
-            // Group done items by turnaround time buckets (ONLY TRACKED DATA)
-            const buckets = {
-                'Same Day': 0,
-                '1 Day': 0,
-                '2-3 Days': 0,
-                '4-7 Days': 0,
-                '7+ Days': 0
-            };
-            
-            const trackedDoneItems = overviewFilteredData.filter(d => d.container === 'Done' && d.isTracked && d.turnaroundDays !== null);
-            
-            trackedDoneItems.forEach(row => {
-                const days = row.turnaroundDays;
-                if (days === 0) buckets['Same Day']++;
-                else if (days === 1) buckets['1 Day']++;
-                else if (days >= 2 && days <= 3) buckets['2-3 Days']++;
-                else if (days >= 4 && days <= 7) buckets['4-7 Days']++;
-                else buckets['7+ Days']++;
-            });
-            
-            const labels = Object.keys(buckets);
-            const counts = Object.values(buckets);
-            
-            // Color code: green for fast, amber for medium, red for slow
-            const backgroundColors = [
-                '#4caf50', // Same Day - green
-                '#8bc34a', // 1 Day - light green
-                '#ffc107', // 2-3 Days - amber
-                '#ff9800', // 4-7 Days - orange
-                '#f44336'  // 7+ Days - red (flagged)
-            ];
-            
-            turnaroundChart = new Chart(ctx, {
-                type: 'bar',
-                data: {
-                    labels: labels,
-                    datasets: [{
-                        label: 'Number of Questions',
-                        data: counts,
-                        backgroundColor: backgroundColors,
-                        borderColor: backgroundColors.map(c => c),
-                        borderWidth: 1
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        title: {
-                            display: trackedDoneItems.length === 0,
-                            text: 'No tracked data yet - will populate from tomorrow onwards',
-                            font: {
-                                size: 14
-                            }
-                        },
-                        tooltip: {
-                            callbacks: {
-                                label: function(context) {
-                                    const label = context.label;
-                                    const value = context.parsed.y;
-                                    const total = counts.reduce((a, b) => a + b, 0);
-                                    const percent = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
-                                    return `${value} questions (${percent}%)`;
+            if (currentTurnaroundView === 'distribution') {
+                // Original: Group done items by turnaround time buckets (ONLY TRACKED DATA)
+                const buckets = {
+                    'Same Day': 0,
+                    '1 Day': 0,
+                    '2-3 Days': 0,
+                    '4-7 Days': 0,
+                    '7+ Days': 0
+                };
+                
+                const trackedDoneItems = overviewFilteredData.filter(d => d.container === 'Done' && d.isTracked && d.turnaroundDays !== null);
+                
+                trackedDoneItems.forEach(row => {
+                    const days = row.turnaroundDays;
+                    if (days === 0) buckets['Same Day']++;
+                    else if (days === 1) buckets['1 Day']++;
+                    else if (days >= 2 && days <= 3) buckets['2-3 Days']++;
+                    else if (days >= 4 && days <= 7) buckets['4-7 Days']++;
+                    else buckets['7+ Days']++;
+                });
+                
+                const labels = Object.keys(buckets);
+                const counts = Object.values(buckets);
+                
+                const backgroundColors = [
+                    '#4caf50', '#8bc34a', '#ffc107', '#ff9800', '#f44336'
+                ];
+                
+                turnaroundChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Number of Questions',
+                            data: counts,
+                            backgroundColor: backgroundColors,
+                            borderColor: backgroundColors.map(c => c),
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        plugins: {
+                            legend: { display: false },
+                            title: {
+                                display: trackedDoneItems.length === 0,
+                                text: 'No tracked data yet - will populate from tomorrow onwards',
+                                font: { size: 14 }
+                            },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        const value = context.parsed.y;
+                                        const total = counts.reduce((a, b) => a + b, 0);
+                                        const percent = total > 0 ? ((value / total) * 100).toFixed(1) : 0;
+                                        return `${value} questions (${percent}%)`;
+                                    }
                                 }
                             }
-                        }
-                    },
-                    scales: {
-                        y: {
-                            beginAtZero: true,
-                            ticks: {
-                                stepSize: 1
-                            }
+                        },
+                        scales: {
+                            y: { beginAtZero: true, ticks: { stepSize: 1 } }
                         }
                     }
-                }
-            });
+                });
+                
+            } else if (currentTurnaroundView === 'turnaround') {
+                // By Mentor - Average Turnaround Time
+                const mentorStats = {};
+                
+                // Calculate average turnaround per mentor (tracked data only)
+                overviewFilteredData.filter(d => d.container === 'Done' && d.isTracked && d.turnaroundDays !== null).forEach(row => {
+                    if (!mentorStats[row.managerName]) {
+                        mentorStats[row.managerName] = { sum: 0, count: 0 };
+                    }
+                    mentorStats[row.managerName].sum += row.turnaroundDays;
+                    mentorStats[row.managerName].count++;
+                });
+                
+                const mentorData = Object.keys(mentorStats).map(mentor => ({
+                    name: mentor,
+                    avg: mentorStats[mentor].count > 0 ? (mentorStats[mentor].sum / mentorStats[mentor].count).toFixed(1) : 0
+                })).sort((a, b) => b.avg - a.avg);
+                
+                const labels = mentorData.map(m => m.name);
+                const avgs = mentorData.map(m => parseFloat(m.avg));
+                const colors = avgs.map(avg => avg >= 7 ? '#f44336' : (avg >= 4 ? '#ff9800' : '#C6A906'));
+                
+                turnaroundChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Avg Turnaround (days)',
+                            data: avgs,
+                            backgroundColor: colors,
+                            borderColor: colors,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        indexAxis: 'y',
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.parsed.x} days average`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: { beginAtZero: true, title: { display: true, text: 'Days' } }
+                        }
+                    }
+                });
+                
+            } else if (currentTurnaroundView === 'wait') {
+                // By Mentor - Average Wait Time (Pending)
+                const mentorStats = {};
+                
+                // Get latest export date for pending snapshot
+                const exportDates = overviewFilteredData.map(d => d.exportDate).filter(d => d);
+                const latestExportDate = exportDates.length > 0 ? exportDates.sort().reverse()[0] : null;
+                
+                // Calculate average wait time per mentor (latest pending only)
+                overviewFilteredData.filter(d => d.container === 'Pending' && d.exportDate === latestExportDate && d.turnaroundDays !== null).forEach(row => {
+                    if (!mentorStats[row.managerName]) {
+                        mentorStats[row.managerName] = { sum: 0, count: 0 };
+                    }
+                    mentorStats[row.managerName].sum += row.turnaroundDays;
+                    mentorStats[row.managerName].count++;
+                });
+                
+                const mentorData = Object.keys(mentorStats).map(mentor => ({
+                    name: mentor,
+                    avg: mentorStats[mentor].count > 0 ? (mentorStats[mentor].sum / mentorStats[mentor].count).toFixed(1) : 0
+                })).sort((a, b) => b.avg - a.avg);
+                
+                const labels = mentorData.map(m => m.name);
+                const avgs = mentorData.map(m => parseFloat(m.avg));
+                const colors = avgs.map(avg => avg >= 7 ? '#f44336' : (avg >= 4 ? '#ff9800' : '#C6A906'));
+                
+                turnaroundChart = new Chart(ctx, {
+                    type: 'bar',
+                    data: {
+                        labels: labels,
+                        datasets: [{
+                            label: 'Avg Wait Time (days)',
+                            data: avgs,
+                            backgroundColor: colors,
+                            borderColor: colors,
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        maintainAspectRatio: true,
+                        indexAxis: 'y',
+                        plugins: {
+                            legend: { display: false },
+                            tooltip: {
+                                callbacks: {
+                                    label: function(context) {
+                                        return `${context.parsed.x} days average wait`;
+                                    }
+                                }
+                            }
+                        },
+                        scales: {
+                            x: { beginAtZero: true, title: { display: true, text: 'Days' } }
+                        }
+                    }
+                });
+            }
         }
 
         function populateFilters() {
@@ -2145,6 +2415,167 @@
                 content.classList.add('collapsed');
                 icon.classList.add('collapsed');
             }
+        }
+
+        // Modal and Drilldown Functions
+        function showDailyMarkedDrilldown(date) {
+            const data = overviewFilteredData.filter(
+                row => row.container === 'Done' && row.exportDate === date && row.isTracked
+            );
+            
+            currentModalData = data;
+            
+            document.getElementById('modal-title').textContent = `Questions Marked on ${date}`;
+            document.getElementById('modal-count').textContent = `${data.length} questions`;
+            
+            const html = `
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #030303; color: #C6A906;">
+                            <th style="padding: 0.75rem; text-align: left;">Learner</th>
+                            <th style="padding: 0.75rem; text-align: left;">Manager</th>
+                            <th style="padding: 0.75rem; text-align: left;">Question</th>
+                            <th style="padding: 0.75rem; text-align: left;">Turnaround</th>
+                            <th style="padding: 0.75rem; text-align: left;">Status</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${data.map(row => `
+                            <tr style="border-bottom: 1px solid #D8D8D8;">
+                                <td style="padding: 0.75rem;">${row.learnerName}</td>
+                                <td style="padding: 0.75rem;">${row.managerName}</td>
+                                <td style="padding: 0.75rem;">${row.questionTitle.substring(0, 60)}${row.questionTitle.length > 60 ? '...' : ''}</td>
+                                <td style="padding: 0.75rem;">${row.turnaroundDays !== null ? row.turnaroundDays + 'd' : '-'}</td>
+                                <td style="padding: 0.75rem;"><span class="badge badge-${row.status.toLowerCase()}">${row.status}</span></td>
+                            </tr>
+                        `).join('')}
+                    </tbody>
+                </table>
+            `;
+            
+            document.getElementById('modal-content').innerHTML = html;
+            document.getElementById('drilldown-modal').style.display = 'block';
+        }
+        
+        function showClearanceRateDrilldown(date) {
+            const doneData = overviewFilteredData.filter(
+                row => row.container === 'Done' && row.exportDate === date && row.isTracked
+            );
+            const pendingData = overviewFilteredData.filter(
+                row => row.container === 'Pending' && row.exportDate === date
+            );
+            
+            currentModalData = [...doneData, ...pendingData];
+            
+            const clearanceRate = pendingData.length > 0 
+                ? ((doneData.length / pendingData.length) * 100).toFixed(2)
+                : 0;
+            
+            document.getElementById('modal-title').textContent = `Clearance Rate on ${date}: ${clearanceRate}%`;
+            document.getElementById('modal-count').textContent = `${doneData.length} marked, ${pendingData.length} pending`;
+            
+            const html = `
+                <h3 style="color: #C6A906; margin-bottom: 1rem;">✅ Questions Marked (${doneData.length})</h3>
+                <table style="width: 100%; border-collapse: collapse; margin-bottom: 2rem;">
+                    <thead>
+                        <tr style="background: #030303; color: #C6A906;">
+                            <th style="padding: 0.75rem; text-align: left;">Learner</th>
+                            <th style="padding: 0.75rem; text-align: left;">Manager</th>
+                            <th style="padding: 0.75rem; text-align: left;">Question</th>
+                            <th style="padding: 0.75rem; text-align: left;">Turnaround</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${doneData.slice(0, 50).map(row => `
+                            <tr style="border-bottom: 1px solid #D8D8D8;">
+                                <td style="padding: 0.75rem;">${row.learnerName}</td>
+                                <td style="padding: 0.75rem;">${row.managerName}</td>
+                                <td style="padding: 0.75rem;">${row.questionTitle.substring(0, 50)}${row.questionTitle.length > 50 ? '...' : ''}</td>
+                                <td style="padding: 0.75rem;">${row.turnaroundDays !== null ? row.turnaroundDays + 'd' : '-'}</td>
+                            </tr>
+                        `).join('')}
+                        ${doneData.length > 50 ? `<tr><td colspan="4" style="text-align: center; padding: 1rem; color: #666;">Showing first 50 of ${doneData.length} questions. Export to CSV for full data.</td></tr>` : ''}
+                    </tbody>
+                </table>
+                
+                <h3 style="color: #FF6B6B; margin-bottom: 1rem;">⏳ Questions Pending (${pendingData.length})</h3>
+                <table style="width: 100%; border-collapse: collapse;">
+                    <thead>
+                        <tr style="background: #030303; color: #C6A906;">
+                            <th style="padding: 0.75rem; text-align: left;">Learner</th>
+                            <th style="padding: 0.75rem; text-align: left;">Manager</th>
+                            <th style="padding: 0.75rem; text-align: left;">Question</th>
+                            <th style="padding: 0.75rem; text-align: left;">Wait Time</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        ${pendingData.slice(0, 50).map(row => `
+                            <tr style="border-bottom: 1px solid #D8D8D8;">
+                                <td style="padding: 0.75rem;">${row.learnerName}</td>
+                                <td style="padding: 0.75rem;">${row.managerName}</td>
+                                <td style="padding: 0.75rem;">${row.questionTitle.substring(0, 50)}${row.questionTitle.length > 50 ? '...' : ''}</td>
+                                <td style="padding: 0.75rem;">${row.turnaroundDays !== null ? row.turnaroundDays + 'd' : '-'}</td>
+                            </tr>
+                        `).join('')}
+                        ${pendingData.length > 50 ? `<tr><td colspan="4" style="text-align: center; padding: 1rem; color: #666;">Showing first 50 of ${pendingData.length} questions. Export to CSV for full data.</td></tr>` : ''}
+                    </tbody>
+                </table>
+            `;
+            
+            document.getElementById('modal-content').innerHTML = html;
+            document.getElementById('drilldown-modal').style.display = 'block';
+        }
+        
+        function closeDrilldownModal() {
+            document.getElementById('drilldown-modal').style.display = 'none';
+            currentModalData = [];
+        }
+        
+        function exportModalToCSV() {
+            if (currentModalData.length === 0) return;
+            
+            const headers = ['Export Date', 'Container', 'Learner Name', 'Manager Name', 'Question Title', 'Turnaround Days', 'Status', 'Marked By'];
+            let csv = headers.join(',') + '\n';
+            
+            currentModalData.forEach(row => {
+                const values = [
+                    row.exportDate,
+                    row.container,
+                    `"${row.learnerName}"`,
+                    `"${row.managerName}"`,
+                    `"${row.questionTitle.replace(/"/g, '""')}"`,
+                    row.turnaroundDays !== null ? row.turnaroundDays : '',
+                    row.status,
+                    row.markedBy
+                ];
+                csv += values.join(',') + '\n';
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `pt-academy-drilldown-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+        }
+
+        function switchTurnaroundView(view) {
+            currentTurnaroundView = view;
+            
+            // Update button states
+            document.getElementById('btn-view-distribution').classList.remove('btn');
+            document.getElementById('btn-view-turnaround').classList.remove('btn');
+            document.getElementById('btn-view-wait').classList.remove('btn');
+            document.getElementById('btn-view-distribution').classList.add('btn-secondary');
+            document.getElementById('btn-view-turnaround').classList.add('btn-secondary');
+            document.getElementById('btn-view-wait').classList.add('btn-secondary');
+            
+            document.getElementById(`btn-view-${view}`).classList.remove('btn-secondary');
+            document.getElementById(`btn-view-${view}`).classList.add('btn');
+            
+            // Recreate chart
+            if (turnaroundChart) turnaroundChart.destroy();
+            createTurnaroundChart();
         }
 
         function switchTab(tabName) {
