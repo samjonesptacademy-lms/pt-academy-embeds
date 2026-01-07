@@ -1161,13 +1161,14 @@
         function createDailyMarkedChart() {
             const ctx = document.getElementById('dailyMarkedChart').getContext('2d');
             
-            // Get all unique dates and count Done items per date
+            // Get all unique dates and count TRACKED Done items per date
             const dateGroups = {};
             const allDates = [...new Set(overviewFilteredData.map(row => row.exportDate))].sort();
             
             allDates.forEach(date => {
+                // Only count tracked (non-historical) done items
                 const doneForDate = overviewFilteredData.filter(
-                    row => row.container === 'Done' && row.exportDate === date
+                    row => row.container === 'Done' && row.exportDate === date && row.isTracked
                 ).length;
                 
                 dateGroups[date] = doneForDate;
@@ -1228,13 +1229,14 @@
         function createClearanceRateChart() {
             const ctx = document.getElementById('clearanceRateChart').getContext('2d');
             
-            // Calculate clearance rate: (Done on date / Pending on date) * 100
+            // Calculate clearance rate: (Tracked Done on date / Pending on date) * 100
             const dateGroups = {};
             const allDates = [...new Set(overviewFilteredData.map(row => row.exportDate))].sort();
             
             allDates.forEach(date => {
+                // Only count tracked (non-historical) done items
                 const doneForDate = overviewFilteredData.filter(
-                    row => row.container === 'Done' && row.exportDate === date
+                    row => row.container === 'Done' && row.exportDate === date && row.isTracked
                 ).length;
                 
                 const pendingForDate = overviewFilteredData.filter(
