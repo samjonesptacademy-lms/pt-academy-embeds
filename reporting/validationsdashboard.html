@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PT Academy Assessor Activity Dashboard</title>
+    <title>PT Academy Validation Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
@@ -469,6 +469,11 @@
             .filters-grid {
                 grid-template-columns: 1fr;
             }
+            
+            /* Stack charts vertically on mobile */
+            div[style*="grid-template-columns: 1fr 1fr"] {
+                grid-template-columns: 1fr !important;
+            }
 
             .header h1 {
                 font-size: 1.5rem;
@@ -496,7 +501,7 @@
     <div class="header">
         <img src="https://pt-academy-embeds.pages.dev/reporting/logo_o_background.png" alt="PT Academy" class="header-logo">
         <div class="header-content">
-            <h1>Assessor Activity Dashboard</h1>
+            <h1>Validation Dashboard</h1>
             <p>Real-time validation queue analytics and mentor performance tracking</p>
         </div>
     </div>
@@ -635,19 +640,16 @@
                     </div>
                 </div>
 
-                <div class="chart-container">
-                    <div class="chart-title">📈 Validation Trends Over Time</div>
-                    <canvas id="trendsChart"></canvas>
-                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 2rem; margin-bottom: 2rem;">
+                    <div class="chart-container">
+                        <div class="chart-title">📈 Validation Trends Over Time</div>
+                        <canvas id="trendsChart"></canvas>
+                    </div>
 
-                <div class="chart-container">
-                    <div class="chart-title">⏱️ Turnaround Time Distribution</div>
-                    <canvas id="turnaroundChart"></canvas>
-                </div>
-
-                <div class="chart-container">
-                    <div class="chart-title">🤖 AI vs Human Marking Trends</div>
-                    <canvas id="aiHumanChart"></canvas>
+                    <div class="chart-container">
+                        <div class="chart-title">⏱️ Turnaround Time Distribution</div>
+                        <canvas id="turnaroundChart"></canvas>
+                    </div>
                 </div>
             </div>
 
@@ -872,7 +874,7 @@
         let itemsPerPage = 100;
 
         // Chart instances
-        let trendsChart, aiHumanChart, turnaroundChart, analyticsChart;
+        let trendsChart, turnaroundChart, analyticsChart;
 
         // Utility function to parse question dates - MUST be defined before parseGoogleSheetData
         function parseQuestionDate(fullDate) {
@@ -1078,7 +1080,6 @@
             updateMetrics();
             createTrendsChart();
             createTurnaroundChart();
-            createAIHumanChart();
             populateFilters();
             populateOverviewFilters(); // New function
             buildMentorPerformance();
@@ -1087,7 +1088,18 @@
 
         function updateMetrics() {
             const data = overviewFilteredData; // Use filtered data instead of allData
-            const pending = data.filter(d => d.container === 'Pending').length;
+            
+            // Get latest export date for pending snapshot
+            const exportDates = data.map(d => d.exportDate).filter(d => d);
+            const latestExportDate = exportDates.length > 0 
+                ? exportDates.sort().reverse()[0] 
+                : null;
+            
+            // Pending should only count from latest export (it's a snapshot, not cumulative)
+            const pending = latestExportDate 
+                ? data.filter(d => d.container === 'Pending' && d.exportDate === latestExportDate).length
+                : 0;
+            
             const done = data.filter(d => d.container === 'Done').length;
             
             // Only count AI/Human from Done items
@@ -1126,8 +1138,10 @@
                     avgTurnaround > 7 ? '⚠️ Over 7 days average' : `Based on ${trackedDoneItems.length} tracked questions`;
             }
             
-            // Calculate average wait time for Pending items
-            const pendingItems = data.filter(d => d.container === 'Pending');
+            // Calculate average wait time for Pending items (from latest snapshot only)
+            const pendingItems = latestExportDate
+                ? data.filter(d => d.container === 'Pending' && d.exportDate === latestExportDate)
+                : [];
             const pendingWithWait = pendingItems.filter(d => d.turnaroundDays !== null);
             const avgWait = pendingWithWait.length > 0
                 ? (pendingWithWait.reduce((sum, d) => sum + d.turnaroundDays, 0) / pendingWithWait.length).toFixed(1)
@@ -1141,18 +1155,26 @@
         function createTrendsChart() {
             const ctx = document.getElementById('trendsChart').getContext('2d');
             
-            // Group by date using overview filtered data
+            // Group by date - for pending, only count from that day's snapshot
             const dateGroups = {};
-            overviewFilteredData.forEach(row => {
-                const date = row.exportDate;
-                if (!dateGroups[date]) {
-                    dateGroups[date] = { pending: 0, done: 0 };
-                }
-                if (row.container === 'Pending') {
-                    dateGroups[date].pending++;
-                } else {
-                    dateGroups[date].done++;
-                }
+            
+            // Get all unique dates first
+            const allDates = [...new Set(overviewFilteredData.map(row => row.exportDate))].sort();
+            
+            // For each date, get pending count from that date's snapshot, and cumulative done
+            allDates.forEach(date => {
+                const pendingForDate = overviewFilteredData.filter(
+                    row => row.container === 'Pending' && row.exportDate === date
+                ).length;
+                
+                const doneForDate = overviewFilteredData.filter(
+                    row => row.container === 'Done' && row.exportDate === date
+                ).length;
+                
+                dateGroups[date] = { 
+                    pending: pendingForDate,
+                    done: doneForDate
+                };
             });
 
             const dates = Object.keys(dateGroups).sort();
@@ -1160,21 +1182,21 @@
             const doneCounts = dates.map(d => dateGroups[d].done);
 
             trendsChart = new Chart(ctx, {
-                type: 'line',
+                type: 'bar',
                 data: {
                     labels: dates,
                     datasets: [{
                         label: 'Pending',
                         data: pendingCounts,
-                        borderColor: '#030303',
-                        backgroundColor: 'rgba(3, 3, 3, 0.1)',
-                        tension: 0.4
+                        backgroundColor: '#FF6B6B',
+                        borderColor: '#FF6B6B',
+                        borderWidth: 1
                     }, {
-                        label: 'Done',
+                        label: 'Done (Daily)',
                         data: doneCounts,
+                        backgroundColor: '#C6A906',
                         borderColor: '#C6A906',
-                        backgroundColor: 'rgba(198, 169, 6, 0.1)',
-                        tension: 0.4
+                        borderWidth: 1
                     }]
                 },
                 options: {
@@ -1183,66 +1205,18 @@
                     plugins: {
                         legend: {
                             position: 'top',
+                        },
+                        tooltip: {
+                            mode: 'index',
+                            intersect: false,
                         }
                     },
                     scales: {
+                        x: {
+                            stacked: true,
+                        },
                         y: {
-                            beginAtZero: true
-                        }
-                    }
-                }
-            });
-        }
-
-        function createAIHumanChart() {
-            const ctx = document.getElementById('aiHumanChart').getContext('2d');
-            
-            // Group by date for done items only using overview filtered data
-            const dateGroups = {};
-            overviewFilteredData.filter(d => d.container === 'Done').forEach(row => {
-                const date = row.exportDate;
-                if (!dateGroups[date]) {
-                    dateGroups[date] = { ai: 0, human: 0 };
-                }
-                if (row.markedBy === 'AI') {
-                    dateGroups[date].ai++;
-                } else {
-                    dateGroups[date].human++;
-                }
-            });
-
-            const dates = Object.keys(dateGroups).sort();
-            const aiCounts = dates.map(d => dateGroups[d].ai);
-            const humanCounts = dates.map(d => dateGroups[d].human);
-
-            aiHumanChart = new Chart(ctx, {
-                type: 'line',
-                data: {
-                    labels: dates,
-                    datasets: [{
-                        label: 'AI Marked',
-                        data: aiCounts,
-                        borderColor: '#D8D8D8',
-                        backgroundColor: 'rgba(216, 216, 216, 0.1)',
-                        tension: 0.4
-                    }, {
-                        label: 'Human Marked',
-                        data: humanCounts,
-                        borderColor: '#C6A906',
-                        backgroundColor: 'rgba(198, 169, 6, 0.1)',
-                        tension: 0.4
-                    }]
-                },
-                options: {
-                    responsive: true,
-                    maintainAspectRatio: true,
-                    plugins: {
-                        legend: {
-                            position: 'top',
-                        }
-                    },
-                    scales: {
-                        y: {
+                            stacked: true,
                             beginAtZero: true
                         }
                     }
@@ -1706,10 +1680,8 @@
             // Destroy and recreate charts
             if (trendsChart) trendsChart.destroy();
             if (turnaroundChart) turnaroundChart.destroy();
-            if (aiHumanChart) aiHumanChart.destroy();
             createTrendsChart();
             createTurnaroundChart();
-            createAIHumanChart();
         }
 
         function resetOverviewFilters() {
@@ -1734,10 +1706,8 @@
             
             if (trendsChart) trendsChart.destroy();
             if (turnaroundChart) turnaroundChart.destroy();
-            if (aiHumanChart) aiHumanChart.destroy();
             createTrendsChart();
             createTurnaroundChart();
-            createAIHumanChart();
         }
 
         function applyFilters() {
