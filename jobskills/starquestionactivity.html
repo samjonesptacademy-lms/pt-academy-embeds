@@ -1,0 +1,329 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>STAR Technique Practice</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8f9fa; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
+        .spinner { width: 50px; height: 50px; border: 4px solid #e9ecef; border-top-color: #C6A906; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { margin-top: 20px; font-size: 16px; color: #666; font-weight: 500; }
+        
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; padding: 20px; background: #f8f9fa; line-height: 1.6; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .title { font-size: 28px; font-weight: 700; color: #333; margin-bottom: 15px; }
+        .description { font-size: 16px; color: #555; line-height: 1.6; max-width: 700px; margin: 0 auto 25px; }
+        
+        .star-explainer { background: white; border-radius: 12px; padding: 25px; margin-bottom: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .star-explainer-title { font-size: 20px; font-weight: 700; color: #333; margin-bottom: 20px; text-align: center; }
+        .star-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; margin-top: 20px; }
+        .star-box { background: #f8f9fa; padding: 20px; border-radius: 8px; border-top: 4px solid #C6A906; text-align: center; }
+        .star-letter { font-size: 32px; font-weight: 700; color: #C6A906; margin-bottom: 10px; }
+        .star-word { font-size: 16px; font-weight: 600; color: #333; margin-bottom: 8px; }
+        .star-desc { font-size: 13px; color: #666; line-height: 1.5; }
+        
+        .question-selector { background: white; border-radius: 12px; padding: 25px; margin-bottom: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        .selector-title { font-size: 18px; font-weight: 700; color: #333; margin-bottom: 15px; }
+        .question-buttons { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 12px; }
+        .question-btn { background: #f8f9fa; border: 2px solid #e9ecef; padding: 15px; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; font-size: 14px; font-weight: 500; color: #333; text-align: left; }
+        .question-btn:hover { border-color: #C6A906; background: white; }
+        .question-btn.active { background: #C6A906; color: white; border-color: #C6A906; }
+        
+        .builder-section { background: white; border-radius: 12px; padding: 25px; margin-bottom: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: none; }
+        .builder-section.active { display: block; }
+        .current-question { background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #C6A906; margin-bottom: 25px; font-size: 16px; font-weight: 600; color: #333; }
+        
+        .star-component { margin-bottom: 25px; }
+        .component-header { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+        .component-letter { background: #C6A906; color: white; width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 20px; font-weight: 700; flex-shrink: 0; }
+        .component-info { flex: 1; }
+        .component-title { font-size: 16px; font-weight: 700; color: #333; }
+        .component-hint { font-size: 13px; color: #666; font-style: italic; }
+        .component-textarea { width: 100%; min-height: 100px; padding: 15px; border: 2px solid #e9ecef; border-radius: 8px; font-family: inherit; font-size: 14px; line-height: 1.6; resize: vertical; transition: border-color 0.3s ease; }
+        .component-textarea:focus { outline: none; border-color: #C6A906; }
+        .component-textarea.filled { border-color: #28a745; background: #f8fff9; }
+        
+        .action-buttons { display: flex; gap: 12px; justify-content: center; margin-top: 30px; flex-wrap: wrap; }
+        .btn { padding: 12px 30px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: none; }
+        .btn-primary { background: #C6A906; color: white; }
+        .btn-primary:hover { background: #a88c05; }
+        .btn-primary:disabled { background: #ccc; cursor: not-allowed; }
+        .btn-secondary { background: #e9ecef; color: #333; }
+        .btn-secondary:hover { background: #d4d8db; }
+        
+        .example-section { background: white; border-radius: 12px; padding: 25px; margin-top: 30px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); display: none; }
+        .example-section.active { display: block; }
+        .example-header { display: flex; align-items: center; gap: 12px; margin-bottom: 20px; padding-bottom: 15px; border-bottom: 2px solid #f8f9fa; }
+        .example-icon { background: #28a745; color: white; width: 45px; height: 45px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 22px; }
+        .example-title { font-size: 20px; font-weight: 700; color: #333; }
+        .example-component { background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #28a745; }
+        .example-label { font-size: 14px; font-weight: 700; color: #28a745; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .example-text { font-size: 15px; color: #333; line-height: 1.7; }
+        
+        .nav-hint { text-align: center; margin-top: 20px; padding: 15px; background: #fff3cd; border-radius: 8px; font-size: 14px; color: #856404; }
+        
+        @media (max-width: 768px) {
+            .star-grid { grid-template-columns: 1fr 1fr; }
+            .question-buttons { grid-template-columns: 1fr; }
+            .action-buttons { flex-direction: column; }
+            .btn { width: 100%; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading content...</div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="title">STAR Technique Practice</h1>
+            <p class="description">The STAR technique helps you structure powerful interview responses using real examples. Select a question below, build your response using the STAR framework, then review an example answer.</p>
+        </div>
+
+        <div class="star-explainer">
+            <div class="star-explainer-title">What is the STAR Technique?</div>
+            <p style="text-align: center; color: #666; margin-bottom: 20px;">STAR is a structured method for answering behavioural interview questions with specific, compelling examples from your experience.</p>
+            <div class="star-grid">
+                <div class="star-box">
+                    <div class="star-letter">S</div>
+                    <div class="star-word">Situation</div>
+                    <div class="star-desc">Set the context and background</div>
+                </div>
+                <div class="star-box">
+                    <div class="star-letter">T</div>
+                    <div class="star-word">Task</div>
+                    <div class="star-desc">Explain the challenge or goal</div>
+                </div>
+                <div class="star-box">
+                    <div class="star-letter">A</div>
+                    <div class="star-word">Action</div>
+                    <div class="star-desc">Describe what you specifically did</div>
+                </div>
+                <div class="star-box">
+                    <div class="star-letter">R</div>
+                    <div class="star-word">Result</div>
+                    <div class="star-desc">Share the outcome achieved</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="question-selector">
+            <div class="selector-title">Choose a question to practice:</div>
+            <div class="question-buttons">
+                <button class="question-btn" onclick="selectQuestion(0)">Tell me about a time you dealt with a difficult client</button>
+                <button class="question-btn" onclick="selectQuestion(1)">Describe a situation where you exceeded a client's expectations</button>
+                <button class="question-btn" onclick="selectQuestion(2)">Give an example of when you had to adapt your training approach</button>
+                <button class="question-btn" onclick="selectQuestion(3)">Tell me about a time you worked effectively as part of a team</button>
+                <button class="question-btn" onclick="selectQuestion(4)">Describe a challenge you faced and how you overcame it</button>
+            </div>
+        </div>
+
+        <div class="builder-section" id="builderSection">
+            <div class="current-question" id="currentQuestion"></div>
+            
+            <div class="star-component">
+                <div class="component-header">
+                    <div class="component-letter">S</div>
+                    <div class="component-info">
+                        <div class="component-title">Situation</div>
+                        <div class="component-hint">Briefly describe the context: Where were you? What was happening?</div>
+                    </div>
+                </div>
+                <textarea class="component-textarea" id="situation" placeholder="Example: During my placement at XYZ Gym, I was working with a new client who had just joined..." oninput="checkFilled(this)"></textarea>
+            </div>
+
+            <div class="star-component">
+                <div class="component-header">
+                    <div class="component-letter">T</div>
+                    <div class="component-info">
+                        <div class="component-title">Task</div>
+                        <div class="component-hint">What was the challenge or goal you needed to achieve?</div>
+                    </div>
+                </div>
+                <textarea class="component-textarea" id="task" placeholder="Example: I needed to build their confidence as they felt intimidated by the gym environment..." oninput="checkFilled(this)"></textarea>
+            </div>
+
+            <div class="star-component">
+                <div class="component-header">
+                    <div class="component-letter">A</div>
+                    <div class="component-info">
+                        <div class="component-title">Action</div>
+                        <div class="component-hint">What specific steps did YOU take? Focus on your actions, not the team's.</div>
+                    </div>
+                </div>
+                <textarea class="component-textarea" id="action" placeholder="Example: I created a personalised induction programme starting in quiet times. I demonstrated each exercise myself first..." oninput="checkFilled(this)" style="min-height: 120px;"></textarea>
+            </div>
+
+            <div class="star-component">
+                <div class="component-header">
+                    <div class="component-letter">R</div>
+                    <div class="component-info">
+                        <div class="component-title">Result</div>
+                        <div class="component-hint">What was the outcome? Include specific, measurable results if possible.</div>
+                    </div>
+                </div>
+                <textarea class="component-textarea" id="result" placeholder="Example: Within three weeks, the client attended consistently 4x per week and reported feeling confident to train independently..." oninput="checkFilled(this)"></textarea>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="clearResponse()">Clear All</button>
+                <button class="btn btn-primary" id="showExampleBtn" onclick="showExample()" disabled>Show Example Answer</button>
+            </div>
+            
+            <div class="nav-hint">💡 Fill in all four sections to see an example answer for this question</div>
+        </div>
+
+        <div class="example-section" id="exampleSection">
+            <div class="example-header">
+                <div class="example-icon">✓</div>
+                <div>
+                    <div class="example-title">Example Answer</div>
+                    <div style="font-size: 14px; color: #666;">This is how a strong STAR response might sound for this question</div>
+                </div>
+            </div>
+            
+            <div id="exampleContent"></div>
+            
+            <div class="action-buttons">
+                <button class="btn btn-secondary" onclick="closeExample()">Try Another Question</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const questions = [
+            {
+                q: "Tell me about a time you dealt with a difficult client",
+                s: "During my practical placement at FitLife Gym, I was assigned a client who had previously trained with two other instructors but stopped attending after a few sessions with each. The facility manager warned me that this client could be challenging as they were very particular about training methods.",
+                t: "My task was to build a positive working relationship with this client, understand their needs, and deliver effective sessions that would keep them engaged and attending consistently—something the previous trainers hadn't achieved.",
+                a: "I started by scheduling an extended consultation to really listen to their concerns without judgment. I learned they had specific injuries that previous trainers hadn't adequately accommodated, making them feel unsafe. I adapted each exercise in their programme with multiple modifications and gave them full control over choosing which variation felt right. I also checked in after each exercise about how it felt, rather than assuming. I documented everything carefully so sessions remained consistent.",
+                r: "The client attended regularly for the remainder of my placement (8 weeks) and provided positive feedback to the facility manager about feeling 'finally heard and understood.' They even mentioned they were planning to continue with a permanent trainer. This taught me that 'difficult' clients often have valid concerns that weren't addressed—listening and adapting can transform the relationship."
+            },
+            {
+                q: "Describe a situation where you exceeded a client's expectations",
+                s: "I was working with a client preparing for a charity 10K run. They had never run that distance before and hired me primarily for the running programme.",
+                t: "While my core responsibility was designing their running plan, I wanted to ensure they were fully prepared for success, which meant addressing more than just cardiovascular fitness.",
+                a: "In addition to their running schedule, I researched common running injuries and incorporated specific strengthening exercises for injury prevention. I created a simple mobility routine they could do on non-running days. I also put together a one-page guide on race-day nutrition and pacing strategies. None of this was expected or requested—I simply wanted them to have the best possible experience.",
+                r: "The client not only completed the 10K but achieved their goal time and remained injury-free throughout training. They sent me a thank-you message saying they 'felt like they had a proper running coach, not just a PT,' and referred two friends to me. This reinforced how going beyond minimum requirements creates memorable experiences and builds reputation."
+            },
+            {
+                q: "Give an example of when you had to adapt your training approach",
+                s: "I had a morning client who was following a strength-training programme I'd designed. One day they arrived visibly exhausted, mentioning they'd only slept three hours due to their baby being unwell.",
+                t: "I needed to deliver a valuable session despite their compromised state, while prioritising their safety and ensuring they didn't leave feeling guilty about underperformance.",
+                a: "I immediately modified the planned heavy strength session. I explained that training hard on minimal sleep increases injury risk and impairs recovery. Instead, I adjusted to lighter weights focusing on movement quality and technique refinement. I incorporated more mobility work and made the session feel productive by treating it as 'perfect practice' day. I reassured them this was smart training, not skipping training.",
+                r: "The client was visibly relieved and later thanked me for 'understanding real life.' They particularly appreciated that I framed the modification positively rather than making them feel guilty. This situation taught me that rigid programme adherence isn't always optimal—sometimes the best training decision is intelligent adaptation."
+            },
+            {
+                q: "Tell me about a time you worked effectively as part of a team",
+                s: "At the leisure centre where I completed my practical experience, the fitness team was preparing for a members' health and fitness event that would showcase the gym's services and attract new personal training clients.",
+                t: "As a student trainer, I wanted to contribute meaningfully to the event's success whilst supporting the permanent staff who were leading the organisation.",
+                a: "I volunteered to create demonstration materials for three popular exercises, showing proper form with common mistakes to avoid. I arrived early on event day to help set up stations and offered to supervise the fitness assessment area when one staff member was delayed. Throughout the event, I made sure to direct interested members to the permanent trainers for consultation bookings rather than promoting myself, as I was only there temporarily. I also helped with breakdown and cleanup afterward.",
+                r: "The event was successful, generating 12 new PT client bookings. The fitness manager specifically thanked me for my 'team-first attitude' and later provided a strong reference for my job applications. This experience showed me that being genuinely helpful and putting team success above personal recognition builds professional reputation and opens future opportunities."
+            },
+            {
+                q: "Describe a challenge you faced and how you overcame it",
+                s: "Early in my training career, I struggled with confidence when working with clients who were significantly older than me. I was 22 and found myself doubting whether clients in their 40s-60s would respect my advice or take me seriously as their trainer.",
+                t: "I needed to build credibility and confidence with older clients while acknowledging this was ultimately a self-imposed limitation affecting my performance and career potential.",
+                a: "I addressed this systematically through several steps. First, I sought additional education in training older adults, completing extra CPD courses that deepened my knowledge. Second, I observed experienced trainers working with older demographics, noting how they communicated and built rapport. Third, I focused on demonstrating competence through thorough consultations, well-planned sessions, and excellent communication rather than worrying about age. I also reminded myself that clients hired me for my qualifications and knowledge, not my age.",
+                r: "Over several months, my confidence grew significantly. I received positive feedback from older clients who appreciated my thorough approach and clear communication. One client in her 50s specifically mentioned she valued that I 'really understood the research' and didn't make assumptions about her capabilities based on age. This challenge taught me that perceived limitations often exist more in our minds than in reality—competence and professionalism matter far more than age."
+            }
+        ];
+
+        let currentQuestionIndex = -1;
+
+        function selectQuestion(index) {
+            currentQuestionIndex = index;
+            document.querySelectorAll('.question-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+            document.getElementById('currentQuestion').textContent = questions[index].q;
+            document.getElementById('builderSection').classList.add('active');
+            document.getElementById('exampleSection').classList.remove('active');
+            clearResponse();
+            document.getElementById('builderSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function checkFilled(element) {
+            if (element.value.trim().length > 20) {
+                element.classList.add('filled');
+            } else {
+                element.classList.remove('filled');
+            }
+            updateShowExampleButton();
+        }
+
+        function updateShowExampleButton() {
+            const s = document.getElementById('situation').value.trim();
+            const t = document.getElementById('task').value.trim();
+            const a = document.getElementById('action').value.trim();
+            const r = document.getElementById('result').value.trim();
+            const btn = document.getElementById('showExampleBtn');
+            btn.disabled = !(s.length > 20 && t.length > 20 && a.length > 20 && r.length > 20);
+        }
+
+        function clearResponse() {
+            document.getElementById('situation').value = '';
+            document.getElementById('task').value = '';
+            document.getElementById('action').value = '';
+            document.getElementById('result').value = '';
+            document.querySelectorAll('.component-textarea').forEach(ta => ta.classList.remove('filled'));
+            updateShowExampleButton();
+        }
+
+        function showExample() {
+            const q = questions[currentQuestionIndex];
+            const content = document.getElementById('exampleContent');
+            content.innerHTML = `
+                <div class="example-component">
+                    <div class="example-label">Situation</div>
+                    <div class="example-text">${q.s}</div>
+                </div>
+                <div class="example-component">
+                    <div class="example-label">Task</div>
+                    <div class="example-text">${q.t}</div>
+                </div>
+                <div class="example-component">
+                    <div class="example-label">Action</div>
+                    <div class="example-text">${q.a}</div>
+                </div>
+                <div class="example-component">
+                    <div class="example-label">Result</div>
+                    <div class="example-text">${q.r}</div>
+                </div>
+            `;
+            document.getElementById('builderSection').classList.remove('active');
+            document.getElementById('exampleSection').classList.add('active');
+            document.getElementById('exampleSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function closeExample() {
+            document.getElementById('exampleSection').classList.remove('active');
+            document.querySelectorAll('.question-btn').forEach(btn => btn.classList.remove('active'));
+            document.getElementById('builderSection').classList.remove('active');
+            currentQuestionIndex = -1;
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function hideLoader() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(function() { overlay.style.display = 'none'; }, 500);
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', hideLoader);
+        } else {
+            hideLoader();
+        }
+        setTimeout(hideLoader, 500);
+    </script>
+</body>
+</html>
