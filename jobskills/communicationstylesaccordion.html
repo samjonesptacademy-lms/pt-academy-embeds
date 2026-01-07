@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Communication Styles</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8f9fa; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
+        .spinner { width: 50px; height: 50px; border: 4px solid #e9ecef; border-top-color: #C6A906; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { margin-top: 20px; font-size: 16px; color: #666; font-weight: 500; }
+        
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; padding: 20px; background: #f8f9fa; line-height: 1.6; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .title { font-size: 28px; font-weight: 700; color: #333; margin-bottom: 15px; }
+        .description { font-size: 16px; color: #555; line-height: 1.6; max-width: 700px; margin: 0 auto; }
+        
+        .accordion-container { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }
+        
+        .accordion-item { border-bottom: 2px solid #f8f9fa; }
+        .accordion-item:last-child { border-bottom: none; }
+        
+        .accordion-header { padding: 25px 30px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: all 0.3s ease; background: white; }
+        .accordion-header:hover { background: #f8f9fa; }
+        .accordion-item.active .accordion-header { background: #fffef8; }
+        
+        .accordion-title { font-size: 20px; font-weight: 700; color: #333; }
+        .accordion-icon { font-size: 24px; color: #C6A906; transition: transform 0.3s ease; }
+        .accordion-item.active .accordion-icon { transform: rotate(180deg); }
+        
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+        .accordion-item.active .accordion-content { max-height: 2000px; }
+        
+        .accordion-body { padding: 0 30px 30px 30px; }
+        
+        .content-text { font-size: 15px; color: #333; line-height: 1.8; margin-bottom: 20px; }
+        .content-text:last-child { margin-bottom: 0; }
+        
+        .example-box { background: #e8f5e9; border-left: 4px solid #28a745; padding: 20px; border-radius: 8px; margin-top: 20px; }
+        .example-label { font-size: 14px; font-weight: 700; color: #28a745; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .example-text { font-size: 15px; color: #155724; line-height: 1.7; font-style: italic; margin-bottom: 15px; }
+        .example-text:last-child { margin-bottom: 0; }
+        .example-explanation { font-size: 14px; color: #155724; line-height: 1.7; margin-top: 10px; padding-top: 10px; border-top: 2px solid rgba(40, 167, 69, 0.2); }
+        
+        .highlight-box { background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 8px; margin-top: 15px; }
+        .highlight-text { font-size: 14px; color: #856404; line-height: 1.7; font-weight: 500; }
+        
+        .bullet-list { margin: 15px 0; padding-left: 25px; }
+        .bullet-list li { margin-bottom: 10px; font-size: 15px; color: #333; line-height: 1.7; }
+        
+        @media (max-width: 768px) {
+            .accordion-header { padding: 20px; }
+            .accordion-body { padding: 0 20px 25px 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading content...</div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Communication Styles & Adaptation</h1>
+            <p class="description">Effective professional communication requires adapting to different audiences, situations, and communication preferences. Click each section to learn more.</p>
+        </div>
+
+        <div class="accordion-container">
+            <!-- Item 1: Formal vs Informal -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(0)">
+                    <div class="accordion-title">Formal vs. Informal Communication</div>
+                    <div class="accordion-icon">▼</div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="content-text">
+                            Different contexts require different formality levels. Written communications with management, official documentation, and external professional correspondence warrant formal professional communication. Casual colleague interactions, client relationships (after appropriate rapport development), and social media engagement may appropriately include informal friendly communication, while maintaining professional boundaries.
+                        </div>
+                        
+                        <div class="highlight-box">
+                            <div class="highlight-text">
+                                Professional judgment determines appropriate formality for specific situations. When uncertain, erring toward slightly more formal proves safer than inappropriate casualness.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 2: Assertive Communication -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(1)">
+                    <div class="accordion-title">Assertive Communication</div>
+                    <div class="accordion-icon">▼</div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="content-text">
+                            Assertiveness represents the balance between passive (failing to express needs or opinions) and aggressive (expressing needs disrespectfully or at others' expense) communication.
+                        </div>
+                        
+                        <div class="content-text">
+                            <strong>Assertive communication involves:</strong>
+                        </div>
+                        <ul class="bullet-list">
+                            <li>Clearly stating needs, opinions, and boundaries</li>
+                            <li>Respecting others' perspectives while maintaining personal positions</li>
+                            <li>Using "I" statements focusing on personal experience rather than accusations</li>
+                            <li>Maintaining calm, professional tone even during difficult conversations</li>
+                            <li>Accepting that not all conflicts resolve with agreement but rather mutual respect and understanding</li>
+                        </ul>
+                        
+                        <div class="example-box">
+                            <div class="example-label">Example of Assertive Boundary</div>
+                            <div class="example-text">
+                                "I appreciate your enthusiasm, but I'm not comfortable providing the specific nutrition plan you're requesting as that falls outside my qualifications. I'm happy to discuss general nutrition principles and refer you to a qualified nutritionist for detailed meal planning."
+                            </div>
+                            <div class="example-explanation">
+                                This clearly states boundaries (not comfortable, outside qualifications) while respecting client needs (offering alternatives).
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Item 3: Written Communication -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(2)">
+                    <div class="accordion-title">Written Communication Professionalism</div>
+                    <div class="accordion-icon">▼</div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="content-text">
+                            Written communication requires particular attention as tone can be easily misinterpreted without non-verbal cues.
+                        </div>
+                        
+                        <div class="content-text">
+                            <strong>Professional written communication includes:</strong>
+                        </div>
+                        <ul class="bullet-list">
+                            <li>Appropriate greetings and closings</li>
+                            <li>Correct grammar and spelling</li>
+                            <li>Professional tone avoiding slang or excessive casualness</li>
+                            <li>Clear and concise expression</li>
+                            <li>Appropriate response timing (prompt but not immediate for non-urgent matters)</li>
+                            <li>Professional email addresses and signatures</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAccordion(index) {
+            const items = document.querySelectorAll('.accordion-item');
+            const item = items[index];
+            
+            // Toggle current item
+            item.classList.toggle('active');
+        }
+
+        function hideLoader() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(function() { overlay.style.display = 'none'; }, 500);
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', hideLoader);
+        } else {
+            hideLoader();
+        }
+        setTimeout(hideLoader, 500);
+    </script>
+</body>
+</html>
