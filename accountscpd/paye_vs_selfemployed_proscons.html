@@ -1,0 +1,271 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Advantages & Disadvantages Comparison</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8f9fa; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
+        .spinner { width: 50px; height: 50px; border: 4px solid #e9ecef; border-top-color: #C6A906; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { margin-top: 20px; font-size: 16px; color: #666; font-weight: 500; }
+        
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; padding: 20px; background: #f8f9fa; line-height: 1.6; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .title { font-size: 28px; font-weight: 700; color: #333; margin-bottom: 15px; }
+        .description { font-size: 16px; color: #555; line-height: 1.6; max-width: 700px; margin: 0 auto; }
+        
+        .columns-container { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        
+        .column { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }
+        .column-header { background: linear-gradient(135deg, #C6A906 0%, #e8c547 100%); color: white; padding: 25px; text-align: center; }
+        .column-title { font-size: 22px; font-weight: 700; margin-bottom: 5px; }
+        .column-subtitle { font-size: 14px; opacity: 0.95; }
+        
+        .accordion-container { padding: 10px; }
+        .accordion-item { border-bottom: 2px solid #f8f9fa; }
+        .accordion-item:last-child { border-bottom: none; }
+        
+        .accordion-header { padding: 20px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: all 0.3s ease; background: white; }
+        .accordion-header:hover { background: #f8f9fa; }
+        .accordion-item.active .accordion-header { background: #fffef8; }
+        
+        .accordion-title { font-size: 17px; font-weight: 700; color: #333; display: flex; align-items: center; gap: 10px; }
+        .accordion-icon { font-size: 24px; color: #C6A906; transition: transform 0.3s ease; }
+        .accordion-item.active .accordion-icon { transform: rotate(180deg); }
+        
+        .advantages-icon { color: #28a745; }
+        .disadvantages-icon { color: #dc3545; }
+        
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+        .accordion-item.active .accordion-content { max-height: 2000px; }
+        
+        .accordion-body { padding: 0 20px 25px 20px; }
+        .content-list { margin: 15px 0 0 20px; }
+        .content-list li { margin-bottom: 12px; font-size: 15px; color: #333; line-height: 1.7; padding-left: 10px; }
+        .content-list li::marker { color: #C6A906; font-weight: 700; }
+        
+        .who-suits { background: #fffef8; border: 2px solid #C6A906; border-radius: 12px; padding: 25px; margin-top: 30px; }
+        .who-suits-title { font-size: 20px; font-weight: 700; color: #C6A906; margin-bottom: 15px; text-align: center; }
+        .who-suits-text { font-size: 15px; color: #333; line-height: 1.8; }
+        
+        @media (max-width: 968px) {
+            .columns-container { grid-template-columns: 1fr; }
+        }
+        
+        @media (max-width: 768px) {
+            .accordion-header { padding: 15px; }
+            .accordion-body { padding: 0 15px 20px 15px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading comparison...</div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Weighing Your Options</h1>
+            <p class="description">Explore the advantages and disadvantages of each employment model. Click each section to expand and learn more.</p>
+        </div>
+
+        <div class="columns-container">
+            <!-- PAYE Column -->
+            <div class="column">
+                <div class="column-header">
+                    <div class="column-title">💼 PAYE Employment</div>
+                    <div class="column-subtitle">Traditional employment model</div>
+                </div>
+                
+                <div class="accordion-container">
+                    <!-- PAYE Advantages -->
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <div class="accordion-title">
+                                <span class="advantages-icon">✓</span>
+                                <span>Advantages</span>
+                            </div>
+                            <div class="accordion-icon">▼</div>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <ul class="content-list">
+                                    <li>Guaranteed regular income regardless of client attendance fluctuations</li>
+                                    <li>Simplified tax administration with automatic deductions</li>
+                                    <li>Entitlement to employment rights and statutory benefits</li>
+                                    <li>Employer pension contributions</li>
+                                    <li>Reduced personal liability for business operations</li>
+                                    <li>No requirement to manage business accounting and compliance</li>
+                                    <li>Potential access to employer-funded CPD and career development</li>
+                                    <li>Typically, access to established client referral systems through employer facilities</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PAYE Disadvantages -->
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <div class="accordion-title">
+                                <span class="disadvantages-icon">✗</span>
+                                <span>Disadvantages</span>
+                            </div>
+                            <div class="accordion-icon">▼</div>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <ul class="content-list">
+                                    <li>Restricted earning potential with fixed hourly rates or salaries</li>
+                                    <li>Limited control over working hours, client selection, and training approaches</li>
+                                    <li>Potential requirements to undertake non-training duties (gym floor coverage, cleaning, administration)</li>
+                                    <li>Earnings dependent on employer business success rather than individual performance</li>
+                                    <li>Restricted ability to develop independent brand or client relationships</li>
+                                    <li>Limited tax planning opportunities with most expenses unclaimable</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- PAYE Who Suits -->
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <div class="accordion-title">
+                                <span>👥</span>
+                                <span>Who Does This Suit?</span>
+                            </div>
+                            <div class="accordion-icon">▼</div>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <p style="font-size: 15px; color: #333; line-height: 1.8; margin-top: 15px;">
+                                    PAYE employment particularly suits:
+                                </p>
+                                <ul class="content-list">
+                                    <li>Newly qualified trainers building experience and client bases</li>
+                                    <li>Individuals prioritising financial security and work-life boundaries</li>
+                                    <li>Trainers preferring to focus exclusively on training delivery without business management</li>
+                                    <li>Those uncomfortable with financial risk and income variability</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Self-Employment Column -->
+            <div class="column">
+                <div class="column-header">
+                    <div class="column-title">🚀 Self-Employment</div>
+                    <div class="column-subtitle">Running your own business</div>
+                </div>
+                
+                <div class="accordion-container">
+                    <!-- Self-Employment Advantages -->
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <div class="accordion-title">
+                                <span class="advantages-icon">✓</span>
+                                <span>Advantages</span>
+                            </div>
+                            <div class="accordion-icon">▼</div>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <ul class="content-list">
+                                    <li>Unlimited earning potential based on business success</li>
+                                    <li>Complete control over working hours, client selection, and service delivery</li>
+                                    <li>Ability to develop personal brand and long-term client relationships</li>
+                                    <li>Flexibility to work from multiple locations or offer online services</li>
+                                    <li>Opportunities to diversify income through multiple service streams</li>
+                                    <li>Tax efficiency through claiming allowable business expenses</li>
+                                    <li>Autonomy to structure business according to personal values and preferences</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Self-Employment Disadvantages -->
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <div class="accordion-title">
+                                <span class="disadvantages-icon">✗</span>
+                                <span>Disadvantages</span>
+                            </div>
+                            <div class="accordion-icon">▼</div>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <ul class="content-list">
+                                    <li>Income uncertainty with fluctuations based on client retention and acquisition</li>
+                                    <li>Complete responsibility for tax compliance and potential penalties for errors</li>
+                                    <li>Requirement to fund own holiday time, sickness cover, and pension</li>
+                                    <li>Personal liability for business debts and potential client claims</li>
+                                    <li>Substantial administrative burden including bookkeeping, marketing, and compliance</li>
+                                    <li>No entitlement to employment rights or statutory benefits</li>
+                                    <li>Necessity to maintain multiple professional insurances at personal expense</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Self-Employment Who Suits -->
+                    <div class="accordion-item">
+                        <div class="accordion-header" onclick="toggleAccordion(this)">
+                            <div class="accordion-title">
+                                <span>👥</span>
+                                <span>Who Does This Suit?</span>
+                            </div>
+                            <div class="accordion-icon">▼</div>
+                        </div>
+                        <div class="accordion-content">
+                            <div class="accordion-body">
+                                <p style="font-size: 15px; color: #333; line-height: 1.8; margin-top: 15px;">
+                                    Self-employment particularly suits:
+                                </p>
+                                <ul class="content-list">
+                                    <li>Experienced trainers with established client bases</li>
+                                    <li>Entrepreneurial individuals comfortable with business management</li>
+                                    <li>Those seeking maximum control over working methods and schedule</li>
+                                    <li>Trainers willing to accept income variability for higher earning potential</li>
+                                    <li>Individuals with financial literacy and strong organizational skills</li>
+                                    <li>Those who enjoy marketing and building their own brand</li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAccordion(header) {
+            const item = header.parentElement;
+            const wasActive = item.classList.contains('active');
+            
+            // Toggle current item
+            item.classList.toggle('active');
+        }
+
+        function hideLoader() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(function() { overlay.style.display = 'none'; }, 500);
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', hideLoader);
+        } else {
+            hideLoader();
+        }
+        setTimeout(hideLoader, 500);
+    </script>
+</body>
+</html>
