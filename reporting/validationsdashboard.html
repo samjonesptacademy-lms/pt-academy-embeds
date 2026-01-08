@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PT Academy Validation Dashboard</title>
+    <title>PT Academy Assessor Activity Dashboard</title>
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <style>
         * {
@@ -599,8 +599,11 @@
     <div class="header">
         <img src="https://pt-academy-embeds.pages.dev/reporting/logo_o_background.png" alt="PT Academy" class="header-logo">
         <div class="header-content">
-            <h1>Validation Dashboard</h1>
-            <p>Real-time validation queue analytics and mentor performance tracking</p>
+            <h1>Assessor Activity Dashboard</h1>
+            <p>Real-time validation queue analytics and assessor performance tracking</p>
+            <p style="margin-top: 0.5rem; font-size: 0.85rem; opacity: 0.8;">
+                Last updated: <span id="last-updated">Loading...</span>
+            </p>
         </div>
     </div>
 
@@ -1237,8 +1240,54 @@
             });
         }
 
+        function updateLastUpdated() {
+            // Get the latest export date from the data
+            const exportDates = allData.map(d => d.exportDate).filter(d => d);
+            if (exportDates.length === 0) {
+                document.getElementById('last-updated').textContent = 'No data';
+                return;
+            }
+            
+            const latestExportDate = exportDates.sort().reverse()[0];
+            
+            // Get current time for "last updated" display
+            const now = new Date();
+            const timeString = now.toLocaleTimeString('en-GB', { 
+                hour: '2-digit', 
+                minute: '2-digit'
+            });
+            const dateString = now.toLocaleDateString('en-GB', { 
+                day: 'numeric', 
+                month: 'short', 
+                year: 'numeric' 
+            });
+            
+            // Also show the latest data date
+            const dataDate = new Date(latestExportDate + 'T00:00:00');
+            const dataDiffMs = now - dataDate;
+            const dataDiffDays = Math.floor(dataDiffMs / (1000 * 60 * 60 * 24));
+            
+            let dataDateText = '';
+            if (dataDiffDays === 0) {
+                dataDateText = 'today';
+            } else if (dataDiffDays === 1) {
+                dataDateText = 'yesterday';
+            } else if (dataDiffDays < 7) {
+                dataDateText = `${dataDiffDays} days ago`;
+            } else {
+                dataDateText = dataDate.toLocaleDateString('en-GB', { 
+                    day: 'numeric', 
+                    month: 'short', 
+                    year: 'numeric' 
+                });
+            }
+            
+            document.getElementById('last-updated').textContent = `${dateString} at ${timeString} | Data from ${dataDateText}`;
+        }
+
         function initializeDashboard() {
             overviewFilteredData = [...allData]; // Initialize overview filtered data
+            updateLastUpdated();
             updateMetrics();
             createDailyMarkedChart();
             createClearanceRateChart();
