@@ -1,0 +1,340 @@
+<!DOCTYPE html>
+<html style="background: #f8f9fa;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Cash Flow Statement</title>
+<style>
+* {box-sizing: border-box; margin: 0; padding: 0;}
+html, body {background: #f8f9fa; min-height: 100vh;}
+body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; opacity: 1; visibility: visible;}
+.cashflow-container {max-width: 800px; margin: 0 auto;}
+.header {text-align: center; margin-bottom: 40px;}
+.title {font-size: 28px; font-weight: 700; color: #333; margin-bottom: 10px;}
+.subtitle {font-size: 15px; color: #666; line-height: 1.6;}
+.statement-card {background: white; border-radius: 12px; padding: 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.1);}
+.statement-title {font-size: 24px; font-weight: 700; text-align: center; color: #333; margin-bottom: 10px;}
+.statement-subtitle {font-size: 14px; text-align: center; color: #666; margin-bottom: 30px;}
+.opening-section {background: #e3f2fd; border: 2px solid #2196f3; padding: 20px; border-radius: 8px; margin-bottom: 30px;}
+.opening-item {display: flex; justify-content: space-between; align-items: center;}
+.opening-label {font-size: 18px; font-weight: 700; color: #1565c0;}
+.opening-value {font-size: 24px; font-weight: 700; color: #1565c0;}
+.section {margin-bottom: 30px;}
+.section-header {background: #C6A906; color: white; padding: 12px 20px; border-radius: 8px 8px 0 0; font-size: 16px; font-weight: 700; text-transform: uppercase;}
+.section.received .section-header {background: #4caf50;}
+.section.paid .section-header {background: #e74c3c;}
+.section-content {border: 2px solid #e9ecef; border-top: none; border-radius: 0 0 8px 8px; padding: 20px;}
+.line-item {display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0f0f0;}
+.line-item:last-child {border-bottom: none;}
+.line-left {display: flex; align-items: center; gap: 10px; flex: 1;}
+.line-label {font-size: 15px; color: #555;}
+.info-button {width: 24px; height: 24px; border-radius: 50%; background: #C6A906; color: white; border: none; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; flex-shrink: 0;}
+.info-button:hover {background: #e0c040; transform: scale(1.1);}
+.line-value {font-size: 16px; font-weight: 600; color: #333;}
+.line-value.positive {color: #2e7d32;}
+.line-value.negative {color: #c62828;}
+.subtotal {background: #f8f9fa; margin: 15px -20px 0 -20px; padding: 15px 20px; border-top: 2px solid #e9ecef;}
+.subtotal .line-label {font-weight: 700; color: #333;}
+.subtotal .line-value {font-size: 18px; color: #C6A906; font-weight: 700;}
+.subtotal.received .line-value {color: #2e7d32;}
+.subtotal.paid .line-value {color: #c62828;}
+.closing-section {background: #fff8e1; border: 2px solid #C6A906; padding: 20px; border-radius: 8px; margin-top: 30px;}
+.closing-item {display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;}
+.closing-item:last-child {margin-bottom: 0; padding-top: 15px; border-top: 2px solid #C6A906;}
+.closing-label {font-size: 18px; font-weight: 700; color: #C6A906;}
+.closing-value {font-size: 24px; font-weight: 700; color: #C6A906;}
+.explanation-box {display: none; background: #fff8e1; border: 2px solid #C6A906; padding: 15px; border-radius: 8px; margin: 10px 0; animation: slideDown 0.3s ease;}
+.explanation-box.active {display: block;}
+.explanation-text {font-size: 14px; line-height: 1.7; color: #555;}
+.info-box {background: #e3f2fd; border-left: 4px solid #2196f3; padding: 15px; border-radius: 6px; margin-top: 30px;}
+.info-title {font-size: 14px; font-weight: 700; color: #1565c0; margin-bottom: 8px;}
+.info-text {font-size: 13px; line-height: 1.7; color: #0d47a1;}
+@keyframes slideDown {from {opacity: 0; transform: translateY(-10px);} to {opacity: 1; transform: translateY(0);}}
+</style>
+</head>
+<body>
+<div class="cashflow-container">
+<div class="header">
+<h1 class="title">Monthly Cash Flow Statement</h1>
+<p class="subtitle">Track actual money movement in and out of your business - click ? buttons for explanations</p>
+</div>
+<div class="statement-card">
+<div class="statement-title">Cash Flow Statement</div>
+<div class="statement-subtitle">Example PT Business - March 2025</div>
+<div class="opening-section">
+<div class="opening-item">
+<div class="opening-label">Opening Bank Balance (1 March)</div>
+<div class="opening-value">£3,200</div>
+</div>
+</div>
+<div class="section received">
+<div class="section-header">Cash Received (Money In)</div>
+<div class="section-content">
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">1-2-1 Client Payments</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp1')">?</button>
+</div>
+<div class="line-value positive">+£4,500</div>
+</div>
+<div class="explanation-box" id="exp1">
+<div class="explanation-text">Cash received from individual personal training clients for sessions delivered. This is actual money hitting your bank account.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Group Class Income</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp2')">?</button>
+</div>
+<div class="line-value positive">+£850</div>
+</div>
+<div class="explanation-box" id="exp2">
+<div class="explanation-text">Payments from group training sessions, boot camps, or class attendees. May include both advance bookings and drop-in fees.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Online Coaching Subscriptions</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp3')">?</button>
+</div>
+<div class="line-value positive">+£600</div>
+</div>
+<div class="explanation-box" id="exp3">
+<div class="explanation-text">Monthly recurring payments from online coaching clients or digital programme subscribers received via direct debit or payment platform.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Programme Sales</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp4')">?</button>
+</div>
+<div class="line-value positive">+£350</div>
+</div>
+<div class="explanation-box" id="exp4">
+<div class="explanation-text">One-off sales of digital training programmes, nutrition guides, or workout plans purchased by clients.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Package Renewals</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp5')">?</button>
+</div>
+<div class="line-value positive">+£1,200</div>
+</div>
+<div class="explanation-box" id="exp5">
+<div class="explanation-text">Clients purchasing new training packages or blocks of sessions. May represent significant cash injection when multiple clients renew.</div>
+</div>
+<div class="subtotal received line-item">
+<div class="line-label">TOTAL CASH RECEIVED</div>
+<div class="line-value">+£7,500</div>
+</div>
+</div>
+</div>
+<div class="section paid">
+<div class="section-header">Cash Paid (Money Out)</div>
+<div class="section-content">
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Insurance Premium</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp6')">?</button>
+</div>
+<div class="line-value negative">-£1,200</div>
+</div>
+<div class="explanation-box" id="exp6">
+<div class="explanation-text">Annual or quarterly insurance payment for public liability and professional indemnity coverage. Large payment impacting this month's cash.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Facility Rental</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp7')">?</button>
+</div>
+<div class="line-value negative">-£450</div>
+</div>
+<div class="explanation-box" id="exp7">
+<div class="explanation-text">Monthly studio or gym rental fee paid to facility owner. Fixed overhead cost regardless of client numbers.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Equipment Purchase</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp8')">?</button>
+</div>
+<div class="line-value negative">-£300</div>
+</div>
+<div class="explanation-box" id="exp8">
+<div class="explanation-text">New training equipment purchased - resistance bands, mats, kettlebells. One-off capital expenditure this month.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Fuel & Travel Costs</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp9')">?</button>
+</div>
+<div class="line-value negative">-£180</div>
+</div>
+<div class="explanation-box" id="exp9">
+<div class="explanation-text">Actual fuel paid for at petrol stations for business travel to clients. Based on mileage, you can claim tax relief at 45p/mile separately.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Marketing & Advertising</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp10')">?</button>
+</div>
+<div class="line-value negative">-£250</div>
+</div>
+<div class="explanation-box" id="exp10">
+<div class="explanation-text">Social media ads, Google Ads, business card printing, flyer distribution. Investment in attracting new clients.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Software Subscriptions</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp11')">?</button>
+</div>
+<div class="line-value negative">-£75</div>
+</div>
+<div class="explanation-box" id="exp11">
+<div class="explanation-text">Monthly fees for scheduling software, payment processing platform, CRM system, email marketing tool, or programming app.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Professional Memberships</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp12')">?</button>
+</div>
+<div class="line-value negative">-£85</div>
+</div>
+<div class="explanation-box" id="exp12">
+<div class="explanation-text">CIMSPA or REPs quarterly membership payment. Essential for maintaining professional status and insurance validity.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Phone & Internet (Business %)</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp13')">?</button>
+</div>
+<div class="line-value negative">-£60</div>
+</div>
+<div class="explanation-box" id="exp13">
+<div class="explanation-text">Business proportion of mobile phone contract and home internet. If 70% business use, claim 70% of total cost paid.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">CPD Course Fee</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp14')">?</button>
+</div>
+<div class="line-value negative">-£180</div>
+</div>
+<div class="explanation-box" id="exp14">
+<div class="explanation-text">Payment for specialist course or certification to expand services (e.g., pre/postnatal training, strength & conditioning).</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Bookkeeping Service</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp15')">?</button>
+</div>
+<div class="line-value negative">-£50</div>
+</div>
+<div class="explanation-box" id="exp15">
+<div class="explanation-text">Monthly fee paid to bookkeeper or accountant for maintaining records and preparing quarterly reports.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Bank Charges</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp16')">?</button>
+</div>
+<div class="line-value negative">-£15</div>
+</div>
+<div class="explanation-box" id="exp16">
+<div class="explanation-text">Business bank account monthly fee and transaction charges for payment processing.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Website Hosting & Domain</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp17')">?</button>
+</div>
+<div class="line-value negative">-£25</div>
+</div>
+<div class="explanation-box" id="exp17">
+<div class="explanation-text">Monthly or annual website hosting fee and domain name renewal for your business website.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Stationery & Supplies</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp18')">?</button>
+</div>
+<div class="line-value negative">-£35</div>
+</div>
+<div class="explanation-box" id="exp18">
+<div class="explanation-text">Printing costs, client session cards, workout sheets, pens, folders, general office supplies.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Cleaning Supplies</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp19')">?</button>
+</div>
+<div class="line-value negative">-£40</div>
+</div>
+<div class="explanation-box" id="exp19">
+<div class="explanation-text">Equipment wipes, antibacterial spray, mat cleaning products. Essential for hygiene and client safety.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Parking Fees</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp20')">?</button>
+</div>
+<div class="line-value negative">-£45</div>
+</div>
+<div class="explanation-box" id="exp20">
+<div class="explanation-text">Accumulated parking charges when visiting clients at various locations throughout the month.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Tax Payment (from previous year)</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp21')">?</button>
+</div>
+<div class="line-value negative">-£800</div>
+</div>
+<div class="explanation-box" id="exp21">
+<div class="explanation-text">Monthly payment toward tax liability. Setting aside funds regularly prevents large shock payment in January. This represents approx 25-30% of profit.</div>
+</div>
+<div class="subtotal paid line-item">
+<div class="line-label">TOTAL CASH PAID</div>
+<div class="line-value">-£3,890</div>
+</div>
+</div>
+</div>
+<div class="closing-section">
+<div class="closing-item">
+<div class="closing-label">Net Cash Flow</div>
+<div class="closing-value">+£3,610</div>
+</div>
+<div class="closing-item">
+<div class="closing-label">Closing Bank Balance (31 March)</div>
+<div class="closing-value">£6,810</div>
+</div>
+</div>
+<div class="info-box">
+<div class="info-title">💡 Understanding Cash Flow vs Profit</div>
+<div class="info-text">
+<strong>Cash flow shows actual money movement</strong> - what came in and went out of your bank account. This is different from profit because: (1) You might get paid for future sessions (cash in now, but service not delivered), (2) You might pay annual expenses in one month (hits cash flow hard that month), (3) Some expenses like depreciation reduce profit but don't affect cash. Positive cash flow means your bank balance grew - critical for business survival!
+</div>
+</div>
+<div class="info-box">
+<div class="info-title">📊 Key Cash Flow Insights</div>
+<div class="info-text">
+<strong>Strong Position:</strong> Net cash flow of +£3,610 this month shows healthy business performance. Bank balance increased from £3,200 to £6,810 - a 113% increase. The large insurance payment (£1,200) and tax payment (£800) were absorbed without financial stress because income exceeded expenses by significant margin. Maintain 3-6 months of expenses as cash reserve for stability.
+</div>
+</div>
+</div>
+</div>
+<script>
+(function() {
+document.documentElement.style.visibility = 'visible';
+document.body.style.visibility = 'visible';
+})();
+window.toggleExplanation = function(event, id) {
+event.stopPropagation();
+const explanation = document.getElementById(id);
+const allExplanations = document.querySelectorAll('.explanation-box');
+allExplanations.forEach(function(box) {
+if (box.id !== id) {
+box.classList.remove('active');
+}
+});
+explanation.classList.toggle('active');
+};
+</script>
+</body>
+</html>
