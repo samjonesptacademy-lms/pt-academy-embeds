@@ -21,15 +21,24 @@ body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-s
 .timeline-item.critical .timeline-marker {border-color: #e74c3c; background: #ffebee;}
 .timeline-item.warning .timeline-marker {border-color: #ffc107; background: #fff8e1;}
 .timeline-item.important .timeline-marker {border-color: #2196f3; background: #e3f2fd;}
-.timeline-content {background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); transition: all 0.3s ease; min-height: 200px;}
+.timeline-content {background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); transition: all 0.3s ease; height: 280px; display: flex; flex-direction: column; position: relative;}
+.timeline-item.expanded .timeline-content {height: 380px;}
 .timeline-item:hover .timeline-content {transform: translateY(-5px); box-shadow: 0 4px 20px rgba(0,0,0,0.15);}
 .timeline-date {font-size: 20px; font-weight: 700; color: #C6A906; margin-bottom: 8px; text-align: center;}
 .timeline-item.critical .timeline-date {color: #e74c3c;}
 .timeline-item.warning .timeline-date {color: #ffc107;}
 .timeline-item.important .timeline-date {color: #2196f3;}
 .timeline-title {font-size: 16px; font-weight: 700; color: #333; margin-bottom: 10px; text-align: center;}
-.timeline-description {font-size: 13px; line-height: 1.6; color: #666; text-align: center;}
-.urgency-badge {display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 10px; font-weight: 700; text-transform: uppercase; margin-top: 10px;}
+.timeline-description {font-size: 13px; line-height: 1.6; color: #666; text-align: center; flex: 1;}
+.timeline-details {font-size: 12px; line-height: 1.7; color: #555; text-align: left; margin-top: 12px; padding-top: 12px; border-top: 2px solid #f0f0f0; max-height: 0; overflow: hidden; opacity: 0; transition: all 0.3s ease;}
+.timeline-item.expanded .timeline-details {max-height: 200px; opacity: 1;}
+.card-footer {margin-top: auto; padding-top: 12px; display: flex; flex-direction: column; align-items: center; gap: 8px;}
+.urgency-badge {display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 10px; font-weight: 700; text-transform: uppercase;}
+.badge-critical {background: #e74c3c; color: white;}
+.badge-warning {background: #ffc107; color: #333;}
+.badge-important {background: #2196f3; color: white;}
+.expand-indicator {font-size: 10px; color: #999; font-weight: 600; text-transform: uppercase;}
+.timeline-item.expanded .expand-indicator {display: none;}
 .badge-critical {background: #e74c3c; color: white;}
 .badge-warning {background: #ffc107; color: #333;}
 .badge-important {background: #2196f3; color: white;}
@@ -44,72 +53,100 @@ body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-s
 <div class="timeline-container">
 <div class="header">
 <h1 class="title">Self-Employment Tax Deadlines</h1>
-<p class="subtitle">Key dates for self-employed trainers throughout the tax year - scroll horizontally to view all deadlines</p>
+<p class="subtitle">Key dates for self-employed trainers - scroll horizontally and click each deadline for full details</p>
 </div>
 <div class="timeline">
 <div class="timeline-line"></div>
 <div class="timeline-track">
-<div class="timeline-item important">
+<div class="timeline-item important" onclick="toggleDetails(this)">
 <div class="timeline-marker">📅</div>
 <div class="timeline-content">
 <div class="timeline-date">5 April</div>
 <div class="timeline-title">Tax Year End</div>
 <div class="timeline-description">UK tax year ends. Record all income and expenses. Last chance for pension contributions.</div>
+<div class="timeline-details">The UK tax year runs from 6 April to 5 April. Ensure all income and expenses are recorded. This is your final opportunity to make pension contributions that count toward the current tax year's tax relief.</div>
+<div class="card-footer">
 <div class="urgency-badge badge-important">Annual</div>
+<div class="expand-indicator">Click for details ▼</div>
 </div>
 </div>
-<div class="timeline-item warning">
+</div>
+<div class="timeline-item warning" onclick="toggleDetails(this)">
 <div class="timeline-marker">⚠️</div>
 <div class="timeline-content">
 <div class="timeline-date">5 October</div>
 <div class="timeline-title">Registration Deadline</div>
 <div class="timeline-description">New self-employed MUST register with HMRC by this date. Late penalties apply.</div>
+<div class="timeline-details">If you became self-employed during the previous tax year (ended 5 April), you MUST register with HMRC by this date. Late registration attracts penalties even if you don't owe tax. Register at gov.uk/register-for-self-assessment.</div>
+<div class="card-footer">
 <div class="urgency-badge badge-warning">New Traders</div>
+<div class="expand-indicator">Click for details ▼</div>
 </div>
 </div>
-<div class="timeline-item important">
+</div>
+<div class="timeline-item important" onclick="toggleDetails(this)">
 <div class="timeline-marker">📝</div>
 <div class="timeline-content">
 <div class="timeline-date">31 October</div>
 <div class="timeline-title">Paper Returns</div>
 <div class="timeline-description">Deadline for paper Self Assessment. Most file online for extended deadline.</div>
+<div class="timeline-details">Deadline for paper Self Assessment tax returns (if not filing online). Most self-employed trainers file online for the extended deadline of 31 January. Paper filing is rarely used but available if needed.</div>
+<div class="card-footer">
 <div class="urgency-badge badge-important">Paper Only</div>
+<div class="expand-indicator">Click for details ▼</div>
 </div>
 </div>
-<div class="timeline-item critical">
+</div>
+<div class="timeline-item critical" onclick="toggleDetails(this)">
 <div class="timeline-marker">💰</div>
 <div class="timeline-content">
 <div class="timeline-date">31 January</div>
 <div class="timeline-title">Payment & Filing</div>
 <div class="timeline-description">CRITICAL: Online return AND payment due. Includes balance + first payment on account. £100+ penalties if missed.</div>
+<div class="timeline-details">Online Self Assessment tax return must be submitted AND payment made by midnight. This includes: (1) Any balance owed for previous tax year, (2) First payment on account for current tax year. Missing this deadline results in automatic £100 penalty plus daily penalties and interest.</div>
+<div class="card-footer">
 <div class="urgency-badge badge-critical">Most Critical</div>
+<div class="expand-indicator">Click for details ▼</div>
 </div>
 </div>
-<div class="timeline-item warning">
+</div>
+<div class="timeline-item warning" onclick="toggleDetails(this)">
 <div class="timeline-marker">📊</div>
 <div class="timeline-content">
 <div class="timeline-date">31 July</div>
 <div class="timeline-title">Second Payment</div>
 <div class="timeline-description">Second payment on account due. Typically half your previous year's tax bill.</div>
+<div class="timeline-details">Second payment on account due for current tax year. This is typically half your previous year's tax bill. If your income has decreased significantly, you can reduce payments on account, but you'll owe the difference if you underestimate.</div>
+<div class="card-footer">
 <div class="urgency-badge badge-warning">Important</div>
+<div class="expand-indicator">Click for details ▼</div>
 </div>
 </div>
-<div class="timeline-item important">
+</div>
+<div class="timeline-item important" onclick="toggleDetails(this)">
 <div class="timeline-marker">💡</div>
 <div class="timeline-content">
 <div class="timeline-date">Ongoing</div>
 <div class="timeline-title">Record Keeping</div>
 <div class="timeline-description">Maintain continuous records. Keep receipts, invoices, bank statements for 5+ years.</div>
+<div class="timeline-details">Maintain continuous records of all income and expenses. Keep receipts, invoices, and bank statements. Records must be retained for at least 5 years after the 31 January submission deadline. Good ongoing bookkeeping prevents year-end panic.</div>
+<div class="card-footer">
 <div class="urgency-badge badge-important">Continuous</div>
+<div class="expand-indicator">Click for details ▼</div>
 </div>
 </div>
-<div class="timeline-item warning">
+</div>
+<div class="timeline-item warning" onclick="toggleDetails(this)">
 <div class="timeline-marker">🎯</div>
 <div class="timeline-content">
 <div class="timeline-date">Best Practice</div>
 <div class="timeline-title">Early Deadlines</div>
 <div class="timeline-description">Submit by 31 Dec. Set aside tax monthly (25-35% of profit). Gives buffer for issues.</div>
+<div class="timeline-details">Don't wait until official deadlines. Aim to submit Self Assessment by 31 December and set aside tax funds monthly (25-35% of profit). This gives buffer for technical issues and prevents cash flow problems when payments fall due.</div>
+<div class="card-footer">
 <div class="urgency-badge badge-warning">Recommended</div>
+<div class="expand-indicator">Click for details ▼</div>
+</div>
 </div>
 </div>
 </div>
@@ -120,6 +157,16 @@ body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-s
 document.documentElement.style.visibility = 'visible';
 document.body.style.visibility = 'visible';
 })();
+window.toggleDetails = function(item) {
+const wasExpanded = item.classList.contains('expanded');
+const allItems = document.querySelectorAll('.timeline-item');
+allItems.forEach(function(i) {
+i.classList.remove('expanded');
+});
+if (!wasExpanded) {
+item.classList.add('expanded');
+}
+};
 </script>
 </body>
 </html>
