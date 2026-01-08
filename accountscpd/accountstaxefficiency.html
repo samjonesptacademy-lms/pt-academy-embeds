@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html style="background: #f8f9fa;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tax Efficiency Strategies</title>
+<style>
+* {box-sizing: border-box; margin: 0; padding: 0;}
+html, body {background: #f8f9fa; min-height: 100vh;}
+body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; opacity: 1; visibility: visible;}
+.accordion-container {max-width: 800px; margin: 0 auto;}
+.accordion-items {display: grid; gap: 15px;}
+.accordion-item {background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.1); border: 2px solid #e9ecef;}
+.accordion-header {padding: 20px 25px; cursor: pointer; background: #fafafa; display: flex; justify-content: space-between; align-items: center; transition: background 0.3s ease;}
+.accordion-header:hover {background: #f0f0f0;}
+.accordion-item.active .accordion-header {background: #fff8e1;}
+.header-title {font-size: 18px; font-weight: 700; color: #333;}
+.expand-icon {font-size: 20px; color: #C6A906; transition: transform 0.3s ease;}
+.accordion-item.active .expand-icon {transform: rotate(180deg);}
+.accordion-content {max-height: 0; overflow: hidden; transition: max-height 0.4s ease;}
+.accordion-content-inner {padding: 25px; border-top: 2px solid #e9ecef;}
+.content-text {font-size: 15px; line-height: 1.8; color: #555;}
+</style>
+</head>
+<body>
+<div class="accordion-container">
+<div class="accordion-items">
+<div class="accordion-item active" onclick="toggleItem(this)">
+<div class="accordion-header">
+<div class="header-title">Expense Optimisation</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="content-text">Ensuring all legitimate allowable expenses are claimed reduces taxable profit. Maintaining thorough records and receipt retention enables maximum lawful expense claims.</div>
+</div>
+</div>
+</div>
+<div class="accordion-item" onclick="toggleItem(this)">
+<div class="accordion-header">
+<div class="header-title">Pension Contributions</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="content-text">Contributions to private pensions receive tax relief, reducing income subject to income tax. Self-employed individuals must establish their own pension arrangements as they do not receive employer contributions, but contributions attract tax relief equivalent to the individual's marginal tax rate.</div>
+</div>
+</div>
+</div>
+<div class="accordion-item" onclick="toggleItem(this)">
+<div class="accordion-header">
+<div class="header-title">Income Smoothing</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="content-text">Where possible, managing when income is received and expenses are incurred can sometimes optimise tax positions, particularly when income approaches tax band thresholds. However, this must be done within accounting rules and cannot involve deliberate income misreporting.</div>
+</div>
+</div>
+</div>
+<div class="accordion-item" onclick="toggleItem(this)">
+<div class="accordion-header">
+<div class="header-title">Professional Advice</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="content-text">Accountants specialising in small businesses and sole traders provide valuable guidance on tax planning, compliance, and optimisation strategies. Accountancy fees are tax-deductible business expenses, and professional advice often generates tax savings exceeding advisory costs.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+(function() {
+document.documentElement.style.visibility = 'visible';
+document.body.style.visibility = 'visible';
+})();
+window.toggleItem = function(item) {
+const content = item.querySelector('.accordion-content');
+const isActive = item.classList.contains('active');
+if (isActive) {
+item.classList.remove('active');
+content.style.maxHeight = null;
+} else {
+item.classList.add('active');
+content.style.maxHeight = content.scrollHeight + 'px';
+}
+};
+setTimeout(function() {
+const firstItem = document.querySelector('.accordion-item');
+const firstContent = firstItem.querySelector('.accordion-content');
+firstContent.style.maxHeight = firstContent.scrollHeight + 'px';
+}, 100);
+</script>
+</body>
+</html>
