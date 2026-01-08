@@ -613,7 +613,7 @@
         <div id="dashboard" style="display: none;">
             <div class="tabs">
                 <button class="tab active" onclick="switchTab('overview')">📊 Overview</button>
-                <button class="tab" onclick="switchTab('mentors')">👥 Mentor Performance</button>
+                <button class="tab" onclick="switchTab('mentors')">👥 Assessor Performance</button>
                 <button class="tab" onclick="switchTab('explorer')">🔍 Data Explorer</button>
                 <button class="tab" onclick="switchTab('analytics')">📈 Custom Field Analytics</button>
             </div>
@@ -637,9 +637,9 @@
                                 </select>
                             </div>
                             <div class="filter-group">
-                                <label class="filter-label">Manager Name</label>
+                                <label class="filter-label">Assessor Name</label>
                                 <select id="filter-overview-manager" onchange="applyOverviewFilters()">
-                                    <option value="">All Managers</option>
+                                    <option value="">All Assessors</option>
                                 </select>
                             </div>
                             <div class="filter-group">
@@ -755,29 +755,29 @@
                         <div class="chart-title">⏱️ Turnaround Time Distribution</div>
                         <div style="display: flex; gap: 0.5rem;">
                             <button class="btn btn-secondary" onclick="switchTurnaroundView('distribution')" id="btn-view-distribution" style="padding: 0.5rem 1rem; font-size: 0.85rem;">Distribution</button>
-                            <button class="btn btn-secondary" onclick="switchTurnaroundView('turnaround')" id="btn-view-turnaround" style="padding: 0.5rem 1rem; font-size: 0.85rem;">By Mentor (Turnaround)</button>
-                            <button class="btn btn-secondary" onclick="switchTurnaroundView('wait')" id="btn-view-wait" style="padding: 0.5rem 1rem; font-size: 0.85rem;">By Mentor (Wait)</button>
+                            <button class="btn btn-secondary" onclick="switchTurnaroundView('turnaround')" id="btn-view-turnaround" style="padding: 0.5rem 1rem; font-size: 0.85rem;">By Assessor (Turnaround)</button>
+                            <button class="btn btn-secondary" onclick="switchTurnaroundView('wait')" id="btn-view-wait" style="padding: 0.5rem 1rem; font-size: 0.85rem;">By Assessor (Wait)</button>
                         </div>
                     </div>
                     <canvas id="turnaroundChart"></canvas>
                 </div>
             </div>
 
-            <!-- Mentor Performance Tab -->
+            <!-- Assessor Performance Tab -->
             <div id="tab-mentors" class="tab-content">
                 <div style="background: #f8f8f8; padding: 1rem; border-radius: 8px; margin-bottom: 1.5rem; border-left: 4px solid #C6A906;">
                     <p style="margin: 0; font-size: 0.9rem; color: #030303;">
-                        <strong>ℹ️ Note:</strong> Learners with multiple managers are shown under a combined "Shared" entry (e.g., "John Smith, Jane Doe"). 
-                        Click any mentor row to see individual learner breakdowns and prioritize by wait time.
+                        <strong>ℹ️ Note:</strong> Learners with multiple assessors are shown under a combined "Shared" entry (e.g., "John Smith, Jane Doe"). 
+                        Click any assessor row to see individual learner breakdowns and prioritize by wait time.
                     </p>
                 </div>
 
                 <div class="filters">
                     <div class="filters-grid">
                         <div class="filter-group">
-                            <label class="filter-label">Filter by Mentor</label>
+                            <label class="filter-label">Filter by Assessor</label>
                             <select id="filter-mentor-performance" onchange="filterMentorPerformance()">
-                                <option value="">All Mentors</option>
+                                <option value="">All Assessors</option>
                             </select>
                         </div>
                     </div>
@@ -786,14 +786,14 @@
                 <div class="data-table">
                     <div class="table-controls">
                         <div class="table-info">
-                            <span id="mentor-count">0</span> mentors
+                            <span id="mentor-count">0</span> assessors
                         </div>
                     </div>
                     <div class="table-wrapper">
                         <table>
                             <thead>
                                 <tr>
-                                    <th class="sortable" onclick="sortMentorTable(0)">Mentor Name</th>
+                                    <th class="sortable" onclick="sortMentorTable(0)">Assessor Name</th>
                                     <th class="sortable" onclick="sortMentorTable(1)">Pending</th>
                                     <th class="sortable" onclick="sortMentorTable(2)">Done (Total)</th>
                                     <th class="sortable" onclick="sortMentorTable(3)">AI Marked</th>
@@ -828,9 +828,9 @@
                                 </select>
                             </div>
                             <div class="filter-group">
-                                <label class="filter-label">Manager Name</label>
+                                <label class="filter-label">Assessor Name</label>
                                 <select id="filter-manager" onchange="applyFilters()">
-                                    <option value="">All Managers</option>
+                                    <option value="">All Assessors</option>
                                 </select>
                             </div>
                             <div class="filter-group">
@@ -910,7 +910,7 @@
                                     <th class="sortable" onclick="sortDataTable(0)">Date</th>
                                     <th class="sortable" onclick="sortDataTable(1)">Container</th>
                                     <th class="sortable" onclick="sortDataTable(2)">Learner</th>
-                                    <th class="sortable" onclick="sortDataTable(3)">Manager</th>
+                                    <th class="sortable" onclick="sortDataTable(3)">Assessor</th>
                                     <th class="sortable" onclick="sortDataTable(4)">Group</th>
                                     <th class="sortable" onclick="sortDataTable(5)">Question</th>
                                     <th class="sortable" onclick="sortDataTable(6)">Status</th>
@@ -1769,6 +1769,12 @@
 
         function buildMentorPerformance() {
             const mentorStats = {};
+            
+            // Get latest export date for pending snapshot
+            const exportDates = allData.map(d => d.exportDate).filter(d => d);
+            const latestExportDate = exportDates.length > 0 
+                ? exportDates.sort().reverse()[0] 
+                : null;
 
             allData.forEach(row => {
                 const mentor = row.managerName;
@@ -1797,10 +1803,13 @@
                 }
 
                 if (row.container === 'Pending') {
-                    mentorStats[mentor].pending++;
-                    mentorStats[mentor].learners[learner].pending++;
-                    if (row.turnaroundDays !== null) {
-                        mentorStats[mentor].learners[learner].waitTimes.push(row.turnaroundDays);
+                    // Only count pending from latest export date (snapshot, not cumulative)
+                    if (row.exportDate === latestExportDate) {
+                        mentorStats[mentor].pending++;
+                        mentorStats[mentor].learners[learner].pending++;
+                        if (row.turnaroundDays !== null) {
+                            mentorStats[mentor].learners[learner].waitTimes.push(row.turnaroundDays);
+                        }
                     }
                 } else {
                     mentorStats[mentor].done++;
@@ -2285,7 +2294,7 @@
         }
 
         function exportToCSV() {
-            const headers = ['Export Date', 'Container', 'Learner ID', 'Learner Name', 'Manager Name', 'Group', 'Custom Fields', 'Question Title', 'Date', 'Full Date', 'Status', 'Marked By'];
+            const headers = ['Export Date', 'Container', 'Learner ID', 'Learner Name', 'Assessor Name', 'Group', 'Custom Fields', 'Question Title', 'Date', 'Full Date', 'Status', 'Marked By'];
             
             let csv = headers.join(',') + '\n';
             
@@ -2438,7 +2447,7 @@
                     <thead>
                         <tr style="background: #030303; color: #C6A906;">
                             <th style="padding: 0.75rem; text-align: left;">Learner</th>
-                            <th style="padding: 0.75rem; text-align: left;">Manager</th>
+                            <th style="padding: 0.75rem; text-align: left;">Assessor</th>
                             <th style="padding: 0.75rem; text-align: left;">Question</th>
                             <th style="padding: 0.75rem; text-align: left;">Turnaround</th>
                             <th style="padding: 0.75rem; text-align: left;">Status</th>
@@ -2485,7 +2494,7 @@
                     <thead>
                         <tr style="background: #030303; color: #C6A906;">
                             <th style="padding: 0.75rem; text-align: left;">Learner</th>
-                            <th style="padding: 0.75rem; text-align: left;">Manager</th>
+                            <th style="padding: 0.75rem; text-align: left;">Assessor</th>
                             <th style="padding: 0.75rem; text-align: left;">Question</th>
                             <th style="padding: 0.75rem; text-align: left;">Turnaround</th>
                         </tr>
@@ -2508,7 +2517,7 @@
                     <thead>
                         <tr style="background: #030303; color: #C6A906;">
                             <th style="padding: 0.75rem; text-align: left;">Learner</th>
-                            <th style="padding: 0.75rem; text-align: left;">Manager</th>
+                            <th style="padding: 0.75rem; text-align: left;">Assessor</th>
                             <th style="padding: 0.75rem; text-align: left;">Question</th>
                             <th style="padding: 0.75rem; text-align: left;">Wait Time</th>
                         </tr>
@@ -2539,7 +2548,7 @@
         function exportModalToCSV() {
             if (currentModalData.length === 0) return;
             
-            const headers = ['Export Date', 'Container', 'Learner Name', 'Manager Name', 'Question Title', 'Turnaround Days', 'Status', 'Marked By'];
+            const headers = ['Export Date', 'Container', 'Learner Name', 'Assessor Name', 'Question Title', 'Turnaround Days', 'Status', 'Marked By'];
             let csv = headers.join(',') + '\n';
             
             currentModalData.forEach(row => {
