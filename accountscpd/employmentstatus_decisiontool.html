@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html style="background: #f8f9fa;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Employment Status Decision Tool</title>
+<style>
+* {box-sizing: border-box; margin: 0; padding: 0;}
+html, body {background: #f8f9fa; min-height: 100vh;}
+body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; opacity: 1; visibility: visible;}
+.decision-container {max-width: 800px; margin: 0 auto;}
+.header {text-align: center; margin-bottom: 40px;}
+.title {font-size: 28px; font-weight: 700; color: #333; margin-bottom: 10px;}
+.subtitle {font-size: 15px; color: #666; line-height: 1.6;}
+.question-card {background: white; border-radius: 12px; padding: 30px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); margin-bottom: 20px; display: none;}
+.question-card.active {display: block;}
+.question-number {font-size: 14px; color: #C6A906; font-weight: 700; text-transform: uppercase; margin-bottom: 10px;}
+.question-text {font-size: 22px; font-weight: 700; color: #333; margin-bottom: 25px; line-height: 1.4;}
+.options-grid {display: grid; gap: 12px;}
+.option-button {padding: 18px 20px; background: #f8f9fa; border: 2px solid #e9ecef; border-radius: 10px; cursor: pointer; transition: all 0.2s ease; text-align: left; font-size: 15px; color: #333;}
+.option-button:hover {background: #fff8e1; border-color: #C6A906;}
+.progress-bar {height: 8px; background: #e9ecef; border-radius: 4px; margin-bottom: 30px; overflow: hidden;}
+.progress-fill {height: 100%; background: linear-gradient(90deg, #C6A906, #e0c040); transition: width 0.3s ease;}
+.result-card {background: white; border-radius: 12px; padding: 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); display: none;}
+.result-card.active {display: block;}
+.result-icon {font-size: 64px; text-align: center; margin-bottom: 20px;}
+.result-title {font-size: 28px; font-weight: 700; text-align: center; color: #333; margin-bottom: 15px;}
+.result-subtitle {font-size: 16px; color: #666; text-align: center; margin-bottom: 30px;}
+.result-section {margin-bottom: 25px;}
+.section-title {font-size: 16px; font-weight: 700; color: #C6A906; text-transform: uppercase; margin-bottom: 12px;}
+.section-content {font-size: 15px; line-height: 1.8; color: #555;}
+.pros-cons-grid {display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;}
+.pros-box, .cons-box {padding: 20px; border-radius: 8px;}
+.pros-box {background: #e8f5e9; border-left: 4px solid #4caf50;}
+.cons-box {background: #ffebee; border-left: 4px solid #e74c3c;}
+.box-title {font-size: 14px; font-weight: 700; margin-bottom: 10px;}
+.pros-box .box-title {color: #2e7d32;}
+.cons-box .box-title {color: #c62828;}
+.box-list {font-size: 14px; line-height: 1.7; margin: 0; padding-left: 20px;}
+.pros-box .box-list {color: #1b5e20;}
+.cons-box .box-list {color: #b71c1c;}
+.box-list li {margin-bottom: 6px;}
+.restart-button {display: block; width: 100%; padding: 15px; background: linear-gradient(135deg, #C6A906, #e0c040); color: white; border: none; border-radius: 10px; font-size: 16px; font-weight: 700; cursor: pointer; margin-top: 30px; transition: transform 0.2s ease;}
+.restart-button:hover {transform: translateY(-2px);}
+@media (max-width: 768px) {
+.pros-cons-grid {grid-template-columns: 1fr;}
+}
+</style>
+</head>
+<body>
+<div class="decision-container">
+<div class="header">
+<h1 class="title">Employment Status Decision Tool</h1>
+<p class="subtitle">Answer a few questions to find the employment model that best suits your circumstances</p>
+</div>
+<div class="progress-bar">
+<div class="progress-fill" id="progressBar" style="width: 0%;"></div>
+</div>
+<div class="question-card active" id="q1">
+<div class="question-number">Question 1 of 5</div>
+<div class="question-text">What's your current level of fitness industry experience?</div>
+<div class="options-grid">
+<button class="option-button" onclick="answer(1, 'paye')">Newly qualified or less than 1 year experience</button>
+<button class="option-button" onclick="answer(1, 'hybrid')">1-3 years experience with some client base</button>
+<button class="option-button" onclick="answer(1, 'self')">3+ years experience with established client base</button>
+</div>
+</div>
+<div class="question-card" id="q2">
+<div class="question-number">Question 2 of 5</div>
+<div class="question-text">How comfortable are you with income variability?</div>
+<div class="options-grid">
+<button class="option-button" onclick="answer(2, 'paye')">I need predictable, stable income each month</button>
+<button class="option-button" onclick="answer(2, 'hybrid')">I can handle some variability with a baseline income</button>
+<button class="option-button" onclick="answer(2, 'self')">I'm comfortable with fluctuating income month-to-month</button>
+</div>
+</div>
+<div class="question-card" id="q3">
+<div class="question-number">Question 3 of 5</div>
+<div class="question-text">How do you feel about business administration tasks?</div>
+<div class="options-grid">
+<button class="option-button" onclick="answer(3, 'paye')">I prefer to focus only on training, not admin</button>
+<button class="option-button" onclick="answer(3, 'hybrid')">I can manage some admin but not full business management</button>
+<button class="option-button" onclick="answer(3, 'self')">I enjoy or am comfortable managing all business aspects</button>
+</div>
+</div>
+<div class="question-card" id="q4">
+<div class="question-number">Question 4 of 5</div>
+<div class="question-text">What's your priority: maximum earning potential or security?</div>
+<div class="options-grid">
+<button class="option-button" onclick="answer(4, 'paye')">Security and stability are my top priorities</button>
+<button class="option-button" onclick="answer(4, 'hybrid')">Balance of both - some security with growth potential</button>
+<button class="option-button" onclick="answer(4, 'self')">Maximum earning potential, willing to accept risk</button>
+</div>
+</div>
+<div class="question-card" id="q5">
+<div class="question-number">Question 5 of 5</div>
+<div class="question-text">How important is autonomy and control over your work?</div>
+<div class="options-grid">
+<button class="option-button" onclick="answer(5, 'paye')">Not essential - I'm happy following employer direction</button>
+<button class="option-button" onclick="answer(5, 'hybrid')">Some autonomy but don't need complete control</button>
+<button class="option-button" onclick="answer(5, 'self')">Very important - I want full control over my business</button>
+</div>
+</div>
+<div class="result-card" id="result-paye">
+<div class="result-icon">💼</div>
+<div class="result-title">PAYE Employment Recommended</div>
+<div class="result-subtitle">Based on your responses, employed PAYE positions best suit your circumstances</div>
+<div class="result-section">
+<div class="section-title">Why This Suits You</div>
+<div class="section-content">Your priorities around income stability, preference for focusing on training over business management, and current experience level align well with employed positions. PAYE employment provides the security and structure that matches your needs while you build experience and confidence.</div>
+</div>
+<div class="pros-cons-grid">
+<div class="pros-box">
+<div class="box-title">✓ Key Advantages</div>
+<ul class="box-list">
+<li>Guaranteed regular income</li>
+<li>Simplified tax (automatic deductions)</li>
+<li>Employment benefits and protections</li>
+<li>No business overhead responsibility</li>
+<li>Focus purely on training delivery</li>
+</ul>
+</div>
+<div class="cons-box">
+<div class="box-title">✗ Considerations</div>
+<ul class="box-list">
+<li>Limited earning potential</li>
+<li>Less control over schedule/clients</li>
+<li>May require non-training duties</li>
+<li>Limited personal brand development</li>
+</ul>
+</div>
+</div>
+<button class="restart-button" onclick="restart()">Start Over</button>
+</div>
+<div class="result-card" id="result-hybrid">
+<div class="result-icon">⚖️</div>
+<div class="result-title">Hybrid Model Recommended</div>
+<div class="result-subtitle">Based on your responses, combining PAYE work with self-employed clients suits you best</div>
+<div class="result-section">
+<div class="section-title">Why This Suits You</div>
+<div class="section-content">Your responses suggest you want both security and growth potential. A hybrid approach gives you baseline income through part-time PAYE employment while building your own client base and business skills. This model provides a safety net as you transition toward greater independence.</div>
+</div>
+<div class="pros-cons-grid">
+<div class="pros-box">
+<div class="box-title">✓ Key Advantages</div>
+<ul class="box-list">
+<li>Baseline income security</li>
+<li>Additional earning from own clients</li>
+<li>Build business skills gradually</li>
+<li>Test self-employment with safety net</li>
+<li>Maintain some employment benefits</li>
+</ul>
+</div>
+<div class="cons-box">
+<div class="box-title">✗ Considerations</div>
+<ul class="box-list">
+<li>Complex tax situation (dual income)</li>
+<li>Time management challenges</li>
+<li>Need Self Assessment submission</li>
+<li>Balancing two sets of obligations</li>
+</ul>
+</div>
+</div>
+<button class="restart-button" onclick="restart()">Start Over</button>
+</div>
+<div class="result-card" id="result-self">
+<div class="result-icon">🚀</div>
+<div class="result-title">Self-Employment Recommended</div>
+<div class="result-subtitle">Based on your responses, operating as a self-employed sole trader suits you best</div>
+<div class="result-section">
+<div class="section-title">Why This Suits You</div>
+<div class="section-content">Your experience, comfort with risk and variability, business management confidence, and desire for autonomy all point toward self-employment. You have the skills and mindset to build and manage an independent training business with unlimited earning potential.</div>
+</div>
+<div class="pros-cons-grid">
+<div class="pros-box">
+<div class="box-title">✓ Key Advantages</div>
+<ul class="box-list">
+<li>Unlimited earning potential</li>
+<li>Complete autonomy and control</li>
+<li>Build personal brand and business</li>
+<li>Tax efficiency through expenses</li>
+<li>Multiple revenue stream opportunities</li>
+</ul>
+</div>
+<div class="cons-box">
+<div class="box-title">✗ Considerations</div>
+<ul class="box-list">
+<li>Income variability and risk</li>
+<li>Full business admin responsibility</li>
+<li>No employment benefits</li>
+<li>Personal liability for business</li>
+<li>Must arrange own insurance/pension</li>
+</ul>
+</div>
+</div>
+<button class="restart-button" onclick="restart()">Start Over</button>
+</div>
+</div>
+<script>
+(function() {
+document.documentElement.style.visibility = 'visible';
+document.body.style.visibility = 'visible';
+})();
+let scores = {paye: 0, hybrid: 0, self: 0};
+let currentQ = 1;
+function answer(questionNum, choice) {
+scores[choice]++;
+currentQ++;
+document.getElementById('q' + questionNum).classList.remove('active');
+document.getElementById('progressBar').style.width = (questionNum / 5 * 100) + '%';
+if (questionNum < 5) {
+document.getElementById('q' + (questionNum + 1)).classList.add('active');
+} else {
+showResult();
+}
+}
+function showResult() {
+let result = 'paye';
+if (scores.self > scores.paye && scores.self > scores.hybrid) result = 'self';
+else if (scores.hybrid > scores.paye) result = 'hybrid';
+document.getElementById('result-' + result).classList.add('active');
+document.getElementById('progressBar').style.width = '100%';
+}
+function restart() {
+scores = {paye: 0, hybrid: 0, self: 0};
+currentQ = 1;
+document.querySelectorAll('.question-card, .result-card').forEach(el => el.classList.remove('active'));
+document.getElementById('q1').classList.add('active');
+document.getElementById('progressBar').style.width = '0%';
+}
+</script>
+</body>
+</html>
