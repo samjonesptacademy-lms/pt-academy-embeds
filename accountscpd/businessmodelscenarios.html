@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html style="background: #f8f9fa;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Hybrid Model Scenarios</title>
+<style>
+* {box-sizing: border-box; margin: 0; padding: 0;}
+html, body {background: #f8f9fa; min-height: 100vh;}
+body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; opacity: 1; visibility: visible;}
+.scenarios-container {max-width: 1200px; margin: 0 auto;}
+.header {text-align: center; margin-bottom: 40px;}
+.title {font-size: 28px; font-weight: 700; color: #333; margin-bottom: 10px;}
+.subtitle {font-size: 15px; color: #666; line-height: 1.6;}
+.scenarios-grid {display: grid; grid-template-columns: repeat(auto-fit, minmax(350px, 1fr)); gap: 20px;}
+.scenario-card {background: white; border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.1); border: 2px solid #e9ecef; transition: all 0.3s ease;}
+.scenario-card:hover {transform: translateY(-3px); box-shadow: 0 4px 20px rgba(0,0,0,0.15);}
+.card-header {background: linear-gradient(135deg, #C6A906, #e0c040); color: white; padding: 25px; text-align: center;}
+.scenario-icon {font-size: 48px; margin-bottom: 10px;}
+.scenario-title {font-size: 22px; font-weight: 700; margin-bottom: 5px;}
+.scenario-subtitle {font-size: 14px; opacity: 0.9;}
+.card-body {padding: 25px;}
+.income-section {margin-bottom: 25px;}
+.section-title {font-size: 14px; font-weight: 700; color: #C6A906; text-transform: uppercase; margin-bottom: 12px;}
+.income-row {display: flex; justify-content: space-between; padding: 10px; background: #f8f9fa; border-radius: 6px; margin-bottom: 8px;}
+.income-label {font-size: 14px; color: #555;}
+.income-value {font-size: 15px; font-weight: 700; color: #333;}
+.income-total {background: #fff8e1; border: 2px solid #C6A906; padding: 12px; border-radius: 8px; display: flex; justify-content: space-between; margin-top: 12px;}
+.income-total .income-label {font-weight: 700; color: #C6A906;}
+.income-total .income-value {font-size: 18px; color: #C6A906;}
+.tax-summary {background: #f8f9fa; padding: 15px; border-left: 4px solid #2196f3; border-radius: 6px; margin-bottom: 20px;}
+.tax-row {display: flex; justify-content: space-between; margin-bottom: 6px; font-size: 13px;}
+.tax-row:last-child {border-top: 1px solid #ddd; padding-top: 6px; margin-top: 6px; font-weight: 700;}
+.pros-cons {display: grid; gap: 12px;}
+.pro-item, .con-item {padding: 12px; border-radius: 6px; font-size: 13px; line-height: 1.6;}
+.pro-item {background: #e8f5e9; border-left: 3px solid #4caf50;}
+.con-item {background: #ffebee; border-left: 3px solid #e74c3c;}
+.item-icon {margin-right: 8px;}
+@media (max-width: 768px) {
+.scenarios-grid {grid-template-columns: 1fr;}
+}
+</style>
+</head>
+<body>
+<div class="scenarios-container">
+<div class="header">
+<h1 class="title">Hybrid Model Scenarios</h1>
+<p class="subtitle">Real-world examples of trainers combining PAYE and self-employed work</p>
+</div>
+<div class="scenarios-grid">
+<div class="scenario-card">
+<div class="card-header">
+<div class="scenario-icon">🌱</div>
+<div class="scenario-title">The Transition Model</div>
+<div class="scenario-subtitle">Building independence gradually</div>
+</div>
+<div class="card-body">
+<div class="income-section">
+<div class="section-title">Income Breakdown</div>
+<div class="income-row">
+<div class="income-label">PAYE (3 days/week)</div>
+<div class="income-value">£18,000</div>
+</div>
+<div class="income-row">
+<div class="income-label">Self-Employed Clients</div>
+<div class="income-value">£12,000</div>
+</div>
+<div class="income-total">
+<div class="income-label">Total Annual Income</div>
+<div class="income-value">£30,000</div>
+</div>
+</div>
+<div class="tax-summary">
+<div class="section-title">Tax Calculation</div>
+<div class="tax-row"><span>PAYE Tax & NI (auto-deducted)</span><span>~£2,700</span></div>
+<div class="tax-row"><span>Self-Employed Tax & NI</span><span>~£1,900</span></div>
+<div class="tax-row"><span>Total Tax Liability</span><span>~£4,600</span></div>
+<div class="tax-row"><span>Net Take-Home</span><span>~£25,400</span></div>
+</div>
+<div class="pros-cons">
+<div class="section-title">Key Advantages</div>
+<div class="pro-item"><span class="item-icon">✓</span>Baseline income security from PAYE role</div>
+<div class="pro-item"><span class="item-icon">✓</span>Testing self-employment with safety net</div>
+<div class="pro-item"><span class="item-icon">✓</span>Maintaining employment benefits</div>
+<div class="section-title">Key Challenges</div>
+<div class="con-item"><span class="item-icon">✗</span>Time management across two commitments</div>
+<div class="con-item"><span class="item-icon">✗</span>Must complete Self Assessment</div>
+<div class="con-item"><span class="item-icon">✗</span>Complex tax situation to manage</div>
+</div>
+</div>
+</div>
+<div class="scenario-card">
+<div class="card-header">
+<div class="scenario-icon">⚡</div>
+<div class="scenario-title">The Balanced Model</div>
+<div class="scenario-subtitle">Equal split for stability & freedom</div>
+</div>
+<div class="card-body">
+<div class="income-section">
+<div class="section-title">Income Breakdown</div>
+<div class="income-row">
+<div class="income-label">PAYE (2 days/week)</div>
+<div class="income-value">£14,000</div>
+</div>
+<div class="income-row">
+<div class="income-label">Self-Employed Clients</div>
+<div class="income-value">£26,000</div>
+</div>
+<div class="income-total">
+<div class="income-label">Total Annual Income</div>
+<div class="income-value">£40,000</div>
+</div>
+</div>
+<div class="tax-summary">
+<div class="section-title">Tax Calculation</div>
+<div class="tax-row"><span>PAYE Tax & NI (auto-deducted)</span><span>~£1,900</span></div>
+<div class="tax-row"><span>Self-Employed Tax & NI</span><span>~£4,200</span></div>
+<div class="tax-row"><span>Total Tax Liability</span><span>~£6,100</span></div>
+<div class="tax-row"><span>Net Take-Home</span><span>~£33,900</span></div>
+</div>
+<div class="pros-cons">
+<div class="section-title">Key Advantages</div>
+<div class="pro-item"><span class="item-icon">✓</span>Balance of security and earning potential</div>
+<div class="pro-item"><span class="item-icon">✓</span>Significant self-employed income for expenses</div>
+<div class="pro-item"><span class="item-icon">✓</span>Part-time benefits maintained</div>
+<div class="section-title">Key Challenges</div>
+<div class="con-item"><span class="item-icon">✗</span>Requires strong time management</div>
+<div class="con-item"><span class="item-icon">✗</span>Larger tax payment through Self Assessment</div>
+<div class="con-item"><span class="item-icon">✗</span>Balancing employer and client obligations</div>
+</div>
+</div>
+</div>
+<div class="scenario-card">
+<div class="card-header">
+<div class="scenario-icon">🎯</div>
+<div class="scenario-title">The Weekend Model</div>
+<div class="scenario-subtitle">Full-time employed + side business</div>
+</div>
+<div class="card-body">
+<div class="income-section">
+<div class="section-title">Income Breakdown</div>
+<div class="income-row">
+<div class="income-label">PAYE Full-Time</div>
+<div class="income-value">£28,000</div>
+</div>
+<div class="income-row">
+<div class="income-label">Weekend Self-Employed</div>
+<div class="income-value">£8,000</div>
+</div>
+<div class="income-total">
+<div class="income-label">Total Annual Income</div>
+<div class="income-value">£36,000</div>
+</div>
+</div>
+<div class="tax-summary">
+<div class="section-title">Tax Calculation</div>
+<div class="tax-row"><span>PAYE Tax & NI (auto-deducted)</span><span>~£4,400</span></div>
+<div class="tax-row"><span>Self-Employed Tax & NI</span><span>~£1,300</span></div>
+<div class="tax-row"><span>Total Tax Liability</span><span>~£5,700</span></div>
+<div class="tax-row"><span>Net Take-Home</span><span>~£30,300</span></div>
+</div>
+<div class="pros-cons">
+<div class="section-title">Key Advantages</div>
+<div class="pro-item"><span class="item-icon">✓</span>Full employment benefits and security</div>
+<div class="pro-item"><span class="item-icon">✓</span>Additional income from side business</div>
+<div class="pro-item"><span class="item-icon">✓</span>Clear separation of work commitments</div>
+<div class="section-title">Key Challenges</div>
+<div class="con-item"><span class="item-icon">✗</span>Limited weekend availability for personal life</div>
+<div class="con-item"><span class="item-icon">✗</span>Potential burnout working 6-7 days</div>
+<div class="con-item"><span class="item-icon">✗</span>Slower self-employed business growth</div>
+</div>
+</div>
+</div>
+<div class="scenario-card">
+<div class="card-header">
+<div class="scenario-icon">🚀</div>
+<div class="scenario-title">The Growth Model</div>
+<div class="scenario-subtitle">Minimum PAYE + thriving self-employed</div>
+</div>
+<div class="card-body">
+<div class="income-section">
+<div class="section-title">Income Breakdown</div>
+<div class="income-row">
+<div class="income-label">PAYE (1 day/week)</div>
+<div class="income-value">£8,000</div>
+</div>
+<div class="income-row">
+<div class="income-label">Self-Employed Business</div>
+<div class="income-value">£38,000</div>
+</div>
+<div class="income-total">
+<div class="income-label">Total Annual Income</div>
+<div class="income-value">£46,000</div>
+</div>
+</div>
+<div class="tax-summary">
+<div class="section-title">Tax Calculation</div>
+<div class="tax-row"><span>PAYE Tax & NI (auto-deducted)</span><span>~£800</span></div>
+<div class="tax-row"><span>Self-Employed Tax & NI</span><span>~£7,600</span></div>
+<div class="tax-row"><span>Total Tax Liability</span><span>~£8,400</span></div>
+<div class="tax-row"><span>Net Take-Home</span><span>~£37,600</span></div>
+</div>
+<div class="pros-cons">
+<div class="section-title">Key Advantages</div>
+<div class="pro-item"><span class="item-icon">✓</span>Mostly self-employed earning potential</div>
+<div class="pro-item"><span class="item-icon">✓</span>Minimal employment safety net</div>
+<div class="pro-item"><span class="item-icon">✓</span>Maximum flexibility and autonomy</div>
+<div class="section-title">Key Challenges</div>
+<div class="con-item"><span class="item-icon">✗</span>Most income at risk if self-employed work drops</div>
+<div class="con-item"><span class="item-icon">✗</span>Large tax payment through Self Assessment</div>
+<div class="con-item"><span class="item-icon">✗</span>Minimal employment benefits</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+(function() {
+document.documentElement.style.visibility = 'visible';
+document.body.style.visibility = 'visible';
+})();
+</script>
+</body>
+</html>
