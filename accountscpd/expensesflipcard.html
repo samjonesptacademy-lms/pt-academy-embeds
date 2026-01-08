@@ -1,1 +1,325 @@
-
+<!DOCTYPE html>
+<html style="background: #f8f9fa;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Allowable Expenses Checker</title>
+<style>
+* {box-sizing: border-box; margin: 0; padding: 0;}
+html, body {background: #f8f9fa; min-height: 100vh;}
+body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; opacity: 1; visibility: visible;}
+.expenses-container {max-width: 1200px; margin: 0 auto;}
+.header {text-align: center; margin-bottom: 40px;}
+.title {font-size: 28px; font-weight: 700; color: #333; margin-bottom: 10px;}
+.subtitle {font-size: 15px; color: #666; line-height: 1.6;}
+.legend {display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 30px;}
+.legend-item {display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600;}
+.legend-badge {width: 20px; height: 20px; border-radius: 4px;}
+.legend-badge.allowable {background: #4caf50;}
+.legend-badge.not-allowable {background: #e74c3c;}
+.legend-badge.partially {background: #ffc107;}
+.cards-grid {display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 15px;}
+.expense-card {height: 240px; perspective: 1000px; cursor: pointer;}
+.card-inner {position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d;}
+.expense-card.flipped .card-inner {transform: rotateY(180deg);}
+.card-front, .card-back {position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); padding: 20px; display: flex; flex-direction: column; justify-content: center;}
+.card-front {background: white; border: 3px solid #e9ecef;}
+.card-back {transform: rotateY(180deg);}
+.card-back.allowable {background: linear-gradient(135deg, #4caf50, #66bb6a); color: white;}
+.card-back.not-allowable {background: linear-gradient(135deg, #e74c3c, #e57373); color: white;}
+.card-back.partially {background: linear-gradient(135deg, #ffc107, #ffd54f); color: #333;}
+.expense-icon {font-size: 40px; text-align: center; margin-bottom: 15px;}
+.expense-name {font-size: 18px; font-weight: 700; text-align: center; color: #333; margin-bottom: 8px;}
+.click-instruction {font-size: 12px; text-align: center; color: #999; margin-top: 15px;}
+.status-badge {display: inline-block; padding: 6px 12px; border-radius: 12px; font-size: 11px; font-weight: 700; text-transform: uppercase; margin-bottom: 15px; text-align: center;}
+.status-badge.allowable {background: rgba(255,255,255,0.3);}
+.status-badge.not-allowable {background: rgba(255,255,255,0.3);}
+.status-badge.partially {background: rgba(0,0,0,0.1);}
+.explanation {font-size: 14px; line-height: 1.7; text-align: center;}
+@media (max-width: 768px) {
+.cards-grid {grid-template-columns: 1fr;}
+}
+</style>
+</head>
+<body>
+<div class="expenses-container">
+<div class="header">
+<h1 class="title">Allowable Expenses Checker</h1>
+<p class="subtitle">Click each expense to reveal whether it's tax deductible for self-employed trainers</p>
+</div>
+<div class="legend">
+<div class="legend-item"><div class="legend-badge allowable"></div><span>✅ Allowable</span></div>
+<div class="legend-item"><div class="legend-badge partially"></div><span>⚠️ Partially Allowable</span></div>
+<div class="legend-item"><div class="legend-badge not-allowable"></div><span>❌ Not Allowable</span></div>
+</div>
+<div class="cards-grid">
+<div class="expense-card" onclick="this.classList.toggle('flipped')">
+<div class="card-inner">
+<div class="card-front">
+<div class="expense-icon">💼</div>
+<div class="expense-name">Professional Indemnity Insurance</div>
+<div class="click-instruction">Click to reveal</div>
+</div>
+<div class="card-back allowable">
+<div class="status-badge allowable">✅ Allowable</div>
+<div class="explanation">Fully deductible as a necessary business expense. Essential for protecting your business from client claims.</div>
+</div>
+</div>
+</div>
+<div class="expense-card" onclick="this.classList.toggle('flipped')">
+<div class="card-inner">
+<div class="card-front">
+<div class="expense-icon">🏋️</div>
+<div class="expense-name">Gym Membership (Personal Use)</div>
+<div class="click-instruction">Click to reveal</div>
+</div>
+<div class="card-back not-allowable">
+<div class="status-badge not-allowable">❌ Not Allowable</div>
+<div class="explanation">Personal gym memberships for your own training are not deductible. However, facility rental for delivering client sessions is allowable.</div>
+</div>
+</div>
+</div>
+<div class="expense-card" onclick="this.classList.toggle('flipped')">
+<div class="card-inner">
+<div class="card-front">
+<div class="expense-icon">📱</div>
+<div class="expense-name">Mobile Phone</div>
+<div class="click-instruction">Click to reveal</div>
+</div>
+<div class="card-back partially">
+<div class="status-badge partially">⚠️ Partially Allowable</div>
+<div class="explanation">Can claim business proportion only. If 60% business use, claim 60% of costs. Keep records to justify the split.</div>
+</div>
+</div>
+</div>
+<div class="expense-card" onclick="this.classList.toggle('flipped')">
+<div class="card-inner">
+<div class="card-front">
+<div class="expense-icon">🎓</div>
+<div class="expense-name">CPD Courses & Certifications</div>
+<div class="click-instruction">Click to reveal</div>
+</div>
+<div class="card-back allowable">
+<div class="status-badge allowable">✅ Allowable</div>
+<div class="explanation">Fully deductible when directly related to your fitness business. Includes courses, workshops, and qualification renewals.</div>
+</div>
+</div>
+</div>
+<div class="expense-card" onclick="this.classList.toggle('flipped')">
+<div class="card-inner">
+<div class="card-front">
+<div class="expense-icon">🚗</div>
+<div class="expense-name">Car Purchase</div>
+<div class="click-instruction">Click to reveal</div>
+</div>
+<div class="card-back not-allowable">
+<div class="status-badge not-allowable">❌ Not Allowable as Single Expense</div>
+<div class="explanation">Cannot claim full car cost, but CAN claim mileage at 45p per business mile (first 10,000 miles). Keep accurate mileage log.</div>
+</div>
+</div>
+</div>
+<div class="expense-card" onclick="this.classList.toggle('flipped')">
+<div class="card-inner">
+<div class="card-front">
+<div class="expense-icon">🏠</div>
+<div class="expense-name">Home Office Costs</div>
+<div class="click-instruction">Click to reveal</div>
+</div>
+<div class="card-back partially">
+<div class="status-badge partially">⚠️ Partially Allowable</div>
+<div class="explanation">Can use simplified £6/week method OR calculate actual proportion of home costs (mortgage interest/rent, utilities, internet). Must be genuine workspace.</div>
+</div>
+</div>
+</div>
+<div class="expense-card" onclick="this.classList.toggle('flipped')">
+<div class="card-inner">
+<div class="card-front">
+<div class="expense-icon">⚽</div>
+<div class="expense-name">Training Equipment for Clients</div>
+<div class="click-instruction">Click to reveal</div>
+</div>
+<div class="card-back allowable">
+<div class="status-badge allowable">✅ Allowable</div>
+<div class="explanation">Equipment used exclusively for client sessions is fully deductible. Includes resistance bands, cones, balls, mats, portable equipment.</div>
+</div>
+</div>
+</div>
+<div class="expense-card" onclick="this.classList.toggle('flipped')">
+<div class="card-inner">
+<div class="card-front">
+<div class="expense-icon">👔</div>
+<div class="expense-name">Business Suits & Formal Wear</div>
+<div class="click-instruction">Click to reveal</div>
+</div>
+<div class="card-back not-allowable">
+<div class="status-badge not-allowable">❌ Not Allowable</div>
+<div class="explanation">Ordinary clothing suitable for everyday wear is not deductible, even if worn for work. Branded gym kit with company logo MAY be allowable.</div>
+</div>
+</div>
+</div>
+<div class="expense-card" onclick="this.classList.toggle('flipped')">
+<div class="card-inner">
+<div class="card-front">
+<div class="expense-icon">📊</div>
+<div class="expense-name">Accountancy Fees</div>
+<div class="click-instruction">Click to reveal</div>
+</div>
+<div class="card-back allowable">
+<div class="status-badge allowable">✅ Allowable</div>
+<div class="explanation">Fees for bookkeeping, tax return preparation, and business accounting advice are fully deductible business expenses.</div>
+</div>
+</div>
+</div>
+<div class="expense-card" onclick="this.classList.toggle('flipped')">
+<div class="card-inner">
+<div class="card-front">
+<div class="expense-icon">📢</div>
+<div class="expense-name">Marketing & Advertising</div>
+<div class="click-instruction">Click to reveal</div>
+</div>
+<div class="card-back allowable">
+<div class="status-badge allowable">✅ Allowable</div>
+<div class="explanation">All marketing costs are deductible including website, business cards, social media ads, flyers, and promotional materials.</div>
+</div>
+</div>
+</div>
+<div class="expense-card" onclick="this.classList.toggle('flipped')">
+<div class="card-inner">
+<div class="card-front">
+<div class="expense-icon">☕</div>
+<div class="expense-name">Client Meals & Entertainment</div>
+<div class="click-instruction">Click to reveal</div>
+</div>
+<div class="card-back not-allowable">
+<div class="status-badge not-allowable">❌ Not Allowable</div>
+<div class="explanation">Client entertainment and meals are generally not allowable expenses. Business meeting costs may qualify but are heavily scrutinized.</div>
+</div>
+</div>
+</div>
+<div class="expense-card" onclick="this.classList.toggle('flipped')">
+<div class="card-inner">
+<div class="card-front">
+<div class="expense-icon">💻</div>
+<div class="expense-name">Laptop & Computer</div>
+<div class="click-instruction">Click to reveal</div>
+</div>
+<div class="card-back partially">
+<div class="status-badge partially">⚠️ Partially Allowable</div>
+<div class="explanation">Can claim business use proportion. If used exclusively for business, fully deductible. Mixed use requires reasonable percentage split.</div>
+</div>
+</div>
+</div>
+<div class="expense-card" onclick="this.classList.toggle('flipped')">
+<div class="card-inner">
+<div class="card-front">
+<div class="expense-icon">🎁</div>
+<div class="expense-name">Client Gifts</div>
+<div class="click-instruction">Click to reveal</div>
+</div>
+<div class="card-back partially">
+<div class="status-badge partially">⚠️ Partially Allowable</div>
+<div class="explanation">Limited to £50 per recipient per year. Must have business branding. Food, drink, tobacco, and vouchers are excluded.</div>
+</div>
+</div>
+</div>
+<div class="expense-card" onclick="this.classList.toggle('flipped')">
+<div class="card-inner">
+<div class="card-front">
+<div class="expense-icon">🏢</div>
+<div class="expense-name">Facility Rental / Rent</div>
+<div class="click-instruction">Click to reveal</div>
+</div>
+<div class="card-back allowable">
+<div class="status-badge allowable">✅ Allowable</div>
+<div class="explanation">Monthly facility rental, studio hire, or space rental for delivering client sessions is fully deductible as premises costs.</div>
+</div>
+</div>
+</div>
+<div class="expense-card" onclick="this.classList.toggle('flipped')">
+<div class="card-inner">
+<div class="card-front">
+<div class="expense-icon">🍽️</div>
+<div class="expense-name">Your Own Lunch</div>
+<div class="click-instruction">Click to reveal</div>
+</div>
+<div class="card-back not-allowable">
+<div class="status-badge not-allowable">❌ Not Allowable</div>
+<div class="explanation">Your own meals during normal working day are personal expenses, not deductible. Only allowable if overnight business travel required.</div>
+</div>
+</div>
+</div>
+<div class="expense-card" onclick="this.classList.toggle('flipped')">
+<div class="card-inner">
+<div class="card-front">
+<div class="expense-icon">📚</div>
+<div class="expense-name">Professional Books & Resources</div>
+<div class="click-instruction">Click to reveal</div>
+</div>
+<div class="card-back allowable">
+<div class="status-badge allowable">✅ Allowable</div>
+<div class="explanation">Books, journals, subscriptions, and online resources directly related to your fitness business are fully deductible.</div>
+</div>
+</div>
+</div>
+<div class="expense-card" onclick="this.classList.toggle('flipped')">
+<div class="card-inner">
+<div class="card-front">
+<div class="expense-icon">⏰</div>
+<div class="expense-name">Childcare Costs</div>
+<div class="click-instruction">Click to reveal</div>
+</div>
+<div class="card-back not-allowable">
+<div class="status-badge not-allowable">❌ Not Allowable</div>
+<div class="explanation">Personal childcare costs are not allowable business expenses, even if required to enable you to work.</div>
+</div>
+</div>
+</div>
+<div class="expense-card" onclick="this.classList.toggle('flipped')">
+<div class="card-inner">
+<div class="card-front">
+<div class="expense-icon">🔧</div>
+<div class="expense-name">Equipment Repairs & Maintenance</div>
+<div class="click-instruction">Click to reveal</div>
+</div>
+<div class="card-back allowable">
+<div class="status-badge allowable">✅ Allowable</div>
+<div class="explanation">Repair and maintenance costs for business equipment are fully deductible. Keep receipts and records.</div>
+</div>
+</div>
+</div>
+<div class="expense-card" onclick="this.classList.toggle('flipped')">
+<div class="card-inner">
+<div class="card-front">
+<div class="expense-icon">💰</div>
+<div class="expense-name">Bank Charges (Business Account)</div>
+<div class="click-instruction">Click to reveal</div>
+</div>
+<div class="card-back allowable">
+<div class="status-badge allowable">✅ Allowable</div>
+<div class="explanation">Business bank account fees, transaction charges, and business credit card interest are deductible business expenses.</div>
+</div>
+</div>
+</div>
+<div class="expense-card" onclick="this.classList.toggle('flipped')">
+<div class="card-inner">
+<div class="card-front">
+<div class="expense-icon">🏃</div>
+<div class="expense-name">Personal Fitness Training</div>
+<div class="click-instruction">Click to reveal</div>
+</div>
+<div class="card-back not-allowable">
+<div class="status-badge not-allowable">❌ Not Allowable</div>
+<div class="explanation">Your own personal training sessions are not deductible business expenses, even though maintaining fitness is important for your profession.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+(function() {
+document.documentElement.style.visibility = 'visible';
+document.body.style.visibility = 'visible';
+})();
+</script>
+</body>
+</html>
