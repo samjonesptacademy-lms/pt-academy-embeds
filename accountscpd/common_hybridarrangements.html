@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hybrid Employment Arrangements</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8f9fa; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
+        .spinner { width: 50px; height: 50px; border: 4px solid #e9ecef; border-top-color: #C6A906; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { margin-top: 20px; font-size: 16px; color: #666; font-weight: 500; }
+        
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; padding: 20px; background: #f8f9fa; line-height: 1.6; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .title { font-size: 28px; font-weight: 700; color: #333; margin-bottom: 15px; }
+        .description { font-size: 16px; color: #555; line-height: 1.6; max-width: 700px; margin: 0 auto; }
+        
+        .carousel-container { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }
+        
+        .carousel-indicators { display: flex; justify-content: center; gap: 10px; padding: 20px; background: #f8f9fa; border-bottom: 2px solid #e9ecef; }
+        .indicator { width: 12px; height: 12px; border-radius: 50%; background: #d4d8db; cursor: pointer; transition: all 0.3s ease; }
+        .indicator.active { background: #C6A906; width: 32px; border-radius: 6px; }
+        .indicator:hover:not(.active) { background: #a88c05; }
+        
+        .carousel-slides { position: relative; min-height: 500px; padding: 30px; }
+        
+        .slide-wrapper { position: absolute; width: 100%; left: 0; top: 30px; opacity: 0; visibility: hidden; transition: opacity 0.5s ease, visibility 0.5s ease; pointer-events: none; z-index: 1; }
+        .slide-wrapper.active { opacity: 1; visibility: visible; pointer-events: auto; }
+        
+        .flip-card { perspective: 1000px; cursor: pointer; height: 440px; }
+        .flip-card-inner { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; }
+        .flip-card.flipped .flip-card-inner { transform: rotateY(180deg); }
+        
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px; background: white; border: 3px solid #e9ecef; }
+        .flip-card-front { padding: 35px; }
+        .flip-card-back { padding: 0; overflow-y: auto; overflow-x: hidden; }
+        .flip-card-back { transform: rotateY(180deg); }
+        
+        .flip-card-front { display: flex; flex-direction: column; align-items: center; justify-content: center; text-align: center; background: linear-gradient(135deg, #fffef8 0%, #ffffff 100%); border: 3px solid #C6A906; }
+        
+        .front-badge { background: #C6A906; color: white; padding: 12px 24px; border-radius: 30px; font-size: 16px; font-weight: 700; margin-bottom: 30px; }
+        
+        .front-title { font-size: 28px; font-weight: 700; color: #333; margin-bottom: 30px; line-height: 1.3; max-width: 600px; }
+        
+        .front-flip-prompt { font-size: 48px; margin-bottom: 20px; animation: bounce 2s ease-in-out infinite; }
+        @keyframes bounce { 0%, 100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
+        
+        .front-instruction { font-size: 18px; color: #666; font-weight: 500; }
+        
+        .back-content { padding: 35px; }
+        
+        .flip-card-back::-webkit-scrollbar { width: 8px; }
+        .flip-card-back::-webkit-scrollbar-track { background: #f8f9fa; border-radius: 12px; }
+        .flip-card-back::-webkit-scrollbar-thumb { background: #C6A906; border-radius: 4px; }
+        .flip-card-back::-webkit-scrollbar-thumb:hover { background: #a88c05; }
+        
+        .card-badge { display: inline-block; background: #C6A906; color: white; padding: 8px 16px; border-radius: 20px; font-size: 13px; font-weight: 700; margin-bottom: 20px; }
+        
+        .card-header { display: flex; align-items: flex-start; justify-content: space-between; margin-bottom: 25px; }
+        .card-title { font-size: 24px; font-weight: 700; color: #333; line-height: 1.3; flex: 1; }
+        .flip-icon { font-size: 28px; color: #C6A906; flex-shrink: 0; margin-left: 15px; animation: pulse 2s ease-in-out infinite; }
+        @keyframes pulse { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.1); } }
+        .flip-card.flipped .flip-icon { animation: none; }
+        
+        .card-content { font-size: 16px; color: #333; line-height: 1.8; margin-bottom: 25px; }
+        
+        .key-points { background: #e8f5e9; border-left: 4px solid #28a745; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .key-points-label { font-size: 14px; font-weight: 700; color: #28a745; margin-bottom: 12px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .key-points ul { margin-left: 20px; }
+        .key-points li { margin-bottom: 8px; font-size: 15px; color: #155724; line-height: 1.7; }
+        
+        .info-box { background: #fffef8; border-left: 4px solid #C6A906; padding: 18px; border-radius: 8px; margin: 20px 0; }
+        .info-label { font-size: 13px; font-weight: 700; color: #C6A906; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .info-text { font-size: 15px; color: #666; line-height: 1.7; }
+        
+        .warning-box { background: #fff3cd; border-left: 4px solid #ffc107; padding: 18px; border-radius: 8px; margin: 20px 0; }
+        .warning-label { font-size: 13px; font-weight: 700; color: #856404; margin-bottom: 8px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .warning-text { font-size: 15px; color: #856404; line-height: 1.7; }
+        
+        .flip-hint { text-align: center; margin-top: 20px; font-size: 14px; color: #999; font-style: italic; }
+        
+        .carousel-navigation { display: flex; justify-content: space-between; align-items: center; padding: 25px 35px; background: #f8f9fa; border-top: 2px solid #e9ecef; }
+        .nav-btn { padding: 12px 30px; border-radius: 8px; font-size: 15px; font-weight: 600; cursor: pointer; transition: all 0.3s ease; border: 2px solid #C6A906; background: white; color: #C6A906; }
+        .nav-btn:hover:not(:disabled) { background: #C6A906; color: white; }
+        .nav-btn:disabled { opacity: 0.3; cursor: not-allowed; background: #e9ecef; border-color: #ccc; color: #999; }
+        .slide-counter { font-size: 15px; font-weight: 600; color: #333; }
+        
+        @media (max-width: 768px) {
+            .carousel-slides { padding: 20px; min-height: 600px; }
+            .flip-card-front, .flip-card-back { padding: 25px; }
+            .carousel-navigation { padding: 20px 25px; flex-wrap: wrap; gap: 15px; }
+            .nav-btn { flex: 1; min-width: 120px; }
+            .slide-counter { width: 100%; text-align: center; order: -1; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading arrangements...</div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Common Hybrid Arrangements</h1>
+            <p class="description">Many personal trainers combine employment types to balance income security with business flexibility. Click each card to flip and explore the arrangement.</p>
+        </div>
+
+        <div class="carousel-container">
+            <div class="carousel-indicators">
+                <div class="indicator active" onclick="goToSlide(0)"></div>
+                <div class="indicator" onclick="goToSlide(1)"></div>
+                <div class="indicator" onclick="goToSlide(2)"></div>
+            </div>
+
+            <div class="carousel-slides">
+                <!-- Slide 1 -->
+                <div class="slide-wrapper active" data-index="0">
+                    <div class="flip-card" onclick="flipCard(0)">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <div class="front-badge">Arrangement 1 of 3</div>
+                                <div class="front-title">Part-Time PAYE with Self-Employed Practice</div>
+                                <div class="front-flip-prompt">🔄</div>
+                                <div class="front-instruction">Click to reveal details</div>
+                            </div>
+                            <div class="flip-card-back">
+                                <div class="back-content">
+                                    <div class="card-badge">Arrangement 1 of 3</div>
+                                    <div class="card-header">
+                                        <div class="card-title">Part-Time PAYE with Self-Employed Practice</div>
+                                        <div class="flip-icon">🔄</div>
+                                    </div>
+                                    
+                                    <div class="card-content">
+                                        Trainers employed part-time by gyms or leisure centres whilst building self-employed client bases outside contracted hours. This model provides baseline income security whilst developing independent businesses.
+                                    </div>
+                                    
+                                    <div class="key-points">
+                                        <div class="key-points-label">✓ How This Works</div>
+                                        <ul>
+                                            <li>Maintain part-time employed position (e.g., 20 hours/week at gym)</li>
+                                            <li>Build self-employed client base during remaining time</li>
+                                            <li>Receive guaranteed income from PAYE role</li>
+                                            <li>Develop independent business without full financial risk</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="info-box">
+                                        <div class="info-label">💡 Key Benefit</div>
+                                        <div class="info-text">
+                                            Provides baseline income security whilst allowing you to test and develop your self-employed business without immediate pressure of replacing full-time income.
+                                        </div>
+                                    </div>
+
+                                    <div class="warning-box">
+                                        <div class="warning-label">⚠️ Important</div>
+                                        <div class="warning-text">
+                                            Check employment contract for restrictions on outside work. Register as self-employed with HMRC and complete Self Assessment tax returns.
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flip-hint">Click to flip back</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 2 -->
+                <div class="slide-wrapper" data-index="1">
+                    <div class="flip-card" onclick="flipCard(1)">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <div class="front-badge">Arrangement 2 of 3</div>
+                                <div class="front-title">Rent-Based Arrangements Structured as Self-Employment</div>
+                                <div class="front-flip-prompt">🔄</div>
+                                <div class="front-instruction">Click to reveal details</div>
+                            </div>
+                            <div class="flip-card-back">
+                                <div class="back-content">
+                                    <div class="card-badge">Arrangement 2 of 3</div>
+                                    <div class="card-header">
+                                        <div class="card-title">Rent-Based Arrangements Structured as Self-Employment</div>
+                                        <div class="flip-icon">🔄</div>
+                                    </div>
+                                    
+                                    <div class="card-content">
+                                        Trainers rent space from facilities and operate entirely self-employed. The critical distinction: facility provides space only, not control over how you deliver services.
+                                    </div>
+                                    
+                                    <div class="key-points">
+                                        <div class="key-points-label">✓ How This Works</div>
+                                        <ul>
+                                            <li>Pay facility rental fee for space access</li>
+                                            <li>Operate independently as self-employed business</li>
+                                            <li>Control client relationships, pricing, and methods</li>
+                                            <li>Retain all client income after rental costs</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="info-box">
+                                        <div class="info-label">💡 Key Distinction</div>
+                                        <div class="info-text">
+                                            Facility provides space only—they don't control how you deliver services, set prices, or manage clients. You're responsible for all business aspects.
+                                        </div>
+                                    </div>
+
+                                    <div class="warning-box">
+                                        <div class="warning-label">⚠️ HMRC Scrutiny</div>
+                                        <div class="warning-text">
+                                            HMRC examines these for "disguised employment." If facility controls your work methods, hours, or pricing, it may constitute employment regardless of label.
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flip-hint">Click to flip back</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Slide 3 -->
+                <div class="slide-wrapper" data-index="2">
+                    <div class="flip-card" onclick="flipCard(2)">
+                        <div class="flip-card-inner">
+                            <div class="flip-card-front">
+                                <div class="front-badge">Arrangement 3 of 3</div>
+                                <div class="front-title">Multiple PAYE Positions</div>
+                                <div class="front-flip-prompt">🔄</div>
+                                <div class="front-instruction">Click to reveal details</div>
+                            </div>
+                            <div class="flip-card-back">
+                                <div class="back-content">
+                                    <div class="card-badge">Arrangement 3 of 3</div>
+                                    <div class="card-header">
+                                        <div class="card-title">Multiple PAYE Positions</div>
+                                        <div class="flip-icon">🔄</div>
+                                    </div>
+                                    
+                                    <div class="card-content">
+                                        Trainers hold multiple part-time employed positions with different organisations, maintaining PAYE status across all roles. This combines multiple employment relationships requiring coordination of tax codes.
+                                    </div>
+                                    
+                                    <div class="key-points">
+                                        <div class="key-points-label">✓ How This Works</div>
+                                        <ul>
+                                            <li>Work part-time for multiple employers</li>
+                                            <li>Each employer operates separate PAYE</li>
+                                            <li>Maintain employee status and benefits across roles</li>
+                                            <li>Diversify income across organizations</li>
+                                        </ul>
+                                    </div>
+
+                                    <div class="info-box">
+                                        <div class="info-label">💡 Tax Code Coordination</div>
+                                        <div class="info-text">
+                                            Primary employment uses your personal tax allowance. Secondary employments taxed at basic rate from first pound. HMRC coordinates through different tax codes.
+                                        </div>
+                                    </div>
+
+                                    <div class="warning-box">
+                                        <div class="warning-label">⚠️ Self Assessment May Be Required</div>
+                                        <div class="warning-text">
+                                            If total income exceeds thresholds, or tax deductions appear incorrect, you may need Self Assessment even though all income is PAYE.
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="flip-hint">Click to flip back</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="carousel-navigation">
+                <button class="nav-btn" id="prevBtn" onclick="previousSlide()" disabled>← Previous</button>
+                <div class="slide-counter">
+                    <span id="currentSlide">1</span> of 3
+                </div>
+                <button class="nav-btn" id="nextBtn" onclick="nextSlide()">Next →</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let currentSlideIndex = 0;
+        const totalSlides = 3;
+        let flippedStates = [false, false, false];
+
+        function updateCarousel() {
+            // Update slides
+            const slides = document.querySelectorAll('.slide-wrapper');
+            slides.forEach((slide, index) => {
+                slide.classList.toggle('active', index === currentSlideIndex);
+            });
+
+            // Update indicators
+            const indicators = document.querySelectorAll('.indicator');
+            indicators.forEach((indicator, index) => {
+                indicator.classList.toggle('active', index === currentSlideIndex);
+            });
+
+            // Update counter
+            document.getElementById('currentSlide').textContent = currentSlideIndex + 1;
+
+            // Update navigation buttons
+            document.getElementById('prevBtn').disabled = currentSlideIndex === 0;
+            document.getElementById('nextBtn').disabled = currentSlideIndex === totalSlides - 1;
+
+            // Scroll to top of carousel
+            document.querySelector('.carousel-container').scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+        }
+
+        function flipCard(index) {
+            const flipCard = document.querySelectorAll('.flip-card')[index];
+            flipCard.classList.toggle('flipped');
+            flippedStates[index] = flipCard.classList.contains('flipped');
+        }
+
+        function goToSlide(index) {
+            currentSlideIndex = index;
+            updateCarousel();
+        }
+
+        function nextSlide() {
+            if (currentSlideIndex < totalSlides - 1) {
+                currentSlideIndex++;
+                updateCarousel();
+            }
+        }
+
+        function previousSlide() {
+            if (currentSlideIndex > 0) {
+                currentSlideIndex--;
+                updateCarousel();
+            }
+        }
+
+        // Keyboard navigation
+        document.addEventListener('keydown', function(e) {
+            if (e.key === 'ArrowLeft') {
+                previousSlide();
+            } else if (e.key === 'ArrowRight') {
+                nextSlide();
+            }
+        });
+
+        function hideLoader() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(function() { overlay.style.display = 'none'; }, 500);
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', hideLoader);
+        } else {
+            hideLoader();
+        }
+        setTimeout(hideLoader, 500);
+    </script>
+</body>
+</html>
