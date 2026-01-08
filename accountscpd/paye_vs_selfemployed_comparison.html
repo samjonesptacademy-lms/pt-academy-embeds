@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAYE vs Self-Employment</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8f9fa; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
+        .spinner { width: 50px; height: 50px; border: 4px solid #e9ecef; border-top-color: #C6A906; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { margin-top: 20px; font-size: 16px; color: #666; font-weight: 500; }
+        
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; padding: 20px; background: #f8f9fa; line-height: 1.6; }
+        .container { max-width: 1200px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .title { font-size: 28px; font-weight: 700; color: #333; margin-bottom: 15px; }
+        .description { font-size: 16px; color: #555; line-height: 1.6; max-width: 700px; margin: 0 auto; }
+        
+        .toggle-container { display: flex; justify-content: center; margin-bottom: 40px; background: white; padding: 8px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); max-width: 500px; margin-left: auto; margin-right: auto; }
+        .toggle-btn { flex: 1; padding: 15px 30px; border: none; background: transparent; font-size: 16px; font-weight: 600; color: #666; cursor: pointer; border-radius: 8px; transition: all 0.3s ease; }
+        .toggle-btn.active { background: #C6A906; color: white; }
+        .toggle-btn:hover:not(.active) { background: #f8f9fa; }
+        
+        .content-container { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }
+        .content-view { display: none; padding: 35px; }
+        .content-view.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .section-title { font-size: 24px; font-weight: 700; color: #C6A906; margin-bottom: 25px; padding-bottom: 15px; border-bottom: 3px solid #f8f9fa; }
+        
+        .info-section { margin-bottom: 30px; }
+        .info-section:last-child { margin-bottom: 0; }
+        .info-heading { font-size: 18px; font-weight: 700; color: #333; margin-bottom: 15px; display: flex; align-items: center; gap: 10px; }
+        .info-icon { font-size: 24px; }
+        .info-text { font-size: 15px; color: #333; line-height: 1.8; margin-bottom: 12px; }
+        
+        .highlight-box { background: #fffef8; border-left: 4px solid #C6A906; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .highlight-title { font-size: 16px; font-weight: 700; color: #C6A906; margin-bottom: 12px; }
+        .highlight-text { font-size: 15px; color: #666; line-height: 1.7; }
+        
+        .benefits-list { background: #e8f5e9; border-left: 4px solid #28a745; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .benefits-title { font-size: 16px; font-weight: 700; color: #28a745; margin-bottom: 15px; }
+        .benefits-list ul { margin-left: 20px; }
+        .benefits-list li { margin-bottom: 10px; font-size: 15px; color: #155724; line-height: 1.7; }
+        
+        .challenges-list { background: #fff3cd; border-left: 4px solid #ffc107; padding: 20px; border-radius: 8px; margin: 20px 0; }
+        .challenges-title { font-size: 16px; font-weight: 700; color: #856404; margin-bottom: 15px; }
+        .challenges-list ul { margin-left: 20px; }
+        .challenges-list li { margin-bottom: 10px; font-size: 15px; color: #856404; line-height: 1.7; }
+        
+        .comparison-table { width: 100%; border-collapse: collapse; margin: 25px 0; }
+        .comparison-table th { background: #C6A906; color: white; padding: 15px; text-align: left; font-size: 15px; font-weight: 600; }
+        .comparison-table td { padding: 15px; border-bottom: 1px solid #e9ecef; font-size: 15px; line-height: 1.7; }
+        .comparison-table tr:last-child td { border-bottom: none; }
+        .comparison-table tr:nth-child(even) { background: #f8f9fa; }
+        
+        .compare-both-btn { background: #C6A906; color: white; padding: 15px 30px; border-radius: 8px; font-size: 16px; font-weight: 600; border: none; cursor: pointer; transition: all 0.3s ease; display: block; margin: 30px auto 0; }
+        .compare-both-btn:hover { background: #a88c05; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(198, 169, 6, 0.3); }
+        
+        .comparison-view { display: none; padding: 35px; }
+        .comparison-view.active { display: block; animation: fadeIn 0.4s ease; }
+        .back-btn { background: #e9ecef; color: #333; padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; border: none; cursor: pointer; margin-bottom: 25px; }
+        .back-btn:hover { background: #d4d8db; }
+        
+        @media (max-width: 768px) {
+            .toggle-container { flex-direction: column; }
+            .content-view, .comparison-view { padding: 25px; }
+            .comparison-table { font-size: 14px; }
+            .comparison-table th, .comparison-table td { padding: 12px 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading content...</div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="title">PAYE Employment vs Self-Employment</h1>
+            <p class="description">Understanding the two main employment models for personal trainers. Explore each option or compare them side-by-side.</p>
+        </div>
+
+        <div class="toggle-container">
+            <button class="toggle-btn active" onclick="showView('paye')">PAYE Employment</button>
+            <button class="toggle-btn" onclick="showView('self')">Self-Employment</button>
+        </div>
+
+        <div class="content-container">
+            <!-- PAYE Employment View -->
+            <div class="content-view active" id="payeView">
+                <div class="section-title">💼 PAYE Employment</div>
+
+                <div class="info-section">
+                    <div class="info-heading">
+                        <span class="info-icon">📋</span>
+                        <span>What is PAYE Employment?</span>
+                    </div>
+                    <div class="info-text">
+                        Pay As You Earn (PAYE) represents the traditional employment model where personal trainers work as employees of fitness facilities, leisure centres, corporate wellness providers, or other organisations. Under PAYE arrangements, employers deduct income tax and National Insurance contributions directly from wages before payment, remitting these amounts to HM Revenue & Customs (HMRC) on your behalf.
+                    </div>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-heading">
+                        <span class="info-icon">⚙️</span>
+                        <span>How PAYE Employment Works</span>
+                    </div>
+                    <div class="info-text">
+                        PAYE employees work under employment contracts specifying terms and conditions including working hours, wage rates, notice periods, and employer expectations. Employers exercise substantial control over how, when, and where work is performed, typically requiring employees to work specified shifts, follow organisational policies and procedures, and potentially undertake duties beyond direct client training such as gym floor supervision, equipment maintenance, or administrative tasks.
+                    </div>
+                    <div class="highlight-box">
+                        <div class="highlight-title">Employer-Employee Relationship</div>
+                        <div class="highlight-text">
+                            The employer-employee relationship under PAYE creates legal obligations on both parties. Employers must provide adequate training, safe working environments, appropriate equipment, and compliance with employment legislation. Employees must perform duties to reasonable standards, follow legitimate instructions, maintain confidentiality, and act in the employer's interests during working hours.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-heading">
+                        <span class="info-icon">💰</span>
+                        <span>Financial Implications</span>
+                    </div>
+                    <div class="info-text">
+                        PAYE employees receive regular wages (typically monthly) with tax and National Insurance deducted automatically. Payslips detail gross pay, deductions, and net pay, providing clear documentation of earnings and tax contributions. This automatic deduction system simplifies tax compliance, as employees generally require no additional tax submissions unless they have supplementary income sources or complex tax affairs.
+                    </div>
+                </div>
+
+                <div class="benefits-list">
+                    <div class="benefits-title">✓ Employee Benefits & Entitlements</div>
+                    <ul>
+                        <li><strong>Statutory holiday pay</strong> - Minimum 5.6 weeks annually for full-time employees</li>
+                        <li><strong>Statutory sick pay</strong> - When meeting eligibility criteria</li>
+                        <li><strong>Maternity, paternity, and adoption pay</strong> - Statutory entitlements</li>
+                        <li><strong>Protection against unfair dismissal</strong> - After qualifying period</li>
+                        <li><strong>Statutory redundancy pay</strong> - After qualifying period</li>
+                        <li><strong>Workplace pension contributions</strong> - Through auto-enrolment schemes</li>
+                        <li><strong>Potential additional benefits</strong> - Gym membership, CPD funding, performance bonuses (employer dependent)</li>
+                    </ul>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-heading">
+                        <span class="info-icon">📊</span>
+                        <span>Income Stability & Planning</span>
+                    </div>
+                    <div class="info-text">
+                        PAYE employment provides income stability and predictability, enabling easier financial planning and access to mortgages, loans, and other credit products that assess affordability based on regular documented income. However, earning potential may be limited compared to self-employment, particularly for trainers with strong client bases and business development skills.
+                    </div>
+                </div>
+
+                <button class="compare-both-btn" onclick="showComparison()">Compare with Self-Employment →</button>
+            </div>
+
+            <!-- Self-Employment View -->
+            <div class="content-view" id="selfView">
+                <div class="section-title">🚀 Self-Employment as a Sole Trader</div>
+
+                <div class="info-section">
+                    <div class="info-heading">
+                        <span class="info-icon">📋</span>
+                        <span>What is Self-Employment?</span>
+                    </div>
+                    <div class="info-text">
+                        Self-employed personal trainers operate as sole traders, running their own fitness businesses and assuming full responsibility for business operations, financial management, and tax compliance. Sole traders are not employees and do not have employers; instead, they are self-directed business operators providing services to clients.
+                    </div>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-heading">
+                        <span class="info-icon">⚙️</span>
+                        <span>How Self-Employment Works</span>
+                    </div>
+                    <div class="info-text">
+                        Self-employed trainers exercise substantial control over their business operations, determining which clients to accept, what services to offer, when and where to work, how to price services, and how to deliver training. This autonomy represents one of self-employment's primary attractions but also necessitates comprehensive business management responsibilities.
+                    </div>
+                    <div class="info-text">
+                        Self-employed status means trainers operate their businesses under their own names or registered business names, market and promote their services independently, establish their own terms and conditions for client relationships, manage their own professional development, and assume financial responsibility for all business expenses, insurance, and compliance obligations.
+                    </div>
+                    <div class="highlight-box">
+                        <div class="highlight-title">⚠️ Legal Distinction</div>
+                        <div class="highlight-text">
+                            Legal and financial distinction exists between the individual and their sole trader business, though unlike limited companies, sole traders and their businesses are not separate legal entities. This means personal assets may be at risk if business liabilities exceed business assets—requiring critical consideration when evaluating appropriate insurance coverage.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-heading">
+                        <span class="info-icon">💰</span>
+                        <span>Financial Implications</span>
+                    </div>
+                    <div class="info-text">
+                        Self-employed trainers receive gross income from clients with no automatic tax deductions. Instead, they must register with HMRC as self-employed, submit annual Self Assessment tax returns declaring all income and allowable expenses, calculate tax and National Insurance liability, and pay tax through Self Assessment system including payments on account for future tax years.
+                    </div>
+                    <div class="highlight-box">
+                        <div class="highlight-title">Tax Advantages</div>
+                        <div class="highlight-text">
+                            This self-administration of tax affairs requires greater financial literacy and organisation than PAYE employment but offers advantages including ability to claim legitimate business expenses against taxable income, potential tax efficiency through expense optimisation and timing of income/expenses, and flexibility to structure finances across tax years strategically.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="challenges-list">
+                    <div class="challenges-title">⚠️ Additional Responsibilities</div>
+                    <ul>
+                        <li><strong>No holiday pay</strong> - Must budget for periods without income</li>
+                        <li><strong>No sick pay</strong> - Income stops when unable to work</li>
+                        <li><strong>No employer pension contributions</strong> - Must arrange own pension provisions</li>
+                        <li><strong>Financial planning required</strong> - Maintain emergency funds for unexpected circumstances</li>
+                        <li><strong>Higher income requirements</strong> - Typically need more to achieve equivalent financial security to PAYE</li>
+                        <li><strong>Business expenses</strong> - Insurance, equipment, marketing, CPD all self-funded</li>
+                    </ul>
+                </div>
+
+                <div class="info-section">
+                    <div class="info-heading">
+                        <span class="info-icon">📊</span>
+                        <span>Financial Management</span>
+                    </div>
+                    <div class="info-text">
+                        Self-employed trainers do not receive employment benefits such as holiday pay, sick pay, or employer pension contributions. Instead, they must budget for periods without income, arrange their own pension provisions, and maintain emergency funds for unexpected circumstances. This requires disciplined financial planning and typically higher income requirements to achieve equivalent financial security to PAYE employment.
+                    </div>
+                </div>
+
+                <button class="compare-both-btn" onclick="showComparison()">Compare with PAYE Employment →</button>
+            </div>
+
+            <!-- Side-by-Side Comparison View -->
+            <div class="comparison-view" id="comparisonView">
+                <button class="back-btn" onclick="hideComparison()">← Back</button>
+                <div class="section-title">📊 Side-by-Side Comparison</div>
+
+                <table class="comparison-table">
+                    <thead>
+                        <tr>
+                            <th>Aspect</th>
+                            <th>PAYE Employment</th>
+                            <th>Self-Employment</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>Control & Autonomy</strong></td>
+                            <td>Employer controls hours, location, duties, and methods. Follow organizational policies and procedures.</td>
+                            <td>Full control over clients, services, pricing, schedule, and methods. Complete business autonomy.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Tax & NI</strong></td>
+                            <td>Automatically deducted by employer. Simple and straightforward.</td>
+                            <td>Self-administered through Self Assessment. Requires financial literacy and organization.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Income</strong></td>
+                            <td>Regular monthly wages. Stable and predictable.</td>
+                            <td>Variable based on clients and bookings. Potentially higher but less predictable.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Holiday Pay</strong></td>
+                            <td>Statutory 5.6 weeks minimum for full-time. Paid time off.</td>
+                            <td>No holiday pay. Must budget for time off without income.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Sick Pay</strong></td>
+                            <td>Statutory sick pay when eligible. Income protection when ill.</td>
+                            <td>No sick pay. Income stops when unable to work.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Pension</strong></td>
+                            <td>Employer contributions through auto-enrolment.</td>
+                            <td>Must arrange and fund own pension provision.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Expenses</strong></td>
+                            <td>Employer covers business expenses (equipment, insurance, CPD).</td>
+                            <td>All business expenses self-funded but tax deductible.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Legal Protection</strong></td>
+                            <td>Employment law protections (unfair dismissal, redundancy pay after qualifying periods).</td>
+                            <td>No employment law protections. Full business liability risk.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Financial Planning</strong></td>
+                            <td>Easier to obtain mortgages/loans with regular documented income.</td>
+                            <td>More complex financial planning required. Emergency fund essential.</td>
+                        </tr>
+                        <tr>
+                            <td><strong>Earning Potential</strong></td>
+                            <td>Limited by salary structure. Predictable but potentially capped.</td>
+                            <td>Unlimited potential with strong client base and business skills. Higher risk, higher reward.</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <button class="back-btn" onclick="hideComparison()">← Back to Individual Views</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showView(view) {
+            // Update toggle buttons
+            document.querySelectorAll('.toggle-btn').forEach(btn => btn.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Show selected view
+            document.querySelectorAll('.content-view').forEach(v => v.classList.remove('active'));
+            if (view === 'paye') {
+                document.getElementById('payeView').classList.add('active');
+            } else {
+                document.getElementById('selfView').classList.add('active');
+            }
+            
+            // Hide comparison
+            document.getElementById('comparisonView').classList.remove('active');
+        }
+
+        function showComparison() {
+            document.querySelectorAll('.content-view').forEach(v => v.classList.remove('active'));
+            document.getElementById('comparisonView').classList.add('active');
+        }
+
+        function hideComparison() {
+            document.getElementById('comparisonView').classList.remove('active');
+            // Show the currently active toggle
+            const activeToggle = document.querySelector('.toggle-btn.active');
+            if (activeToggle.textContent.includes('PAYE')) {
+                document.getElementById('payeView').classList.add('active');
+            } else {
+                document.getElementById('selfView').classList.add('active');
+            }
+        }
+
+        function hideLoader() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(function() { overlay.style.display = 'none'; }, 500);
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', hideLoader);
+        } else {
+            hideLoader();
+        }
+        setTimeout(hideLoader, 500);
+    </script>
+</body>
+</html>
