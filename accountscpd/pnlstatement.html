@@ -1,0 +1,229 @@
+<!DOCTYPE html>
+<html style="background: #f8f9fa;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Profit & Loss Statement Builder</title>
+<style>
+* {box-sizing: border-box; margin: 0; padding: 0;}
+html, body {background: #f8f9fa; min-height: 100vh;}
+body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; opacity: 1; visibility: visible;}
+.pl-container {max-width: 800px; margin: 0 auto;}
+.header {text-align: center; margin-bottom: 40px;}
+.title {font-size: 28px; font-weight: 700; color: #333; margin-bottom: 10px;}
+.subtitle {font-size: 15px; color: #666; line-height: 1.6;}
+.statement-card {background: white; border-radius: 12px; padding: 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.1);}
+.statement-title {font-size: 24px; font-weight: 700; text-align: center; color: #333; margin-bottom: 10px;}
+.statement-subtitle {font-size: 14px; text-align: center; color: #666; margin-bottom: 30px;}
+.section {margin-bottom: 30px;}
+.section-header {background: #C6A906; color: white; padding: 12px 20px; border-radius: 8px 8px 0 0; font-size: 16px; font-weight: 700; text-transform: uppercase;}
+.section-content {border: 2px solid #e9ecef; border-top: none; border-radius: 0 0 8px 8px; padding: 20px;}
+.line-item {display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px solid #f0f0f0;}
+.line-item:last-child {border-bottom: none;}
+.line-left {display: flex; align-items: center; gap: 10px; flex: 1;}
+.line-label {font-size: 15px; color: #555;}
+.info-button {width: 24px; height: 24px; border-radius: 50%; background: #C6A906; color: white; border: none; font-size: 14px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; flex-shrink: 0;}
+.info-button:hover {background: #e0c040; transform: scale(1.1);}
+.line-value {font-size: 16px; font-weight: 600; color: #333;}
+.subtotal {background: #f8f9fa; margin: 15px -20px; padding: 15px 20px; border-top: 2px solid #e9ecef; border-bottom: 2px solid #e9ecef;}
+.subtotal .line-label {font-weight: 700; color: #333;}
+.subtotal .line-value {font-size: 18px; color: #C6A906;}
+.total {background: #fff8e1; margin: 20px -20px 0 -20px; padding: 20px; border-radius: 8px;}
+.total .line-label {font-size: 18px; font-weight: 700; color: #C6A906;}
+.total .line-value {font-size: 24px; font-weight: 700; color: #C6A906;}
+.info-box {background: #e3f2fd; border-left: 4px solid #2196f3; padding: 15px; border-radius: 6px; margin-top: 30px;}
+.info-title {font-size: 14px; font-weight: 700; color: #1565c0; margin-bottom: 8px;}
+.info-text {font-size: 13px; line-height: 1.7; color: #0d47a1;}
+.explanation-box {display: none; background: #fff8e1; border: 2px solid #C6A906; padding: 15px; border-radius: 8px; margin: 10px 0; animation: slideDown 0.3s ease;}
+.explanation-box.active {display: block;}
+.explanation-text {font-size: 14px; line-height: 1.7; color: #555;}
+@keyframes slideDown {from {opacity: 0; transform: translateY(-10px);} to {opacity: 1; transform: translateY(0);}}
+</style>
+</head>
+<body>
+<div class="pl-container">
+<div class="header">
+<h1 class="title">Sample Profit & Loss Statement</h1>
+<p class="subtitle">Example annual P&L for a self-employed personal trainer - click the ? buttons for explanations</p>
+</div>
+<div class="statement-card">
+<div class="statement-title">Annual Profit & Loss Statement</div>
+<div class="statement-subtitle">Example PT Business - Tax Year 2024/25</div>
+<div class="section">
+<div class="section-header">Income</div>
+<div class="section-content">
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Personal Training Revenue</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp1')">?</button>
+</div>
+<div class="line-value">£42,000</div>
+</div>
+<div class="explanation-box" id="exp1">
+<div class="explanation-text">One-to-one personal training sessions charged directly to clients. This is your core revenue from individual client training.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Group Class Revenue</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp2')">?</button>
+</div>
+<div class="line-value">£8,500</div>
+</div>
+<div class="explanation-box" id="exp2">
+<div class="explanation-text">Income from group fitness classes, boot camps, or small group training sessions where multiple clients train together.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Online Coaching Revenue</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp3')">?</button>
+</div>
+<div class="line-value">£5,200</div>
+</div>
+<div class="explanation-box" id="exp3">
+<div class="explanation-text">Remote coaching packages, digital training programmes, app-based coaching, or online consultations delivered virtually.</div>
+</div>
+<div class="subtotal line-item">
+<div class="line-label">TOTAL INCOME</div>
+<div class="line-value">£55,700</div>
+</div>
+</div>
+</div>
+<div class="section">
+<div class="section-header">Business Expenses</div>
+<div class="section-content">
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Professional Insurance</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp4')">?</button>
+</div>
+<div class="line-value">£1,200</div>
+</div>
+<div class="explanation-box" id="exp4">
+<div class="explanation-text">Public liability insurance (covers client injuries) and professional indemnity insurance (covers negligence claims). Essential and fully tax deductible.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Professional Memberships</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp5')">?</button>
+</div>
+<div class="line-value">£350</div>
+</div>
+<div class="explanation-box" id="exp5">
+<div class="explanation-text">CIMSPA registration, REPs membership, professional body subscriptions. Required for professional credibility and insurance validity.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Training Equipment</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp6')">?</button>
+</div>
+<div class="line-value">£800</div>
+</div>
+<div class="explanation-box" id="exp6">
+<div class="explanation-text">Resistance bands, TRX, kettlebells, cones, mats, portable equipment used exclusively for client training sessions. Fully deductible.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Business Travel & Mileage</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp7')">?</button>
+</div>
+<div class="line-value">£2,400</div>
+</div>
+<div class="explanation-box" id="exp7">
+<div class="explanation-text">Mileage to/from clients at 45p per business mile (first 10,000 miles). Keep detailed mileage log with dates, destinations, and business purpose.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Marketing & Advertising</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp8')">?</button>
+</div>
+<div class="line-value">£1,500</div>
+</div>
+<div class="explanation-box" id="exp8">
+<div class="explanation-text">Website hosting, business cards, social media advertising, promotional materials, branded merchandise. All marketing costs are fully deductible.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">CPD & Training</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp9')">?</button>
+</div>
+<div class="line-value">£600</div>
+</div>
+<div class="explanation-box" id="exp9">
+<div class="explanation-text">Continuing Professional Development courses, specialist certifications, workshops, conferences directly related to your fitness business.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Premises Costs</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp10')">?</button>
+</div>
+<div class="line-value">£4,200</div>
+</div>
+<div class="explanation-box" id="exp10">
+<div class="explanation-text">Studio rental, facility rental fees, or home office expenses. For home office, can use simplified £6/week or calculate actual proportion of costs.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Accountancy Fees</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp11')">?</button>
+</div>
+<div class="line-value">£500</div>
+</div>
+<div class="explanation-box" id="exp11">
+<div class="explanation-text">Professional bookkeeping services, tax return preparation fees, accountant consultation costs. Fully deductible as business expense.</div>
+</div>
+<div class="line-item">
+<div class="line-left">
+<div class="line-label">Other Business Costs</div>
+<button class="info-button" onclick="toggleExplanation(event, 'exp12')">?</button>
+</div>
+<div class="line-value">£950</div>
+</div>
+<div class="explanation-box" id="exp12">
+<div class="explanation-text">Business proportion of phone/internet, software subscriptions (scheduling apps, CRM), bank charges, stationery, and miscellaneous business expenses.</div>
+</div>
+<div class="subtotal line-item">
+<div class="line-label">TOTAL EXPENSES</div>
+<div class="line-value">£12,500</div>
+</div>
+</div>
+</div>
+<div class="total line-item">
+<div class="line-label">NET PROFIT (TAXABLE)</div>
+<div class="line-value">£43,200</div>
+</div>
+<div class="info-box">
+<div class="info-title">💡 Understanding Your P&L Statement</div>
+<div class="info-text">
+<strong>Net Profit</strong> is your taxable income after claiming legitimate business expenses. This £43,200 would then have Personal Allowance (£12,570) deducted, leaving £30,630 taxable at 20% = £6,126 income tax. Add Class 2 and Class 4 NI for total tax liability. The remaining amount after all taxes is your actual take-home profit.
+</div>
+</div>
+<div class="info-box">
+<div class="info-title">📊 Key Metrics from This Statement</div>
+<div class="info-text">
+<strong>Profit Margin:</strong> 77.6% (£43,200 profit / £55,700 income)<br>
+<strong>Expense Ratio:</strong> 22.4% (£12,500 expenses / £55,700 income)<br>
+<strong>Monthly Average Profit:</strong> £3,600<br>
+This is a healthy profit margin for service-based businesses.
+</div>
+</div>
+</div>
+</div>
+<script>
+(function() {
+document.documentElement.style.visibility = 'visible';
+document.body.style.visibility = 'visible';
+})();
+window.toggleExplanation = function(event, id) {
+event.stopPropagation();
+const explanation = document.getElementById(id);
+const allExplanations = document.querySelectorAll('.explanation-box');
+allExplanations.forEach(function(box) {
+if (box.id !== id) {
+box.classList.remove('active');
+}
+});
+explanation.classList.toggle('active');
+};
+</script>
+</body>
+</html>
