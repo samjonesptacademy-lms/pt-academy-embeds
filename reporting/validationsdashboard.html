@@ -1262,8 +1262,14 @@
                 year: 'numeric' 
             });
             
-            // Also show the latest data date
-            const dataDate = new Date(latestExportDate + 'T00:00:00');
+            // Parse the data date more carefully (format: YYYY-MM-DD)
+            const dateParts = latestExportDate.split('-');
+            const dataDate = new Date(
+                parseInt(dateParts[0]), // year
+                parseInt(dateParts[1]) - 1, // month (0-indexed)
+                parseInt(dateParts[2]) // day
+            );
+            
             const dataDiffMs = now - dataDate;
             const dataDiffDays = Math.floor(dataDiffMs / (1000 * 60 * 60 * 24));
             
