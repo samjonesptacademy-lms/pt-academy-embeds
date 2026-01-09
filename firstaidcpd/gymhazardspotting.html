@@ -20,34 +20,50 @@ body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-s
 .image-stage {background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.1);}
 .stage-header {text-align: center; margin-bottom: 20px;}
 .stage-title {font-size: 28px; font-weight: 700; color: #333; margin-bottom: 10px;}
-.stage-subtitle {font-size: 16px; color: #666;}
-.counter {background: #fff8e1; border: 2px solid #C6A906; padding: 15px; border-radius: 8px; text-align: center; margin-bottom: 20px;}
-.counter-text {font-size: 18px; font-weight: 700; color: #C6A906;}
+.stage-subtitle {font-size: 16px; color: #666; line-height: 1.6;}
+.counter-row {display: flex; gap: 15px; justify-content: center; margin-bottom: 20px;}
+.counter {background: #fff8e1; border: 2px solid #C6A906; padding: 15px 25px; border-radius: 8px; text-align: center; flex: 1; max-width: 200px;}
+.counter-label {font-size: 13px; font-weight: 600; color: #666; margin-bottom: 5px; text-transform: uppercase;}
 .counter-number {font-size: 32px; font-weight: 700; color: #C6A906;}
-.image-wrapper {position: relative; width: 100%; max-width: 100%; margin: 0 auto; border-radius: 8px; overflow: hidden;}
-.gym-image {width: 100%; height: auto; display: block;}
-.hotspot {position: absolute; width: 60px; height: 60px; border: 3px solid #e74c3c; border-radius: 50%; background: rgba(231, 76, 60, 0.2); cursor: pointer; transition: all 0.3s ease; animation: pulse 2s infinite;}
-.hotspot:hover {transform: scale(1.15); background: rgba(231, 76, 60, 0.4);}
-.hotspot.found {border-color: #4caf50; background: rgba(76, 175, 80, 0.3); animation: none;}
-.hotspot.found:after {content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 32px; color: #4caf50; font-weight: 700;}
-@keyframes pulse {
-0%, 100% {transform: scale(1); opacity: 0.7;}
-50% {transform: scale(1.1); opacity: 1;}
+.image-wrapper {position: relative; width: 100%; max-width: 100%; margin: 0 auto; border-radius: 8px; overflow: hidden; cursor: crosshair; border: 3px solid #e9ecef;}
+.gym-image {width: 100%; height: auto; display: block; user-select: none;}
+.click-marker {position: absolute; width: 50px; height: 50px; border-radius: 50%; pointer-events: none; animation: markerAppear 0.3s ease;}
+.click-marker.correct {background: rgba(76, 175, 80, 0.3); border: 3px solid #4caf50;}
+.click-marker.incorrect {background: rgba(158, 158, 158, 0.3); border: 3px solid #9e9e9e;}
+.click-marker.correct:after {content: '✓'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 28px; color: #4caf50; font-weight: 700;}
+.click-marker.incorrect:after {content: '✕'; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%); font-size: 24px; color: #9e9e9e; font-weight: 700;}
+@keyframes markerAppear {
+from {transform: scale(0); opacity: 0;}
+to {transform: scale(1); opacity: 1;}
 }
-.hotspot-label {position: absolute; bottom: -30px; left: 50%; transform: translateX(-50%); background: #e74c3c; color: white; padding: 4px 10px; border-radius: 12px; font-size: 11px; font-weight: 700; white-space: nowrap; opacity: 0; transition: opacity 0.3s ease;}
-.hotspot:hover .hotspot-label {opacity: 1;}
-.hotspot.found .hotspot-label {background: #4caf50;}
+.hazard-zone {position: absolute; opacity: 0; pointer-events: none;}
+.feedback-toast {position: fixed; top: 20px; right: 20px; background: white; padding: 20px 25px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); display: none; z-index: 1000; animation: slideIn 0.3s ease;}
+.feedback-toast.show {display: block;}
+.feedback-toast.success {border-left: 5px solid #4caf50;}
+.feedback-toast.miss {border-left: 5px solid #9e9e9e;}
+.toast-title {font-size: 16px; font-weight: 700; margin-bottom: 5px;}
+.toast-title.success {color: #2e7d32;}
+.toast-title.miss {color: #757575;}
+.toast-text {font-size: 14px; color: #666;}
+@keyframes slideIn {
+from {transform: translateX(400px); opacity: 0;}
+to {transform: translateX(0); opacity: 1;}
+}
 .submit-section {text-align: center; margin-top: 30px;}
 .submit-btn {background: linear-gradient(135deg, #C6A906, #e0c040); color: white; padding: 18px 50px; border-radius: 30px; font-size: 18px; font-weight: 700; border: none; cursor: pointer; transition: all 0.3s ease;}
-.submit-btn:hover {transform: translateY(-2px); box-shadow: 0 4px 15px rgba(198,169,6,0.3);}
+.submit-btn:hover:not(:disabled) {transform: translateY(-2px); box-shadow: 0 4px 15px rgba(198,169,6,0.3);}
 .submit-btn:disabled {background: #ccc; cursor: not-allowed; transform: none;}
 .feedback-box {background: #e3f2fd; border: 2px solid #2196f3; padding: 20px; border-radius: 8px; margin-top: 20px;}
 .feedback-title {font-size: 20px; font-weight: 700; color: #1565c0; margin-bottom: 10px;}
 .feedback-text {font-size: 15px; line-height: 1.7; color: #0d47a1;}
 .reveal-notice {background: #fff8e1; border: 2px solid #C6A906; padding: 20px; border-radius: 8px; margin-top: 20px; text-align: center;}
 .reveal-text {font-size: 16px; color: #333; font-weight: 600;}
+.hint-box {background: #f8f9fa; border-left: 4px solid #2196f3; padding: 15px; border-radius: 6px; margin-bottom: 20px;}
+.hint-text {font-size: 14px; color: #555; line-height: 1.6;}
 @media (max-width: 768px) {
-.hotspot {width: 40px; height: 40px;}
+.counter-row {flex-direction: column;}
+.counter {max-width: 100%;}
+.feedback-toast {right: 10px; left: 10px;}
 }
 </style>
 </head>
@@ -63,7 +79,7 @@ Your browser does not support the video tag.
 </div>
 </div>
 <div class="instructions">
-<div class="instruction-title">Watch the Introduction Video!</div>
+<div class="instruction-title">Watch the Introduction Video</div>
 <div class="instruction-text">Pay close attention to the gym scene. After the video, you'll identify safety hazards you spot.</div>
 </div>
 </div>
@@ -71,46 +87,34 @@ Your browser does not support the video tag.
 <div class="image-stage">
 <div class="stage-header">
 <div class="stage-title">Spot the Hazards</div>
-<div class="stage-subtitle">Click on areas of the image where you see safety hazards</div>
+<div class="stage-subtitle">Click anywhere on the image where you see a safety hazard</div>
+</div>
+<div class="hint-box">
+<div class="hint-text">💡 <strong>Tip:</strong> There are 6 hazards hidden in this gym scene. Look carefully at the floor, equipment, people, and surrounding areas. Click directly on any hazards you spot!</div>
+</div>
+<div class="counter-row">
+<div class="counter">
+<div class="counter-label">Hazards Found</div>
+<div class="counter-number"><span id="foundCount">0</span> / 6</div>
 </div>
 <div class="counter">
-<div class="counter-text">Hazards Found</div>
-<div class="counter-number"><span id="foundCount">0</span> / <span id="totalCount">8</span></div>
+<div class="counter-label">Total Clicks</div>
+<div class="counter-number" id="clickCount">0</div>
 </div>
-<div class="image-wrapper">
-<img src="https://pt-academy-embeds.pages.dev/firstaidcpd/Gym_Hazard_Scene.webp" alt="Gym Scene" class="gym-image" id="gymImage">
-<div class="hotspot" style="left: 11%; top: 55%;" onclick="foundHazard(this, 1)">
-<div class="hotspot-label">Click to identify</div>
 </div>
-<div class="hotspot" style="left: 8%; top: 85%;" onclick="foundHazard(this, 2)">
-<div class="hotspot-label">Click to identify</div>
-</div>
-<div class="hotspot" style="left: 28%; top: 58%;" onclick="foundHazard(this, 3)">
-<div class="hotspot-label">Click to identify</div>
-</div>
-<div class="hotspot" style="left: 35%; top: 73%;" onclick="foundHazard(this, 4)">
-<div class="hotspot-label">Click to identify</div>
-</div>
-<div class="hotspot" style="left: 53%; top: 60%;" onclick="foundHazard(this, 5)">
-<div class="hotspot-label">Click to identify</div>
-</div>
-<div class="hotspot" style="left: 75%; top: 72%;" onclick="foundHazard(this, 6)">
-<div class="hotspot-label">Click to identify</div>
-</div>
-<div class="hotspot" style="left: 68%; top: 55%;" onclick="foundHazard(this, 7)">
-<div class="hotspot-label">Click to identify</div>
-</div>
-<div class="hotspot" style="left: 88%; top: 65%;" onclick="foundHazard(this, 8)">
-<div class="hotspot-label">Click to identify</div>
-</div>
+<div class="image-wrapper" id="imageWrapper">
+<img src="https://pt-academy-embeds.pages.dev/firstaidcpd/Gym_Hazard_Scene.heic" alt="Gym Scene" class="gym-image" id="gymImage">
+<div class="hazard-zone" id="zone1" style="left: 3%; top: 82%; width: 12%; height: 12%;"></div>
+<div class="hazard-zone" id="zone2" style="left: 72%; top: 68%; width: 10%; height: 15%;"></div>
+<div class="hazard-zone" id="zone3" style="left: 80%; top: 52%; width: 15%; height: 20%;"></div>
+<div class="hazard-zone" id="zone4" style="left: 32%; top: 70%; width: 8%; height: 12%;"></div>
+<div class="hazard-zone" id="zone5" style="left: 48%; top: 52%; width: 12%; height: 18%;"></div>
+<div class="hazard-zone" id="zone6" style="left: 8%; top: 48%; width: 18%; height: 25%;"></div>
 </div>
 <div class="submit-section">
 <button class="submit-btn" id="submitBtn" onclick="submitAnswers()">Submit & See Results →</button>
 </div>
-<div class="feedback-box" id="feedbackBox" style="display: none;">
-<div class="feedback-title">Great Work!</div>
-<div class="feedback-text">You identified <span id="finalCount">0</span> out of 8 hazards. Now watch the reveal video to see all the hazards explained in detail.</div>
-</div>
+<div class="feedback-box" id="feedbackBox" style="display: none;"></div>
 <div class="reveal-notice" id="revealNotice" style="display: none;">
 <div class="reveal-text">⏳ Starting reveal video in 3 seconds...</div>
 </div>
@@ -131,32 +135,99 @@ Your browser does not support the video tag.
 </div>
 </div>
 </div>
+<div class="feedback-toast" id="feedbackToast">
+<div class="toast-title"></div>
+<div class="toast-text"></div>
+</div>
 <script>
 (function() {
 document.documentElement.style.visibility = 'visible';
 document.body.style.visibility = 'visible';
 })();
-let foundHazards = 0;
-const totalHazards = 8;
+const hazards = [
+{id: 'zone1', found: false, name: 'Liquid spill on floor'},
+{id: 'zone2', found: false, name: 'Weights left on floor'},
+{id: 'zone3', found: false, name: 'Improperly stored/damaged equipment'},
+{id: 'zone4', found: false, name: 'Broken glass on floor'},
+{id: 'zone5', found: false, name: 'Member in wrong training area'},
+{id: 'zone6', found: false, name: 'Improper footwear and clothing'}
+];
+let totalClicks = 0;
+let foundCount = 0;
 const introVideo = document.getElementById('introVideo');
+const imageWrapper = document.getElementById('imageWrapper');
+const gymImage = document.getElementById('gymImage');
+const feedbackToast = document.getElementById('feedbackToast');
 introVideo.addEventListener('ended', function() {
 setTimeout(function() {
 document.getElementById('introStage').classList.remove('active');
 document.getElementById('spotterStage').classList.add('active');
 }, 1000);
 });
-window.foundHazard = function(element, hazardNum) {
-if (element.classList.contains('found')) {
-return;
+imageWrapper.addEventListener('click', function(e) {
+const rect = gymImage.getBoundingClientRect();
+const x = ((e.clientX - rect.left) / rect.width) * 100;
+const y = ((e.clientY - rect.top) / rect.height) * 100;
+totalClicks++;
+document.getElementById('clickCount').textContent = totalClicks;
+let foundHazard = false;
+let hazardName = '';
+for (let i = 0; i < hazards.length; i++) {
+const hazard = hazards[i];
+if (hazard.found) continue;
+const zone = document.getElementById(hazard.id);
+const zoneRect = zone.getBoundingClientRect();
+const zoneLeft = ((zoneRect.left - rect.left) / rect.width) * 100;
+const zoneTop = ((zoneRect.top - rect.top) / rect.height) * 100;
+const zoneRight = zoneLeft + parseFloat(zone.style.width);
+const zoneBottom = zoneTop + parseFloat(zone.style.height);
+if (x >= zoneLeft && x <= zoneRight && y >= zoneTop && y <= zoneBottom) {
+foundHazard = true;
+hazard.found = true;
+hazardName = hazard.name;
+foundCount++;
+document.getElementById('foundCount').textContent = foundCount;
+break;
 }
-element.classList.add('found');
-foundHazards++;
-document.getElementById('foundCount').textContent = foundHazards;
-element.querySelector('.hotspot-label').textContent = 'Hazard #' + hazardNum;
-};
+}
+const marker = document.createElement('div');
+marker.className = 'click-marker ' + (foundHazard ? 'correct' : 'incorrect');
+marker.style.left = (x - 2.5) + '%';
+marker.style.top = (y - 5) + '%';
+imageWrapper.appendChild(marker);
+showToast(foundHazard, hazardName);
+});
+function showToast(isCorrect, hazardName) {
+const toast = document.getElementById('feedbackToast');
+const title = toast.querySelector('.toast-title');
+const text = toast.querySelector('.toast-text');
+toast.className = 'feedback-toast show ' + (isCorrect ? 'success' : 'miss');
+title.className = 'toast-title ' + (isCorrect ? 'success' : 'miss');
+if (isCorrect) {
+title.textContent = '✓ Hazard Found!';
+text.textContent = 'You identified: ' + hazardName;
+} else {
+title.textContent = 'Keep Looking';
+text.textContent = 'No hazard at this location. Try another area!';
+}
+setTimeout(function() {
+toast.classList.remove('show');
+}, 3000);
+}
 window.submitAnswers = function() {
-document.getElementById('finalCount').textContent = foundHazards;
-document.getElementById('feedbackBox').style.display = 'block';
+const feedbackBox = document.getElementById('feedbackBox');
+let feedbackHTML = '<div class="feedback-title">';
+if (foundCount === 6) {
+feedbackHTML += '🎉 Perfect Score!</div><div class="feedback-text">Excellent work! You found all 6 hazards in the gym scene. Your attention to detail shows strong safety awareness. Now watch the reveal video to see detailed explanations of each hazard.</div>';
+} else if (foundCount >= 4) {
+feedbackHTML += '👍 Great Work!</div><div class="feedback-text">You found ' + foundCount + ' out of 6 hazards using ' + totalClicks + ' clicks. That\'s a strong performance! The reveal video will show you the hazards you may have missed.</div>';
+} else if (foundCount >= 2) {
+feedbackHTML += '✓ Good Effort!</div><div class="feedback-text">You identified ' + foundCount + ' out of 6 hazards. Spotting hazards takes practice and careful observation. Watch the reveal video to see all the hazards and improve your hazard awareness.</div>';
+} else {
+feedbackHTML += '👀 Keep Learning!</div><div class="feedback-text">You found ' + foundCount + ' out of 6 hazards. Hazard identification is a critical skill that develops with training and experience. The reveal video will show you what to look for.</div>';
+}
+feedbackBox.innerHTML = feedbackHTML;
+feedbackBox.style.display = 'block';
 document.getElementById('submitBtn').disabled = true;
 document.getElementById('submitBtn').textContent = 'Submitted ✓';
 document.getElementById('revealNotice').style.display = 'block';
