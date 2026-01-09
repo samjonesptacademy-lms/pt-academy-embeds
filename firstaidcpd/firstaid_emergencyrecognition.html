@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html style="background: #f8f9fa;">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>First Aid: Emergency Recognition Guide</title>
+<style>
+ * {
+ box-sizing: border-box;
+ margin: 0;
+ padding: 0;
+ }
+ 
+ html, body {
+ background: #f8f9fa;
+ min-height: 100vh;
+ }
+ 
+ body {
+ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+ padding: 20px;
+ opacity: 1;
+ visibility: visible;
+ }
+ 
+ .emergency-container {
+ max-width: 1200px;
+ margin: 0 auto;
+ }
+ 
+ .header {
+ text-align: center;
+ margin-bottom: 40px;
+ }
+ 
+ .title {
+ font-size: 28px;
+ font-weight: 700;
+ color: #333;
+ margin-bottom: 10px;
+ }
+ 
+ .subtitle {
+ font-size: 15px;
+ color: #666;
+ line-height: 1.6;
+ }
+ 
+ .cards-grid {
+ display: grid;
+ grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+ gap: 20px;
+ }
+ 
+ .flip-card {
+ height: 400px;
+ perspective: 1000px;
+ cursor: pointer;
+ }
+ 
+ .flip-card-inner {
+ position: relative;
+ width: 100%;
+ height: 100%;
+ transition: transform 0.6s;
+ transform-style: preserve-3d;
+ }
+ 
+ .flip-card.flipped .flip-card-inner {
+ transform: rotateY(180deg);
+ }
+ 
+ .flip-card-front,
+ .flip-card-back {
+ position: absolute;
+ width: 100%;
+ height: 100%;
+ backface-visibility: hidden;
+ border-radius: 12px;
+ box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+ display: flex;
+ flex-direction: column;
+ justify-content: center;
+ align-items: center;
+ padding: 30px;
+ }
+ 
+ .flip-card-front {
+ background: white;
+ border: 3px solid #e9ecef;
+ }
+ 
+ .flip-card-back {
+ background: linear-gradient(135deg, #C6A906, #e0c040);
+ transform: rotateY(180deg);
+ color: white;
+ overflow-y: auto;
+ }
+ 
+ .card-icon {
+ font-size: 80px;
+ margin-bottom: 20px;
+ }
+ 
+ .card-title {
+ font-size: 24px;
+ font-weight: 700;
+ text-align: center;
+ margin-bottom: 10px;
+ }
+ 
+ .flip-card-front .card-title {
+ color: #333;
+ }
+ 
+ .card-category {
+ font-size: 13px;
+ text-transform: uppercase;
+ letter-spacing: 1px;
+ color: #C6A906;
+ font-weight: 600;
+ margin-bottom: 15px;
+ }
+ 
+ .flip-card-back .card-category {
+ color: #fff;
+ opacity: 0.9;
+ }
+ 
+ .flip-instruction {
+ font-size: 14px;
+ color: #999;
+ margin-top: 20px;
+ text-align: center;
+ }
+ 
+ .back-section {
+ width: 100%;
+ margin-bottom: 20px;
+ }
+ 
+ .back-section:last-child {
+ margin-bottom: 0;
+ }
+ 
+ .section-label {
+ font-size: 12px;
+ font-weight: 700;
+ text-transform: uppercase;
+ letter-spacing: 0.5px;
+ margin-bottom: 10px;
+ padding-bottom: 5px;
+ border-bottom: 2px solid rgba(255,255,255,0.3);
+ }
+ 
+ .section-content {
+ font-size: 14px;
+ line-height: 1.7;
+ }
+ 
+ .recognition-list {
+ margin: 0;
+ padding-left: 20px;
+ }
+ 
+ .recognition-list li {
+ margin-bottom: 8px;
+ }
+ 
+ .severity-badge {
+ display: inline-block;
+ padding: 4px 12px;
+ border-radius: 12px;
+ font-size: 11px;
+ font-weight: 700;
+ text-transform: uppercase;
+ letter-spacing: 0.5px;
+ margin-top: 10px;
+ }
+ 
+ .severity-critical {
+ background: #e74c3c;
+ color: white;
+ }
+ 
+ .severity-urgent {
+ background: #f39c12;
+ color: white;
+ }
+ 
+ .severity-monitor {
+ background: #3498db;
+ color: white;
+ }
+ 
+ @media (max-width: 768px) {
+ .flip-card {
+ height: 450px;
+ }
+ 
+ .cards-grid {
+ grid-template-columns: 1fr;
+ }
+ }
+</style>
+</head>
+<body>
+
+<div class="emergency-container">
+ <div class="header">
+ <h1 class="title">Emergency Recognition Guide</h1>
+ <p class="subtitle">Click each card to see recognition signs, severity indicators, and appropriate response</p>
+ </div>
+ 
+ <div class="cards-grid">
+ <!-- Cardiac Arrest -->
+ <div class="flip-card" onclick="this.classList.toggle('flipped')">
+ <div class="flip-card-inner">
+ <div class="flip-card-front">
+ <div class="card-icon">💔</div>
+ <div class="card-category">Cardiovascular</div>
+ <div class="card-title">Cardiac Arrest</div>
+ <div class="flip-instruction">Click to view recognition signs</div>
+ </div>
+ <div class="flip-card-back">
+ <div class="card-category">Cardiovascular Emergency</div>
+ <div class="card-title">Cardiac Arrest</div>
+ 
+ <div class="back-section">
+ <div class="section-label">Recognition Signs</div>
+ <div class="section-content">
+ <ul class="recognition-list">
+ <li>Sudden collapse and loss of consciousness</li>
+ <li>Unresponsive to verbal or physical stimuli</li>
+ <li>Absent or abnormal breathing (gasping)</li>
+ <li>No signs of circulation</li>
+ </ul>
+ </div>
+ </div>
+ 
+ <div class="back-section">
+ <div class="section-label">Appropriate Response</div>
+ <div class="section-content">
+ Alert designated first aiders and call 999 immediately. If trained personnel and AED available, CPR and defibrillation required. Untrained persons should follow dispatcher instructions.
+ </div>
+ </div>
+ 
+ <div class="severity-badge severity-critical">Life-Threatening</div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- Heart Attack -->
+ <div class="flip-card" onclick="this.classList.toggle('flipped')">
+ <div class="flip-card-inner">
+ <div class="flip-card-front">
+ <div class="card-icon">❤️</div>
+ <div class="card-category">Cardiovascular</div>
+ <div class="card-title">Heart Attack</div>
+ <div class="flip-instruction">Click to view recognition signs</div>
+ </div>
+ <div class="flip-card-back">
+ <div class="card-category">Cardiovascular Emergency</div>
+ <div class="card-title">Heart Attack</div>
+ 
+ <div class="back-section">
+ <div class="section-label">Recognition Signs</div>
+ <div class="section-content">
+ <ul class="recognition-list">
+ <li>Central chest pain, pressure, or tightness</li>
+ <li>Pain radiating to arm, jaw, neck, or back</li>
+ <li>Shortness of breath</li>
+ <li>Nausea, sweating, pale/clammy skin</li>
+ <li>Sense of impending doom</li>
+ </ul>
+ </div>
+ </div>
+ 
+ <div class="back-section">
+ <div class="section-label">Appropriate Response</div>
+ <div class="section-content">
+ Call 999 immediately. Help person into comfortable position (usually sitting). If they have prescribed nitroglycerin, help them access it. Monitor and reassure until help arrives.
+ </div>
+ </div>
+ 
+ <div class="severity-badge severity-critical">Life-Threatening</div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- Asthma Attack -->
+ <div class="flip-card" onclick="this.classList.toggle('flipped')">
+ <div class="flip-card-inner">
+ <div class="flip-card-front">
+ <div class="card-icon">🫁</div>
+ <div class="card-category">Respiratory</div>
+ <div class="card-title">Asthma Attack</div>
+ <div class="flip-instruction">Click to view recognition signs</div>
+ </div>
+ <div class="flip-card-back">
+ <div class="card-category">Respiratory Emergency</div>
+ <div class="card-title">Asthma Attack</div>
+ 
+ <div class="back-section">
+ <div class="section-label">Recognition Signs</div>
+ <div class="section-content">
+ <ul class="recognition-list">
+ <li>Difficulty breathing or shortness of breath</li>
+ <li>Wheezing sound during breathing</li>
+ <li>Coughing, chest tightness</li>
+ <li>Inability to complete sentences</li>
+ <li>Distress and anxiety</li>
+ </ul>
+ </div>
+ </div>
+ 
+ <div class="back-section">
+ <div class="section-label">Appropriate Response</div>
+ <div class="section-content">
+ Help person sit upright and use their inhaler if available. Encourage slow, calm breathing. Call 999 if severe, not improving, or no inhaler available. Monitor closely.
+ </div>
+ </div>
+ 
+ <div class="severity-badge severity-urgent">Urgent</div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- Hypoglycemia -->
+ <div class="flip-card" onclick="this.classList.toggle('flipped')">
+ <div class="flip-card-inner">
+ <div class="flip-card-front">
+ <div class="card-icon">🍬</div>
+ <div class="card-category">Metabolic</div>
+ <div class="card-title">Hypoglycemia</div>
+ <div class="flip-instruction">Click to view recognition signs</div>
+ </div>
+ <div class="flip-card-back">
+ <div class="card-category">Metabolic Emergency</div>
+ <div class="card-title">Hypoglycemia (Low Blood Sugar)</div>
+ 
+ <div class="back-section">
+ <div class="section-label">Recognition Signs</div>
+ <div class="section-content">
+ <ul class="recognition-list">
+ <li>Sudden weakness, shakiness, trembling</li>
+ <li>Sweating despite cool temperature</li>
+ <li>Irritability, confusion, mood changes</li>
+ <li>Dizziness, rapid heartbeat</li>
+ <li>Severe cases: loss of consciousness</li>
+ </ul>
+ </div>
+ </div>
+ 
+ <div class="back-section">
+ <div class="section-label">Appropriate Response</div>
+ <div class="section-content">
+ If conscious, help person access their glucose tablets, juice, or sugary food. Monitor improvement. Call 999 if unconscious, not improving, or seizures occur.
+ </div>
+ </div>
+ 
+ <div class="severity-badge severity-urgent">Urgent</div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- Seizure -->
+ <div class="flip-card" onclick="this.classList.toggle('flipped')">
+ <div class="flip-card-inner">
+ <div class="flip-card-front">
+ <div class="card-icon">⚡</div>
+ <div class="card-category">Neurological</div>
+ <div class="card-title">Seizure</div>
+ <div class="flip-instruction">Click to view recognition signs</div>
+ </div>
+ <div class="flip-card-back">
+ <div class="card-category">Neurological Emergency</div>
+ <div class="card-title">Seizure</div>
+ 
+ <div class="back-section">
+ <div class="section-label">Recognition Signs</div>
+ <div class="section-content">
+ <ul class="recognition-list">
+ <li>Sudden loss of consciousness and falling</li>
+ <li>Rhythmic jerking movements of limbs</li>
+ <li>Rigid muscles or stiffening</li>
+ <li>Loss of bladder/bowel control</li>
+ <li>Confusion or disorientation afterward</li>
+ </ul>
+ </div>
+ </div>
+ 
+ <div class="back-section">
+ <div class="section-label">Appropriate Response</div>
+ <div class="section-content">
+ Protect from injury (move hazards away), cushion head, time the seizure. Do NOT restrain. Call 999 if seizure lasts >5 minutes, repeated seizures, or first-time occurrence.
+ </div>
+ </div>
+ 
+ <div class="severity-badge severity-urgent">Urgent</div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- Severe Bleeding -->
+ <div class="flip-card" onclick="this.classList.toggle('flipped')">
+ <div class="flip-card-inner">
+ <div class="flip-card-front">
+ <div class="card-icon">🩸</div>
+ <div class="card-category">Trauma</div>
+ <div class="card-title">Severe Bleeding</div>
+ <div class="flip-instruction">Click to view recognition signs</div>
+ </div>
+ <div class="flip-card-back">
+ <div class="card-category">Trauma Emergency</div>
+ <div class="card-title">Severe Bleeding</div>
+ 
+ <div class="back-section">
+ <div class="section-label">Recognition Signs</div>
+ <div class="section-content">
+ <ul class="recognition-list">
+ <li>Blood spurting from wound</li>
+ <li>Bleeding not slowing with pressure</li>
+ <li>Blood soaking through dressings</li>
+ <li>Large or deep wounds</li>
+ <li>Signs of shock developing</li>
+ </ul>
+ </div>
+ </div>
+ 
+ <div class="back-section">
+ <div class="section-label">Appropriate Response</div>
+ <div class="section-content">
+ Alert first aiders and call 999. First aid trained responders will apply direct pressure, elevate if possible. Use universal precautions. Monitor for shock.
+ </div>
+ </div>
+ 
+ <div class="severity-badge severity-critical">Life-Threatening</div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- Heat Stroke -->
+ <div class="flip-card" onclick="this.classList.toggle('flipped')">
+ <div class="flip-card-inner">
+ <div class="flip-card-front">
+ <div class="card-icon">🌡️</div>
+ <div class="card-category">Environmental</div>
+ <div class="card-title">Heat Stroke</div>
+ <div class="flip-instruction">Click to view recognition signs</div>
+ </div>
+ <div class="flip-card-back">
+ <div class="card-category">Environmental Emergency</div>
+ <div class="card-title">Heat Stroke</div>
+ 
+ <div class="back-section">
+ <div class="section-label">Recognition Signs</div>
+ <div class="section-content">
+ <ul class="recognition-list">
+ <li>Core temperature above 40°C</li>
+ <li>Altered mental state (confusion, aggression)</li>
+ <li>Hot, dry skin (sweating may cease)</li>
+ <li>Rapid, strong pulse</li>
+ <li>Possible seizures or loss of consciousness</li>
+ </ul>
+ </div>
+ </div>
+ 
+ <div class="back-section">
+ <div class="section-label">Appropriate Response</div>
+ <div class="section-content">
+ Call 999 immediately. Move to cool environment. First aid trained responders will initiate cooling measures. This is life-threatening and requires emergency medical care.
+ </div>
+ </div>
+ 
+ <div class="severity-badge severity-critical">Life-Threatening</div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- Fainting -->
+ <div class="flip-card" onclick="this.classList.toggle('flipped')">
+ <div class="flip-card-inner">
+ <div class="flip-card-front">
+ <div class="card-icon">😵</div>
+ <div class="card-category">Circulation</div>
+ <div class="card-title">Fainting</div>
+ <div class="flip-instruction">Click to view recognition signs</div>
+ </div>
+ <div class="flip-card-back">
+ <div class="card-category">Circulation Issue</div>
+ <div class="card-title">Fainting (Syncope)</div>
+ 
+ <div class="back-section">
+ <div class="section-label">Recognition Signs</div>
+ <div class="section-content">
+ <ul class="recognition-list">
+ <li>Brief loss of consciousness (seconds to minutes)</li>
+ <li>Preceding dizziness, light-headedness, nausea</li>
+ <li>Pale appearance, sweating</li>
+ <li>Usually regains consciousness when lying flat</li>
+ <li>May feel weak afterward</li>
+ </ul>
+ </div>
+ </div>
+ 
+ <div class="back-section">
+ <div class="section-label">Appropriate Response</div>
+ <div class="section-content">
+ Help person lie flat with legs elevated. Ensure airway is clear. Monitor recovery. Call 999 if prolonged unconsciousness, chest pain, fainting during exercise, or first occurrence.
+ </div>
+ </div>
+ 
+ <div class="severity-badge severity-monitor">Monitor Closely</div>
+ </div>
+ </div>
+ </div>
+ </div>
+</div>
+
+<script>
+ (function() {
+ document.documentElement.style.visibility = 'visible';
+ document.body.style.visibility = 'visible';
+ })();
+</script>
+
+</body>
+</html>
