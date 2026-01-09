@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html style="background: #f8f9fa;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Emergency Action Plans</title>
+<style>
+* {box-sizing: border-box; margin: 0; padding: 0;}
+html, body {background: #f8f9fa; min-height: 100vh;}
+body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; opacity: 1; visibility: visible;}
+.eap-container {max-width: 1200px; margin: 0 auto;}
+.cover-screen {background: linear-gradient(135deg, #C6A906 0%, #e0c040 100%); border-radius: 12px; padding: 80px 40px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.15); cursor: pointer; transition: all 0.3s ease; min-height: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center;}
+.cover-screen:hover {transform: translateY(-5px); box-shadow: 0 8px 30px rgba(0,0,0,0.2);}
+.cover-screen.hidden {display: none;}
+.cover-icon {font-size: 120px; margin-bottom: 30px; animation: pulse 2s infinite;}
+.cover-title {font-size: 42px; font-weight: 700; color: white; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);}
+.cover-subtitle {font-size: 20px; color: white; margin-bottom: 40px; opacity: 0.95; line-height: 1.6; max-width: 600px;}
+.cover-button {background: white; color: #C6A906; padding: 18px 50px; border-radius: 30px; font-size: 18px; font-weight: 700; border: none; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;}
+.cover-button:hover {transform: scale(1.05); box-shadow: 0 4px 15px rgba(0,0,0,0.3);}
+.main-content {display: none;}
+.main-content.visible {display: block;}
+@keyframes pulse {
+0%, 100% {transform: scale(1);}
+50% {transform: scale(1.05);}
+}
+.header {text-align: center; margin-bottom: 30px;}
+.title {font-size: 28px; font-weight: 700; color: #333; margin-bottom: 10px;}
+.subtitle {font-size: 15px; color: #666; line-height: 1.6;}
+.content-wrapper {background: white; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); overflow: hidden;}
+.tabs {display: flex; border-bottom: 2px solid #e9ecef;}
+.tab {flex: 1; padding: 18px 20px; text-align: center; font-size: 16px; font-weight: 700; color: #666; cursor: pointer; transition: all 0.3s ease; border-bottom: 3px solid transparent;}
+.tab:hover {background: #f8f9fa; color: #333;}
+.tab.active {color: #C6A906; border-bottom-color: #C6A906; background: #fff8e1;}
+.tab-content {display: none; padding: 30px;}
+.tab-content.active {display: block;}
+.components-grid {display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; max-height: 450px; overflow-y: auto;}
+.component-card {background: #f8f9fa; border-left: 4px solid #C6A906; border-radius: 8px; padding: 15px; transition: all 0.2s ease;}
+.component-card:hover {background: #fff8e1; transform: translateX(3px);}
+.component-title {font-size: 15px; font-weight: 700; color: #C6A906; margin-bottom: 8px;}
+.component-text {font-size: 13px; line-height: 1.7; color: #555;}
+.importance-section {background: #e3f2fd; border-left: 4px solid #2196f3; padding: 20px; border-radius: 8px; margin-top: 20px;}
+.importance-title {font-size: 16px; font-weight: 700; color: #1565c0; margin-bottom: 10px;}
+.importance-text {font-size: 14px; line-height: 1.8; color: #0d47a1;}
+.example-header {background: #fff8e1; padding: 15px 20px; border-radius: 8px; margin-bottom: 20px; border-left: 4px solid #C6A906;}
+.example-title {font-size: 18px; font-weight: 700; color: #C6A906; margin-bottom: 5px;}
+.example-subtitle {font-size: 13px; color: #666;}
+.eap-sections {display: grid; gap: 15px; max-height: 450px; overflow-y: auto;}
+.eap-section {background: #f8f9fa; border-radius: 8px; padding: 18px; border: 2px solid #e9ecef;}
+.section-header {display: flex; align-items: center; gap: 10px; margin-bottom: 12px;}
+.section-icon {font-size: 24px;}
+.section-title {font-size: 16px; font-weight: 700; color: #333;}
+.section-content {font-size: 13px; line-height: 1.7; color: #555;}
+.section-list {margin: 8px 0 0 20px; padding: 0;}
+.section-list li {margin-bottom: 6px;}
+.highlight-box {background: #fff8e1; border: 2px solid #C6A906; padding: 12px; border-radius: 6px; margin-top: 10px;}
+.highlight-text {font-size: 12px; font-weight: 700; color: #333;}
+@media (max-width: 768px) {
+.components-grid {grid-template-columns: 1fr;}
+.tabs {flex-direction: column;}
+}
+</style>
+</head>
+<body>
+<div class="eap-container">
+<div class="cover-screen" onclick="showContent()">
+<div class="cover-icon">🚨</div>
+<div class="cover-title">Emergency Action Plans</div>
+<div class="cover-subtitle">Learn about comprehensive emergency action plans and see an example</div>
+<button class="cover-button">View EAP Guide →</button>
+</div>
+<div class="main-content">
+<div class="header">
+<h1 class="title">Emergency Action Plans (EAPs)</h1>
+<p class="subtitle">Understanding comprehensive emergency planning and implementation</p>
+</div>
+<div class="content-wrapper">
+<div class="tabs">
+<div class="tab active" onclick="switchTab(0)">EAP Components</div>
+<div class="tab" onclick="switchTab(1)">Example EAP</div>
+</div>
+<div class="tab-content active">
+<div class="components-grid">
+<div class="component-card">
+<div class="component-title">🚨 Emergency Identification</div>
+<div class="component-text">Defines what constitutes emergencies requiring plan activation. Categorizes by severity (minor incidents vs. major emergencies) and type (medical, fire, security, structural).</div>
+</div>
+<div class="component-card">
+<div class="component-title">👥 Roles & Responsibilities</div>
+<div class="component-text">Clearly assigns who assesses situations, provides direct care, contacts emergency services, manages bystanders, documents incidents, and communicates with management.</div>
+</div>
+<div class="component-card">
+<div class="component-title">📞 Communication Procedures</div>
+<div class="component-text">Establishes how emergency services are contacted, how staff are alerted, how information is communicated to 999, and how management is notified.</div>
+</div>
+<div class="component-card">
+<div class="component-title">🏥 Emergency Equipment</div>
+<div class="component-text">Documents locations of first aid kits, AEDs, emergency phones, emergency exits, and assembly points. Ensures rapid access during emergencies.</div>
+</div>
+<div class="component-card">
+<div class="component-title">📋 Response Protocols</div>
+<div class="component-text">Provides step-by-step procedures for common emergency types: cardiac arrest, severe bleeding, loss of consciousness, suspected spinal injury, fire evacuation, threatening behaviour.</div>
+</div>
+<div class="component-card">
+<div class="component-title">📝 Documentation Requirements</div>
+<div class="component-text">Specifies what must be documented, when documentation occurs (during or after), who completes it, and where records are stored for compliance and review.</div>
+</div>
+</div>
+<div class="importance-section">
+<div class="importance-title">⚠️ Why EAP Familiarity Matters</div>
+<div class="importance-text">All fitness staff must be thoroughly familiar with facility EAPs through regular training, accessible written copies, periodic drills, and clear understanding of personal roles. During actual emergencies, stress and urgency impair decision-making and memory. Familiar, well-rehearsed protocols enable effective action despite cognitive challenges. Unfamiliarity results in confusion, delays, and potentially harmful improvisation.</div>
+</div>
+</div>
+<div class="tab-content">
+<div class="example-header">
+<div class="example-title">Sample Fitness Facility EAP</div>
+<div class="example-subtitle">Example emergency action plan for a typical gym environment</div>
+</div>
+<div class="eap-sections">
+<div class="eap-section">
+<div class="section-header">
+<div class="section-icon">🚨</div>
+<div class="section-title">Emergency Classification</div>
+</div>
+<div class="section-content">
+<strong>Major Emergencies (Activate Full EAP):</strong>
+<ul class="section-list">
+<li>Cardiac arrest or no breathing</li>
+<li>Severe bleeding or traumatic injury</li>
+<li>Loss of consciousness</li>
+<li>Suspected spinal injury</li>
+<li>Fire or structural damage</li>
+<li>Violent or threatening situation</li>
+</ul>
+<strong>Minor Incidents (First Aid Response):</strong>
+<ul class="section-list">
+<li>Minor cuts, scrapes, bruises</li>
+<li>Muscle strains or minor sprains</li>
+<li>Nosebleeds</li>
+<li>Minor equipment malfunction</li>
+</ul>
+</div>
+</div>
+<div class="eap-section">
+<div class="section-header">
+<div class="section-icon">👥</div>
+<div class="section-title">Assigned Roles</div>
+</div>
+<div class="section-content">
+<strong>First Responder (First qualified staff member on scene):</strong> Assesses situation, provides immediate care, directs others
+<br><br>
+<strong>Emergency Caller (Designated by First Responder):</strong> Calls 999, provides clear information, remains on line, meets emergency services at entrance
+<br><br>
+<strong>Crowd Control (Senior staff member):</strong> Manages bystanders, maintains clear area, prevents video recording, maintains privacy
+<br><br>
+<strong>Equipment Retrieval (Available staff):</strong> Brings first aid kit, AED, emergency equipment as directed
+<br><br>
+<strong>Documentation (Duty Manager):</strong> Completes incident report, notifies management, secures witness statements
+</div>
+</div>
+<div class="eap-section">
+<div class="section-header">
+<div class="section-icon">📞</div>
+<div class="section-title">Emergency Contact Procedure</div>
+</div>
+<div class="section-content">
+<strong>Calling 999:</strong>
+<ol class="section-list">
+<li>State: "Emergency at [Facility Name], [Full Address], [Postcode]"</li>
+<li>Describe emergency type and number of casualties</li>
+<li>Provide specific location within facility</li>
+<li>Follow dispatcher instructions</li>
+<li>Do NOT hang up until told to do so</li>
+<li>Send staff member to meet ambulance at main entrance</li>
+</ol>
+<div class="highlight-box">
+<div class="highlight-text">Emergency Phone Locations: Reception desk, gym floor office, studio control room. Facility Address Card posted at each location.</div>
+</div>
+</div>
+</div>
+<div class="eap-section">
+<div class="section-header">
+<div class="section-icon">🏥</div>
+<div class="section-title">Emergency Equipment Locations</div>
+</div>
+<div class="section-content">
+<ul class="section-list">
+<li><strong>First Aid Kits:</strong> Reception, gym floor (near weights area), studio changing rooms, pool area</li>
+<li><strong>AED (Defibrillator):</strong> Main reception wall (clearly marked), gym floor emergency station</li>
+<li><strong>Emergency Phones:</strong> Reception, gym floor office, studio control</li>
+<li><strong>Emergency Exits:</strong> Main entrance, rear fire exit (near studios), pool area emergency exit, car park exit</li>
+<li><strong>Assembly Point:</strong> Car park far corner, away from building entrance</li>
+</ul>
+<div class="highlight-box">
+<div class="highlight-text">All equipment checked weekly. AED pads expire: [DATE]. Next inspection: [DATE].</div>
+</div>
+</div>
+</div>
+<div class="eap-section">
+<div class="section-header">
+<div class="section-icon">❤️</div>
+<div class="section-title">Cardiac Arrest Protocol</div>
+</div>
+<div class="section-content">
+<ol class="section-list">
+<li>Check for danger, responsiveness, breathing</li>
+<li>Shout for help - activate EAP immediately</li>
+<li>Designate someone to call 999 and retrieve AED</li>
+<li>Begin CPR: 30 compressions, 2 breaths</li>
+<li>Apply AED as soon as available - follow voice prompts</li>
+<li>Continue until emergency services arrive or person recovers</li>
+<li>Rotate CPR providers every 2 minutes if possible</li>
+</ol>
+<div class="highlight-box">
+<div class="highlight-text">DO NOT stop CPR to move the person unless in immediate danger. Quality compressions save lives.</div>
+</div>
+</div>
+</div>
+<div class="eap-section">
+<div class="section-header">
+<div class="section-icon">🔥</div>
+<div class="section-title">Fire Evacuation Protocol</div>
+</div>
+<div class="section-content">
+<ol class="section-list">
+<li>Sound fire alarm immediately upon discovering fire</li>
+<li>Do NOT attempt to fight fire - evacuate immediately</li>
+<li>Staff close doors (do not lock), guide members to nearest exit</li>
+<li>Check toilets, changing rooms, studios for remaining persons</li>
+<li>Proceed to assembly point calmly but quickly</li>
+<li>Duty Manager conducts headcount using sign-in system</li>
+<li>Await fire service - report missing persons immediately</li>
+<li>Do NOT re-enter building until fire service gives all-clear</li>
+</ol>
+</div>
+</div>
+<div class="eap-section">
+<div class="section-header">
+<div class="section-icon">📝</div>
+<div class="section-title">Incident Documentation</div>
+</div>
+<div class="section-content">
+<strong>Complete within 24 hours of incident:</strong>
+<ul class="section-list">
+<li>Incident Report Form (located in duty manager office)</li>
+<li>Date, time, location of incident</li>
+<li>Names of casualty, witnesses, staff involved</li>
+<li>Detailed description of what occurred</li>
+<li>Actions taken and by whom</li>
+<li>Emergency services attendance and advice given</li>
+<li>Outcome and follow-up required</li>
+</ul>
+<div class="highlight-box">
+<div class="highlight-text">Reports stored in locked filing cabinet (Duty Manager office). Notify Regional Manager within 4 hours of major emergencies.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+(function() {
+document.documentElement.style.visibility = 'visible';
+document.body.style.visibility = 'visible';
+})();
+window.showContent = function() {
+document.querySelector('.cover-screen').classList.add('hidden');
+document.querySelector('.main-content').classList.add('visible');
+};
+window.switchTab = function(index) {
+const tabs = document.querySelectorAll('.tab');
+const contents = document.querySelectorAll('.tab-content');
+tabs.forEach((tab, i) => {
+if (i === index) {
+tab.classList.add('active');
+contents[i].classList.add('active');
+} else {
+tab.classList.remove('active');
+contents[i].classList.remove('active');
+}
+});
+};
+</script>
+</body>
+</html>
