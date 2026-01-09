@@ -31,11 +31,25 @@
         
         .section-badge { display: inline-block; background: #C6A906; color: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 700; margin-bottom: 25px; }
         
-        .duty-item { margin-bottom: 30px; background: #f8f9fa; border-radius: 8px; padding: 25px; border-left: 4px solid #C6A906; }
-        .duty-item:last-child { margin-bottom: 0; }
+        .duty-item { margin-bottom: 15px; background: white; border-radius: 8px; border: 2px solid #e9ecef; overflow: hidden; }
+        .duty-item:last-child { margin-bottom: 30px; }
         
-        .duty-title { font-size: 18px; font-weight: 700; color: #333; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
-        .duty-icon { font-size: 22px; }
+        .duty-header { padding: 20px 25px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: all 0.3s ease; background: white; }
+        .duty-header:hover { background: #f8f9fa; }
+        .duty-item.active .duty-header { background: #fffef8; }
+        
+        .duty-title-wrapper { display: flex; align-items: center; gap: 12px; flex: 1; }
+        
+        .duty-title { font-size: 18px; font-weight: 700; color: #333; }
+        .duty-icon { font-size: 22px; flex-shrink: 0; }
+        
+        .accordion-icon { font-size: 20px; color: #C6A906; transition: transform 0.3s ease; flex-shrink: 0; }
+        .duty-item.active .accordion-icon { transform: rotate(180deg); }
+        
+        .duty-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+        .duty-item.active .duty-content { max-height: 1000px; }
+        
+        .duty-body { padding: 0 25px 25px 25px; }
         
         .duty-description { font-size: 16px; color: #333; line-height: 1.8; margin-bottom: 15px; }
         
@@ -83,78 +97,106 @@
                 </p>
 
                 <div class="duty-item">
-                    <div class="duty-title">
-                        <span class="duty-icon">📋</span>
-                        <span>Risk Assessment Requirements</span>
+                    <div class="duty-header" onclick="toggleDuty(this)">
+                        <div class="duty-title-wrapper">
+                            <span class="duty-icon">📋</span>
+                            <span class="duty-title">Risk Assessment Requirements</span>
+                        </div>
+                        <div class="accordion-icon">▼</div>
                     </div>
-                    <div class="duty-description">
-                        Employers must conduct suitable and sufficient risk assessments identifying hazards, evaluating risks, and implementing control measures to minimise harm potential.
-                    </div>
-                    <div class="duty-examples">
-                        <div class="examples-label">In Fitness Facilities, This Includes:</div>
-                        <ul class="examples-list">
-                            <li>Equipment-related injury risks</li>
-                            <li>Environmental hazards (wet floors, trip hazards)</li>
-                            <li>Emergency access and evacuation routes</li>
-                            <li>Specific risks associated with various activities (group exercise, swimming, high-intensity training)</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="duty-item">
-                    <div class="duty-title">
-                        <span class="duty-icon">🚑</span>
-                        <span>Provision of First Aid</span>
-                    </div>
-                    <div class="duty-description">
-                        The Health and Safety (First Aid) Regulations 1981 require employers to provide adequate and appropriate first aid equipment, facilities, and personnel based on workplace risk assessments.
-                    </div>
-                    <div class="duty-examples">
-                        <div class="examples-label">Adequacy Depends On:</div>
-                        <ul class="examples-list">
-                            <li>Workplace size and member numbers</li>
-                            <li>Nature of activities and associated risks</li>
-                            <li>Distance from emergency medical services</li>
-                            <li>Staff working patterns and availability</li>
-                        </ul>
+                    <div class="duty-content">
+                        <div class="duty-body">
+                            <div class="duty-description">
+                                Employers must conduct suitable and sufficient risk assessments identifying hazards, evaluating risks, and implementing control measures to minimise harm potential.
+                            </div>
+                            <div class="duty-examples">
+                                <div class="examples-label">In Fitness Facilities, This Includes:</div>
+                                <ul class="examples-list">
+                                    <li>Equipment-related injury risks</li>
+                                    <li>Environmental hazards (wet floors, trip hazards)</li>
+                                    <li>Emergency access and evacuation routes</li>
+                                    <li>Specific risks associated with various activities (group exercise, swimming, high-intensity training)</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="duty-item">
-                    <div class="duty-title">
-                        <span class="duty-icon">📢</span>
-                        <span>Information and Training</span>
+                    <div class="duty-header" onclick="toggleDuty(this)">
+                        <div class="duty-title-wrapper">
+                            <span class="duty-icon">🚑</span>
+                            <span class="duty-title">Provision of First Aid</span>
+                        </div>
+                        <div class="accordion-icon">▼</div>
                     </div>
-                    <div class="duty-description">
-                        Employers must provide information about first aid arrangements to all staff members.
-                    </div>
-                    <div class="duty-examples">
-                        <div class="examples-label">Required Information Includes:</div>
-                        <ul class="examples-list">
-                            <li>Locations of first aid equipment and facilities</li>
-                            <li>Identities of trained first aiders</li>
-                            <li>Emergency procedures and communication systems</li>
-                            <li>Specific health and safety information relevant to activities or equipment</li>
-                        </ul>
+                    <div class="duty-content">
+                        <div class="duty-body">
+                            <div class="duty-description">
+                                The Health and Safety (First Aid) Regulations 1981 require employers to provide adequate and appropriate first aid equipment, facilities, and personnel based on workplace risk assessments.
+                            </div>
+                            <div class="duty-examples">
+                                <div class="examples-label">Adequacy Depends On:</div>
+                                <ul class="examples-list">
+                                    <li>Workplace size and member numbers</li>
+                                    <li>Nature of activities and associated risks</li>
+                                    <li>Distance from emergency medical services</li>
+                                    <li>Staff working patterns and availability</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="duty-item">
-                    <div class="duty-title">
-                        <span class="duty-icon">🏗️</span>
-                        <span>Safe Working Environment</span>
+                    <div class="duty-header" onclick="toggleDuty(this)">
+                        <div class="duty-title-wrapper">
+                            <span class="duty-icon">📢</span>
+                            <span class="duty-title">Information and Training</span>
+                        </div>
+                        <div class="accordion-icon">▼</div>
                     </div>
-                    <div class="duty-description">
-                        Employers must maintain safe facilities through comprehensive safety management.
+                    <div class="duty-content">
+                        <div class="duty-body">
+                            <div class="duty-description">
+                                Employers must provide information about first aid arrangements to all staff members.
+                            </div>
+                            <div class="duty-examples">
+                                <div class="examples-label">Required Information Includes:</div>
+                                <ul class="examples-list">
+                                    <li>Locations of first aid equipment and facilities</li>
+                                    <li>Identities of trained first aiders</li>
+                                    <li>Emergency procedures and communication systems</li>
+                                    <li>Specific health and safety information relevant to activities or equipment</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                    <div class="duty-examples">
-                        <div class="examples-label">This Requires:</div>
-                        <ul class="examples-list">
-                            <li>Regular equipment maintenance and safety checks</li>
-                            <li>Adequate lighting and clear emergency routes</li>
-                            <li>Appropriate environmental conditions (temperature, ventilation, cleanliness)</li>
-                            <li>Systems for reporting and addressing hazards</li>
-                        </ul>
+                </div>
+
+                <div class="duty-item">
+                    <div class="duty-header" onclick="toggleDuty(this)">
+                        <div class="duty-title-wrapper">
+                            <span class="duty-icon">🏗️</span>
+                            <span class="duty-title">Safe Working Environment</span>
+                        </div>
+                        <div class="accordion-icon">▼</div>
+                    </div>
+                    <div class="duty-content">
+                        <div class="duty-body">
+                            <div class="duty-description">
+                                Employers must maintain safe facilities through comprehensive safety management.
+                            </div>
+                            <div class="duty-examples">
+                                <div class="examples-label">This Requires:</div>
+                                <ul class="examples-list">
+                                    <li>Regular equipment maintenance and safety checks</li>
+                                    <li>Adequate lighting and clear emergency routes</li>
+                                    <li>Appropriate environmental conditions (temperature, ventilation, cleanliness)</li>
+                                    <li>Systems for reporting and addressing hazards</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -175,59 +217,80 @@
                 </p>
 
                 <div class="duty-item">
-                    <div class="duty-title">
-                        <span class="duty-icon">⚠️</span>
-                        <span>Taking Reasonable Care</span>
+                    <div class="duty-header" onclick="toggleDuty(this)">
+                        <div class="duty-title-wrapper">
+                            <span class="duty-icon">⚠️</span>
+                            <span class="duty-title">Taking Reasonable Care</span>
+                        </div>
+                        <div class="accordion-icon">▼</div>
                     </div>
-                    <div class="duty-description">
-                        Employees must take reasonable care for their own health and safety and that of others affected by their actions.
-                    </div>
-                    <div class="duty-examples">
-                        <div class="examples-label">In Fitness Contexts, This Includes:</div>
-                        <ul class="examples-list">
-                            <li>Following safe working practices</li>
-                            <li>Using equipment properly</li>
-                            <li>Maintaining professional competence</li>
-                            <li>Reporting hazards or safety concerns</li>
-                        </ul>
-                    </div>
-                </div>
-
-                <div class="duty-item">
-                    <div class="duty-title">
-                        <span class="duty-icon">🤝</span>
-                        <span>Cooperation with Employers</span>
-                    </div>
-                    <div class="duty-description">
-                        Employees must cooperate with employers regarding health and safety matters.
-                    </div>
-                    <div class="duty-examples">
-                        <div class="examples-label">This Means:</div>
-                        <ul class="examples-list">
-                            <li>Following policies and procedures</li>
-                            <li>Attending required training</li>
-                            <li>Reporting incidents and near-misses</li>
-                            <li>Using provided safety equipment appropriately</li>
-                        </ul>
+                    <div class="duty-content">
+                        <div class="duty-body">
+                            <div class="duty-description">
+                                Employees must take reasonable care for their own health and safety and that of others affected by their actions.
+                            </div>
+                            <div class="duty-examples">
+                                <div class="examples-label">In Fitness Contexts, This Includes:</div>
+                                <ul class="examples-list">
+                                    <li>Following safe working practices</li>
+                                    <li>Using equipment properly</li>
+                                    <li>Maintaining professional competence</li>
+                                    <li>Reporting hazards or safety concerns</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
                 <div class="duty-item">
-                    <div class="duty-title">
-                        <span class="duty-icon">🚫</span>
-                        <span>Not Interfering with Safety Measures</span>
+                    <div class="duty-header" onclick="toggleDuty(this)">
+                        <div class="duty-title-wrapper">
+                            <span class="duty-icon">🤝</span>
+                            <span class="duty-title">Cooperation with Employers</span>
+                        </div>
+                        <div class="accordion-icon">▼</div>
                     </div>
-                    <div class="duty-description">
-                        Employees must not intentionally or recklessly interfere with or misuse safety equipment, systems, or provisions.
+                    <div class="duty-content">
+                        <div class="duty-body">
+                            <div class="duty-description">
+                                Employees must cooperate with employers regarding health and safety matters.
+                            </div>
+                            <div class="duty-examples">
+                                <div class="examples-label">This Means:</div>
+                                <ul class="examples-list">
+                                    <li>Following policies and procedures</li>
+                                    <li>Attending required training</li>
+                                    <li>Reporting incidents and near-misses</li>
+                                    <li>Using provided safety equipment appropriately</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
-                    <div class="duty-examples">
-                        <div class="examples-label">This Includes:</div>
-                        <ul class="examples-list">
-                            <li>Maintaining emergency equipment functionality</li>
-                            <li>Preserving clear emergency exits</li>
-                            <li>Respecting safety protocols</li>
-                            <li>Not tampering with or misusing safety equipment</li>
-                        </ul>
+                </div>
+
+                <div class="duty-item">
+                    <div class="duty-header" onclick="toggleDuty(this)">
+                        <div class="duty-title-wrapper">
+                            <span class="duty-icon">🚫</span>
+                            <span class="duty-title">Not Interfering with Safety Measures</span>
+                        </div>
+                        <div class="accordion-icon">▼</div>
+                    </div>
+                    <div class="duty-content">
+                        <div class="duty-body">
+                            <div class="duty-description">
+                                Employees must not intentionally or recklessly interfere with or misuse safety equipment, systems, or provisions.
+                            </div>
+                            <div class="duty-examples">
+                                <div class="examples-label">This Includes:</div>
+                                <ul class="examples-list">
+                                    <li>Maintaining emergency equipment functionality</li>
+                                    <li>Preserving clear emergency exits</li>
+                                    <li>Respecting safety protocols</li>
+                                    <li>Not tampering with or misusing safety equipment</li>
+                                </ul>
+                            </div>
+                        </div>
                     </div>
                 </div>
 
@@ -257,6 +320,11 @@
             } else {
                 document.getElementById('employeeTab').classList.add('active');
             }
+        }
+
+        function toggleDuty(header) {
+            const item = header.parentElement;
+            item.classList.toggle('active');
         }
 
         function hideLoader() {
