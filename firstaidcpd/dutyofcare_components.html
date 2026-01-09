@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Components of Duty of Care</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8f9fa; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
+        .spinner { width: 50px; height: 50px; border: 4px solid #e9ecef; border-top-color: #C6A906; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { margin-top: 20px; font-size: 16px; color: #666; font-weight: 500; }
+        
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; padding: 20px; background: #f8f9fa; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .title { font-size: 28px; font-weight: 700; color: #333; margin-bottom: 15px; }
+        .description { font-size: 16px; color: #555; line-height: 1.6; max-width: 700px; margin: 0 auto; }
+        
+        .accordion-container { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }
+        
+        .accordion-item { border-bottom: 2px solid #f8f9fa; }
+        .accordion-item:last-child { border-bottom: none; }
+        
+        .accordion-header { padding: 25px 30px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: all 0.3s ease; background: white; }
+        .accordion-header:hover { background: #f8f9fa; }
+        .accordion-item.active .accordion-header { background: #fffef8; }
+        
+        .accordion-title-wrapper { display: flex; align-items: center; gap: 15px; flex: 1; }
+        .accordion-number { background: #C6A906; color: white; width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex-shrink: 0; }
+        .accordion-title { font-size: 20px; font-weight: 700; color: #333; }
+        
+        .accordion-icon { font-size: 24px; color: #C6A906; transition: transform 0.3s ease; flex-shrink: 0; }
+        .accordion-item.active .accordion-icon { transform: rotate(180deg); }
+        
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+        .accordion-item.active .accordion-content { max-height: 1000px; }
+        
+        .accordion-body { padding: 0 30px 30px 85px; }
+        .accordion-text { font-size: 16px; color: #333; line-height: 1.8; }
+        
+        @media (max-width: 768px) {
+            .accordion-header { padding: 20px; }
+            .accordion-body { padding: 0 20px 25px 20px; }
+            .accordion-title-wrapper { flex-direction: column; align-items: flex-start; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading content...</div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Components of Duty of Care</h1>
+            <p class="description">Understanding the three key components that define a fitness professional's duty of care. Click each section to expand.</p>
+        </div>
+
+        <div class="accordion-container">
+            <!-- Component 1: Competence -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title-wrapper">
+                        <div class="accordion-number">1</div>
+                        <div class="accordion-title">Competence</div>
+                    </div>
+                    <div class="accordion-icon">▼</div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <p class="accordion-text">
+                            Fitness professionals must maintain competence appropriate to their roles through proper qualifications, continuing professional development, working within scope of practice, and maintaining professional registrations where required.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Component 2: Reasonable Actions -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title-wrapper">
+                        <div class="accordion-number">2</div>
+                        <div class="accordion-title">Reasonable Actions</div>
+                    </div>
+                    <div class="accordion-icon">▼</div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <p class="accordion-text">
+                            Duty of care requires taking actions that reasonable, competent professionals would take in similar circumstances. This includes recognising emergencies requiring intervention, following established protocols appropriately, seeking help when situations exceed capabilities, and avoiding actions that could worsen conditions.
+                        </p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Component 3: Foreseeability -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title-wrapper">
+                        <div class="accordion-number">3</div>
+                        <div class="accordion-title">Foreseeability</div>
+                    </div>
+                    <div class="accordion-icon">▼</div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <p class="accordion-text">
+                            Professionals must anticipate and prepare for reasonably foreseeable risks. In fitness environments, certain emergencies are foreseeable including exercise-induced cardiac events, musculoskeletal injuries, hypoglycemia in diabetic clients, asthma attacks, and slips, trips, and falls.
+                        </p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAccordion(header) {
+            const item = header.parentElement;
+            item.classList.toggle('active');
+        }
+
+        function hideLoader() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(function() { overlay.style.display = 'none'; }, 500);
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', hideLoader);
+        } else {
+            hideLoader();
+        }
+        setTimeout(hideLoader, 500);
+    </script>
+</body>
+</html>
