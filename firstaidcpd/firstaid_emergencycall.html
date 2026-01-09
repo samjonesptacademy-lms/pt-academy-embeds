@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html style="background: #f8f9fa;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Calling Emergency Services</title>
+<style>
+* {box-sizing: border-box; margin: 0; padding: 0;}
+html, body {background: #f8f9fa; min-height: 100vh;}
+body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; opacity: 1; visibility: visible;}
+.container {max-width: 1000px; margin: 0 auto;}
+.cover-screen {background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); border-radius: 12px; padding: 80px 40px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.15); cursor: pointer; transition: all 0.3s ease; min-height: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center;}
+.cover-screen:hover {transform: translateY(-5px); box-shadow: 0 8px 30px rgba(0,0,0,0.2);}
+.cover-screen.hidden {display: none;}
+.cover-icon {font-size: 120px; margin-bottom: 30px;}
+.cover-title {font-size: 42px; font-weight: 700; color: white; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);}
+.cover-subtitle {font-size: 20px; color: white; margin-bottom: 40px; opacity: 0.95; line-height: 1.6; max-width: 650px;}
+.cover-button {background: white; color: #e74c3c; padding: 18px 50px; border-radius: 30px; font-size: 18px; font-weight: 700; border: none; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;}
+.cover-button:hover {transform: scale(1.05); box-shadow: 0 4px 15px rgba(0,0,0,0.3);}
+.main-content {display: none;}
+.main-content.visible {display: block;}
+.tabs {background: white; border-radius: 12px 12px 0 0; display: flex; box-shadow: 0 2px 12px rgba(0,0,0,0.1); overflow: hidden;}
+.tab {flex: 1; padding: 20px; text-align: center; font-size: 16px; font-weight: 700; color: #666; cursor: pointer; transition: all 0.3s ease; border-bottom: 3px solid transparent;}
+.tab:hover {background: #f8f9fa; color: #333;}
+.tab.active {color: #e74c3c; border-bottom-color: #e74c3c; background: white;}
+.tab-content {display: none; background: white; padding: 30px; border-radius: 0 0 12px 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); min-height: 400px;}
+.tab-content.active {display: block;}
+.accordion-grid {display: grid; gap: 12px;}
+.accordion-item {background: white; border: 2px solid #e9ecef; border-radius: 8px; overflow: hidden; cursor: pointer; transition: all 0.3s ease;}
+.accordion-item:hover {border-color: #e74c3c;}
+.accordion-header {padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; background: #f8f9fa;}
+.accordion-header-left {display: flex; align-items: center; gap: 12px;}
+.accordion-icon {font-size: 28px;}
+.accordion-title {font-size: 18px; font-weight: 700; color: #e74c3c;}
+.expand-icon {font-size: 20px; color: #e74c3c; transition: transform 0.3s ease;}
+.accordion-item.active .expand-icon {transform: rotate(180deg);}
+.accordion-content {max-height: 0; overflow: hidden; transition: max-height 0.4s ease;}
+.accordion-content-inner {padding: 20px;}
+.accordion-text {font-size: 15px; line-height: 1.7; color: #555; margin-bottom: 12px;}
+.accordion-list {padding-left: 20px; margin-top: 10px;}
+.accordion-list li {margin-bottom: 10px; line-height: 1.6; color: #555;}
+.info-box {background: #fff3cd; border-left: 4px solid #ffc107; padding: 15px; border-radius: 6px; margin-top: 15px;}
+.info-box-text {font-size: 14px; color: #856404; line-height: 1.6; font-weight: 600;}
+.checklist-grid {display: grid; gap: 15px; margin-top: 20px;}
+.checklist-item {background: white; border: 2px solid #e9ecef; padding: 15px 20px; border-radius: 8px; display: flex; align-items: flex-start; gap: 15px;}
+.checklist-icon {font-size: 24px; flex-shrink: 0;}
+.checklist-content {flex: 1;}
+.checklist-title {font-size: 16px; font-weight: 700; color: #333; margin-bottom: 5px;}
+.checklist-text {font-size: 14px; line-height: 1.6; color: #666;}
+.video-section {background: #f8f9fa; padding: 25px; border-radius: 12px; border: 2px solid #e9ecef;}
+.video-title {font-size: 22px; font-weight: 700; color: #333; margin-bottom: 15px; text-align: center;}
+.video-subtitle {font-size: 15px; color: #666; text-align: center; margin-bottom: 20px; line-height: 1.6;}
+.video-container {position: relative; padding-bottom: 56.25%; height: 0; overflow: hidden; border-radius: 8px; box-shadow: 0 4px 12px rgba(0,0,0,0.1);}
+.video-container iframe {position: absolute; top: 0; left: 0; width: 100%; height: 100%;}
+.key-points {background: white; padding: 20px; border-radius: 8px; border: 2px solid #C6A906; margin-top: 20px;}
+.key-points-title {font-size: 18px; font-weight: 700; color: #C6A906; margin-bottom: 15px;}
+.key-points-list {padding-left: 20px;}
+.key-points-list li {margin-bottom: 10px; line-height: 1.6; color: #555; font-size: 14px;}
+@media (max-width: 768px) {
+.tabs {flex-direction: column;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="cover-screen" onclick="showContent()">
+<div class="cover-icon">📞</div>
+<div class="cover-title">Calling Emergency Services</div>
+<div class="cover-subtitle">Learn when to call 999, what information to provide, and how to communicate effectively with emergency dispatchers</div>
+<button class="cover-button">Begin Learning →</button>
+</div>
+<div class="main-content">
+<div class="tabs">
+<div class="tab active" onclick="switchTab(0)">When to Call</div>
+<div class="tab" onclick="switchTab(1)">What to Say</div>
+<div class="tab" onclick="switchTab(2)">Example Call</div>
+</div>
+<div class="tab-content active">
+<div class="accordion-grid">
+<div class="accordion-item active" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">🚨</div>
+<div class="accordion-title">Emergency Situations Requiring 999</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">Emergency services should be contacted for:</div>
+<ul class="accordion-list">
+<li>Unconscious or unresponsive individuals</li>
+<li>Chest pain suggesting possible heart attack</li>
+<li>Difficulty breathing not quickly resolved</li>
+<li>Severe bleeding</li>
+<li>Suspected spinal injury</li>
+<li>Seizures lasting longer than 5 minutes or repeated seizures</li>
+<li>Severe head injuries</li>
+<li>Signs of stroke (sudden facial weakness, arm weakness, speech problems)</li>
+<li>Any situation where you are seriously concerned about someone's condition</li>
+<li>When designated first aiders or facility protocols direct emergency service contact</li>
+</ul>
+<div class="info-box">
+<div class="info-box-text">⚠️ If in doubt, call 999. It's better to call and not need them than to delay in a genuine emergency. Dispatchers can help assess the situation.</div>
+</div>
+</div>
+</div>
+</div>
+<div class="accordion-item" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">⏱️</div>
+<div class="accordion-title">Time-Critical Emergencies</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">Some emergencies require immediate 999 contact because every minute matters:</div>
+<ul class="accordion-list">
+<li><strong>Cardiac Arrest:</strong> Person not breathing normally or unresponsive - survival decreases 7-10% per minute without CPR/defibrillation</li>
+<li><strong>Stroke:</strong> Face-Arm-Speech-Time (FAST) - treatment within hours can prevent permanent disability</li>
+<li><strong>Severe Bleeding:</strong> Major blood loss can lead to shock and death within minutes</li>
+<li><strong>Choking:</strong> Complete airway obstruction causes unconsciousness within 2-3 minutes</li>
+<li><strong>Anaphylaxis:</strong> Severe allergic reaction can cause airway closure and death within minutes</li>
+</ul>
+<div class="info-box">
+<div class="info-box-text">💡 For these time-critical emergencies, call 999 immediately while beginning appropriate first aid. Don't delay the call to provide treatment.</div>
+</div>
+</div>
+</div>
+</div>
+<div class="accordion-item" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">🤔</div>
+<div class="accordion-title">When You're Unsure</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">If you're uncertain whether a situation requires emergency services:</div>
+<ul class="accordion-list">
+<li>Call 999 and describe the situation - dispatchers are trained to assess urgency</li>
+<li>Consider: "Would I want someone to call for me in this situation?"</li>
+<li>Trust your instincts - if something feels seriously wrong, call</li>
+<li>Remember facility protocols may require 999 contact for specific situations</li>
+<li>Don't worry about "wasting" emergency services time - they would rather assess than miss emergencies</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="tab-content">
+<div class="checklist-grid">
+<div class="checklist-item">
+<div class="checklist-icon">📍</div>
+<div class="checklist-content">
+<div class="checklist-title">Location Information</div>
+<div class="checklist-text"><strong>What to provide:</strong> Full facility address including building name, specific location within facility (gym floor, studio 2, changing rooms), best entry point for responders, parking information if relevant. Be as specific as possible - "Men's changing room near pool entrance" is better than just "changing rooms".</div>
+</div>
+</div>
+<div class="checklist-item">
+<div class="checklist-icon">👤</div>
+<div class="checklist-content">
+<div class="checklist-title">Casualty Information</div>
+<div class="checklist-text"><strong>What to provide:</strong> Number of casualties, brief description of what happened, whether casualty is conscious and breathing, visible injuries or symptoms, approximate age if known. Example: "One male casualty, approximately 45 years old, collapsed during exercise, unconscious but breathing, no visible injuries."</div>
+</div>
+</div>
+<div class="checklist-item">
+<div class="checklist-icon">🩹</div>
+<div class="checklist-content">
+<div class="checklist-title">Current Actions</div>
+<div class="checklist-text"><strong>What to provide:</strong> Whether anyone is providing first aid, what is currently being done. Example: "Staff member providing CPR" or "Casualty in recovery position, being monitored." This helps dispatchers know what support you need and what's already happening.</div>
+</div>
+</div>
+<div class="checklist-item">
+<div class="checklist-icon">📱</div>
+<div class="checklist-content">
+<div class="checklist-title">Following Dispatcher Instructions</div>
+<div class="checklist-text">Emergency services dispatchers may provide instructions for actions to take while awaiting responder arrival. Follow these instructions carefully and confirm understanding. Dispatchers can talk untrained persons through CPR and other interventions if necessary. They remain on the line to provide ongoing guidance.</div>
+</div>
+</div>
+<div class="checklist-item">
+<div class="checklist-icon">⏳</div>
+<div class="checklist-content">
+<div class="checklist-title">Maintaining Communication</div>
+<div class="checklist-text">Remain on the line until told to hang up. This allows dispatchers to provide ongoing guidance and update responding crews if situations change. If you must hang up (to provide care or for safety), ensure someone knows you contacted emergency services and what instructions were provided. Have someone meet responders at the entrance.</div>
+</div>
+</div>
+</div>
+<div class="info-box" style="margin-top: 20px;">
+<div class="info-box-text">💡 <strong>Pro Tip:</strong> Speak clearly and calmly. The dispatcher needs to understand you. Take a breath before speaking if you feel panicked. It's okay to say "I'm not sure" - they can work with that.</div>
+</div>
+</div>
+<div class="tab-content">
+<div class="video-section">
+<div class="video-title">Example 999 Emergency Call</div>
+<div class="video-subtitle">Listen to this example call for a medical emergency at a leisure centre in Birmingham. Notice how the caller provides clear information and follows dispatcher instructions.</div>
+<div class="video-container">
+<iframe width="560" height="315" src="https://www.youtube.com/embed/_jZ8Y2SRHcg?si=qTNkG5--10n-PLFU" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+</div>
+</div>
+<div class="key-points">
+<div class="key-points-title">Key Points from the Example Call</div>
+<ul class="key-points-list">
+<li><strong>Clear Location:</strong> The caller provides the full facility name and specific location within the building</li>
+<li><strong>Casualty Status:</strong> Immediate information about consciousness and breathing status</li>
+<li><strong>What Happened:</strong> Brief explanation of the incident (collapsed during exercise)</li>
+<li><strong>Current Actions:</strong> Confirms first aid is being provided and by whom</li>
+<li><strong>Following Instructions:</strong> The caller listens to and acknowledges dispatcher guidance</li>
+<li><strong>Remaining Calm:</strong> Despite the emergency, information is conveyed clearly and systematically</li>
+<li><strong>Meeting Responders:</strong> Arrangements made for someone to meet ambulance at entrance</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+(function() {
+document.documentElement.style.visibility = 'visible';
+document.body.style.visibility = 'visible';
+})();
+window.showContent = function() {
+document.querySelector('.cover-screen').classList.add('hidden');
+document.querySelector('.main-content').classList.add('visible');
+setTimeout(function() {
+const firstAccordion = document.querySelector('.accordion-item');
+const firstContent = firstAccordion.querySelector('.accordion-content');
+firstContent.style.maxHeight = firstContent.scrollHeight + 'px';
+}, 100);
+};
+window.switchTab = function(index) {
+const tabs = document.querySelectorAll('.tab');
+const contents = document.querySelectorAll('.tab-content');
+tabs.forEach((tab, i) => {
+if (i === index) {
+tab.classList.add('active');
+contents[i].classList.add('active');
+} else {
+tab.classList.remove('active');
+contents[i].classList.remove('active');
+}
+});
+};
+window.toggleAccordion = function(item) {
+const content = item.querySelector('.accordion-content');
+const isActive = item.classList.contains('active');
+if (isActive) {
+item.classList.remove('active');
+content.style.maxHeight = null;
+} else {
+item.classList.add('active');
+content.style.maxHeight = content.scrollHeight + 'px';
+}
+};
+</script>
+</body>
+</html>
