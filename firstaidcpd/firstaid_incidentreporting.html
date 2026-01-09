@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html style="background: #f8f9fa;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Incident Documentation</title>
+<style>
+* {box-sizing: border-box; margin: 0; padding: 0;}
+html, body {background: #f8f9fa; min-height: 100vh;}
+body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; opacity: 1; visibility: visible;}
+.doc-container {max-width: 1200px; margin: 0 auto;}
+.cover-screen {background: linear-gradient(135deg, #2196f3 0%, #1976d2 100%); border-radius: 12px; padding: 80px 40px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.15); cursor: pointer; transition: all 0.3s ease; min-height: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center;}
+.cover-screen:hover {transform: translateY(-5px); box-shadow: 0 8px 30px rgba(0,0,0,0.2);}
+.cover-screen.hidden {display: none;}
+.cover-icon {font-size: 120px; margin-bottom: 30px;}
+.cover-title {font-size: 42px; font-weight: 700; color: white; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);}
+.cover-subtitle {font-size: 20px; color: white; margin-bottom: 40px; opacity: 0.95; line-height: 1.6; max-width: 600px;}
+.cover-button {background: white; color: #2196f3; padding: 18px 50px; border-radius: 30px; font-size: 18px; font-weight: 700; border: none; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;}
+.cover-button:hover {transform: scale(1.05); box-shadow: 0 4px 15px rgba(0,0,0,0.3);}
+.main-content {display: none;}
+.main-content.visible {display: block;}
+.tabs {background: white; border-radius: 12px 12px 0 0; display: flex; box-shadow: 0 2px 12px rgba(0,0,0,0.1); overflow: hidden;}
+.tab {flex: 1; padding: 20px; text-align: center; font-size: 16px; font-weight: 700; color: #666; cursor: pointer; transition: all 0.3s ease; border-bottom: 3px solid transparent;}
+.tab:hover {background: #f8f9fa; color: #333;}
+.tab.active {color: #2196f3; border-bottom-color: #2196f3; background: white;}
+.tab-content {display: none; background: white; padding: 30px; border-radius: 0 0 12px 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); min-height: 500px;}
+.tab-content.active {display: block;}
+.content-grid {display: grid; gap: 20px;}
+.info-card {background: #f8f9fa; border-left: 4px solid #2196f3; padding: 20px; border-radius: 8px;}
+.card-title {font-size: 18px; font-weight: 700; color: #2196f3; margin-bottom: 10px;}
+.card-text {font-size: 15px; line-height: 1.7; color: #555;}
+.practices-grid {display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 15px; margin-top: 20px;}
+.practice-item {background: white; border: 2px solid #e9ecef; padding: 18px; border-radius: 8px; transition: all 0.2s ease;}
+.practice-item:hover {border-color: #2196f3; transform: translateY(-2px);}
+.practice-icon {font-size: 32px; margin-bottom: 10px;}
+.practice-title {font-size: 16px; font-weight: 700; color: #333; margin-bottom: 8px;}
+.practice-text {font-size: 14px; line-height: 1.6; color: #666;}
+.report-example {background: white; border: 3px solid #2196f3; padding: 30px; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); max-width: 800px; margin: 0 auto; position: relative;}
+.report-header {background: #2196f3; color: white; padding: 20px; margin: -30px -30px 20px -30px; border-radius: 9px 9px 0 0;}
+.report-title {font-size: 24px; font-weight: 700; margin-bottom: 5px;}
+.report-subtitle {font-size: 14px; opacity: 0.9;}
+.form-section {margin-bottom: 25px; position: relative;}
+.section-label {font-size: 12px; font-weight: 700; color: #2196f3; text-transform: uppercase; margin-bottom: 8px; display: block;}
+.form-field {background: #f8f9fa; padding: 12px; border-radius: 6px; border: 2px solid #e9ecef; font-size: 14px; color: #333; line-height: 1.6;}
+.info-hotspot {position: absolute; top: 0; right: 0; width: 32px; height: 32px; border-radius: 50%; background: #C6A906; color: white; border: none; font-size: 18px; font-weight: 700; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s ease; animation: pulse 2s infinite;}
+.info-hotspot:hover {background: #e0c040; transform: scale(1.1); animation: none;}
+@keyframes pulse {
+0%, 100% {box-shadow: 0 0 0 0 rgba(198, 169, 6, 0.4);}
+50% {box-shadow: 0 0 0 10px rgba(198, 169, 6, 0);}
+}
+.explanation-popup {display: none; position: absolute; top: 35px; right: 0; background: white; border: 3px solid #C6A906; padding: 15px; border-radius: 8px; box-shadow: 0 4px 20px rgba(0,0,0,0.2); z-index: 100; width: 300px; animation: slideDown 0.3s ease;}
+.explanation-popup.active {display: block;}
+.explanation-title {font-size: 14px; font-weight: 700; color: #C6A906; margin-bottom: 8px;}
+.explanation-text {font-size: 13px; line-height: 1.6; color: #333;}
+@keyframes slideDown {
+from {opacity: 0; transform: translateY(-10px);}
+to {opacity: 1; transform: translateY(0);}
+}
+.instruction-box {background: #fff8e1; border: 2px solid #C6A906; padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: center;}
+.instruction-text {font-size: 15px; color: #333; font-weight: 600;}
+@media (max-width: 768px) {
+.tabs {flex-direction: column;}
+.practices-grid {grid-template-columns: 1fr;}
+.explanation-popup {width: 250px; right: auto; left: 0;}
+}
+</style>
+</head>
+<body>
+<div class="doc-container">
+<div class="cover-screen" onclick="showContent()">
+<div class="cover-icon">📝</div>
+<div class="cover-title">Incident Documentation</div>
+<div class="cover-subtitle">Learn proper incident reporting procedures and explore an example incident report</div>
+<button class="cover-button">Begin Learning →</button>
+</div>
+<div class="main-content">
+<div class="tabs">
+<div class="tab active" onclick="switchTab(0)">Why Document?</div>
+<div class="tab" onclick="switchTab(1)">Best Practices</div>
+<div class="tab" onclick="switchTab(2)">Example Report</div>
+</div>
+<div class="tab-content active">
+<div class="content-grid">
+<div class="info-card">
+<div class="card-title">🛡️ Legal Protection</div>
+<div class="card-text">Proper documentation protects both organisations and staff by creating an objective record of events and responses. In the event of legal claims or disputes, comprehensive incident reports provide evidence of appropriate actions taken and duty of care fulfilled.</div>
+</div>
+<div class="info-card">
+<div class="card-title">📚 Learning Opportunities</div>
+<div class="card-text">Incident reports enable organisations to learn from events and prevent recurrence. Analysing patterns in incidents reveals training needs, hazard identification requirements, and procedural improvements necessary to enhance safety.</div>
+</div>
+<div class="info-card">
+<div class="card-title">⚖️ Regulatory Compliance</div>
+<div class="card-text">Health and safety regulations require documentation of workplace incidents. Failure to maintain proper records can result in regulatory penalties, license restrictions, and legal consequences for organisations and management.</div>
+</div>
+<div class="info-card">
+<div class="card-title">💼 Insurance Support</div>
+<div class="card-text">Insurance claims for incidents require comprehensive documentation. Detailed incident reports support claim processing, demonstrate risk management efforts, and may influence premium calculations and coverage terms.</div>
+</div>
+<div class="info-card">
+<div class="card-title">📊 Trend Monitoring</div>
+<div class="card-text">Systematic documentation enables identification of trends and patterns indicating systemic issues. Regular review of incident reports reveals recurring problems requiring organisational attention, policy changes, or facility modifications.</div>
+</div>
+</div>
+</div>
+<div class="tab-content">
+<div class="practices-grid">
+<div class="practice-item">
+<div class="practice-icon">⏱️</div>
+<div class="practice-title">Timeliness</div>
+<div class="practice-text">Complete reports as soon as possible while details remain clear. Memory fades rapidly - incidents documented hours or days later lose accuracy and critical details.</div>
+</div>
+<div class="practice-item">
+<div class="practice-icon">🎯</div>
+<div class="practice-title">Objectivity</div>
+<div class="practice-text">Record facts observed rather than assumptions, interpretations, or blame. Use neutral language describing what you saw, heard, and did - not what you think happened or why.</div>
+</div>
+<div class="practice-item">
+<div class="practice-icon">🔍</div>
+<div class="practice-title">Specificity</div>
+<div class="practice-text">Provide detailed descriptions rather than vague generalisations. Instead of "client fell," write "client lost balance while dismounting treadmill, fell backwards, landing on right hip."</div>
+</div>
+<div class="practice-item">
+<div class="practice-icon">📋</div>
+<div class="practice-title">Comprehensiveness</div>
+<div class="practice-text">Include all relevant information even if seeming minor. Environmental factors, equipment conditions, witnesses present, and exact sequences of events may prove crucial later.</div>
+</div>
+<div class="practice-item">
+<div class="practice-icon">✍️</div>
+<div class="practice-title">Legibility</div>
+<div class="practice-text">Ensure handwritten reports are clearly readable or use typed documentation. Illegible reports cannot fulfill their protective and learning functions - clarity is essential.</div>
+</div>
+<div class="practice-item">
+<div class="practice-icon">🔒</div>
+<div class="practice-title">Confidentiality</div>
+<div class="practice-text">Store reports securely, limit access to authorised personnel only, and comply with GDPR. Never discuss incidents casually or share details on social media - this violates legal and professional standards.</div>
+</div>
+</div>
+</div>
+<div class="tab-content">
+<div class="instruction-box">
+<div class="instruction-text">💡 Click the gold ? buttons to learn what should be included in each section</div>
+</div>
+<div class="report-example">
+<div class="report-header">
+<div class="report-title">Incident Report Form</div>
+<div class="report-subtitle">FitLife Gym & Fitness Centre</div>
+</div>
+<div class="form-section">
+<label class="section-label">Date, Time & Location</label>
+<div class="form-field">
+<strong>Date:</strong> 15 January 2025<br>
+<strong>Time:</strong> 14:35<br>
+<strong>Location:</strong> Weights area, near squat racks
+</div>
+<button class="info-hotspot" onclick="toggleExplanation(event, 'exp1')">?</button>
+<div class="explanation-popup" id="exp1">
+<div class="explanation-title">Why This Matters</div>
+<div class="explanation-text">Precise timing helps establish facts, correlate with CCTV footage, verify staff presence, and understand facility conditions (busy periods, lighting, etc.). Specific location enables hazard identification and environment assessment.</div>
+</div>
+</div>
+<div class="form-section">
+<label class="section-label">Individual(s) Involved</label>
+<div class="form-field">
+<strong>Name:</strong> James Mitchell<br>
+<strong>Membership #:</strong> FL-4892<br>
+<strong>Contact:</strong> 07789 456 123<br>
+<strong>Age:</strong> 34
+</div>
+<button class="info-hotspot" onclick="toggleExplanation(event, 'exp2')">?</button>
+<div class="explanation-popup" id="exp2">
+<div class="explanation-title">Why This Matters</div>
+<div class="explanation-text">Accurate identification enables follow-up contact, insurance claims processing, and medical record correlation if needed. Membership details verify the individual's status and any pre-existing conditions noted during screening.</div>
+</div>
+</div>
+<div class="form-section">
+<label class="section-label">Incident Description</label>
+<div class="form-field">
+Member was performing barbell back squats with 100kg. During the third repetition of his second set, he lost balance in the bottom position and fell backwards. The weight fell from his shoulders onto the safety bars of the squat rack. Member landed in a seated position on the floor.
+</div>
+<button class="info-hotspot" onclick="toggleExplanation(event, 'exp3')">?</button>
+<div class="explanation-popup" id="exp3">
+<div class="explanation-title">Why This Matters</div>
+<div class="explanation-text">Detailed, objective description enables understanding of what actually occurred. Include specific details: exercise being performed, weight used, exact sequence of events, and how the incident concluded. Avoid assumptions about causes - describe only what was observed.</div>
+</div>
+</div>
+<div class="form-section">
+<label class="section-label">Witnesses Present</label>
+<div class="form-field">
+<strong>Witness 1:</strong> Sarah Thompson (Staff - Gym Floor Supervisor)<br>
+<strong>Witness 2:</strong> Marcus Reid (Member FL-3021)<br>
+Both witnesses observed the incident from approximately 3 meters away.
+</div>
+<button class="info-hotspot" onclick="toggleExplanation(event, 'exp4')">?</button>
+<div class="explanation-popup" id="exp4">
+<div class="explanation-title">Why This Matters</div>
+<div class="explanation-text">Witness statements corroborate reports and provide additional perspectives. Record names and contact information immediately - witnesses may be difficult to identify later. Note their position/proximity to assess observation quality.</div>
+</div>
+</div>
+<div class="form-section">
+<label class="section-label">Injuries / Symptoms</label>
+<div class="form-field">
+Member reported lower back discomfort (pain level 4/10) and minor bruising to tailbone area. No visible injuries observed. Member was able to stand and walk unassisted. Declined offer of ambulance/medical attention.
+</div>
+<button class="info-hotspot" onclick="toggleExplanation(event, 'exp5')">?</button>
+<div class="explanation-popup" id="exp5">
+<div class="explanation-title">Why This Matters</div>
+<div class="explanation-text">Document symptoms reported by the individual and injuries observed by responders. Use their words for pain descriptions and note pain scale ratings. Record refusal of medical attention - this is crucial legal documentation protecting the organisation if injuries worsen later.</div>
+</div>
+</div>
+<div class="form-section">
+<label class="section-label">Actions Taken</label>
+<div class="form-field">
+1. Gym supervisor Sarah Thompson responded immediately<br>
+2. Member assisted to seated position on nearby bench<br>
+3. First aid assessment conducted - no signs of serious injury<br>
+4. Cold pack offered for bruising (declined by member)<br>
+5. Member advised to seek medical attention if symptoms worsen<br>
+6. Member rested for 10 minutes before leaving facility independently
+</div>
+<button class="info-hotspot" onclick="toggleExplanation(event, 'exp6')">?</button>
+<div class="explanation-popup" id="exp6">
+<div class="explanation-title">Why This Matters</div>
+<div class="explanation-text">Step-by-step record of response demonstrates appropriate care and duty of care fulfillment. Shows training application, proper procedures followed, and offers of assistance. Timeline of actions helps establish facts if questions arise later.</div>
+</div>
+</div>
+<div class="form-section">
+<label class="section-label">Equipment / Environmental Factors</label>
+<div class="form-field">
+Squat rack safety bars functioned correctly - caught falling weight as designed. Equipment inspected post-incident - no faults identified. Flooring dry and clear of obstacles. Adequate lighting present. Normal gym operating hours with moderate activity levels.
+</div>
+<button class="info-hotspot" onclick="toggleExplanation(event, 'exp7')">?</button>
+<div class="explanation-popup" id="exp7">
+<div class="explanation-title">Why This Matters</div>
+<div class="explanation-text">Environmental documentation identifies contributing factors and demonstrates proper facility maintenance. Equipment function verification shows safety systems working correctly. This protects against claims of negligence regarding facility conditions or equipment maintenance.</div>
+</div>
+</div>
+<div class="form-section">
+<label class="section-label">Follow-Up & Outcome</label>
+<div class="form-field">
+Member contacted by phone 24 hours post-incident (16 Jan, 10:00). Reported mild soreness but no worsening symptoms. Has appointment with GP scheduled for 18 Jan as precaution. Member expressed no concerns regarding facility or equipment. Incident reviewed in staff meeting 17 Jan - no procedural changes required.
+</div>
+<button class="info-hotspot" onclick="toggleExplanation(event, 'exp8')">?</button>
+<div class="explanation-popup" id="exp8">
+<div class="explanation-title">Why This Matters</div>
+<div class="explanation-text">Follow-up demonstrates ongoing care and concern. Documents outcome and resolution. Shows organisational learning through staff review. If the individual develops complications later, follow-up contact provides additional protection showing continued duty of care.</div>
+</div>
+</div>
+<div class="form-section" style="border-top: 2px solid #e9ecef; padding-top: 20px; margin-top: 30px;">
+<div class="form-field" style="background: #f8f9fa;">
+<strong>Report Completed By:</strong> Sarah Thompson, Gym Floor Supervisor<br>
+<strong>Date Completed:</strong> 15 January 2025, 15:10<br>
+<strong>Signature:</strong><em>S. Thompson</em>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+(function() {
+document.documentElement.style.visibility = 'visible';
+document.body.style.visibility = 'visible';
+})();
+window.showContent = function() {
+document.querySelector('.cover-screen').classList.add('hidden');
+document.querySelector('.main-content').classList.add('visible');
+};
+window.switchTab = function(index) {
+const tabs = document.querySelectorAll('.tab');
+const contents = document.querySelectorAll('.tab-content');
+tabs.forEach((tab, i) => {
+if (i === index) {
+tab.classList.add('active');
+contents[i].classList.add('active');
+} else {
+tab.classList.remove('active');
+contents[i].classList.remove('active');
+}
+});
+};
+window.toggleExplanation = function(event, id) {
+event.stopPropagation();
+const allPopups = document.querySelectorAll('.explanation-popup');
+const thisPopup = document.getElementById(id);
+allPopups.forEach(popup => {
+if (popup.id !== id) {
+popup.classList.remove('active');
+}
+});
+thisPopup.classList.toggle('active');
+};
+document.addEventListener('click', function(e) {
+if (!e.target.classList.contains('info-hotspot')) {
+document.querySelectorAll('.explanation-popup').forEach(popup => {
+popup.classList.remove('active');
+});
+}
+});
+</script>
+</body>
+</html>
