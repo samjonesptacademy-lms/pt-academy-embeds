@@ -1,0 +1,383 @@
+<!DOCTYPE html>
+<html style="background: #f8f9fa;">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>First Aid: Scope of Practice & Professional Boundaries</title>
+<style>
+ * {
+ box-sizing: border-box;
+ margin: 0;
+ padding: 0;
+ }
+ 
+ html, body {
+ background: #f8f9fa;
+ min-height: 100vh;
+ }
+ 
+ body {
+ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+ padding: 20px;
+ opacity: 1;
+ visibility: visible;
+ }
+ 
+ .scope-container {
+ max-width: 1000px;
+ margin: 0 auto;
+ }
+ 
+ .header {
+ text-align: center;
+ margin-bottom: 30px;
+ }
+ 
+ .title {
+ font-size: 28px;
+ font-weight: 700;
+ color: #333;
+ margin-bottom: 10px;
+ }
+ 
+ .subtitle {
+ font-size: 15px;
+ color: #666;
+ line-height: 1.6;
+ }
+ 
+ .categories-grid {
+ display: grid;
+ gap: 20px;
+ }
+ 
+ .category-card {
+ background: white;
+ border-radius: 12px;
+ overflow: hidden;
+ box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+ border: 2px solid #e9ecef;
+ }
+ 
+ .category-card.can-do {
+ border-left: 6px solid #4caf50;
+ }
+ 
+ .category-card.cannot-do {
+ border-left: 6px solid #e74c3c;
+ }
+ 
+ .category-card.uncertain {
+ border-left: 6px solid #ffc107;
+ }
+ 
+ .category-header {
+ padding: 20px 25px;
+ cursor: pointer;
+ background: #fafafa;
+ display: flex;
+ justify-content: space-between;
+ align-items: center;
+ transition: background 0.3s ease;
+ }
+ 
+ .category-header:hover {
+ background: #f0f0f0;
+ }
+ 
+ .category-card.active .category-header {
+ background: #fff8e1;
+ }
+ 
+ .header-left {
+ display: flex;
+ align-items: center;
+ gap: 15px;
+ }
+ 
+ .category-icon {
+ font-size: 32px;
+ flex-shrink: 0;
+ }
+ 
+ .category-title {
+ font-size: 20px;
+ font-weight: 700;
+ color: #333;
+ }
+ 
+ .expand-icon {
+ font-size: 20px;
+ color: #C6A906;
+ transition: transform 0.3s ease;
+ }
+ 
+ .category-card.active .expand-icon {
+ transform: rotate(180deg);
+ }
+ 
+ .category-content {
+ max-height: 0;
+ overflow: hidden;
+ transition: max-height 0.4s ease;
+ }
+ 
+ .category-content-inner {
+ padding: 25px;
+ }
+ 
+ .intro-text {
+ font-size: 15px;
+ line-height: 1.8;
+ color: #555;
+ margin-bottom: 20px;
+ padding: 15px;
+ background: #f8f9fa;
+ border-left: 4px solid #C6A906;
+ border-radius: 6px;
+ }
+ 
+ .items-list {
+ display: grid;
+ gap: 10px;
+ }
+ 
+ .list-item {
+ display: flex;
+ align-items: flex-start;
+ gap: 12px;
+ padding: 12px;
+ background: #f8f9fa;
+ border-radius: 8px;
+ transition: all 0.2s ease;
+ }
+ 
+ .list-item:hover {
+ background: #f0f0f0;
+ transform: translateX(3px);
+ }
+ 
+ .item-icon {
+ font-size: 20px;
+ flex-shrink: 0;
+ margin-top: 2px;
+ }
+ 
+ .can-do .item-icon {
+ color: #4caf50;
+ }
+ 
+ .cannot-do .item-icon {
+ color: #e74c3c;
+ }
+ 
+ .uncertain .item-icon {
+ color: #ffc107;
+ }
+ 
+ .item-text {
+ font-size: 15px;
+ line-height: 1.6;
+ color: #333;
+ flex: 1;
+ }
+ 
+ @media (max-width: 768px) {
+ .category-title {
+ font-size: 18px;
+ }
+ 
+ .category-icon {
+ font-size: 28px;
+ }
+ }
+</style>
+</head>
+<body>
+
+<div class="scope-container">
+ <div class="header">
+ <h1 class="title">Scope of Practice & Professional Boundaries</h1>
+ <p class="subtitle">Understanding what you can and should do, what requires specific training, and when to seek help</p>
+ </div>
+ 
+ <div class="categories-grid">
+ <!-- CAN AND SHOULD DO -->
+ <div class="category-card can-do active" onclick="toggleCategory(this)">
+ <div class="category-header">
+ <div class="header-left">
+ <div class="category-icon">✅</div>
+ <div class="category-title">What You CAN and SHOULD Do</div>
+ </div>
+ <div class="expand-icon">▼</div>
+ </div>
+ <div class="category-content">
+ <div class="category-content-inner">
+ <div class="intro-text">
+ These actions are appropriate and expected for fitness professionals without regulated first aid qualifications. You can provide valuable assistance within these boundaries.
+ </div>
+ <div class="items-list">
+ <div class="list-item">
+ <div class="item-icon">✓</div>
+ <div class="item-text">Recognise signs of medical emergencies</div>
+ </div>
+ <div class="list-item">
+ <div class="item-icon">✓</div>
+ <div class="item-text">Follow facility emergency action plans</div>
+ </div>
+ <div class="list-item">
+ <div class="item-icon">✓</div>
+ <div class="item-text">Alert designated first aiders</div>
+ </div>
+ <div class="list-item">
+ <div class="item-icon">✓</div>
+ <div class="item-text">Call emergency services when needed</div>
+ </div>
+ <div class="list-item">
+ <div class="item-icon">✓</div>
+ <div class="item-text">Provide clear information using frameworks like LIONEL</div>
+ </div>
+ <div class="list-item">
+ <div class="item-icon">✓</div>
+ <div class="item-text">Manage bystanders and maintain scene safety</div>
+ </div>
+ <div class="list-item">
+ <div class="item-icon">✓</div>
+ <div class="item-text">Offer comfort and reassurance to casualties</div>
+ </div>
+ <div class="list-item">
+ <div class="item-icon">✓</div>
+ <div class="item-text">Document incidents appropriately</div>
+ </div>
+ <div class="list-item">
+ <div class="item-icon">✓</div>
+ <div class="item-text">Help casualties access their own prescribed medications (inhalers, glucose tablets)</div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- SHOULD NOT DO -->
+ <div class="category-card cannot-do" onclick="toggleCategory(this)">
+ <div class="category-header">
+ <div class="header-left">
+ <div class="category-icon">❌</div>
+ <div class="category-title">What You SHOULD NOT Do Without Specific Training</div>
+ </div>
+ <div class="expand-icon">▼</div>
+ </div>
+ <div class="category-content">
+ <div class="category-content-inner">
+ <div class="intro-text">
+ These actions require regulated first aid training and qualifications. Attempting them without proper training could cause harm and create legal liability.
+ </div>
+ <div class="items-list">
+ <div class="list-item">
+ <div class="item-icon">✗</div>
+ <div class="item-text">Provide first aid treatments (CPR, bandaging, splinting)</div>
+ </div>
+ <div class="list-item">
+ <div class="item-icon">✗</div>
+ <div class="item-text">Use AEDs without training</div>
+ </div>
+ <div class="list-item">
+ <div class="item-icon">✗</div>
+ <div class="item-text">Move casualties with suspected spinal injuries</div>
+ </div>
+ <div class="list-item">
+ <div class="item-icon">✗</div>
+ <div class="item-text">Make medical diagnoses</div>
+ </div>
+ <div class="list-item">
+ <div class="item-icon">✗</div>
+ <div class="item-text">Decide whether emergency services are "really needed"</div>
+ </div>
+ <div class="list-item">
+ <div class="item-icon">✗</div>
+ <div class="item-text">Prescribe or administer medications (except helping with casualties' own medications)</div>
+ </div>
+ <div class="list-item">
+ <div class="item-icon">✗</div>
+ <div class="item-text">Attempt interventions beyond your training level</div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- WHEN UNCERTAIN -->
+ <div class="category-card uncertain" onclick="toggleCategory(this)">
+ <div class="category-header">
+ <div class="header-left">
+ <div class="category-icon">⚠️</div>
+ <div class="category-title">When Uncertain</div>
+ </div>
+ <div class="expand-icon">▼</div>
+ </div>
+ <div class="category-content">
+ <div class="category-content-inner">
+ <div class="intro-text">
+ When in doubt, these principles will keep you and the casualty safe. It's always better to seek help than to attempt something beyond your capability.
+ </div>
+ <div class="items-list">
+ <div class="list-item">
+ <div class="item-icon">▲</div>
+ <div class="item-text">Err on the side of caution</div>
+ </div>
+ <div class="list-item">
+ <div class="item-icon">▲</div>
+ <div class="item-text">Ask for help from designated first aiders</div>
+ </div>
+ <div class="list-item">
+ <div class="item-icon">▲</div>
+ <div class="item-text">Call emergency services if seriously concerned</div>
+ </div>
+ <div class="list-item">
+ <div class="item-icon">▲</div>
+ <div class="item-text">Follow dispatcher instructions carefully</div>
+ </div>
+ <div class="list-item">
+ <div class="item-icon">▲</div>
+ <div class="item-text">Let designated first aiders or medical professionals take charge</div>
+ </div>
+ <div class="list-item">
+ <div class="item-icon">▲</div>
+ <div class="item-text">Remember: unnecessary ambulance calls are preferable to delayed help for serious conditions</div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+</div>
+
+<script>
+ (function() {
+ document.documentElement.style.visibility = 'visible';
+ document.body.style.visibility = 'visible';
+ })();
+
+ window.toggleCategory = function(card) {
+ const content = card.querySelector('.category-content');
+ const isActive = card.classList.contains('active');
+ 
+ if (isActive) {
+ card.classList.remove('active');
+ content.style.maxHeight = null;
+ } else {
+ card.classList.add('active');
+ content.style.maxHeight = content.scrollHeight + 'px';
+ }
+ };
+ 
+ // Auto-expand first category on load
+ setTimeout(function() {
+ const firstCard = document.querySelector('.category-card');
+ const firstContent = firstCard.querySelector('.category-content');
+ firstContent.style.maxHeight = firstContent.scrollHeight + 'px';
+ }, 100);
+</script>
+
+</body>
+</html>
