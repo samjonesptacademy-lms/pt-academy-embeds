@@ -1,0 +1,408 @@
+<!DOCTYPE html>
+<html style="background: #f8f9fa;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Risk Assessment Activity</title>
+<style>
+* {box-sizing: border-box; margin: 0; padding: 0;}
+html, body {background: #f8f9fa; min-height: 100vh;}
+body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; opacity: 1; visibility: visible;}
+.activity-container {max-width: 1000px; margin: 0 auto;}
+.cover-screen {background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); border-radius: 12px; padding: 80px 40px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.15); cursor: pointer; transition: all 0.3s ease; min-height: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center;}
+.cover-screen:hover {transform: translateY(-5px); box-shadow: 0 8px 30px rgba(0,0,0,0.2);}
+.cover-screen.hidden {display: none;}
+.cover-icon {font-size: 120px; margin-bottom: 30px;}
+.cover-title {font-size: 42px; font-weight: 700; color: white; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);}
+.cover-subtitle {font-size: 20px; color: white; margin-bottom: 40px; opacity: 0.95; line-height: 1.6; max-width: 600px;}
+.cover-button {background: white; color: #e74c3c; padding: 18px 50px; border-radius: 30px; font-size: 18px; font-weight: 700; border: none; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;}
+.cover-button:hover {transform: scale(1.05); box-shadow: 0 4px 15px rgba(0,0,0,0.3);}
+.main-content {display: none;}
+.main-content.visible {display: block;}
+.progress-bar {background: white; padding: 20px; border-radius: 12px; margin-bottom: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.1);}
+.progress-steps {display: flex; justify-content: space-between; position: relative;}
+.progress-line {position: absolute; top: 15px; left: 0; right: 0; height: 4px; background: #e9ecef; z-index: 1;}
+.progress-fill {height: 100%; background: linear-gradient(90deg, #C6A906, #e0c040); transition: width 0.3s ease;}
+.progress-step {position: relative; z-index: 2; text-align: center; flex: 1;}
+.step-circle {width: 30px; height: 30px; border-radius: 50%; background: white; border: 3px solid #e9ecef; margin: 0 auto 8px auto; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 14px; color: #999; transition: all 0.3s ease;}
+.progress-step.active .step-circle {border-color: #C6A906; background: #C6A906; color: white;}
+.progress-step.completed .step-circle {border-color: #4caf50; background: #4caf50; color: white;}
+.step-label {font-size: 12px; color: #666; font-weight: 600;}
+.content-card {background: white; border-radius: 12px; padding: 30px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); display: none;}
+.content-card.active {display: block;}
+.card-title {font-size: 28px; font-weight: 700; color: #333; margin-bottom: 15px;}
+.card-subtitle {font-size: 16px; color: #666; margin-bottom: 25px; line-height: 1.6;}
+.process-grid {display: grid; gap: 15px; margin-bottom: 25px;}
+.process-item {background: #f8f9fa; border-left: 4px solid #C6A906; padding: 18px; border-radius: 8px;}
+.process-number {display: inline-block; width: 30px; height: 30px; background: #C6A906; color: white; border-radius: 50%; text-align: center; line-height: 30px; font-weight: 700; margin-right: 10px;}
+.process-title {font-size: 16px; font-weight: 700; color: #333; margin-bottom: 8px;}
+.process-text {font-size: 14px; line-height: 1.7; color: #555;}
+.examples-section {background: #e3f2fd; border-left: 4px solid #2196f3; padding: 20px; border-radius: 8px; margin-bottom: 25px;}
+.examples-title {font-size: 18px; font-weight: 700; color: #1565c0; margin-bottom: 15px;}
+.example-item {background: white; padding: 15px; border-radius: 8px; margin-bottom: 12px;}
+.example-item:last-child {margin-bottom: 0;}
+.example-hazard {font-size: 14px; font-weight: 700; color: #e74c3c; margin-bottom: 5px;}
+.example-risk {font-size: 13px; color: #f57c00; margin-bottom: 5px;}
+.example-controls {font-size: 13px; color: #2e7d32; line-height: 1.6;}
+.scenario-card {background: #fff8e1; border: 3px solid #C6A906; padding: 25px; border-radius: 12px; margin-bottom: 25px;}
+.scenario-title {font-size: 20px; font-weight: 700; color: #C6A906; margin-bottom: 15px;}
+.scenario-text {font-size: 15px; line-height: 1.8; color: #333; margin-bottom: 20px;}
+.scenario-image {font-size: 64px; text-align: center; margin-bottom: 20px;}
+.input-group {margin-bottom: 20px;}
+.input-label {font-size: 15px; font-weight: 700; color: #333; margin-bottom: 8px; display: block;}
+.input-field {width: 100%; padding: 12px; border: 2px solid #e9ecef; border-radius: 8px; font-size: 14px; font-family: inherit;}
+.input-field:focus {outline: none; border-color: #C6A906;}
+.checkbox-group {display: grid; gap: 10px;}
+.checkbox-item {background: #f8f9fa; padding: 12px; border-radius: 8px; border: 2px solid #e9ecef; cursor: pointer; transition: all 0.2s ease;}
+.checkbox-item:hover {background: #fff8e1;}
+.checkbox-item.selected {background: #e8f5e9; border-color: #4caf50;}
+.checkbox-item input {margin-right: 10px;}
+.checkbox-label {font-size: 14px; color: #333;}
+.button-group {display: flex; gap: 15px; justify-content: center; margin-top: 30px;}
+.btn {padding: 15px 40px; border-radius: 10px; font-size: 16px; font-weight: 700; border: none; cursor: pointer; transition: all 0.2s ease;}
+.btn-primary {background: linear-gradient(135deg, #C6A906, #e0c040); color: white;}
+.btn-primary:hover {transform: translateY(-2px); box-shadow: 0 4px 15px rgba(198,169,6,0.3);}
+.btn-secondary {background: #e9ecef; color: #666;}
+.btn-secondary:hover {background: #ddd;}
+.feedback-box {display: none; padding: 20px; border-radius: 8px; margin-top: 20px;}
+.feedback-box.active {display: block;}
+.feedback-box.correct {background: #e8f5e9; border: 2px solid #4caf50;}
+.feedback-box.incorrect {background: #ffebee; border: 2px solid #e74c3c;}
+.feedback-title {font-size: 18px; font-weight: 700; margin-bottom: 10px;}
+.feedback-box.correct .feedback-title {color: #2e7d32;}
+.feedback-box.incorrect .feedback-title {color: #c62828;}
+.feedback-text {font-size: 14px; line-height: 1.7; color: #333;}
+.completion-card {background: linear-gradient(135deg, #4caf50, #66bb6a); color: white; padding: 40px; border-radius: 12px; text-align: center;}
+.completion-icon {font-size: 80px; margin-bottom: 20px;}
+.completion-title {font-size: 32px; font-weight: 700; margin-bottom: 15px;}
+.completion-text {font-size: 16px; line-height: 1.7; opacity: 0.95;}
+@media (max-width: 768px) {
+.progress-steps {flex-direction: column; gap: 15px;}
+.progress-line {display: none;}
+.button-group {flex-direction: column;}
+}
+</style>
+</head>
+<body>
+<div class="activity-container">
+<div class="cover-screen" onclick="startActivity()">
+<div class="cover-icon">⚠️</div>
+<div class="cover-title">Risk Assessment Activity</div>
+<div class="cover-subtitle">Learn the 4-step risk assessment process, then practice with real gym scenarios</div>
+<button class="cover-button">Start Activity →</button>
+</div>
+<div class="main-content">
+<div class="progress-bar">
+<div class="progress-steps">
+<div class="progress-line"><div class="progress-fill" id="progressFill" style="width: 0%;"></div></div>
+<div class="progress-step active" id="step1"><div class="step-circle">1</div><div class="step-label">Learn Process</div></div>
+<div class="progress-step" id="step2"><div class="step-circle">2</div><div class="step-label">See Examples</div></div>
+<div class="progress-step" id="step3"><div class="step-circle">3</div><div class="step-label">Practice</div></div>
+<div class="progress-step" id="step4"><div class="step-circle">4</div><div class="step-label">Complete</div></div>
+</div>
+</div>
+<div class="content-card active" id="card1">
+<div class="card-title">The Risk Assessment Process</div>
+<div class="card-subtitle">Risk assessment follows a systematic 4-step approach to identify and control hazards</div>
+<div class="process-grid">
+<div class="process-item">
+<div><span class="process-number">1</span><span class="process-title">Hazard Identification</span></div>
+<div class="process-text">Recognise anything with potential to cause harm: equipment (weights, machines, functional tools), activities (high-intensity training, martial arts, aquatics), environmental factors (wet areas, steps, doors), and population considerations (elderly, health conditions, children).</div>
+</div>
+<div class="process-item">
+<div><span class="process-number">2</span><span class="process-title">Risk Evaluation</span></div>
+<div class="process-text">Assess likelihood of harm occurring and potential severity. Consider frequency of exposure, number of people exposed, existing controls, and historical incident data.</div>
+</div>
+<div class="process-item">
+<div><span class="process-number">3</span><span class="process-title">Control Measures</span></div>
+<div class="process-text">Introduce measures to eliminate hazards or reduce risks: engineering controls (equipment design, modifications), administrative controls (policies, procedures, training, supervision), and PPE where appropriate.</div>
+</div>
+<div class="process-item">
+<div><span class="process-number">4</span><span class="process-title">Regular Review</span></div>
+<div class="process-text">Reassess risks periodically or following incidents, near-misses, or significant changes to activities, equipment, facilities, or populations.</div>
+</div>
+</div>
+<div class="button-group">
+<button class="btn btn-primary" onclick="nextCard(2)">Continue to Examples →</button>
+</div>
+</div>
+<div class="content-card" id="card2">
+<div class="card-title">Common Gym Hazards & Controls</div>
+<div class="card-subtitle">Real examples of risk assessment application in fitness environments</div>
+<div class="examples-section">
+<div class="examples-title">📋 Example Risk Assessments</div>
+<div class="example-item">
+<div class="example-hazard">Hazard: Free Weight Dropping</div>
+<div class="example-risk">Risk: Foot/limb injuries, damaged floors</div>
+<div class="example-controls">Controls: Designated free weight areas, proper lifting technique instruction, appropriate flooring, rules prohibiting unnecessary weight dropping</div>
+</div>
+<div class="example-item">
+<div class="example-hazard">Hazard: Cardiovascular Equipment</div>
+<div class="example-risk">Risk: Falls, entanglement, cardiac events</div>
+<div class="example-controls">Controls: Proper equipment maintenance, emergency stop mechanisms, instruction on equipment use, supervision during initial use, medical screening for high-risk individuals</div>
+</div>
+<div class="example-item">
+<div class="example-hazard">Hazard: Wet Changing Room Floors</div>
+<div class="example-risk">Risk: Slips and falls</div>
+<div class="example-controls">Controls: Non-slip flooring, regular cleaning and drying, adequate drainage, wet floor signage, appropriate footwear policies</div>
+</div>
+</div>
+<div class="button-group">
+<button class="btn btn-secondary" onclick="nextCard(1)">← Back</button>
+<button class="btn btn-primary" onclick="nextCard(3)">Practice Risk Assessment →</button>
+</div>
+</div>
+<div class="content-card" id="card3">
+<div class="card-title">Practice: Scenario 1</div>
+<div class="scenario-card">
+<div class="scenario-image">🏋️</div>
+<div class="scenario-title">Scenario: Group HIIT Class</div>
+<div class="scenario-text">You're running a high-intensity interval training class with 20 participants of mixed abilities. The class involves burpees, box jumps, kettlebell swings, and sprint intervals. Some participants are new to HIIT training. The studio has rubber flooring and equipment is stored along the walls.</div>
+</div>
+<div class="input-group">
+<label class="input-label">Step 1: Identify the Hazards (select all that apply)</label>
+<div class="checkbox-group">
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="high-impact"><span class="checkbox-label">High-impact movements (burpees, box jumps)</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="mixed-ability"><span class="checkbox-label">Mixed ability levels in class</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="kettlebells"><span class="checkbox-label">Kettlebell swings (improper technique/dropping)</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="box-jumps"><span class="checkbox-label">Box jump equipment (falls, shin injuries)</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="cardiovascular"><span class="checkbox-label">High cardiovascular demands</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="crowding"><span class="checkbox-label">Crowding with 20 participants</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="fatigue"><span class="checkbox-label">Fatigue affecting form and coordination</span>
+</div>
+</div>
+</div>
+<div class="input-group">
+<label class="input-label">Step 2: Identify the Potential Risks (select all that apply)</label>
+<div class="checkbox-group">
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="sprains"><span class="checkbox-label">Muscle strains and joint sprains</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="falls"><span class="checkbox-label">Falls and impact injuries</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="overexertion"><span class="checkbox-label">Overexertion and exhaustion</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="cardiac"><span class="checkbox-label">Cardiac events in susceptible individuals</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="collisions"><span class="checkbox-label">Collisions between participants</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="equipment-injury"><span class="checkbox-label">Equipment-related injuries (dropped weights, shin strikes)</span>
+</div>
+</div>
+</div>
+<div class="input-group">
+<label class="input-label">Step 3: Select appropriate control measures (select all that apply)</label>
+<div class="checkbox-group">
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="proper-demo"><span class="checkbox-label">Provide proper demonstration and technique instruction</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="modifications"><span class="checkbox-label">Offer exercise modifications for different fitness levels</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="spacing"><span class="checkbox-label">Ensure adequate spacing between participants</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="warmup"><span class="checkbox-label">Comprehensive warm-up and cool-down</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="supervision"><span class="checkbox-label">Active supervision and correction during exercises</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="screening"><span class="checkbox-label">Pre-class health screening for new participants</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="equipment-check"><span class="checkbox-label">Equipment safety checks before class</span>
+</div>
+</div>
+</div>
+<div class="feedback-box" id="feedback1"></div>
+<div class="button-group">
+<button class="btn btn-secondary" onclick="nextCard(2)">← Back</button>
+<button class="btn btn-primary" onclick="checkAnswers1()">Submit Assessment</button>
+</div>
+</div>
+<div class="content-card" id="card4">
+<div class="card-title">Practice: Scenario 2</div>
+<div class="scenario-card">
+<div class="scenario-image">🏊</div>
+<div class="scenario-title">Scenario: Pool Area Management</div>
+<div class="scenario-text">Your gym has a swimming pool used for aqua aerobics classes, lane swimming, and general recreation. The pool area includes wet changing rooms, a poolside with loungers, and shower facilities. Members range from young adults to elderly users, and some bring children.</div>
+</div>
+<div class="input-group">
+<label class="input-label">Step 1: Identify the Hazards (select all that apply)</label>
+<div class="checkbox-group">
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="drowning"><span class="checkbox-label">Drowning risk</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="wet-surfaces"><span class="checkbox-label">Wet and slippery surfaces</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="chemicals"><span class="checkbox-label">Pool chemicals (chlorine exposure)</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="depth"><span class="checkbox-label">Varying pool depths</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="children"><span class="checkbox-label">Unsupervised children</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="elderly"><span class="checkbox-label">Elderly users with mobility issues</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="running"><span class="checkbox-label">Running near pool edge</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="equipment-storage"><span class="checkbox-label">Pool equipment and loungers (trip hazards)</span>
+</div>
+</div>
+</div>
+<div class="input-group">
+<label class="input-label">Step 2: Identify the Potential Risks (select all that apply)</label>
+<div class="checkbox-group">
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="drowning-risk"><span class="checkbox-label">Drowning or near-drowning incidents</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="slip-fall"><span class="checkbox-label">Slips, trips and falls</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="head-injury"><span class="checkbox-label">Head injuries from falls on hard surfaces</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="chemical-exposure"><span class="checkbox-label">Chemical irritation (eyes, skin, respiratory)</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="diving-injury"><span class="checkbox-label">Diving injuries in shallow water</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="child-accidents"><span class="checkbox-label">Child-specific accidents and injuries</span>
+</div>
+</div>
+</div>
+<div class="input-group">
+<label class="input-label">Step 3: Select appropriate control measures (select all that apply)</label>
+<div class="checkbox-group">
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="lifeguard"><span class="checkbox-label">Qualified lifeguard supervision during operating hours</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="non-slip"><span class="checkbox-label">Non-slip flooring throughout wet areas</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="depth-markers"><span class="checkbox-label">Clear depth markers and signage</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="child-policy"><span class="checkbox-label">Child supervision policy and age restrictions</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="emergency-equipment"><span class="checkbox-label">Emergency rescue equipment (reach poles, flotation devices)</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="cleaning"><span class="checkbox-label">Regular cleaning and drying of wet areas</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="chemicals"><span class="checkbox-label">Proper pool chemical management and testing</span>
+</div>
+<div class="checkbox-item" onclick="toggleCheckbox(this)">
+<input type="checkbox" value="rules"><span class="checkbox-label">Clear pool rules (no running, no diving in shallow areas)</span>
+</div>
+</div>
+</div>
+<div class="feedback-box" id="feedback2"></div>
+<div class="button-group">
+<button class="btn btn-secondary" onclick="nextCard(3)">← Back</button>
+<button class="btn btn-primary" onclick="checkAnswers2()">Submit Assessment</button>
+</div>
+</div>
+<div class="content-card" id="card5">
+<div class="completion-card">
+<div class="completion-icon">✅</div>
+<div class="completion-title">Risk Assessment Activity Complete!</div>
+<div class="completion-text">You've successfully learned the 4-step risk assessment process and practiced applying it to real gym scenarios. Remember: effective risk assessment is ongoing and requires regular review to maintain safe training environments.</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+(function() {
+document.documentElement.style.visibility = 'visible';
+document.body.style.visibility = 'visible';
+})();
+let currentCard = 1;
+window.startActivity = function() {
+document.querySelector('.cover-screen').classList.add('hidden');
+document.querySelector('.main-content').classList.add('visible');
+};
+window.nextCard = function(cardNum) {
+document.querySelectorAll('.content-card').forEach(c => c.classList.remove('active'));
+document.getElementById('card' + cardNum).classList.add('active');
+document.querySelectorAll('.progress-step').forEach(s => s.classList.remove('active'));
+document.getElementById('step' + cardNum).classList.add('active');
+for (let i = 1; i < cardNum; i++) {
+document.getElementById('step' + i).classList.add('completed');
+}
+const progress = ((cardNum - 1) / 3) * 100;
+document.getElementById('progressFill').style.width = progress + '%';
+currentCard = cardNum;
+window.scrollTo(0, 0);
+};
+window.toggleCheckbox = function(item) {
+item.classList.toggle('selected');
+const checkbox = item.querySelector('input');
+checkbox.checked = !checkbox.checked;
+};
+window.checkAnswers1 = function() {
+const hazardBoxes = document.querySelectorAll('#card3 .input-group:nth-child(2) .checkbox-item input:checked');
+const riskBoxes = document.querySelectorAll('#card3 .input-group:nth-child(3) .checkbox-item input:checked');
+const controlBoxes = document.querySelectorAll('#card3 .input-group:nth-child(4) .checkbox-item input:checked');
+const feedback = document.getElementById('feedback1');
+if (hazardBoxes.length === 0 || riskBoxes.length === 0 || controlBoxes.length === 0) {
+feedback.className = 'feedback-box active incorrect';
+feedback.innerHTML = '<div class="feedback-title">❌ Incomplete Assessment</div><div class="feedback-text">Please complete all three steps: identify hazards, identify risks, and select control measures. Each step requires at least one selection.</div>';
+return;
+}
+feedback.className = 'feedback-box active correct';
+feedback.innerHTML = '<div class="feedback-title">✓ Good Assessment!</div><div class="feedback-text"><strong>Well done!</strong> You\'ve identified key hazards including high-impact movements, mixed abilities, equipment risks, and cardiovascular demands. Your risk identification covers strains, falls, overexertion, and potential cardiac events. The control measures you selected are all appropriate for HIIT class safety.<br><br><strong>Key point:</strong> Multiple overlapping controls provide the best protection. Continue to next scenario!</div>';
+setTimeout(function() {
+nextCard(4);
+}, 4000);
+};
+window.checkAnswers2 = function() {
+const hazardBoxes = document.querySelectorAll('#card4 .input-group:nth-child(2) .checkbox-item input:checked');
+const riskBoxes = document.querySelectorAll('#card4 .input-group:nth-child(3) .checkbox-item input:checked');
+const controlBoxes = document.querySelectorAll('#card4 .input-group:nth-child(4) .checkbox-item input:checked');
+const feedback = document.getElementById('feedback2');
+if (hazardBoxes.length === 0 || riskBoxes.length === 0 || controlBoxes.length === 0) {
+feedback.className = 'feedback-box active incorrect';
+feedback.innerHTML = '<div class="feedback-title">❌ Incomplete Assessment</div><div class="feedback-text">Please complete all three steps: identify hazards, identify risks, and select control measures. Each step requires at least one selection.</div>';
+return;
+}
+feedback.className = 'feedback-box active correct';
+feedback.innerHTML = '<div class="feedback-title">✓ Excellent Assessment!</div><div class="feedback-text"><strong>Outstanding work!</strong> You\'ve identified the multiple hazards present in pool environments: drowning risk, wet surfaces, chemicals, depth variations, and vulnerable populations. Your risk identification appropriately covers drowning, slips, head injuries, and chemical exposure. The controls you selected demonstrate understanding that pools require comprehensive, layered safety measures.<br><br><strong>Activity complete!</strong> You\'ve successfully applied the 4-step risk assessment process to realistic gym scenarios.</div>';
+setTimeout(function() {
+nextCard(5);
+}, 4000);
+};
+</script>
+</body>
+</html>
