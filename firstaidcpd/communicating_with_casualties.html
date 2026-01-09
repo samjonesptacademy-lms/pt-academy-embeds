@@ -1,0 +1,398 @@
+```html
+<!-- Communicating with casualties Accordion -->
+<div class="pta-embed" role="region" aria-label="First Aid communication & reassurance accordion">
+  <style>
+    /* Scoped styles (won't leak) */
+    .pta-embed{
+      --bg: #0b0b0f;
+      --panel: rgba(255,255,255,0.06);
+      --panel-2: rgba(255,255,255,0.085);
+      --stroke: rgba(255,255,255,0.14);
+      --text: rgba(255,255,255,0.92);
+      --muted: rgba(255,255,255,0.72);
+      --gold: #d8b65a;
+      --gold-2: rgba(216,182,90,0.18);
+      --shadow: 0 18px 45px rgba(0,0,0,0.45);
+
+      font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color: var(--text);
+      background: radial-gradient(1100px 420px at 20% -10%, rgba(216,182,90,0.22), transparent 60%),
+                  radial-gradient(900px 360px at 90% 10%, rgba(216,182,90,0.14), transparent 55%),
+                  var(--bg);
+      border: 1px solid rgba(255,255,255,0.10);
+      border-radius: 18px;
+      box-shadow: var(--shadow);
+      padding: 18px;
+      max-width: 820px;
+    }
+
+    .pta-header{
+      display: grid;
+      gap: 6px;
+      padding: 6px 6px 14px 6px;
+    }
+    .pta-title{
+      font-size: 20px;
+      font-weight: 750;
+      letter-spacing: 0.2px;
+      margin: 0;
+    }
+    .pta-subtitle{
+      font-size: 13.5px;
+      color: var(--muted);
+      margin: 0;
+      line-height: 1.45;
+    }
+
+    .pta-acc{
+      display: grid;
+      gap: 10px;
+      margin-top: 10px;
+    }
+
+    .pta-item{
+      border: 1px solid var(--stroke);
+      border-radius: 14px;
+      overflow: hidden;
+      background: linear-gradient(180deg, rgba(255,255,255,0.055), rgba(255,255,255,0.03));
+    }
+
+    .pta-trigger{
+      width: 100%;
+      border: 0;
+      background: transparent;
+      color: inherit;
+      cursor: pointer;
+      padding: 14px 14px;
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 12px;
+      text-align: left;
+    }
+
+    .pta-badge{
+      width: 30px;
+      height: 30px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      letter-spacing: 0.6px;
+      color: #111;
+      background: linear-gradient(180deg, var(--gold), #b7923b);
+      box-shadow: 0 10px 22px rgba(216,182,90,0.18);
+      flex: none;
+    }
+
+    .pta-trigger-text{
+      display: grid;
+      gap: 2px;
+      min-width: 0;
+    }
+
+    .pta-trigger-title{
+      font-size: 15px;
+      font-weight: 750;
+      line-height: 1.2;
+      margin: 0;
+    }
+
+    .pta-trigger-hint{
+      font-size: 12.5px;
+      color: var(--muted);
+      line-height: 1.35;
+      margin: 0;
+    }
+
+    .pta-chevron{
+      width: 34px;
+      height: 34px;
+      border-radius: 12px;
+      display: grid;
+      place-items: center;
+      border: 1px solid rgba(255,255,255,0.12);
+      background: rgba(255,255,255,0.04);
+      transition: transform 180ms ease, background 180ms ease, border-color 180ms ease;
+    }
+
+    .pta-chevron svg{
+      width: 18px;
+      height: 18px;
+      opacity: 0.9;
+    }
+
+    .pta-content{
+      display: grid;
+      gap: 10px;
+      padding: 0 14px 14px 56px;
+    }
+
+    .pta-body{
+      margin: 0;
+      color: rgba(255,255,255,0.86);
+      line-height: 1.55;
+      font-size: 13.5px;
+      background: rgba(216,182,90,0.06);
+      border: 1px solid rgba(216,182,90,0.18);
+      border-radius: 12px;
+      padding: 12px 12px;
+    }
+
+    .pta-item[data-open="true"]{
+      background: linear-gradient(180deg, rgba(216,182,90,0.10), rgba(255,255,255,0.03));
+      border-color: rgba(216,182,90,0.34);
+    }
+
+    .pta-item[data-open="true"] .pta-chevron{
+      transform: rotate(180deg);
+      background: rgba(216,182,90,0.10);
+      border-color: rgba(216,182,90,0.26);
+    }
+
+    /* Smooth open/close animation */
+    .pta-collapsible{
+      overflow: hidden;
+      max-height: 0;
+      transition: max-height 220ms ease;
+    }
+
+    /* Focus styles for accessibility */
+    .pta-trigger:focus-visible{
+      outline: 2px solid rgba(216,182,90,0.75);
+      outline-offset: 3px;
+      border-radius: 12px;
+    }
+
+    @media (prefers-reduced-motion: reduce){
+      .pta-chevron, .pta-collapsible{ transition: none; }
+    }
+  </style>
+
+  <div class="pta-header">
+    <h3 class="pta-title">Communication & reassurance</h3>
+    <p class="pta-subtitle">Use calm, clear communication to reduce anxiety and support the casualty while help is on the way.</p>
+  </div>
+
+  <div class="pta-acc" data-pta-accordion>
+    <!-- 1 -->
+    <div class="pta-item" data-open="false">
+      <button class="pta-trigger" type="button" aria-expanded="false">
+        <div class="pta-badge">1</div>
+        <div class="pta-trigger-text">
+          <p class="pta-trigger-title">Remain Calm</p>
+          <p class="pta-trigger-hint">Calm confidence reduces anxiety.</p>
+        </div>
+        <div class="pta-chevron" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </button>
+      <div class="pta-collapsible" role="region" aria-label="Remain Calm details">
+        <div class="pta-content">
+          <p class="pta-body">
+            Displaying calm confidence helps reduce casualty anxiety. Even when feeling uncertain internally,
+            projecting calm competence benefits casualties psychologically.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 2 -->
+    <div class="pta-item" data-open="false">
+      <button class="pta-trigger" type="button" aria-expanded="false">
+        <div class="pta-badge">2</div>
+        <div class="pta-trigger-text">
+          <p class="pta-trigger-title">Introduce Yourself</p>
+          <p class="pta-trigger-hint">Name + role, simply and clearly.</p>
+        </div>
+        <div class="pta-chevron" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </button>
+      <div class="pta-collapsible" role="region" aria-label="Introduce Yourself details">
+        <div class="pta-content">
+          <p class="pta-body">
+            Briefly state your name and role: “I’m Alex, I work here. Help is on the way.”
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 3 -->
+    <div class="pta-item" data-open="false">
+      <button class="pta-trigger" type="button" aria-expanded="false">
+        <div class="pta-badge">3</div>
+        <div class="pta-trigger-text">
+          <p class="pta-trigger-title">Explain What’s Happening</p>
+          <p class="pta-trigger-hint">Describe actions and what comes next.</p>
+        </div>
+        <div class="pta-chevron" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </button>
+      <div class="pta-collapsible" role="region" aria-label="Explain What's Happening details">
+        <div class="pta-content">
+          <p class="pta-body">
+            Describe what you’re doing and what will happen: “An ambulance is coming,” “We’re just going to help you lie down,”
+            “The first aider will be here in a moment.”
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 4 -->
+    <div class="pta-item" data-open="false">
+      <button class="pta-trigger" type="button" aria-expanded="false">
+        <div class="pta-badge">4</div>
+        <div class="pta-trigger-text">
+          <p class="pta-trigger-title">Provide Honest Reassurance</p>
+          <p class="pta-trigger-hint">Reassure without making promises.</p>
+        </div>
+        <div class="pta-chevron" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </button>
+      <div class="pta-collapsible" role="region" aria-label="Provide Honest Reassurance details">
+        <div class="pta-content">
+          <p class="pta-body">
+            Reassure casualties they’re being helped without making specific promises about outcomes:
+            “You’re in good hands,” “Help will be here very soon,” rather than “You’ll be fine” or “Everything will be okay”
+            which may be untrue.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 5 -->
+    <div class="pta-item" data-open="false">
+      <button class="pta-trigger" type="button" aria-expanded="false">
+        <div class="pta-badge">5</div>
+        <div class="pta-trigger-text">
+          <p class="pta-trigger-title">Listen and Respond</p>
+          <p class="pta-trigger-hint">Let them share concerns and key info.</p>
+        </div>
+        <div class="pta-chevron" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </button>
+      <div class="pta-collapsible" role="region" aria-label="Listen and Respond details">
+        <div class="pta-content">
+          <p class="pta-body">
+            If casualties can communicate, listen to their concerns, questions, or information about their condition.
+            Individuals with chronic conditions often know what’s wrong and what helps them.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 6 -->
+    <div class="pta-item" data-open="false">
+      <button class="pta-trigger" type="button" aria-expanded="false">
+        <div class="pta-badge">6</div>
+        <div class="pta-trigger-text">
+          <p class="pta-trigger-title">Maintain Dignity</p>
+          <p class="pta-trigger-hint">Protect privacy throughout.</p>
+        </div>
+        <div class="pta-chevron" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </button>
+      <div class="pta-collapsible" role="region" aria-label="Maintain Dignity details">
+        <div class="pta-content">
+          <p class="pta-body">
+            Protect casualty privacy and dignity during assessment and treatment, particularly regarding clothing,
+            positioning, or personal information.
+          </p>
+        </div>
+      </div>
+    </div>
+
+    <!-- 7 -->
+    <div class="pta-item" data-open="false">
+      <button class="pta-trigger" type="button" aria-expanded="false">
+        <div class="pta-badge">7</div>
+        <div class="pta-trigger-text">
+          <p class="pta-trigger-title">Regular Updates</p>
+          <p class="pta-trigger-hint">Keep them informed as things change.</p>
+        </div>
+        <div class="pta-chevron" aria-hidden="true">
+          <svg viewBox="0 0 24 24" fill="none">
+            <path d="M6 9l6 6 6-6" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
+          </svg>
+        </div>
+      </button>
+      <div class="pta-collapsible" role="region" aria-label="Regular Updates details">
+        <div class="pta-content">
+          <p class="pta-body">
+            Provide updates periodically: “The ambulance should be here any minute,” “The first aider is just getting equipment now.”
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    (function(){
+      const root = document.querySelector('[data-pta-accordion]');
+      if(!root) return;
+
+      const items = Array.from(root.querySelectorAll('.pta-item'));
+
+      function setOpen(item, open){
+        const btn = item.querySelector('.pta-trigger');
+        const panel = item.querySelector('.pta-collapsible');
+        item.dataset.open = open ? 'true' : 'false';
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+
+        if(open){
+          // set to natural height for smooth animation
+          panel.style.maxHeight = panel.scrollHeight + 'px';
+        } else {
+          panel.style.maxHeight = '0px';
+        }
+      }
+
+      // initialise (all closed)
+      items.forEach(i => setOpen(i, false));
+
+      root.addEventListener('click', (e) => {
+        const btn = e.target.closest('.pta-trigger');
+        if(!btn) return;
+
+        const item = btn.closest('.pta-item');
+        const isOpen = item.dataset.open === 'true';
+
+        // close others
+        items.forEach(i => {
+          if(i !== item) setOpen(i, false);
+        });
+
+        // toggle current
+        setOpen(item, !isOpen);
+      });
+
+      // keep heights correct on resize
+      window.addEventListener('resize', () => {
+        items.forEach(i => {
+          if(i.dataset.open === 'true'){
+            const panel = i.querySelector('.pta-collapsible');
+            panel.style.maxHeight = panel.scrollHeight + 'px';
+          }
+        });
+      });
+    })();
+  </script>
+</div>
+```
