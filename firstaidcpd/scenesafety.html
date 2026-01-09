@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html style="background: #f8f9fa;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Scene Safety Assessment</title>
+<style>
+* {box-sizing: border-box; margin: 0; padding: 0;}
+html, body {background: #f8f9fa; min-height: 100vh;}
+body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; opacity: 1; visibility: visible;}
+.container {max-width: 900px; margin: 0 auto;}
+.cover-screen {background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); border-radius: 12px; padding: 80px 40px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.15); cursor: pointer; transition: all 0.3s ease; min-height: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center;}
+.cover-screen:hover {transform: translateY(-5px); box-shadow: 0 8px 30px rgba(0,0,0,0.2);}
+.cover-screen.hidden {display: none;}
+.cover-icon {font-size: 120px; margin-bottom: 30px;}
+.cover-title {font-size: 42px; font-weight: 700; color: white; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);}
+.cover-subtitle {font-size: 20px; color: white; margin-bottom: 40px; opacity: 0.95; line-height: 1.6; max-width: 600px;}
+.cover-button {background: white; color: #e74c3c; padding: 18px 50px; border-radius: 30px; font-size: 18px; font-weight: 700; border: none; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;}
+.cover-button:hover {transform: scale(1.05); box-shadow: 0 4px 15px rgba(0,0,0,0.3);}
+.main-content {display: none;}
+.main-content.visible {display: block;}
+.section {background: white; border-radius: 12px; padding: 30px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); margin-bottom: 20px; display: none;}
+.section.active {display: block;}
+.section-title {font-size: 28px; font-weight: 700; color: #333; margin-bottom: 20px; text-align: center;}
+.accordion-grid {display: grid; gap: 12px;}
+.accordion-item {background: white; border: 2px solid #e9ecef; border-radius: 8px; overflow: hidden; cursor: pointer; transition: all 0.3s ease;}
+.accordion-item:hover {border-color: #e74c3c;}
+.accordion-header {padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; background: #f8f9fa;}
+.accordion-header-left {display: flex; align-items: center; gap: 12px;}
+.accordion-icon {font-size: 28px;}
+.accordion-title {font-size: 18px; font-weight: 700; color: #e74c3c;}
+.expand-icon {font-size: 20px; color: #e74c3c; transition: transform 0.3s ease;}
+.accordion-item.active .expand-icon {transform: rotate(180deg);}
+.accordion-content {max-height: 0; overflow: hidden; transition: max-height 0.4s ease;}
+.accordion-content-inner {padding: 20px;}
+.accordion-text {font-size: 15px; line-height: 1.7; color: #555;}
+.accordion-list {margin-top: 10px; padding-left: 20px;}
+.accordion-list li {margin-bottom: 8px; line-height: 1.6;}
+.continue-btn {background: linear-gradient(135deg, #C6A906, #e0c040); color: white; padding: 15px 40px; border-radius: 25px; font-size: 16px; font-weight: 700; border: none; cursor: pointer; transition: all 0.3s ease; display: block; margin: 30px auto 0 auto;}
+.continue-btn:hover {transform: translateY(-2px); box-shadow: 0 4px 15px rgba(198,169,6,0.3);}
+.scenario-container {background: white; border-radius: 12px; padding: 30px; box-shadow: 0 2px 12px rgba(0,0,0,0.1);}
+.scenario-header {text-align: center; margin-bottom: 25px;}
+.scenario-number {font-size: 14px; font-weight: 600; color: #C6A906; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;}
+.scenario-title {font-size: 24px; font-weight: 700; color: #333; margin-bottom: 15px;}
+.scenario-description {font-size: 16px; line-height: 1.7; color: #555; background: #f8f9fa; padding: 20px; border-radius: 8px; border-left: 4px solid #e74c3c;}
+.question-section {margin-top: 30px;}
+.question-label {font-size: 18px; font-weight: 700; color: #333; margin-bottom: 15px;}
+.options-grid {display: grid; gap: 12px;}
+.option-card {background: #f8f9fa; border: 3px solid #e9ecef; padding: 18px; border-radius: 8px; cursor: pointer; transition: all 0.2s ease;}
+.option-card:hover {border-color: #C6A906; background: #fff8e1;}
+.option-card.selected {border-color: #C6A906; background: #fff8e1;}
+.option-card.correct {border-color: #4caf50; background: #e8f5e9;}
+.option-card.incorrect {border-color: #e74c3c; background: #ffebee;}
+.option-text {font-size: 15px; line-height: 1.6; color: #333;}
+.feedback-box {display: none; margin-top: 20px; padding: 20px; border-radius: 8px;}
+.feedback-box.active {display: block;}
+.feedback-box.correct {background: #e8f5e9; border: 2px solid #4caf50;}
+.feedback-box.incorrect {background: #ffebee; border: 2px solid #e74c3c;}
+.feedback-title {font-size: 18px; font-weight: 700; margin-bottom: 10px;}
+.feedback-box.correct .feedback-title {color: #2e7d32;}
+.feedback-box.incorrect .feedback-title {color: #c62828;}
+.feedback-text {font-size: 15px; line-height: 1.7; color: #333;}
+.button-group {display: flex; gap: 15px; justify-content: center; margin-top: 25px;}
+.btn {padding: 14px 35px; border-radius: 25px; font-size: 16px; font-weight: 700; border: none; cursor: pointer; transition: all 0.3s ease;}
+.btn-primary {background: linear-gradient(135deg, #C6A906, #e0c040); color: white;}
+.btn-primary:hover:not(:disabled) {transform: translateY(-2px); box-shadow: 0 4px 15px rgba(198,169,6,0.3);}
+.btn-primary:disabled {background: #ccc; cursor: not-allowed;}
+.completion-card {background: linear-gradient(135deg, #4caf50, #66bb6a); color: white; padding: 50px 40px; border-radius: 12px; text-align: center;}
+.completion-icon {font-size: 80px; margin-bottom: 20px;}
+.completion-title {font-size: 32px; font-weight: 700; margin-bottom: 15px;}
+.completion-text {font-size: 16px; line-height: 1.7; opacity: 0.95;}
+@media (max-width: 768px) {
+.button-group {flex-direction: column;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="cover-screen" onclick="startActivity()">
+<div class="cover-icon">⚠️</div>
+<div class="cover-title">Scene Safety Assessment</div>
+<div class="cover-subtitle">Learn to assess and ensure scene safety before providing first aid</div>
+<button class="cover-button">Begin Learning →</button>
+</div>
+<div class="main-content">
+<div class="section active" id="infoSection">
+<div class="section-title">Scene Safety Principles</div>
+<div class="accordion-grid">
+<div class="accordion-item active" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">🔍</div>
+<div class="accordion-title">Danger Assessment</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">Before approaching casualties, quickly assess for:</div>
+<ul class="accordion-list">
+<li>Ongoing hazards (falling weights, unstable equipment, wet floors, electrical hazards)</li>
+<li>Risk of injury to responders or bystanders</li>
+<li>Whether scene can be made safe or requires professional emergency services before approach</li>
+</ul>
+<div class="accordion-text" style="margin-top: 15px;">If scenes cannot be made safe, the appropriate action is maintaining safe distance, preventing others from entering danger zones, and immediately contacting emergency services. <strong>Becoming additional casualties serves no purpose and compounds emergencies.</strong></div>
+</div>
+</div>
+</div>
+<div class="accordion-item" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">🛡️</div>
+<div class="accordion-title">Making Scenes Safe</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">When possible, make scenes safe by:</div>
+<ul class="accordion-list">
+<li>Switching off dangerous equipment</li>
+<li>Clearing surrounding hazards</li>
+<li>Controlling bystanders to maintain space</li>
+<li>Ensuring adequate lighting for assessment and treatment</li>
+</ul>
+<div class="accordion-text" style="margin-top: 15px;"><strong>However, do not place yourself at risk</strong> attempting to make scenes safe if doing so requires specialised knowledge or creates danger.</div>
+</div>
+</div>
+</div>
+<div class="accordion-item" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">👥</div>
+<div class="accordion-title">Responder Safety First</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">Your safety is the priority. A safe responder can help; an injured responder becomes part of the problem. Always:</div>
+<ul class="accordion-list">
+<li>Stop and assess before rushing to help</li>
+<li>Never enter scenes you cannot safely exit</li>
+<li>Call for professional help when hazards exceed your capability</li>
+<li>Monitor the scene continuously - conditions can change</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+<button class="continue-btn" onclick="startScenarios()">Continue to Scenarios →</button>
+</div>
+<div class="section" id="scenarioSection">
+<div class="scenario-container" id="scenario1">
+<div class="scenario-header">
+<div class="scenario-number">Scenario 1 of 4</div>
+<div class="scenario-title">Collapsed Member Near Treadmill</div>
+<div class="scenario-description">You hear a thud and see a member collapsed on the floor next to a treadmill. The treadmill is still running at high speed. The member is not moving.</div>
+</div>
+<div class="question-section">
+<div class="question-label">What should you do first?</div>
+<div class="options-grid">
+<div class="option-card" onclick="selectOption(this, 'scenario1', false)">
+<div class="option-text">Immediately rush over and check if the person is breathing</div>
+</div>
+<div class="option-card" onclick="selectOption(this, 'scenario1', false)">
+<div class="option-text">Shout for help while running towards the casualty</div>
+</div>
+<div class="option-card" onclick="selectOption(this, 'scenario1', true)">
+<div class="option-text">Stop the treadmill using the emergency stop, then approach the casualty</div>
+</div>
+<div class="option-card" onclick="selectOption(this, 'scenario1', false)">
+<div class="option-text">Call 999 immediately before approaching</div>
+</div>
+</div>
+<div class="feedback-box" id="feedback1"></div>
+<div class="button-group">
+<button class="btn btn-primary" id="nextBtn1" onclick="nextScenario(2)" style="display: none;">Next Scenario →</button>
+</div>
+</div>
+</div>
+<div class="scenario-container" id="scenario2" style="display: none;">
+<div class="scenario-header">
+<div class="scenario-number">Scenario 2 of 4</div>
+<div class="scenario-title">Weight Rack Collapse</div>
+<div class="scenario-description">A storage rack holding dumbbells has partially collapsed. A member is trapped underneath with weights on their legs. The rack is unstable and more weights could fall.</div>
+</div>
+<div class="question-section">
+<div class="question-label">What is the safest immediate action?</div>
+<div class="options-grid">
+<div class="option-card" onclick="selectOption(this, 'scenario2', false)">
+<div class="option-text">Immediately try to lift the weights off the casualty</div>
+</div>
+<div class="option-card" onclick="selectOption(this, 'scenario2', true)">
+<div class="option-text">Stabilize the rack if possible, call for additional help, then carefully remove weights</div>
+</div>
+<div class="option-card" onclick="selectOption(this, 'scenario2', false)">
+<div class="option-text">Pull the person out from under the rack quickly</div>
+</div>
+<div class="option-card" onclick="selectOption(this, 'scenario2', false)">
+<div class="option-text">Wait for emergency services before taking any action</div>
+</div>
+</div>
+<div class="feedback-box" id="feedback2"></div>
+<div class="button-group">
+<button class="btn btn-primary" id="nextBtn2" onclick="nextScenario(3)" style="display: none;">Next Scenario →</button>
+</div>
+</div>
+</div>
+<div class="scenario-container" id="scenario3" style="display: none;">
+<div class="scenario-header">
+<div class="scenario-number">Scenario 3 of 4</div>
+<div class="scenario-title">Wet Floor Emergency</div>
+<div class="scenario-description">A member has slipped on a wet floor near the pool area and appears to be injured. The floor is still very wet and slippery. Other members are nearby and could also slip.</div>
+</div>
+<div class="question-section">
+<div class="question-label">What should you prioritize?</div>
+<div class="options-grid">
+<div class="option-card" onclick="selectOption(this, 'scenario3', false)">
+<div class="option-text">Carefully walk across the wet floor to reach the casualty</div>
+</div>
+<div class="option-card" onclick="selectOption(this, 'scenario3', true)">
+<div class="option-text">Alert others to the hazard, find a safe approach path, then reach the casualty</div>
+</div>
+<div class="option-card" onclick="selectOption(this, 'scenario3', false)">
+<div class="option-text">Start mopping the floor before helping the casualty</div>
+</div>
+<div class="option-card" onclick="selectOption(this, 'scenario3', false)">
+<div class="option-text">Ask other members to help you reach the casualty</div>
+</div>
+</div>
+<div class="feedback-box" id="feedback3"></div>
+<div class="button-group">
+<button class="btn btn-primary" id="nextBtn3" onclick="nextScenario(4)" style="display: none;">Next Scenario →</button>
+</div>
+</div>
+</div>
+<div class="scenario-container" id="scenario4" style="display: none;">
+<div class="scenario-header">
+<div class="scenario-number">Scenario 4 of 4</div>
+<div class="scenario-title">Electrical Equipment Fault</div>
+<div class="scenario-description">A member is lying unconscious next to a piece of electronic equipment that is sparking and smoking. You can smell burning.</div>
+</div>
+<div class="question-section">
+<div class="question-label">What is the correct response?</div>
+<div class="options-grid">
+<div class="option-card" onclick="selectOption(this, 'scenario4', false)">
+<div class="option-text">Quickly pull the person away from the equipment</div>
+</div>
+<div class="option-card" onclick="selectOption(this, 'scenario4', false)">
+<div class="option-text">Pour water on the equipment to stop the sparking</div>
+</div>
+<div class="option-card" onclick="selectOption(this, 'scenario4', true)">
+<div class="option-text">Cut power at the mains/isolate the circuit, evacuate the area, call emergency services</div>
+</div>
+<div class="option-card" onclick="selectOption(this, 'scenario4', false)">
+<div class="option-text">Use a fire extinguisher on the equipment first</div>
+</div>
+</div>
+<div class="feedback-box" id="feedback4"></div>
+<div class="button-group">
+<button class="btn btn-primary" id="nextBtn4" onclick="completeActivity()" style="display: none;">Complete Activity →</button>
+</div>
+</div>
+</div>
+</div>
+<div class="section" id="completionSection">
+<div class="completion-card">
+<div class="completion-icon">✅</div>
+<div class="completion-title">Scene Safety Training Complete!</div>
+<div class="completion-text">You've successfully learned the principles of scene safety assessment. Remember: your safety always comes first. A safe responder can provide effective help; an injured responder becomes part of the problem.</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+(function() {
+document.documentElement.style.visibility = 'visible';
+document.body.style.visibility = 'visible';
+})();
+const scenarios = {
+scenario1: {
+correct: "Correct! Stopping the treadmill removes an immediate hazard before approaching. Running equipment poses a danger to both the casualty and responders.",
+incorrect: "Not quite. The running treadmill is an immediate hazard that must be controlled first. Always eliminate dangers before approaching casualties when safe to do so."
+},
+scenario2: {
+correct: "Correct! Stabilizing the unstable rack prevents further collapse. Getting help ensures safe weight removal. Rushing in could cause more weights to fall on both the casualty and you.",
+incorrect: "Not the safest approach. The unstable rack could cause further injury to both the casualty and responders. Stabilize the hazard and get help before attempting rescue."
+},
+scenario3: {
+correct: "Correct! Warning others prevents additional casualties. Finding a safe approach (dry path, using walls/railings for support) protects you while reaching the casualty.",
+incorrect: "Not the safest approach. Walking on wet, slippery surfaces without caution risks creating another casualty. Always secure the scene and find safe approach routes."
+},
+scenario4: {
+correct: "Correct! Electrical hazards require power isolation before any approach. Sparking equipment could electrocute anyone who touches the casualty. Evacuation prevents smoke inhalation. Emergency services have specialist equipment for electrical emergencies.",
+incorrect: "Not safe. Electrical hazards can electrocute responders through casualties or equipment. Never approach until power is isolated. This situation requires emergency services with specialist equipment."
+}
+};
+window.startActivity = function() {
+document.querySelector('.cover-screen').classList.add('hidden');
+document.querySelector('.main-content').classList.add('visible');
+setTimeout(function() {
+const firstAccordion = document.querySelector('.accordion-item');
+const firstContent = firstAccordion.querySelector('.accordion-content');
+firstContent.style.maxHeight = firstContent.scrollHeight + 'px';
+}, 100);
+};
+window.toggleAccordion = function(item) {
+const content = item.querySelector('.accordion-content');
+const isActive = item.classList.contains('active');
+if (isActive) {
+item.classList.remove('active');
+content.style.maxHeight = null;
+} else {
+item.classList.add('active');
+content.style.maxHeight = content.scrollHeight + 'px';
+}
+};
+window.startScenarios = function() {
+document.getElementById('infoSection').classList.remove('active');
+document.getElementById('scenarioSection').classList.add('active');
+};
+window.selectOption = function(element, scenarioId, isCorrect) {
+const allOptions = element.parentElement.querySelectorAll('.option-card');
+allOptions.forEach(opt => {
+opt.style.pointerEvents = 'none';
+opt.classList.remove('selected');
+});
+element.classList.add('selected');
+if (isCorrect) {
+element.classList.add('correct');
+} else {
+element.classList.add('incorrect');
+}
+const feedback = document.getElementById('feedback' + scenarioId.slice(-1));
+feedback.className = 'feedback-box active ' + (isCorrect ? 'correct' : 'incorrect');
+const title = isCorrect ? '✓ Correct!' : '✗ Not Quite';
+const text = isCorrect ? scenarios[scenarioId].correct : scenarios[scenarioId].incorrect;
+feedback.innerHTML = '<div class="feedback-title">' + title + '</div><div class="feedback-text">' + text + '</div>';
+document.getElementById('nextBtn' + scenarioId.slice(-1)).style.display = 'inline-block';
+};
+window.nextScenario = function(num) {
+document.getElementById('scenario' + (num - 1)).style.display = 'none';
+document.getElementById('scenario' + num).style.display = 'block';
+window.scrollTo(0, 0);
+};
+window.completeActivity = function() {
+document.getElementById('scenarioSection').classList.remove('active');
+document.getElementById('completionSection').classList.add('active');
+window.scrollTo(0, 0);
+};
+</script>
+</body>
+</html>
