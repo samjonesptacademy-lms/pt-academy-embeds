@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html style="background: #f8f9fa;">
+<head>
+ <meta charset="UTF-8">
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
+ <title>Primary Survey: ABC Approach</title>
+<style>
+ * {
+ box-sizing: border-box;
+ margin: 0;
+ padding: 0;
+ }
+ 
+ html, body {
+ background: #f8f9fa;
+ min-height: 100vh;
+ }
+ 
+ body {
+ font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+ padding: 20px;
+ opacity: 1;
+ visibility: visible;
+ }
+ 
+ .survey-container {
+ max-width: 900px;
+ margin: 0 auto;
+ }
+ 
+ .header {
+ text-align: center;
+ margin-bottom: 40px;
+ }
+ 
+ .title {
+ font-size: 28px;
+ font-weight: 700;
+ color: #333;
+ margin-bottom: 10px;
+ }
+ 
+ .subtitle {
+ font-size: 15px;
+ color: #666;
+ line-height: 1.6;
+ }
+ 
+ .intro-box {
+ background: white;
+ border: 2px solid #C6A906;
+ border-radius: 12px;
+ padding: 20px;
+ margin-bottom: 30px;
+ text-align: center;
+ }
+ 
+ .intro-text {
+ font-size: 15px;
+ line-height: 1.8;
+ color: #555;
+ }
+ 
+ .accordion {
+ display: grid;
+ gap: 15px;
+ }
+ 
+ .accordion-item {
+ background: white;
+ border-radius: 12px;
+ border: 2px solid #e9ecef;
+ overflow: hidden;
+ box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+ }
+ 
+ .accordion-header {
+ padding: 25px;
+ cursor: pointer;
+ display: flex;
+ align-items: center;
+ gap: 20px;
+ background: #fafafa;
+ transition: background 0.3s ease;
+ }
+ 
+ .accordion-header:hover {
+ background: #f0f0f0;
+ }
+ 
+ .accordion-item.active .accordion-header {
+ background: #fff8e1;
+ }
+ 
+ .letter-circle {
+ width: 60px;
+ height: 60px;
+ background: linear-gradient(135deg, #C6A906, #e0c040);
+ color: white;
+ border-radius: 50%;
+ display: flex;
+ align-items: center;
+ justify-content: center;
+ font-size: 28px;
+ font-weight: 700;
+ flex-shrink: 0;
+ }
+ 
+ .header-text {
+ flex: 1;
+ }
+ 
+ .item-title {
+ font-size: 22px;
+ font-weight: 700;
+ color: #333;
+ margin-bottom: 5px;
+ }
+ 
+ .item-subtitle {
+ font-size: 15px;
+ color: #666;
+ }
+ 
+ .expand-icon {
+ font-size: 24px;
+ color: #C6A906;
+ transition: transform 0.3s ease;
+ flex-shrink: 0;
+ }
+ 
+ .accordion-item.active .expand-icon {
+ transform: rotate(180deg);
+ }
+ 
+ .accordion-content {
+ max-height: 0;
+ overflow: hidden;
+ transition: max-height 0.4s ease;
+ }
+ 
+ .accordion-content-inner {
+ padding: 30px;
+ }
+ 
+ .content-section {
+ margin-bottom: 25px;
+ }
+ 
+ .content-section:last-child {
+ margin-bottom: 0;
+ }
+ 
+ .section-heading {
+ font-size: 15px;
+ font-weight: 700;
+ color: #C6A906;
+ text-transform: uppercase;
+ margin-bottom: 12px;
+ }
+ 
+ .section-text {
+ font-size: 15px;
+ line-height: 1.8;
+ color: #555;
+ margin-bottom: 15px;
+ }
+ 
+ .sign-list {
+ background: #f8f9fa;
+ border-left: 4px solid #e74c3c;
+ padding: 15px 15px 15px 35px;
+ border-radius: 6px;
+ margin-bottom: 15px;
+ }
+ 
+ .sign-list-item {
+ font-size: 14px;
+ line-height: 1.8;
+ color: #555;
+ padding: 5px 0;
+ position: relative;
+ }
+ 
+ .sign-list-item::before {
+ content: '⚠';
+ position: absolute;
+ left: -20px;
+ color: #e74c3c;
+ }
+ 
+ .response-box {
+ background: #e8f5e9;
+ border: 2px solid #4caf50;
+ border-radius: 8px;
+ padding: 15px;
+ }
+ 
+ .response-title {
+ font-weight: 700;
+ color: #2e7d32;
+ margin-bottom: 10px;
+ display: flex;
+ align-items: center;
+ gap: 8px;
+ }
+ 
+ .response-text {
+ font-size: 14px;
+ line-height: 1.8;
+ color: #555;
+ }
+ 
+ .warning-box {
+ background: #fff3cd;
+ border-left: 4px solid #ffc107;
+ padding: 15px;
+ border-radius: 6px;
+ margin-top: 15px;
+ }
+ 
+ .warning-title {
+ font-weight: 700;
+ color: #856404;
+ margin-bottom: 8px;
+ display: flex;
+ align-items: center;
+ gap: 8px;
+ }
+ 
+ .warning-text {
+ font-size: 14px;
+ line-height: 1.7;
+ color: #856404;
+ }
+ 
+ @media (max-width: 768px) {
+ .letter-circle {
+ width: 50px;
+ height: 50px;
+ font-size: 24px;
+ }
+ 
+ .item-title {
+ font-size: 20px;
+ }
+ }
+</style>
+</head>
+<body>
+
+<div class="survey-container">
+ <div class="header">
+ <h1 class="title">Primary Survey: ABC Approach</h1>
+ <p class="subtitle">A rapid assessment to identify immediate life threats</p>
+ </div>
+ 
+ <div class="intro-box">
+ <p class="intro-text">
+ The primary survey identifies conditions requiring immediate intervention. Once the scene is safe, assess casualties using the ABC approach to detect life-threatening problems with <strong>Airway, Breathing, and Circulation</strong>.
+ </p>
+ </div>
+ 
+ <div class="accordion">
+ <!-- Airway -->
+ <div class="accordion-item active" onclick="toggleItem(this)">
+ <div class="accordion-header">
+ <div class="letter-circle">A</div>
+ <div class="header-text">
+ <div class="item-title">Airway</div>
+ <div class="item-subtitle">Is the airway clear and open?</div>
+ </div>
+ <div class="expand-icon">▼</div>
+ </div>
+ <div class="accordion-content">
+ <div class="accordion-content-inner">
+ <div class="content-section">
+ <div class="section-heading">What to Assess</div>
+ <div class="section-text">
+ Check whether the casualty's airway is clear and open (patent). A blocked or compromised airway prevents breathing and is immediately life-threatening.
+ </div>
+ </div>
+ 
+ <div class="content-section">
+ <div class="section-heading">Signs of Airway Problems</div>
+ <div class="sign-list">
+ <div class="sign-list-item">Noisy breathing (snoring, gurgling sounds)</div>
+ <div class="sign-list-item">Inability to speak or difficulty speaking</div>
+ <div class="sign-list-item">Visible obstruction in mouth</div>
+ <div class="sign-list-item">Complete silence when casualty appears to be trying to breathe</div>
+ </div>
+ </div>
+ 
+ <div class="content-section">
+ <div class="section-heading">Awareness-Level Response</div>
+ <div class="response-box">
+ <div class="response-title">
+ <span>✓</span>
+ <span>Your Actions (Without Training)</span>
+ </div>
+ <div class="response-text">
+ • Immediately alert designated first aiders<br>
+ • Call 999 if airway is compromised<br>
+ • Do NOT attempt to clear airway yourself<br>
+ • Do NOT move the casualty unless in immediate danger<br>
+ • Monitor and be ready to provide information to responders
+ </div>
+ </div>
+ <div class="warning-box">
+ <div class="warning-title">
+ <span>⚠️</span>
+ <span>Important</span>
+ </div>
+ <div class="warning-text">
+ Airway management requires specific training. Do not attempt to open airways or remove obstructions without proper first aid qualification.
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- Breathing -->
+ <div class="accordion-item" onclick="toggleItem(this)">
+ <div class="accordion-header">
+ <div class="letter-circle">B</div>
+ <div class="header-text">
+ <div class="item-title">Breathing</div>
+ <div class="item-subtitle">Is the person breathing normally?</div>
+ </div>
+ <div class="expand-icon">▼</div>
+ </div>
+ <div class="accordion-content">
+ <div class="accordion-content-inner">
+ <div class="content-section">
+ <div class="section-heading">What to Assess</div>
+ <div class="section-text">
+ Determine whether the casualty is breathing normally. For unconscious casualties, look for chest movement, listen for breath sounds, and watch for signs of breathing.
+ </div>
+ </div>
+ 
+ <div class="content-section">
+ <div class="section-heading">Signs of Abnormal Breathing</div>
+ <div class="sign-list">
+ <div class="sign-list-item">No breathing at all</div>
+ <div class="sign-list-item">Gasping or agonal breathing (irregular gasps)</div>
+ <div class="sign-list-item">Very rapid or very slow breathing</div>
+ <div class="sign-list-item">Extreme difficulty breathing despite being conscious</div>
+ <div class="sign-list-item">Blue-tinged lips or skin (cyanosis)</div>
+ </div>
+ </div>
+ 
+ <div class="content-section">
+ <div class="section-heading">Awareness-Level Response</div>
+ <div class="response-box">
+ <div class="response-title">
+ <span>✓</span>
+ <span>Your Actions (Without Training)</span>
+ </div>
+ <div class="response-text">
+ • If not breathing: Call 999 IMMEDIATELY and alert first aiders<br>
+ • Follow emergency dispatcher instructions<br>
+ • If breathing but unconscious: Monitor closely and call 999<br>
+ • If difficulty breathing: Help person into comfortable position, call 999<br>
+ • Do NOT attempt rescue breathing or CPR without training
+ </div>
+ </div>
+ <div class="warning-box">
+ <div class="warning-title">
+ <span>⚠️</span>
+ <span>Critical</span>
+ </div>
+ <div class="warning-text">
+ Absence of normal breathing is a life-threatening emergency. Call 999 immediately. Trained first aiders will provide CPR if needed.
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ 
+ <!-- Circulation -->
+ <div class="accordion-item" onclick="toggleItem(this)">
+ <div class="accordion-header">
+ <div class="letter-circle">C</div>
+ <div class="header-text">
+ <div class="item-title">Circulation</div>
+ <div class="item-subtitle">Is circulation adequate?</div>
+ </div>
+ <div class="expand-icon">▼</div>
+ </div>
+ <div class="accordion-content">
+ <div class="accordion-content-inner">
+ <div class="content-section">
+ <div class="section-heading">What to Assess</div>
+ <div class="section-text">
+ For untrained persons, circulation assessment focuses on observing for signs of adequate blood flow rather than checking pulses (which is unreliable without training). Look for signs of life and circulation problems.
+ </div>
+ </div>
+ 
+ <div class="content-section">
+ <div class="section-heading">Signs of Circulation Problems</div>
+ <div class="sign-list">
+ <div class="sign-list-item">Pale, cold, clammy skin</div>
+ <div class="sign-list-item">Blue-tinged lips or nail beds</div>
+ <div class="sign-list-item">Absence of signs of life (no movement, no normal breathing)</div>
+ <div class="sign-list-item">Severe bleeding (blood spurting or heavy flow)</div>
+ <div class="sign-list-item">Deteriorating consciousness level</div>
+ </div>
+ </div>
+ 
+ <div class="content-section">
+ <div class="section-heading">Awareness-Level Response</div>
+ <div class="response-box">
+ <div class="response-title">
+ <span>✓</span>
+ <span>Your Actions (Without Training)</span>
+ </div>
+ <div class="response-text">
+ • Severe bleeding: Alert first aiders immediately, call 999<br>
+ • Do NOT check for pulse (unreliable without training)<br>
+ • Look for signs of life: movement, normal breathing, responsiveness<br>
+ • If no signs of life: Call 999, alert first aiders for CPR<br>
+ • Monitor skin color and warmth as indicators of shock
+ </div>
+ </div>
+ <div class="warning-box">
+ <div class="warning-title">
+ <span>⚠️</span>
+ <span>Remember</span>
+ </div>
+ <div class="warning-text">
+ Severe bleeding requires immediate intervention by trained first aiders. Do not attempt direct pressure without gloves and training. Absence of signs of life requires immediate CPR by trained personnel.
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+ </div>
+</div>
+
+<script>
+ (function() {
+ document.documentElement.style.visibility = 'visible';
+ document.body.style.visibility = 'visible';
+ })();
+
+ window.toggleItem = function(item) {
+ const content = item.querySelector('.accordion-content');
+ const isActive = item.classList.contains('active');
+ 
+ if (isActive) {
+ item.classList.remove('active');
+ content.style.maxHeight = null;
+ } else {
+ item.classList.add('active');
+ content.style.maxHeight = content.scrollHeight + 'px';
+ }
+ };
+ 
+ // Auto-expand first item
+ setTimeout(function() {
+ const firstItem = document.querySelector('.accordion-item');
+ const firstContent = firstItem.querySelector('.accordion-content');
+ firstContent.style.maxHeight = firstContent.scrollHeight + 'px';
+ }, 100);
+</script>
+
+</body>
+</html>
