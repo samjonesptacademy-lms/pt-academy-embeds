@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Health and Safety Duties</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8f9fa; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
+        .spinner { width: 50px; height: 50px; border: 4px solid #e9ecef; border-top-color: #C6A906; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { margin-top: 20px; font-size: 16px; color: #666; font-weight: 500; }
+        
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; padding: 20px; background: #f8f9fa; line-height: 1.6; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .title { font-size: 28px; font-weight: 700; color: #333; margin-bottom: 15px; }
+        .description { font-size: 16px; color: #555; line-height: 1.6; max-width: 700px; margin: 0 auto; }
+        
+        .tab-container { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }
+        
+        .tabs { display: flex; background: #f8f9fa; border-bottom: 2px solid #e9ecef; }
+        .tab { flex: 1; padding: 20px; text-align: center; cursor: pointer; font-size: 18px; font-weight: 600; color: #666; transition: all 0.3s ease; background: #f8f9fa; border: none; }
+        .tab:hover { background: #e9ecef; }
+        .tab.active { background: white; color: #C6A906; border-bottom: 3px solid #C6A906; margin-bottom: -2px; }
+        
+        .tab-content { display: none; padding: 35px; }
+        .tab-content.active { display: block; animation: fadeIn 0.4s ease; }
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+        
+        .section-badge { display: inline-block; background: #C6A906; color: white; padding: 8px 16px; border-radius: 20px; font-size: 14px; font-weight: 700; margin-bottom: 25px; }
+        
+        .duty-item { margin-bottom: 30px; background: #f8f9fa; border-radius: 8px; padding: 25px; border-left: 4px solid #C6A906; }
+        .duty-item:last-child { margin-bottom: 0; }
+        
+        .duty-title { font-size: 18px; font-weight: 700; color: #333; margin-bottom: 12px; display: flex; align-items: center; gap: 10px; }
+        .duty-icon { font-size: 22px; }
+        
+        .duty-description { font-size: 16px; color: #333; line-height: 1.8; margin-bottom: 15px; }
+        
+        .duty-examples { background: white; border-radius: 6px; padding: 18px; margin-top: 15px; }
+        .examples-label { font-size: 14px; font-weight: 700; color: #C6A906; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px; }
+        .examples-list { margin-left: 20px; }
+        .examples-list li { margin-bottom: 8px; font-size: 15px; color: #666; line-height: 1.7; }
+        
+        .highlight-box { background: #fffef8; border: 2px solid #C6A906; border-radius: 8px; padding: 20px; margin-top: 30px; }
+        .highlight-title { font-size: 16px; font-weight: 700; color: #C6A906; margin-bottom: 10px; }
+        .highlight-text { font-size: 15px; color: #666; line-height: 1.7; }
+        
+        @media (max-width: 768px) {
+            .tabs { flex-direction: column; }
+            .tab { padding: 15px; }
+            .tab-content { padding: 25px; }
+            .duty-item { padding: 20px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading content...</div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Health & Safety Duties Under HSWA</h1>
+            <p class="description">Understanding the legal responsibilities of employers and employees under the Health and Safety at Work Act. Select a tab to explore each set of duties.</p>
+        </div>
+
+        <div class="tab-container">
+            <div class="tabs">
+                <button class="tab active" onclick="showTab('employer')">🏢 Employer Duties</button>
+                <button class="tab" onclick="showTab('employee')">👤 Employee Duties</button>
+            </div>
+
+            <!-- Employer Duties Tab -->
+            <div class="tab-content active" id="employerTab">
+                <div class="section-badge">Primary Legal Responsibility</div>
+                
+                <p style="font-size: 16px; color: #333; line-height: 1.8; margin-bottom: 30px;">
+                    Employers hold primary legal responsibility for health and safety within their organisations. Key employer duties relevant to first aid and emergency response include:
+                </p>
+
+                <div class="duty-item">
+                    <div class="duty-title">
+                        <span class="duty-icon">📋</span>
+                        <span>Risk Assessment Requirements</span>
+                    </div>
+                    <div class="duty-description">
+                        Employers must conduct suitable and sufficient risk assessments identifying hazards, evaluating risks, and implementing control measures to minimise harm potential.
+                    </div>
+                    <div class="duty-examples">
+                        <div class="examples-label">In Fitness Facilities, This Includes:</div>
+                        <ul class="examples-list">
+                            <li>Equipment-related injury risks</li>
+                            <li>Environmental hazards (wet floors, trip hazards)</li>
+                            <li>Emergency access and evacuation routes</li>
+                            <li>Specific risks associated with various activities (group exercise, swimming, high-intensity training)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="duty-item">
+                    <div class="duty-title">
+                        <span class="duty-icon">🚑</span>
+                        <span>Provision of First Aid</span>
+                    </div>
+                    <div class="duty-description">
+                        The Health and Safety (First Aid) Regulations 1981 require employers to provide adequate and appropriate first aid equipment, facilities, and personnel based on workplace risk assessments.
+                    </div>
+                    <div class="duty-examples">
+                        <div class="examples-label">Adequacy Depends On:</div>
+                        <ul class="examples-list">
+                            <li>Workplace size and member numbers</li>
+                            <li>Nature of activities and associated risks</li>
+                            <li>Distance from emergency medical services</li>
+                            <li>Staff working patterns and availability</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="duty-item">
+                    <div class="duty-title">
+                        <span class="duty-icon">📢</span>
+                        <span>Information and Training</span>
+                    </div>
+                    <div class="duty-description">
+                        Employers must provide information about first aid arrangements to all staff members.
+                    </div>
+                    <div class="duty-examples">
+                        <div class="examples-label">Required Information Includes:</div>
+                        <ul class="examples-list">
+                            <li>Locations of first aid equipment and facilities</li>
+                            <li>Identities of trained first aiders</li>
+                            <li>Emergency procedures and communication systems</li>
+                            <li>Specific health and safety information relevant to activities or equipment</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="duty-item">
+                    <div class="duty-title">
+                        <span class="duty-icon">🏗️</span>
+                        <span>Safe Working Environment</span>
+                    </div>
+                    <div class="duty-description">
+                        Employers must maintain safe facilities through comprehensive safety management.
+                    </div>
+                    <div class="duty-examples">
+                        <div class="examples-label">This Requires:</div>
+                        <ul class="examples-list">
+                            <li>Regular equipment maintenance and safety checks</li>
+                            <li>Adequate lighting and clear emergency routes</li>
+                            <li>Appropriate environmental conditions (temperature, ventilation, cleanliness)</li>
+                            <li>Systems for reporting and addressing hazards</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <div class="highlight-title">💡 Key Point</div>
+                    <div class="highlight-text">
+                        Employers carry the primary legal duty for workplace health and safety. This responsibility cannot be delegated, though specific tasks can be assigned to competent persons.
+                    </div>
+                </div>
+            </div>
+
+            <!-- Employee Duties Tab -->
+            <div class="tab-content" id="employeeTab">
+                <div class="section-badge">Supporting Legal Responsibility</div>
+                
+                <p style="font-size: 16px; color: #333; line-height: 1.8; margin-bottom: 30px;">
+                    While employers hold primary responsibility, employees also have legal duties contributing to workplace safety:
+                </p>
+
+                <div class="duty-item">
+                    <div class="duty-title">
+                        <span class="duty-icon">⚠️</span>
+                        <span>Taking Reasonable Care</span>
+                    </div>
+                    <div class="duty-description">
+                        Employees must take reasonable care for their own health and safety and that of others affected by their actions.
+                    </div>
+                    <div class="duty-examples">
+                        <div class="examples-label">In Fitness Contexts, This Includes:</div>
+                        <ul class="examples-list">
+                            <li>Following safe working practices</li>
+                            <li>Using equipment properly</li>
+                            <li>Maintaining professional competence</li>
+                            <li>Reporting hazards or safety concerns</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="duty-item">
+                    <div class="duty-title">
+                        <span class="duty-icon">🤝</span>
+                        <span>Cooperation with Employers</span>
+                    </div>
+                    <div class="duty-description">
+                        Employees must cooperate with employers regarding health and safety matters.
+                    </div>
+                    <div class="duty-examples">
+                        <div class="examples-label">This Means:</div>
+                        <ul class="examples-list">
+                            <li>Following policies and procedures</li>
+                            <li>Attending required training</li>
+                            <li>Reporting incidents and near-misses</li>
+                            <li>Using provided safety equipment appropriately</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="duty-item">
+                    <div class="duty-title">
+                        <span class="duty-icon">🚫</span>
+                        <span>Not Interfering with Safety Measures</span>
+                    </div>
+                    <div class="duty-description">
+                        Employees must not intentionally or recklessly interfere with or misuse safety equipment, systems, or provisions.
+                    </div>
+                    <div class="duty-examples">
+                        <div class="examples-label">This Includes:</div>
+                        <ul class="examples-list">
+                            <li>Maintaining emergency equipment functionality</li>
+                            <li>Preserving clear emergency exits</li>
+                            <li>Respecting safety protocols</li>
+                            <li>Not tampering with or misusing safety equipment</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="highlight-box">
+                    <div class="highlight-title">💡 Key Point</div>
+                    <div class="highlight-text">
+                        Employee duties are complementary to employer responsibilities. While employers have primary legal duty, employees play a crucial role in maintaining workplace safety through their daily actions and compliance with safety measures.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showTab(tabName) {
+            // Update tab buttons
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => tab.classList.remove('active'));
+            event.target.classList.add('active');
+            
+            // Update tab content
+            const contents = document.querySelectorAll('.tab-content');
+            contents.forEach(content => content.classList.remove('active'));
+            
+            if (tabName === 'employer') {
+                document.getElementById('employerTab').classList.add('active');
+            } else {
+                document.getElementById('employeeTab').classList.add('active');
+            }
+        }
+
+        function hideLoader() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(function() { overlay.style.display = 'none'; }, 500);
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', hideLoader);
+        } else {
+            hideLoader();
+        }
+        setTimeout(hideLoader, 500);
+    </script>
+</body>
+</html>
