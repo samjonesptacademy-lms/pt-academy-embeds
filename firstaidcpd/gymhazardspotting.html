@@ -60,10 +60,6 @@ to {transform: translateX(0); opacity: 1;}
 .reveal-text {font-size: 16px; color: #333; font-weight: 600;}
 .hint-box {background: #f8f9fa; border-left: 4px solid #2196f3; padding: 15px; border-radius: 6px; margin-bottom: 20px;}
 .hint-text {font-size: 14px; color: #555; line-height: 1.6;}
-.debug-overlay {position: fixed; top: 10px; left: 10px; background: rgba(0,0,0,0.9); color: #4caf50; padding: 15px 20px; border-radius: 8px; font-family: monospace; font-size: 14px; z-index: 9999; line-height: 1.8;}
-.debug-title {color: #C6A906; font-weight: 700; margin-bottom: 10px; font-size: 16px;}
-.debug-coords {color: #4caf50; font-size: 18px; font-weight: 700;}
-.debug-instructions {color: #aaa; font-size: 12px; margin-top: 10px;}
 @media (max-width: 768px) {
 .counter-row {flex-direction: column;}
 .counter {max-width: 100%;}
@@ -108,12 +104,12 @@ Your browser does not support the video tag.
 </div>
 <div class="image-wrapper" id="imageWrapper">
 <img src="https://pt-academy-embeds.pages.dev/firstaidcpd/Gym_Hazard_Scene.webp" alt="Gym Scene" class="gym-image" id="gymImage">
-<div class="hazard-zone" id="zone1" style="left: 3%; top: 82%; width: 12%; height: 12%;"></div>
-<div class="hazard-zone" id="zone2" style="left: 72%; top: 68%; width: 10%; height: 15%;"></div>
-<div class="hazard-zone" id="zone3" style="left: 80%; top: 52%; width: 15%; height: 20%;"></div>
-<div class="hazard-zone" id="zone4" style="left: 32%; top: 70%; width: 8%; height: 12%;"></div>
-<div class="hazard-zone" id="zone5" style="left: 48%; top: 52%; width: 12%; height: 18%;"></div>
-<div class="hazard-zone" id="zone6" style="left: 8%; top: 48%; width: 18%; height: 25%;"></div>
+<div class="hazard-zone" id="zone1" style="left: 3%; top: 90%; width: 16%; height: 10%;"></div>
+<div class="hazard-zone" id="zone2" style="left: 66%; top: 78%; width: 16%; height: 13%;"></div>
+<div class="hazard-zone" id="zone3" style="left: 55%; top: 64%; width: 16%; height: 13%;"></div>
+<div class="hazard-zone" id="zone4" style="left: 42%; top: 56%; width: 16%; height: 12%;"></div>
+<div class="hazard-zone" id="zone5" style="left: 29%; top: 73%; width: 15%; height: 12%;"></div>
+<div class="hazard-zone" id="zone6" style="left: 9%; top: 60%; width: 16%; height: 13%;"></div>
 </div>
 <div class="submit-section">
 <button class="submit-btn" id="submitBtn" onclick="submitAnswers()">Submit & See Results →</button>
@@ -138,12 +134,6 @@ Your browser does not support the video tag.
 <div class="instruction-text">Watch as each hazard is identified and explained. Compare with the hazards you spotted!</div>
 </div>
 </div>
-</div>
-<div id="debugOverlay" class="debug-overlay">
-<div class="debug-title">🔧 DEBUG MODE</div>
-<div>Last Click:</div>
-<div class="debug-coords" id="debugCoords">Click image to see coordinates</div>
-<div class="debug-instructions">Use these values for zone positioning:<br>left: X%, top: Y%</div>
 </div>
 <div class="feedback-toast" id="feedbackToast">
 <div class="toast-title"></div>
@@ -178,7 +168,6 @@ imageWrapper.addEventListener('click', function(e) {
 const rect = gymImage.getBoundingClientRect();
 const x = ((e.clientX - rect.left) / rect.width) * 100;
 const y = ((e.clientY - rect.top) / rect.height) * 100;
-document.getElementById('debugCoords').innerHTML = 'left: ' + x.toFixed(1) + '%, top: ' + y.toFixed(1) + '%';
 totalClicks++;
 document.getElementById('clickCount').textContent = totalClicks;
 let foundHazard = false;
