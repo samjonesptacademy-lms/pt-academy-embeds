@@ -1,0 +1,916 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Examples Gallery</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #C6A906 0%, #a68905 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 30px 20px;
+        }
+
+        .phase-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 12px;
+        }
+
+        .phase-intro {
+            background: #f0f8ff;
+            border-left: 4px solid #2196F3;
+            padding: 14px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            font-size: 14px;
+            color: #444;
+            line-height: 1.6;
+        }
+
+        .example-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .example-btn {
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .example-btn:hover {
+            border-color: #C6A906;
+            background: #fffbf0;
+        }
+
+        .example-btn.active {
+            background: #C6A906;
+            color: white;
+            border-color: #C6A906;
+        }
+
+        .example-btn.cheat-btn {
+            margin-left: auto;
+            background: #27ae60;
+            color: white;
+            border-color: #27ae60;
+        }
+
+        .example-btn.cheat-btn:hover {
+            background: #229954;
+            border-color: #229954;
+        }
+
+        .cv-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+
+        .cv-column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .cv-column.spotlight-column {
+            order: -1;
+            margin-bottom: 10px;
+        }
+
+        .column-label {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #C6A906;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .cv-display {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 30px;
+            font-size: 13px;
+            line-height: 1.8;
+            color: #333;
+        }
+
+        .cv-header {
+            text-align: center;
+            margin-bottom: 20px;
+            border-bottom: 2px solid #C6A906;
+            padding-bottom: 16px;
+        }
+
+        .cv-name {
+            font-size: 18px;
+            font-weight: 700;
+            margin-bottom: 6px;
+        }
+
+        .cv-contact {
+            font-size: 12px;
+            color: #666;
+        }
+
+        .cv-section {
+            margin-bottom: 18px;
+        }
+
+        .cv-section.clickable {
+            cursor: pointer;
+            transition: all 0.2s ease;
+            border-radius: 4px;
+            padding: 8px;
+        }
+
+        .cv-section.clickable:hover {
+            background: #fffbf0;
+            border-left: 4px solid #C6A906;
+        }
+
+        .cv-section.active {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+
+        .cv-section-title {
+            font-size: 12px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: #C6A906;
+            letter-spacing: 1px;
+            margin-bottom: 8px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 4px;
+        }
+
+        .cv-content {
+            margin-left: 8px;
+        }
+
+        .cv-job {
+            margin-bottom: 12px;
+        }
+
+        .cv-job-title {
+            font-weight: 700;
+            margin-bottom: 2px;
+        }
+
+        .cv-job-meta {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 6px;
+        }
+
+        .cv-bullet {
+            margin-left: 16px;
+            margin-bottom: 4px;
+        }
+
+        .cv-bullet:before {
+            content: '▸ ';
+            color: #C6A906;
+            font-weight: bold;
+            margin-right: 6px;
+        }
+
+        .spotlight-panel {
+            background: #f0f8ff;
+            border: 2px solid #2196F3;
+            border-radius: 8px;
+            padding: 16px;
+            min-height: 400px;
+            flex: 1;
+        }
+
+        .spotlight-placeholder {
+            color: #666;
+            text-align: center;
+            padding-top: 150px;
+        }
+
+        .spotlight-content {
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .spotlight-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #2196F3;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .spotlight-commentary {
+            background: white;
+            border: 1px solid #2196F3;
+            border-radius: 6px;
+            padding: 12px;
+            margin-bottom: 12px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .spotlight-commentary strong {
+            color: #2196F3;
+        }
+
+        .spotlight-section {
+            background: #f9f9f9;
+            border-left: 3px solid #2196F3;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #555;
+            margin-bottom: 12px;
+        }
+
+        .print-hint {
+            font-size: 12px;
+            color: #999;
+            margin-top: 16px;
+            padding-top: 16px;
+            border-top: 1px solid #ddd;
+        }
+
+        .cheat-sheet {
+            page-break-inside: avoid;
+            background: white;
+            border: 2px solid #C6A906;
+            border-radius: 8px;
+            padding: 24px;
+            margin-bottom: 20px;
+        }
+
+        .cheat-sheet h2 {
+            font-size: 20px;
+            color: #333;
+            text-align: center;
+            margin-bottom: 8px;
+        }
+
+        .cheat-sheet-subtitle {
+            text-align: center;
+            color: #666;
+            font-size: 13px;
+            margin-bottom: 20px;
+            border-bottom: 1px solid #ddd;
+            padding-bottom: 12px;
+        }
+
+        .cheat-section {
+            margin-bottom: 20px;
+            page-break-inside: avoid;
+        }
+
+        .cheat-section h3 {
+            font-size: 14px;
+            font-weight: 700;
+            color: #C6A906;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+            padding-bottom: 6px;
+            border-bottom: 2px solid #C6A906;
+        }
+
+        .cheat-section p {
+            font-size: 12px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        .cheat-checklist {
+            list-style: none;
+            padding: 0;
+            margin: 0;
+        }
+
+        .cheat-checklist li {
+            font-size: 12px;
+            color: #555;
+            padding-left: 20px;
+            position: relative;
+            margin-bottom: 6px;
+            line-height: 1.4;
+        }
+
+        .cheat-checklist li:before {
+            content: '✓';
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: bold;
+        }
+
+        .print-button-container {
+            text-align: center;
+            margin: 20px 0;
+        }
+
+        .print-button-container button {
+            background: #27ae60;
+            color: white;
+            border: none;
+            padding: 12px 28px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .print-button-container button:hover {
+            background: #229954;
+        }
+
+        .cheat-sheet-container {
+            display: none;
+            margin-top: 40px;
+        }
+
+        .cheat-sheet-container.show {
+            display: block;
+        }
+
+        @media print {
+            body {
+                background: white;
+            }
+
+            .container {
+                box-shadow: none;
+            }
+
+            .header, .example-selector, .print-button-container, .phase-intro, .cv-grid {
+                display: none;
+            }
+
+            .cheat-sheet {
+                border: 2px solid #333;
+                page-break-after: always;
+            }
+
+            .print-hint {
+                display: none;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .cv-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>CV Examples Gallery</h1>
+            <p>Explore complete real CV examples from fitness professionals at different career stages</p>
+        </div>
+
+        <div class="content">
+            <div class="phase-title">Complete CV Examples</div>
+            <div class="phase-intro">
+                Explore how complete CVs are structured in real-world fitness professional examples. Select an example, then click on sections to explore them in detail with expert commentary. After reviewing all 3 examples, you'll unlock a printable cheat sheet to guide your own CV creation.
+            </div>
+
+            <div class="example-selector" id="exampleSelector"></div>
+            <button class="example-btn cheat-btn" id="cheatBtn" style="display: none;" onclick="viewCheatSheet()">📋 Cheat Sheet</button>
+
+            <div class="cv-grid">
+                <div class="cv-column spotlight-column">
+                    <div class="column-label">Section Spotlight</div>
+                    <div class="spotlight-panel" id="sectionSpotlight">
+                        <div class="spotlight-placeholder">Click a section in the CV to explore it in detail →</div>
+                    </div>
+                </div>
+                <div class="cv-column">
+                    <div class="column-label">Full CV</div>
+                    <div id="cvContainer"></div>
+                    <div class="print-hint">
+                        💡 Tip: You can print this CV using Ctrl+P (or Cmd+P on Mac) and save as PDF.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Cheat Sheet Modal -->
+    <div id="cheatSheetModal" style="display: none; position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0,0,0,0.5); z-index: 1000; overflow-y: auto;">
+        <div style="background: white; margin: 20px auto; max-width: 900px; border-radius: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.3);">
+            <div style="position: sticky; top: 0; background: linear-gradient(135deg, #C6A906 0%, #a68905 100%); padding: 20px; display: flex; justify-content: space-between; align-items: center; border-radius: 12px 12px 0 0;">
+                <h2 style="color: white; margin: 0; font-size: 18px;">CV Writing Cheat Sheet</h2>
+                <button onclick="closeCheatSheet()" style="background: white; color: #333; border: none; padding: 8px 16px; border-radius: 4px; cursor: pointer; font-weight: 600;">✕ Close</button>
+            </div>
+            <div id="cheatSheetContent" style="padding: 30px;"></div>
+            <div style="padding: 20px; text-align: center; border-top: 1px solid #ddd;">
+                <button onclick="window.print()" style="background: #27ae60; color: white; border: none; padding: 12px 28px; border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer;">🖨️ Print Cheat Sheet</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let reviewedCVs = new Set();
+
+        const sectionCommentary = {
+            'Professional Profile': {
+                title: 'Professional Profile/Summary',
+                commentary: 'This 3-5 sentence overview immediately tells employers your qualification level, relevant experience, and career focus. It\'s tailored to the specific role and demonstrates genuine interest through specificity.',
+                guidance: [
+                    'States qualification level upfront (Level 3, etc.)',
+                    'Mentions relevant experience (how long, in what setting)',
+                    'Shows specialisation or focus area',
+                    'Demonstrates passion/genuine interest in the field',
+                    'Tailored to the specific role/facility—not generic'
+                ]
+            },
+            'Professional Experience': {
+                title: 'Professional Experience',
+                commentary: 'This section demonstrates your actual achievements and value. Notice how each role includes specific outcomes—retention percentages, revenue generated, member improvements—rather than just listing duties. This shows impact, not just activity.',
+                guidance: [
+                    'Reverse chronological order (most recent first)',
+                    'Includes job title, company, and dates',
+                    'Each bullet is achievement-focused, not responsibility-focused',
+                    'Includes quantified results (percentages, numbers, outcomes)',
+                    'Shows progression and skill development',
+                    '3-6 bullets per role (most important achievements)'
+                ]
+            },
+            'Professional Qualifications': {
+                title: 'Professional Qualifications',
+                commentary: 'Fitness qualifications are presented clearly with awarding bodies and dates. This enables employers to verify credentials instantly. Professional body registration (CIMSPA) demonstrates commitment to standards and continuing development.',
+                guidance: [
+                    'Qualification title clearly stated',
+                    'Awarding body included (CIMSPA, REPS, St John, etc.)',
+                    'Date obtained (month/year)',
+                    'Professional body registration status shown',
+                    'Validity dates for time-sensitive qualifications (First Aid)',
+                    'Higher qualifications and specialist certs highlighted'
+                ]
+            },
+            'Key Skills': {
+                title: 'Key Skills',
+                commentary: 'Skills are categorised and specific rather than generic. Notice how they\'re organised into technical, interpersonal, and professional groups. This helps employers quickly identify relevant capabilities they\'re seeking.',
+                guidance: [
+                    'Grouped into categories (Technical, Interpersonal, Professional)',
+                    'Specific, not generic ("Periodisation principles" not "Good trainer")',
+                    'Aligned with job requirements and industry standards',
+                    'Include both hard and soft skills',
+                    'Reflect actual experience demonstrated earlier in CV',
+                    'Ordered by relevance to target role'
+                ]
+            }
+        };
+
+        const cvExamples = [
+            {
+                name: 'Recently Qualified PT',
+                experience: '0-6 months',
+                data: {
+                    name: 'Sarah Thompson',
+                    location: 'Manchester',
+                    phone: '07935 123456',
+                    email: 'sarah.thompson@email.com',
+                    profile: 'Newly qualified Level 3 Personal Trainer with practical gym experience and strong customer service background in retail. Passionate about helping clients achieve sustainable fitness goals through evidence-based programming. Seeking to develop expertise in strength training within a professional facility.',
+                    experience: [
+                        {
+                            title: 'Gym Instructor',
+                            company: 'XYZ Gym',
+                            dates: 'September 2023 – December 2023',
+                            bullets: [
+                                'Conducted induction sessions for new members, improving programme adherence by 25%',
+                                'Assessed member technique across resistance training and provided corrective guidance',
+                                'Maintained equipment safety and facility cleanliness to industry standards',
+                                'Supported personal trainers with client assessments and programme delivery'
+                            ]
+                        },
+                        {
+                            title: 'Sales Assistant',
+                            company: 'Retail Store',
+                            dates: 'January 2022 – August 2023',
+                            bullets: [
+                                'Delivered excellent customer service to diverse clientele, achieving satisfaction ratings above 95%',
+                                'Generated strong sales performance through relationship-building and product knowledge',
+                                'Trained 3 new team members on processes and customer service standards'
+                            ]
+                        }
+                    ],
+                    qualifications: [
+                        'Level 3 Personal Training Diploma | CIMSPA | January 2024',
+                        'Level 2 Gym Instructor Award | CIMSPA | June 2023',
+                        'First Aid at Work | St John Ambulance | Valid until December 2025',
+                        'CIMSPA Registered Professional'
+                    ],
+                    skills: [
+                        'Resistance training programming and progression',
+                        'Movement screening and form assessment',
+                        'Client induction and orientation',
+                        'Health and safety compliance',
+                        'Facility equipment operation',
+                        'Client communication and support'
+                    ]
+                }
+            },
+            {
+                name: 'Experienced PT (1-2 years)',
+                experience: '1-2 years',
+                data: {
+                    name: 'James Wilson',
+                    location: 'London',
+                    phone: '07921 456789',
+                    email: 'james.wilson@email.com',
+                    profile: 'Level 3 Personal Trainer with 18 months gym experience specialising in strength training and body composition coaching. Proven track record of delivering results for 20+ concurrent clients with 88% retention rate. Passionate about evidence-based programming and helping clients build sustainable fitness habits.',
+                    experience: [
+                        {
+                            title: 'Personal Trainer',
+                            company: 'ABC Fitness Centre',
+                            dates: 'February 2022 – Present',
+                            bullets: [
+                                'Deliver 18-22 personal training sessions weekly to diverse client base, achieving 88% retention rate',
+                                'Design individualised strength programmes using evidence-based periodisation, resulting in average client strength gains of 15-20%',
+                                'Develop nutrition and lifestyle guidance for clients, supporting sustainable behaviour change',
+                                'Contribute to facility social media content (Instagram, TikTok), increasing client engagement and facility visibility by 35%',
+                                'Mentor 2 junior trainers on programming principles and client communication'
+                            ]
+                        },
+                        {
+                            title: 'Fitness Instructor',
+                            company: 'ABC Fitness Centre',
+                            dates: 'September 2021 – January 2022',
+                            bullets: [
+                                'Delivered 3-4 group fitness classes weekly, maintaining average attendance of 15-20 members',
+                                'Generated £2,500+ in membership sales through relationship-based approach',
+                                'Supported personal trainers with client inductions and assessments'
+                            ]
+                        }
+                    ],
+                    qualifications: [
+                        'Level 3 Personal Training Diploma | CIMSPA | August 2021',
+                        'Level 2 Gym Instructor Award | CIMSPA | April 2021',
+                        'Strength and Conditioning Specialist | UKSCA | December 2023',
+                        'First Aid at Work | St John Ambulance | Valid until March 2026',
+                        'CIMSPA Registered Professional'
+                    ],
+                    skills: [
+                        'Resistance training programme design and periodisation',
+                        'Movement screening and corrective exercise prescription',
+                        'Nutrition coaching and behaviour change support',
+                        'Social media content creation and engagement',
+                        'Team mentoring and junior trainer development',
+                        'Client motivation and rapport-building',
+                        'Facility management software (Zen Planner, PT Distinction)'
+                    ]
+                }
+            },
+            {
+                name: 'Senior PT (3+ years)',
+                experience: '3+ years',
+                data: {
+                    name: 'Emma Davies',
+                    location: 'Bristol',
+                    phone: '07845 123789',
+                    email: 'emma.davies@email.com',
+                    profile: 'Senior Personal Trainer with 3.5 years progressive fitness experience and strong business acumen. Manage personal training client base of 35+ clients generating £48,000+ annual revenue. Specialist in pre/post-natal fitness and injury rehabilitation. Proven track record of mentoring junior staff and driving facility improvements through quality initiatives.',
+                    experience: [
+                        {
+                            title: 'Senior Personal Trainer',
+                            company: 'DEF Premium Fitness',
+                            dates: 'January 2022 – Present',
+                            bullets: [
+                                'Manage personal training client base of 35+ clients with 92% retention rate, generating £48,000+ annual revenue',
+                                'Mentor and supervise 3 junior trainers, conducting monthly development reviews and delivering evidence-based training workshops',
+                                'Develop specialist programming for pre/post-natal fitness and injury rehabilitation, expanding facility service offering',
+                                'Lead facility quality assurance initiatives, improving client satisfaction scores from 78% to 89%',
+                                'Develop fitness assessment protocols and documentation, standardising client onboarding across facility'
+                            ]
+                        },
+                        {
+                            title: 'Personal Trainer',
+                            company: 'DEF Premium Fitness',
+                            dates: 'March 2021 – December 2021',
+                            bullets: [
+                                'Delivered 20-25 sessions weekly to diverse clientele, building client base from 0 to 25 clients over 12 months',
+                                'Achieved 2+ gym memberships per month through relationship-based sales approach and facility advocacy',
+                                'Designed strength training programmes using periodisation principles, achieving average client strength improvements of 18-25%'
+                            ]
+                        },
+                        {
+                            title: 'Gym Supervisor',
+                            company: 'Leisure Centre',
+                            dates: 'June 2020 – February 2021',
+                            bullets: [
+                                'Supervised facility operations including staff management, health & safety compliance, and member services',
+                                'Conducted member inductions and fitness assessments for 15-20 weekly new joiners',
+                                'Trained 4 team members on induction procedures and customer service standards'
+                            ]
+                        }
+                    ],
+                    qualifications: [
+                        'Level 3 Personal Training Diploma | CIMSPA | May 2020',
+                        'Level 2 Gym Instructor Award | CIMSPA | January 2020',
+                        'Specialist Pre/Post-Natal Fitness | CIMSPA | September 2022',
+                        'Specialist Injury Rehabilitation | REPS UK | March 2023',
+                        'First Aid at Work | St John Ambulance | Valid until May 2026',
+                        'CIMSPA Registered Professional | Member since 2020'
+                    ],
+                    skills: [
+                        'Senior personal training programme design and periodisation',
+                        'Pre/post-natal fitness specialist programming',
+                        'Injury rehabilitation and corrective exercise prescription',
+                        'Team leadership and junior trainer mentoring',
+                        'Business development and revenue generation',
+                        'Client outcome tracking and performance analysis',
+                        'Health & Safety risk assessment and compliance',
+                        'Facility quality assurance and process improvement',
+                        'Advanced facility management software proficiency'
+                    ]
+                }
+            }
+        ];
+
+        function initializeExamples() {
+            const selector = document.getElementById('exampleSelector');
+            selector.innerHTML = '';
+
+            cvExamples.forEach((example, index) => {
+                const btn = document.createElement('button');
+                btn.className = 'example-btn' + (index === 0 ? ' active' : '');
+                btn.textContent = `${example.name} (${example.experience})`;
+                btn.onclick = () => showCV(index);
+                selector.appendChild(btn);
+            });
+
+            buildCheatSheet();
+            showCV(0);
+        }
+
+        function showCV(index) {
+            const example = cvExamples[index];
+            const data = example.data;
+
+            reviewedCVs.add(index);
+            const allReviewed = reviewedCVs.size === cvExamples.length;
+
+            document.querySelectorAll('.example-btn:not(.cheat-btn)').forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+
+            let html = `
+                <div class="cv-display">
+                    <div class="cv-header">
+                        <div class="cv-name">${data.name}</div>
+                        <div class="cv-contact">${data.location} | ${data.phone} | ${data.email}</div>
+                    </div>
+                    <div class="cv-section clickable" onclick="showSpotlight('Professional Profile')">
+                        <div class="cv-section-title">Professional Profile</div>
+                        <div class="cv-content">${data.profile}</div>
+                    </div>
+                    <div class="cv-section clickable" onclick="showSpotlight('Professional Experience')">
+                        <div class="cv-section-title">Professional Experience</div>
+                        <div class="cv-content">
+            `;
+            
+            data.experience.forEach(job => {
+                html += `
+                    <div class="cv-job">
+                        <div class="cv-job-title">${job.title}</div>
+                        <div class="cv-job-meta">${job.company} | ${job.dates}</div>
+                        ${job.bullets.map(bullet => `<div class="cv-bullet">${bullet}</div>`).join('')}
+                    </div>
+                `;
+            });
+
+            html += `
+                        </div>
+                    </div>
+                    <div class="cv-section clickable" onclick="showSpotlight('Professional Qualifications')">
+                        <div class="cv-section-title">Professional Qualifications</div>
+                        <div class="cv-content">
+                            ${data.qualifications.map(qual => `<div class="cv-bullet">${qual}</div>`).join('')}
+                        </div>
+                    </div>
+                    <div class="cv-section clickable" onclick="showSpotlight('Key Skills')">
+                        <div class="cv-section-title">Key Skills</div>
+                        <div class="cv-content">
+                            ${data.skills.map(skill => `<div class="cv-bullet">${skill}</div>`).join('')}
+                        </div>
+                    </div>
+                </div>
+            `;
+
+            document.getElementById('cvContainer').innerHTML = html;
+
+            // Show cheat sheet button if all reviewed
+            const cheatBtn = document.getElementById('cheatBtn');
+            if (allReviewed) {
+                cheatBtn.style.display = 'block';
+            }
+        }
+
+        function showSpotlight(sectionName) {
+            const spotlight = document.getElementById('sectionSpotlight');
+            const commentary = sectionCommentary[sectionName];
+
+            let html = `
+                <div class="spotlight-content">
+                    <div class="spotlight-title">📋 ${commentary.title}</div>
+                    <div class="spotlight-commentary">
+                        <strong>Why this section matters:</strong><br>
+                        ${commentary.commentary}
+                    </div>
+                    <div style="font-size: 12px; font-weight: 700; color: #2196F3; margin-bottom: 8px;">✓ What to include:</div>
+                    ${commentary.guidance.map(point => `<div class="spotlight-section">${point}</div>`).join('')}
+                </div>
+            `;
+
+            spotlight.innerHTML = html;
+
+            document.querySelectorAll('.cv-section.clickable').forEach(sec => {
+                sec.classList.remove('active');
+            });
+            event.target.closest('.cv-section').classList.add('active');
+        }
+
+        function viewCheatSheet() {
+            document.getElementById('cheatSheetModal').style.display = 'block';
+            document.body.style.overflow = 'hidden';
+        }
+
+        function closeCheatSheet() {
+            document.getElementById('cheatSheetModal').style.display = 'none';
+            document.body.style.overflow = 'auto';
+        }
+
+        window.onclick = function(event) {
+            const modal = document.getElementById('cheatSheetModal');
+            if (event.target == modal) {
+                closeCheatSheet();
+            }
+        }
+
+        function buildCheatSheet() {
+            const cheatSheetContent = document.getElementById('cheatSheetContent');
+            let html = `
+                <div class="print-button-container">
+                    <button onclick="window.print()">🖨️ Print CV Writing Cheat Sheet</button>
+                </div>
+
+                <div class="cheat-sheet">
+                    <h2>CV Writing Cheat Sheet</h2>
+                    <div class="cheat-sheet-subtitle">Quick Reference Guide for CV Structure and Content</div>
+
+                    <div class="cheat-section">
+                        <h3>1. Contact Information</h3>
+                        <ul class="cheat-checklist">
+                            <li>Full name at top</li>
+                            <li>City/Town (not full address)</li>
+                            <li>Professional phone number</li>
+                            <li>Professional email address</li>
+                            <li>LinkedIn profile URL (optional)</li>
+                        </ul>
+                    </div>
+
+                    <div class="cheat-section">
+                        <h3>2. Personal Profile (3-5 sentences)</h3>
+                        <ul class="cheat-checklist">
+                            <li>State your qualification level (Level 3, etc.)</li>
+                            <li>Mention relevant experience and duration</li>
+                            <li>Highlight specialisation or focus area</li>
+                            <li>Show genuine interest in fitness</li>
+                            <li>Tailor to each specific application</li>
+                        </ul>
+                    </div>
+
+                    <div class="cheat-section">
+                        <h3>3. Professional Experience (Reverse Chronological)</h3>
+                        <ul class="cheat-checklist">
+                            <li>Job title and company name</li>
+                            <li>Employment dates (Month/Year format)</li>
+                            <li>3-6 achievement-focused bullet points</li>
+                            <li>Include quantified results (%, numbers, outcomes)</li>
+                            <li>Demonstrate impact and value contributed</li>
+                            <li>Show progression and skill development</li>
+                        </ul>
+                    </div>
+
+                    <div class="cheat-section">
+                        <h3>4. Professional Qualifications</h3>
+                        <ul class="cheat-checklist">
+                            <li>Qualification title clearly stated</li>
+                            <li>Awarding body (CIMSPA, REPS, St John, etc.)</li>
+                            <li>Date obtained (Month/Year)</li>
+                            <li>Validity dates for time-sensitive quals (First Aid)</li>
+                            <li>Professional body registration status</li>
+                            <li>Highlight specialist certifications</li>
+                        </ul>
+                    </div>
+
+                    <div class="cheat-section">
+                        <h3>5. Key Skills</h3>
+                        <ul class="cheat-checklist">
+                            <li>Group into categories (Technical, Interpersonal, Professional)</li>
+                            <li>Be specific, not generic</li>
+                            <li>Align with job requirements</li>
+                            <li>Include hard and soft skills</li>
+                            <li>Order by relevance to target role</li>
+                            <li>Reflect actual experience from earlier sections</li>
+                        </ul>
+                    </div>
+
+                    <div class="cheat-section">
+                        <h3>Formatting Tips</h3>
+                        <ul class="cheat-checklist">
+                            <li>Length: 1-2 pages (recently qualified = 1 page)</li>
+                            <li>Font: Arial, Calibri, or Times New Roman, 10-12pt</li>
+                            <li>Spacing: 1.15 or 1.5 line height</li>
+                            <li>Adequate white space (don't cram content)</li>
+                            <li>Consistent formatting throughout</li>
+                            <li>Proofread multiple times for errors</li>
+                        </ul>
+                    </div>
+
+                    <div class="cheat-section">
+                        <h3>Key Principles</h3>
+                        <ul class="cheat-checklist">
+                            <li>Achievement-focused, not responsibility-focused</li>
+                            <li>Quantify results where possible (percentages, numbers)</li>
+                            <li>Tailor for each specific application</li>
+                            <li>Use specific terminology, not generic claims</li>
+                            <li>Be honest—never fabricate or exaggerate</li>
+                            <li>Employers spend 30-90 seconds on initial scan—make it count</li>
+                        </ul>
+                    </div>
+                </div>
+            `;
+
+            cheatSheetContent.innerHTML = html;
+        }
+
+        initializeExamples();
+    </script>
+</body>
+</html>
