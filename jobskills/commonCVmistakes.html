@@ -23,9 +23,9 @@ body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-s
 .intro-title {font-size: 28px; font-weight: 700; color: #333; margin-bottom: 12px;}
 .intro-text {font-size: 16px; line-height: 1.7; color: #666;}
 .cards-grid {display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin-top: 20px;}
-.flip-card {background: transparent; perspective: 1000px; height: 280px;}
+.flip-card {background: transparent; perspective: 1000px; height: 280px; cursor: pointer;}
 .flip-card-inner {position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d;}
-.flip-card:hover .flip-card-inner {transform: rotateY(180deg);}
+.flip-card.flipped .flip-card-inner {transform: rotateY(180deg);}
 .flip-card-front, .flip-card-back {position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px; padding: 25px; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15);}
 .flip-card-front {background: linear-gradient(135deg, #C6A906, #e0c040); color: white;}
 .flip-card-back {background: white; border: 3px solid #C6A906; transform: rotateY(180deg); justify-content: flex-start; padding-top: 20px; overflow-y: auto;}
@@ -57,17 +57,17 @@ body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-s
 <div class="main-content">
 <div class="intro-section">
 <div class="intro-title">6 Critical CV Errors to Avoid</div>
-<div class="intro-text">Several common errors undermine CV effectiveness and can lead employers to discard applications immediately. Hover over each card to learn about these mistakes and how to prevent them.</div>
+<div class="intro-text">Several common errors undermine CV effectiveness and can lead employers to discard applications immediately. Click each card to learn about these mistakes and how to prevent them.</div>
 </div>
 <div class="cards-grid">
 <!-- Error 1: Spelling and Grammar -->
-<div class="flip-card">
+<div class="flip-card" onclick="this.classList.toggle('flipped')">
 <div class="flip-card-inner">
 <div class="flip-card-front">
 <div class="card-icon">✏️</div>
 <div class="card-number">Error #1</div>
 <div class="card-title">Spelling & Grammar Errors</div>
-<div class="card-subtitle">Hover to learn more</div>
+<div class="card-subtitle">Click to learn more</div>
 </div>
 <div class="flip-card-back">
 <div class="back-error-type">Critical Error</div>
@@ -85,13 +85,13 @@ body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-s
 </div>
 </div>
 <!-- Error 2: Unexplained Gaps -->
-<div class="flip-card">
+<div class="flip-card" onclick="this.classList.toggle('flipped')">
 <div class="flip-card-inner">
 <div class="flip-card-front">
 <div class="card-icon">📅</div>
 <div class="card-number">Error #2</div>
 <div class="card-title">Unexplained Gaps</div>
-<div class="card-subtitle">Hover to learn more</div>
+<div class="card-subtitle">Click to learn more</div>
 </div>
 <div class="flip-card-back">
 <div class="back-error-type">Red Flag</div>
@@ -109,13 +109,13 @@ body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-s
 </div>
 </div>
 <!-- Error 3: Generic Content -->
-<div class="flip-card">
+<div class="flip-card" onclick="this.classList.toggle('flipped')">
 <div class="flip-card-inner">
 <div class="flip-card-front">
 <div class="card-icon">💬</div>
 <div class="card-number">Error #3</div>
 <div class="card-title">Generic, Non-Specific Content</div>
-<div class="card-subtitle">Hover to learn more</div>
+<div class="card-subtitle">Click to learn more</div>
 </div>
 <div class="flip-card-back">
 <div class="back-error-type">Weak Impact</div>
@@ -133,13 +133,13 @@ body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-s
 </div>
 </div>
 <!-- Error 4: Irrelevant Information -->
-<div class="flip-card">
+<div class="flip-card" onclick="this.classList.toggle('flipped')">
 <div class="flip-card-inner">
 <div class="flip-card-front">
 <div class="card-icon">🗑️</div>
 <div class="card-number">Error #4</div>
 <div class="card-title">Irrelevant Information</div>
-<div class="card-subtitle">Hover to learn more</div>
+<div class="card-subtitle">Click to learn more</div>
 </div>
 <div class="flip-card-back">
 <div class="back-error-type">Diluted Impact</div>
@@ -157,13 +157,13 @@ body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-s
 </div>
 </div>
 <!-- Error 5: Dishonesty -->
-<div class="flip-card">
+<div class="flip-card" onclick="this.classList.toggle('flipped')">
 <div class="flip-card-inner">
 <div class="flip-card-front">
 <div class="card-icon">⚠️</div>
 <div class="card-number">Error #5</div>
 <div class="card-title">Dishonesty or Exaggeration</div>
-<div class="card-subtitle">Hover to learn more</div>
+<div class="card-subtitle">Click to learn more</div>
 </div>
 <div class="flip-card-back">
 <div class="back-error-type">Serious Violation</div>
@@ -181,13 +181,13 @@ body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-s
 </div>
 </div>
 <!-- Error 6: Poor Contact Info -->
-<div class="flip-card">
+<div class="flip-card" onclick="this.classList.toggle('flipped')">
 <div class="flip-card-inner">
 <div class="flip-card-front">
 <div class="card-icon">📧</div>
 <div class="card-number">Error #6</div>
 <div class="card-title">Poor Contact Information</div>
-<div class="card-subtitle">Hover to learn more</div>
+<div class="card-subtitle">Click to learn more</div>
 </div>
 <div class="flip-card-back">
 <div class="back-error-type">Missed Opportunity</div>
