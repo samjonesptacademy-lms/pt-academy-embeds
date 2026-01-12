@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html style="background: #f8f9fa;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Reliability Consequences</title>
+<style>
+* {box-sizing: border-box; margin: 0; padding: 0;}
+html, body {background: #f8f9fa; min-height: 100vh;}
+body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; opacity: 1; visibility: visible;}
+.container {max-width: 1100px; margin: 0 auto;}
+.cover-screen {background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%); border-radius: 12px; padding: 80px 40px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.15); cursor: pointer; transition: all 0.3s ease; min-height: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center;}
+.cover-screen:hover {transform: translateY(-5px); box-shadow: 0 8px 30px rgba(0,0,0,0.2);}
+.cover-screen.hidden {display: none;}
+.cover-icon {font-size: 120px; margin-bottom: 30px;}
+.cover-title {font-size: 42px; font-weight: 700; color: white; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);}
+.cover-subtitle {font-size: 20px; color: white; margin-bottom: 40px; opacity: 0.95; line-height: 1.6; max-width: 700px;}
+.cover-button {background: white; color: #e74c3c; padding: 18px 50px; border-radius: 30px; font-size: 18px; font-weight: 700; border: none; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;}
+.cover-button:hover {transform: scale(1.05); box-shadow: 0 4px 15px rgba(0,0,0,0.3);}
+.main-content {display: none;}
+.main-content.visible {display: block;}
+.intro-section {background: white; border-radius: 12px; padding: 30px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); margin-bottom: 30px; text-align: center;}
+.intro-title {font-size: 28px; font-weight: 700; color: #333; margin-bottom: 15px;}
+.intro-text {font-size: 16px; line-height: 1.7; color: #666;}
+.scenarios-grid {display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 20px; margin-bottom: 30px;}
+.scenario-button {background: white; border: 3px solid #e9ecef; border-radius: 12px; padding: 25px 20px; cursor: pointer; transition: all 0.3s ease; text-align: center;}
+.scenario-button:hover {border-color: #C6A906; transform: translateY(-3px); box-shadow: 0 4px 15px rgba(0,0,0,0.1);}
+.scenario-button.active {border-color: #C6A906; background: #fff8e1;}
+.scenario-icon {font-size: 48px; margin-bottom: 15px;}
+.scenario-title {font-size: 18px; font-weight: 700; color: #333; line-height: 1.3;}
+.ripple-display {background: white; border-radius: 12px; padding: 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); display: none;}
+.ripple-display.active {display: block;}
+.ripple-chain {display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 15px; margin-bottom: 30px;}
+.ripple-step {flex: 1; min-width: 180px; text-align: center; position: relative;}
+.step-box {background: linear-gradient(135deg, #fff 0%, #f8f9fa 100%); border: 2px solid #e9ecef; border-radius: 12px; padding: 20px; transition: all 0.4s ease; opacity: 0; transform: translateY(20px);}
+.ripple-step.animate .step-box {opacity: 1; transform: translateY(0);}
+.ripple-step.step-1 .step-box {background: #ffebee; border-color: #e74c3c;}
+.ripple-step.step-2 .step-box {background: #fff3e0; border-color: #ff9800;}
+.ripple-step.step-3 .step-box {background: #fff8e1; border-color: #ffc107;}
+.ripple-step.step-4 .step-box {background: #ffcdd2; border-color: #c62828;}
+.step-number {display: inline-block; width: 32px; height: 32px; background: #C6A906; color: white; border-radius: 50%; font-weight: 700; line-height: 32px; margin-bottom: 12px; font-size: 16px;}
+.step-title {font-size: 16px; font-weight: 700; color: #333; margin-bottom: 8px;}
+.step-description {font-size: 13px; color: #666; line-height: 1.5;}
+.arrow {font-size: 32px; color: #C6A906; opacity: 0; transition: opacity 0.4s ease 0.2s;}
+.ripple-step.animate ~ .arrow {opacity: 1;}
+.key-message {background: #fff8e1; border: 3px solid #C6A906; border-radius: 12px; padding: 25px; text-align: center;}
+.key-message-icon {font-size: 48px; margin-bottom: 15px;}
+.key-message-text {font-size: 18px; font-weight: 700; color: #333; line-height: 1.6;}
+@media (max-width: 768px) {
+.scenarios-grid {grid-template-columns: 1fr;}
+.ripple-chain {flex-direction: column;}
+.arrow {display: none;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="cover-screen" onclick="showContent()">
+<div class="cover-icon">⚠️</div>
+<div class="cover-title">The Ripple Effect</div>
+<div class="cover-subtitle">How small reliability issues create cascading business problems</div>
+<button class="cover-button">Explore Consequences →</button>
+</div>
+<div class="main-content">
+<div class="intro-section">
+<div class="intro-title">Small Actions, Big Consequences</div>
+<div class="intro-text">Select a reliability issue below to see how one unreliable action creates a ripple effect throughout the business, affecting clients, colleagues, and management.</div>
+</div>
+<div class="scenarios-grid">
+<div class="scenario-button" onclick="showRipple(1)">
+<div class="scenario-icon">⏰</div>
+<div class="scenario-title">Late Arrival</div>
+</div>
+<div class="scenario-button" onclick="showRipple(2)">
+<div class="scenario-icon">❌</div>
+<div class="scenario-title">Missed Session</div>
+</div>
+<div class="scenario-button" onclick="showRipple(3)">
+<div class="scenario-icon">📱</div>
+<div class="scenario-title">Poor Communication</div>
+</div>
+<div class="scenario-button" onclick="showRipple(4)">
+<div class="scenario-icon">🚫</div>
+<div class="scenario-title">Repeated Absence</div>
+</div>
+</div>
+<div class="ripple-display" id="ripple1">
+<div class="ripple-chain">
+<div class="ripple-step step-1">
+<div class="step-box">
+<div class="step-number">1</div>
+<div class="step-title">Late Arrival</div>
+<div class="step-description">Trainer arrives 10 minutes late for client session</div>
+</div>
+</div>
+<div class="arrow">→</div>
+<div class="ripple-step step-2">
+<div class="step-box">
+<div class="step-number">2</div>
+<div class="step-title">Client Dissatisfaction</div>
+<div class="step-description">Client pays for 60 minutes but receives 50; feels disrespected</div>
+</div>
+</div>
+<div class="arrow">→</div>
+<div class="ripple-step step-3">
+<div class="step-box">
+<div class="step-number">3</div>
+<div class="step-title">Formal Complaint</div>
+<div class="step-description">Client complains to management; requires investigation and response</div>
+</div>
+</div>
+<div class="arrow">→</div>
+<div class="ripple-step step-4">
+<div class="step-box">
+<div class="step-number">4</div>
+<div class="step-title">Membership Cancellation</div>
+<div class="step-description">Loss of revenue, damaged reputation, wasted acquisition cost</div>
+</div>
+</div>
+</div>
+<div class="key-message">
+<div class="key-message-icon">💡</div>
+<div class="key-message-text">One 10-minute delay affects the client, creates admin work, damages facility reputation, and results in revenue loss. One unreliable action rarely affects only one person.</div>
+</div>
+</div>
+<div class="ripple-display" id="ripple2">
+<div class="ripple-chain">
+<div class="ripple-step step-1">
+<div class="step-box">
+<div class="step-number">1</div>
+<div class="step-title">Missed Session</div>
+<div class="step-description">Trainer doesn't show up for scheduled client appointment</div>
+</div>
+</div>
+<div class="arrow">→</div>
+<div class="ripple-step step-2">
+<div class="step-box">
+<div class="step-number">2</div>
+<div class="step-title">Refunds Required</div>
+<div class="step-description">Client demands refund; immediate revenue loss</div>
+</div>
+</div>
+<div class="arrow">→</div>
+<div class="ripple-step step-3">
+<div class="step-box">
+<div class="step-number">3</div>
+<div class="step-title">Admin Workload</div>
+<div class="step-description">Staff process refunds, reschedule, handle complaints instead of normal duties</div>
+</div>
+</div>
+<div class="arrow">→</div>
+<div class="ripple-step step-4">
+<div class="step-box">
+<div class="step-number">4</div>
+<div class="step-title">Management Frustration</div>
+<div class="step-description">Time spent addressing avoidable problem; trust in trainer diminishes</div>
+</div>
+</div>
+</div>
+<div class="key-message">
+<div class="key-message-icon">💡</div>
+<div class="key-message-text">One missed session creates immediate financial loss, diverts staff from productive work, and erodes management confidence. The cost extends far beyond one appointment.</div>
+</div>
+</div>
+<div class="ripple-display" id="ripple3">
+<div class="ripple-chain">
+<div class="ripple-step step-1">
+<div class="step-box">
+<div class="step-number">1</div>
+<div class="step-title">Poor Communication</div>
+<div class="step-description">Trainer fails to inform team about schedule changes or client updates</div>
+</div>
+</div>
+<div class="arrow">→</div>
+<div class="ripple-step step-2">
+<div class="step-box">
+<div class="step-number">2</div>
+<div class="step-title">Scheduling Chaos</div>
+<div class="step-description">Double bookings, missed appointments, confusion about coverage</div>
+</div>
+</div>
+<div class="arrow">→</div>
+<div class="ripple-step step-3">
+<div class="step-box">
+<div class="step-number">3</div>
+<div class="step-title">Colleague Resentment</div>
+<div class="step-description">Other staff cover mistakes, work extra, clean up problems</div>
+</div>
+</div>
+<div class="arrow">→</div>
+<div class="ripple-step step-4">
+<div class="step-box">
+<div class="step-number">4</div>
+<div class="step-title">Team Breakdown</div>
+<div class="step-description">Toxic workplace culture; colleagues refuse to help unreliable trainer</div>
+</div>
+</div>
+</div>
+<div class="key-message">
+<div class="key-message-icon">💡</div>
+<div class="key-message-text">Poor communication forces colleagues to compensate for your disorganization. This builds resentment, damages relationships, and isolates you professionally.</div>
+</div>
+</div>
+<div class="ripple-display" id="ripple4">
+<div class="ripple-chain">
+<div class="ripple-step step-1">
+<div class="step-box">
+<div class="step-number">1</div>
+<div class="step-title">Repeated Absence</div>
+<div class="step-description">Pattern of calling in sick or unexplained no-shows develops</div>
+</div>
+</div>
+<div class="arrow">→</div>
+<div class="ripple-step step-2">
+<div class="step-box">
+<div class="step-number">2</div>
+<div class="step-title">Loss of Trust</div>
+<div class="step-description">Management and colleagues stop believing excuses; reputation damaged</div>
+</div>
+</div>
+<div class="arrow">→</div>
+<div class="ripple-step step-3">
+<div class="step-box">
+<div class="step-number">3</div>
+<div class="step-title">Reduced Hours</div>
+<div class="step-description">Employer stops offering prime shifts; income decreases significantly</div>
+</div>
+</div>
+<div class="arrow">→</div>
+<div class="ripple-step step-4">
+<div class="step-box">
+<div class="step-number">4</div>
+<div class="step-title">Termination</div>
+<div class="step-description">Employment ends; negative reference affects future opportunities</div>
+</div>
+</div>
+</div>
+<div class="key-message">
+<div class="key-message-icon">💡</div>
+<div class="key-message-text">Repeated unreliability destroys professional reputation permanently. Future employers contact previous employers—your reliability record follows you throughout your career.</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+(function() {
+document.documentElement.style.visibility = 'visible';
+document.body.style.visibility = 'visible';
+})();
+window.showContent = function() {
+document.querySelector('.cover-screen').classList.add('hidden');
+document.querySelector('.main-content').classList.add('visible');
+};
+window.showRipple = function(num) {
+const buttons = document.querySelectorAll('.scenario-button');
+const displays = document.querySelectorAll('.ripple-display');
+buttons.forEach((btn, i) => {
+if (i + 1 === num) {
+btn.classList.add('active');
+} else {
+btn.classList.remove('active');
+}
+});
+displays.forEach((display) => {
+display.classList.remove('active');
+display.querySelectorAll('.ripple-step').forEach(step => step.classList.remove('animate'));
+});
+const selectedDisplay = document.getElementById('ripple' + num);
+selectedDisplay.classList.add('active');
+const steps = selectedDisplay.querySelectorAll('.ripple-step');
+steps.forEach((step, index) => {
+setTimeout(() => {
+step.classList.add('animate');
+}, index * 400);
+});
+selectedDisplay.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+};
+</script>
+</body>
+</html>
