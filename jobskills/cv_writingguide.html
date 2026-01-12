@@ -1,0 +1,1034 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CV Writing Guide - Information Activity</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #C6A906 0%, #a68905 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 30px 20px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e0e0e0;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            color: #C6A906;
+        }
+
+        .tab-btn.active {
+            color: #C6A906;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #C6A906;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .accordion {
+            margin-bottom: 12px;
+        }
+
+        .accordion-header {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            padding: 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            border-radius: 6px;
+            font-weight: 600;
+            color: #333;
+            font-size: 15px;
+            user-select: none;
+        }
+
+        .accordion-header:hover {
+            background: #f5f5f5;
+            border-color: #C6A906;
+        }
+
+        .accordion-icon {
+            font-size: 18px;
+            transition: transform 0.3s ease;
+            color: #C6A906;
+            font-weight: bold;
+        }
+
+        .accordion.open .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-top: none;
+            border-bottom-left-radius: 6px;
+            border-bottom-right-radius: 6px;
+        }
+
+        .accordion.open .accordion-content {
+            max-height: 800px;
+            padding: 16px;
+        }
+
+        .accordion-text {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #555;
+        }
+
+        .accordion-text p {
+            margin-bottom: 12px;
+        }
+
+        .accordion-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .point-list {
+            list-style: none;
+            margin: 12px 0;
+        }
+
+        .point-list li {
+            padding-left: 24px;
+            position: relative;
+            margin-bottom: 10px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .point-list li:before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #C6A906;
+            font-weight: bold;
+        }
+
+        .section-number {
+            font-size: 12px;
+            color: #C6A906;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        .key-point {
+            background: #fffbf0;
+            border-left: 3px solid #C6A906;
+            padding: 12px 14px;
+            margin: 12px 0;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .key-point strong {
+            color: #333;
+        }
+
+        .example-box {
+            background: #f0f8ff;
+            border-left: 3px solid #2196F3;
+            padding: 12px 14px;
+            margin: 12px 0;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #444;
+        }
+
+        .example-label {
+            font-weight: 700;
+            color: #2196F3;
+            margin-bottom: 6px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .comparison-item {
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .avoid {
+            background: #ffe8e8;
+            border-left: 3px solid #e74c3c;
+        }
+
+        .seek {
+            background: #e8f5e9;
+            border-left: 3px solid #27ae60;
+        }
+
+        .avoid-label, .seek-label {
+            font-weight: 700;
+            margin-bottom: 6px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .avoid-label {
+            color: #e74c3c;
+        }
+
+        .seek-label {
+            color: #27ae60;
+        }
+
+        .progress-indicator {
+            display: flex;
+            gap: 6px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            justify-content: center;
+        }
+
+        .progress-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.active {
+            background: #C6A906;
+            transform: scale(1.3);
+        }
+
+        .code-block {
+            background: #f5f5f5;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            padding: 12px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            margin: 12px 0;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 640px) {
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .tabs {
+                gap: 4px;
+            }
+
+            .tab-btn {
+                padding: 10px 12px;
+                font-size: 12px;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .accordion-header {
+                font-size: 14px;
+                padding: 14px;
+            }
+
+            .content {
+                padding: 20px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>CV Writing Guide</h1>
+            <p>Master the essential skills to create professional CVs that get fitness jobs</p>
+        </div>
+
+        <div class="content">
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('purpose')">CV Purpose</button>
+                <button class="tab-btn" onclick="switchTab('structure')">Structure</button>
+                <button class="tab-btn" onclick="switchTab('content')">Content</button>
+                <button class="tab-btn" onclick="switchTab('tailoring')">Tailoring</button>
+                <button class="tab-btn" onclick="switchTab('mistakes')">Common Mistakes</button>
+            </div>
+
+            <!-- Tab 1: CV Purpose -->
+            <div id="purpose" class="tab-content active">
+                <div class="section-number">Section 1 of 5</div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>What is a CV and Why Does It Matter?</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>A Curriculum Vitae (CV) is a marketing document presenting professional qualifications, experience, skills, and achievements to potential employers. Within recruitment processes, CVs function as initial screening tools enabling employers to assess whether candidates warrant interview invitations.</p>
+                            
+                            <div class="key-point">
+                                <strong>The Reality:</strong> Employers typically spend 30-90 seconds reviewing CVs during initial screening. Your CV must capture attention quickly and demonstrate relevance immediately.
+                            </div>
+
+                            <p><strong>CVs achieve multiple key objectives:</strong></p>
+                            <ul class="point-list">
+                                <li>Capturing employer attention within brief review periods</li>
+                                <li>Demonstrating relevant qualifications and experience for target positions</li>
+                                <li>Highlighting achievements and value contributions rather than merely listing responsibilities</li>
+                                <li>Presenting information accessibly through clear structure and formatting</li>
+                                <li>Creating positive first impressions that position you as professional and capable</li>
+                            </ul>
+
+                            <div class="key-point">
+                                <strong>For Fitness Professionals:</strong> The fitness industry presents specific considerations. Many candidates possess similar baseline qualifications (Level 2, Level 3), making differentiation through achievement demonstration, experience articulation, and professional presentation particularly important.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>The Fitness Employment Landscape</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Employment within the fitness sector extends beyond technical training competence to encompass interpersonal skills, commercial awareness, operational reliability, and cultural fit within facility environments.</p>
+
+                            <p><strong>What Fitness Employers Prioritise:</strong></p>
+                            <ul class="point-list">
+                                <li><strong>Reliability and Professionalism:</strong> Consistent attendance, punctuality, and professional conduct</li>
+                                <li><strong>Customer Service Excellence:</strong> Member satisfaction, communication skills, rapport-building</li>
+                                <li><strong>Sales and Commercial Awareness:</strong> Understanding member retention, facility revenue generation</li>
+                                <li><strong>Technical Competence:</strong> Valid qualifications, evidence-based programming, safety awareness</li>
+                                <li><strong>Team Compatibility:</strong> Working well with colleagues, facility culture alignment</li>
+                            </ul>
+
+                            <div class="key-point">
+                                <strong>Key Insight:</strong> Whilst technical qualifications provide essential foundations, the differentiating factors between successful and unsuccessful candidates often relate to soft skills, professional conduct, and demonstrated understanding of business requirements.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Structure -->
+            <div id="structure" class="tab-content">
+                <div class="section-number">Section 2 of 5</div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Contact Information</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Your CV header should prominently display essential contact details enabling employers to reach you easily.</p>
+
+                            <div class="key-point">
+                                <strong>Must Include:</strong> Full name, location (city/town only - no need for complete address for privacy/GDPR), phone number, professional email address
+                            </div>
+
+                            <p><strong>Optional Elements:</strong></p>
+                            <ul class="point-list">
+                                <li>LinkedIn profile URL</li>
+                                <li>Professional website or portfolio</li>
+                            </ul>
+
+                            <div class="comparison-grid">
+                                <div class="comparison-item avoid">
+                                    <div class="avoid-label">❌ Avoid</div>
+                                    Informal or inappropriate email addresses (partygirl2005@, fitnessguy88@, etc.). These undermine professionalism immediately.
+                                </div>
+                                <div class="comparison-item seek">
+                                    <div class="seek-label">✓ Seek</div>
+                                    Professional email addresses (firstname.lastname@, firstnamelastname@). Creating dedicated professional emails demonstrates commitment.
+                                </div>
+                            </div>
+
+                            <div class="example-box">
+                                <div class="example-label">💡 Example</div>
+                                <strong>Sarah Thompson</strong><br>
+                                Manchester | 07935 123456 | sarah.thompson@email.com | linkedin.com/in/sarahthompson
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Personal Profile / Professional Summary</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>A concise opening statement (3-5 sentences or 50-100 words) summarising professional identity, key strengths, relevant experience, and career objectives.</p>
+
+                            <div class="key-point">
+                                <strong>Critical Principle:</strong> Personal profiles should be tailored for specific applications rather than generic statements applicable to any role.
+                            </div>
+
+                            <div class="example-box">
+                                <div class="example-label">💡 Good Example</div>
+                                "Newly qualified Level 3 Personal Trainer with Level 2 Gym Instructor experience and strong customer service background from retail management. Passionate about helping clients achieve sustainable lifestyle changes through evidence-based programming and motivational coaching. Seeking to contribute to [Facility Name]'s member experience team whilst developing specialisation in strength training for older adults."
+                            </div>
+
+                            <p>This example demonstrates:</p>
+                            <ul class="point-list">
+                                <li>Qualification level and relevant experience</li>
+                                <li>Transferable skills from other industries</li>
+                                <li>Specific interests and specialisations</li>
+                                <li>Tailored application to the specific facility</li>
+                            </ul>
+
+                            <div class="comparison-grid">
+                                <div class="comparison-item avoid">
+                                    <div class="avoid-label">❌ Generic Profile</div>
+                                    "Passionate fitness professional seeking to work with diverse clients in a dynamic environment. Hard worker with strong communication skills."
+                                </div>
+                                <div class="comparison-item seek">
+                                    <div class="seek-label">✓ Tailored Profile</div>
+                                    "Level 3 Personal Trainer with 6 months' placement experience in boutique strength studios. Specialising in female-focused strength and conditioning for 25-45 year olds."
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Employment History</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Reverse chronological listing of relevant work experience including job titles, employer names, employment dates (month/year format), and key responsibilities and achievements.</p>
+
+                            <div class="key-point">
+                                <strong>Each position should include 3-6 bullet points</strong> highlighting significant duties, accomplishments, or skills developed.
+                            </div>
+
+                            <p><strong>What to Include:</strong></p>
+                            <ul class="point-list">
+                                <li>Previous fitness industry roles</li>
+                                <li>Customer service positions demonstrating transferable skills</li>
+                                <li>Sales or business development experience</li>
+                                <li>Team leadership or supervisory roles</li>
+                                <li>Any positions demonstrating reliability, professionalism, and relevant competencies</li>
+                            </ul>
+
+                            <div class="key-point">
+                                <strong>Transferable Skills:</strong> Even experience outside fitness can demonstrate value. Retail experience shows customer service and communication; hospitality shows multitasking and service excellence; teaching develops communication and instruction skills.
+                            </div>
+
+                            <div class="example-box">
+                                <div class="example-label">💡 Good Example</div>
+                                <strong>Personal Trainer | XYZ Gym | March 2024 – Present</strong><br>
+                                • Design and deliver strength training programmes for diverse clients, resulting in 90% client retention<br>
+                                • Conduct movement assessments and develop individualised progressions for 15+ weekly clients<br>
+                                • Advise members on nutrition and lifestyle strategies, supporting sustainable behaviour change<br>
+                                • Contribute to facility's social media content, increasing member engagement by 35%
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Education and Qualifications</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Listing of relevant academic and professional qualifications including qualification titles, awarding bodies, dates obtained, and optionally, grade/classification.</p>
+
+                            <div class="key-point">
+                                <strong>For Fitness Professionals:</strong> Fitness qualifications (Level 2, Level 3, specialist certifications) should feature prominently, potentially in dedicated "Professional Qualifications" sections separate from academic education.
+                            </div>
+
+                            <p><strong>Include:</strong></p>
+                            <ul class="point-list">
+                                <li>Qualification titles and awarding bodies</li>
+                                <li>Dates obtained (month/year)</li>
+                                <li>Registration status with professional bodies (CIMSPA, REPs) – demonstrates professional commitment and meets employer requirements</li>
+                                <li>Grade/classification for relevant higher education</li>
+                            </ul>
+
+                            <div class="example-box">
+                                <div class="example-label">💡 Good Example</div>
+                                <strong>Professional Qualifications:</strong><br>
+                                • Level 3 Personal Training Diploma | CIMSPA | March 2024<br>
+                                • Level 2 Gym Instructor Award | CIMSPA | June 2023<br>
+                                • First Aid at Work | St John Ambulance | Valid until December 2025<br>
+                                • CIMSPA Registered Professional
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Skills Section</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Highlighting key competencies relevant to fitness roles including technical skills, soft skills, practical capabilities, and additional relevant abilities.</p>
+
+                            <p><strong>Skills Categories:</strong></p>
+                            <ul class="point-list">
+                                <li><strong>Technical Skills:</strong> Programme design, movement analysis, specific training modalities, exercise programming</li>
+                                <li><strong>Soft Skills:</strong> Communication, motivation, rapport-building, active listening, problem-solving</li>
+                                <li><strong>Practical Capabilities:</strong> Equipment proficiency, software/technology skills, assessment techniques</li>
+                                <li><strong>Additional Assets:</strong> First aid qualification, nutrition knowledge, additional languages</li>
+                            </ul>
+
+                            <div class="comparison-grid">
+                                <div class="comparison-item avoid">
+                                    <div class="avoid-label">❌ Generic</div>
+                                    "Good trainer", "Hard worker", "Team player", "Excellent communication"
+                                </div>
+                                <div class="comparison-item seek">
+                                    <div class="seek-label">✓ Specific</div>
+                                    "Proficient in strength training programming using periodisation principles", "Experienced in nutrition coaching for sustainable behaviour change"
+                                </div>
+                            </div>
+
+                            <div class="example-box">
+                                <div class="example-label">💡 Good Example</div>
+                                <strong>Key Skills:</strong><br>
+                                • Resistance training programme design and progressive overload<br>
+                                • Movement screening and corrective exercise programming<br>
+                                • Client behaviour change coaching and motivation<br>
+                                • Nutrition guidance and lifestyle counselling<br>
+                                • Facility management software (Zen Planner, PT Distinction)<br>
+                                • Health and safety risk assessment
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Additional Sections (Optional)</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Depending on individual circumstances, CVs might include additional sections. However, these should add genuine value rather than padding.</p>
+
+                            <p><strong>Potentially Valuable Additions:</strong></p>
+                            <ul class="point-list">
+                                <li>Volunteer experience (especially in fitness/community settings)</li>
+                                <li>Awards or recognition from employers or professional bodies</li>
+                                <li>Professional development and continuing education</li>
+                                <li>Relevant hobbies/interests that demonstrate professional commitment</li>
+                                <li>Publications or presentations in fitness field</li>
+                            </ul>
+
+                            <div class="key-point">
+                                <strong>Quality Over Quantity:</strong> Every piece of information should serve the purpose of demonstrating suitability for fitness roles. Irrelevant hobbies or interests consume valuable space without enhancing your application.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Content -->
+            <div id="content" class="tab-content">
+                <div class="section-number">Section 3 of 5</div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Achievement vs. Responsibility Focus</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>The distinction between responsibility-focused and achievement-focused CV content significantly impacts effectiveness. Many candidates merely list job duties without demonstrating actual accomplishments or value contributions.</p>
+
+                            <div class="comparison-grid">
+                                <div class="comparison-item avoid">
+                                    <div class="avoid-label">❌ Responsibility-Focused</div>
+                                    "Responsible for delivering personal training sessions. Assisted members with fitness guidance. Managed facility equipment and facilities."
+                                </div>
+                                <div class="comparison-item seek">
+                                    <div class="seek-label">✓ Achievement-Focused</div>
+                                    "Delivered 15+ personal training sessions weekly, achieving 90% client retention through personalised programming. Increased facility equipment utilisation by 40% through equipment maintenance and member education."
+                                </div>
+                            </div>
+
+                            <p><strong>Achievement-focused content demonstrates:</strong></p>
+                            <ul class="point-list">
+                                <li>Quantified results and impact (percentages, numbers, specific outcomes)</li>
+                                <li>Value you contributed beyond basic job duties</li>
+                                <li>Problem-solving and initiative</li>
+                                <li>Measurable improvements and positive changes</li>
+                            </ul>
+
+                            <div class="key-point">
+                                <strong>The Formula:</strong> Action verb + specific responsibility + quantified or specific result = compelling achievement statement
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Formatting and Presentation</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>CV presentation significantly influences first impressions and readability. Well-formatted CVs appear professional, enable quick information scanning, and create positive impressions before content is even read.</p>
+
+                            <p><strong>Best Practices:</strong></p>
+                            <ul class="point-list">
+                                <li><strong>Length:</strong> 1-2 pages for fitness professionals. Recently qualified trainers can effectively present credentials on single pages; experienced professionals might extend to two pages. Avoid exceeding two pages unless extraordinary circumstances justify length.</li>
+                                <li><strong>Font:</strong> Professional, readable fonts (Arial, Calibri, Times New Roman) in 10-12 point size. Avoid decorative or highly stylised fonts.</li>
+                                <li><strong>White Space:</strong> Adequate white space prevents overwhelming appearance and aids readability.</li>
+                                <li><strong>Consistency:</strong> Consistent font, spacing, and formatting throughout creates polished appearance.</li>
+                                <li><strong>Line Spacing:</strong> 1.15 or 1.5 spacing aids readability without excessive waste of space.</li>
+                            </ul>
+
+                            <div class="key-point">
+                                <strong>The 30-Second Test:</strong> Can someone quickly scan your CV and understand your key qualifications and experience? If not, reconsider your layout and formatting.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Proofreading and Accuracy</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>CVs with spelling, grammar, or formatting errors undermine credibility and professionalism. Multiple errors may lead employers to discard CVs without further consideration.</p>
+
+                            <p><strong>Proofreading Strategy:</strong></p>
+                            <ul class="point-list">
+                                <li>Proofread meticulously multiple times</li>
+                                <li>Have additional people review your CV for errors you might overlook</li>
+                                <li>Read CVs aloud to identify awkward phrasing or errors missed during silent reading</li>
+                                <li>Use spell-check and grammar tools, but don't rely solely on automated checking</li>
+                                <li>Check dates, employer names, and qualification details for accuracy</li>
+                            </ul>
+
+                            <div class="key-point">
+                                <strong>Honesty is Non-Negotiable:</strong> Never fabricate qualifications, employment dates, or responsibilities. Dishonesty is a serious ethical violation that can result in employment termination if discovered later. Employers commonly verify qualifications and may contact previous employers.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Handling Employment Gaps</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Significant unexplained gaps in employment history create concern and questions for employers. Whilst gaps occur for legitimate reasons, addressing them briefly and honestly prevents speculation.</p>
+
+                            <div class="example-box">
+                                <div class="example-label">💡 Examples of Addressing Gaps</div>
+                                • Career break for family care<br>
+                                • Travelled whilst completing fitness qualifications<br>
+                                • Self-employment in freelance personal training<br>
+                                • Study leave to complete professional development
+                            </div>
+
+                            <p>Brief explanations provide context without excessive detail. This demonstrates transparency and prevents employers from making unfounded assumptions about employment gaps.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 4: Tailoring -->
+            <div id="tailoring" class="tab-content">
+                <div class="section-number">Section 4 of 5</div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Why Tailor Your CV?</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Generic CVs rarely prove as effective as tailored applications reflecting specific position requirements. Tailoring demonstrates genuine interest and understanding of employer needs.</p>
+
+                            <div class="key-point">
+                                <strong>Tailoring Principle:</strong> Tailoring does not mean fabricating experience or qualifications but rather emphasising genuinely relevant elements whilst de-emphasising less relevant aspects.
+                            </div>
+
+                            <p><strong>Tailoring Involves:</strong></p>
+                            <ul class="point-list">
+                                <li>Adjusting personal profiles to reflect specific employer and role</li>
+                                <li>Emphasising experience and skills most relevant to particular positions</li>
+                                <li>Incorporating keywords from job advertisements</li>
+                                <li>Demonstrating research and understanding of employer facilities</li>
+                                <li>Aligning achievement examples with employer values or priorities</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Analysing Job Advertisements</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Effective tailoring begins with careful job advertisement analysis identifying key information and priorities.</p>
+
+                            <p><strong>Analyse Advertisements For:</strong></p>
+                            <ul class="point-list">
+                                <li>Required and desirable qualifications and skills</li>
+                                <li>Key responsibilities and duties repeated across the description</li>
+                                <li>Employer values and culture indicators</li>
+                                <li>Specific competencies emphasised repeatedly</li>
+                                <li>Language and terminology used by employers</li>
+                            </ul>
+
+                            <div class="key-point">
+                                <strong>Keyword Strategy:</strong> Note frequently repeated terms or concepts in advertisements as these typically represent highest priorities. If advertisements emphasise "member engagement," "community building," or "service excellence" repeatedly, your CV should highlight relevant experience using similar terminology.
+                            </div>
+
+                            <div class="example-box">
+                                <div class="example-label">💡 Example</div>
+                                <strong>Job Ad Keywords:</strong> "Member engagement", "community-focused", "group fitness experience", "social media savvy"<br><br>
+                                <strong>Your CV Should Emphasise:</strong> Your group fitness classes (if you have them), community event participation, and social media contributions
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Tailoring Strategies</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Practical approaches to tailoring your CV for specific opportunities.</p>
+
+                            <p><strong>Personal Profile Tailoring (Maximum Opportunity):</strong></p>
+                            <p>Personal profiles offer maximum tailoring opportunity as they can be completely rewritten for each application without changing factual employment history.</p>
+
+                            <div class="example-box">
+                                <div class="example-label">💡 Example</div>
+                                <strong>Generic Profile:</strong> "Level 3 Personal Trainer with gym experience."<br><br>
+                                <strong>Tailored for boutique studio role:</strong> "Level 3 Personal Trainer with 12 months' boutique studio experience specialising in small-group strength training and individualised programming for members aged 30-50."<br><br>
+                                <strong>Tailored for leisure centre role:</strong> "Level 3 Personal Trainer with strong customer service background passionate about making fitness accessible to diverse populations in community leisure environments."
+                            </div>
+
+                            <p><strong>Skills Section Reordering:</strong></p>
+                            <p>Reorder your skills section to prioritise most relevant capabilities for specific positions. A role emphasising sales might prioritize commercial skills; a community-focused role might prioritize communication and accessibility.</p>
+
+                            <p><strong>Experience Emphasis:</strong></p>
+                            <p>For roles emphasising sales and business development, highlight relevant sales experience and commercial achievements. For positions prioritising client care and service excellence, emphasise client retention, satisfaction achievements, and service delivery quality.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 5: Common Mistakes -->
+            <div id="mistakes" class="tab-content">
+                <div class="section-number">Section 5 of 5</div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Generic, Non-Specific Content</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Vague descriptions without supporting evidence fail to differentiate candidates and appear lazy or unprepared.</p>
+
+                            <div class="comparison-grid">
+                                <div class="comparison-item avoid">
+                                    <div class="avoid-label">❌ Weak</div>
+                                    "Good communicator", "Hard worker", "Team player", "Experienced trainer"
+                                </div>
+                                <div class="comparison-item seek">
+                                    <div class="seek-label">✓ Strong</div>
+                                    "Delivered individualised coaching to 20+ weekly clients with 87% retention rate", "Led team of 5 junior trainers through mentoring and development"
+                                </div>
+                            </div>
+
+                            <p><strong>Every claim should be specific and demonstrable.</strong> Specific examples, quantified achievements, and concrete skill demonstrations prove far more persuasive than generic claims applicable to any candidate.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Spelling, Grammar, and Formatting Errors</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Multiple errors undermine credibility and professionalism, potentially leading employers to discard CVs without further consideration.</p>
+
+                            <p><strong>Common errors include:</strong></p>
+                            <ul class="point-list">
+                                <li>Spelling mistakes and typos</li>
+                                <li>Grammar errors and awkward phrasing</li>
+                                <li>Inconsistent formatting or fonts</li>
+                                <li>Incorrect dates or employer information</li>
+                                <li>Inconsistent capitalization or punctuation</li>
+                            </ul>
+
+                            <div class="key-point">
+                                <strong>Prevention Strategy:</strong> Proofread meticulously, have others review your CV, read aloud for fluency, and use tools (but don't rely solely on automated checking).
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Irrelevant Information</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Including excessive personal information, irrelevant hobbies, or unrelated work experience dilutes CV impact and wastes valuable space.</p>
+
+                            <div class="comparison-grid">
+                                <div class="comparison-item avoid">
+                                    <div class="avoid-label">❌ Irrelevant</div>
+                                    "I enjoy video games and watching TV", "I love dogs and cats", "I attended Primary School at...", "Worked as a newspaper delivery person in 1998"
+                                </div>
+                                <div class="comparison-item seek">
+                                    <div class="seek-label">✓ Relevant</div>
+                                    Only information demonstrating fitness-related competence or valuable transferable skills
+                                </div>
+                            </div>
+
+                            <p>Every piece of information should serve the purpose of demonstrating suitability for fitness roles.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Poor Contact Information</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Unprofessional email addresses, incorrect phone numbers, or outdated contact information prevent employers from reaching interested candidates.</p>
+
+                            <div class="comparison-grid">
+                                <div class="comparison-item avoid">
+                                    <div class="avoid-label">❌ Unprofessional</div>
+                                    partygirl2005@email.com, fitnessguy88@, incorrect phone numbers, no email provided
+                                </div>
+                                <div class="comparison-item seek">
+                                    <div class="seek-label">✓ Professional</div>
+                                    sarah.thompson@email.com, firstname.lastname@, correct, accessible contact numbers
+                                </div>
+                            </div>
+
+                            <div class="key-point">
+                                <strong>Fundamental Requirement:</strong> Ensuring accurate, professional contact details is non-negotiable. Test that phone numbers work and emails receive messages before submitting CVs.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Unexplained Gaps and Inconsistencies</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Significant unexplained gaps create concern. Dishonesty or exaggeration, however, is far worse.</p>
+
+                            <div class="key-point">
+                                <strong>Address Gaps Briefly:</strong> Brief explanations such as "Career break for family care" or "Travelled whilst completing fitness qualifications" provide context without excessive detail and prevent speculation.
+                            </div>
+
+                            <p><strong>Never Fabricate or Exaggerate:</strong></p>
+                            <ul class="point-list">
+                                <li>Fabricating qualifications, employment dates, or responsibilities represents serious ethical violations</li>
+                                <li>Dishonesty can result in employment termination if discovered later</li>
+                                <li>Employers commonly verify qualifications and may contact previous employers</li>
+                                <li>Discrepancies between CVs and reality will surface</li>
+                            </ul>
+
+                            <div class="key-point">
+                                <strong>The Right Approach:</strong> Present your experience positively and emphasise strengths honestly. Never resort to dishonesty—it's never acceptable and always risky.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-indicator" id="progressIndicator"></div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active from all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+
+            // Activate corresponding button
+            event.target.classList.add('active');
+
+            // Reset accordions
+            document.querySelectorAll('.accordion').forEach(acc => {
+                acc.classList.remove('open');
+            });
+
+            // Update progress dots
+            updateProgressDots();
+
+            // Scroll to top
+            document.querySelector('.content').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Accordion toggle
+        function toggleAccordion(header) {
+            const accordion = header.parentElement;
+            accordion.classList.toggle('open');
+        }
+
+        // Progress indicator dots
+        function updateProgressDots() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const indicator = document.getElementById('progressIndicator');
+            indicator.innerHTML = '';
+
+            tabBtns.forEach((btn, index) => {
+                const dot = document.createElement('div');
+                dot.className = 'progress-dot';
+                if (btn.classList.contains('active')) {
+                    dot.classList.add('active');
+                }
+                indicator.appendChild(dot);
+            });
+        }
+
+        // Initialize
+        updateProgressDots();
+    </script>
+</body>
+</html>
