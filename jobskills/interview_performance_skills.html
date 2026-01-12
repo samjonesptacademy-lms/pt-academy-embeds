@@ -1,0 +1,1023 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Performance Skills - Information Activity</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #C6A906 0%, #a68905 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 30px 20px;
+        }
+
+        .intro-box {
+            background: linear-gradient(135deg, #fffbf0 0%, #fff8e7 100%);
+            border-left: 4px solid #C6A906;
+            padding: 20px;
+            margin-bottom: 30px;
+            border-radius: 8px;
+            font-size: 15px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .intro-box strong {
+            color: #333;
+            display: block;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 8px;
+            margin-bottom: 25px;
+            border-bottom: 2px solid #e0e0e0;
+            flex-wrap: wrap;
+        }
+
+        .tab-btn {
+            background: none;
+            border: none;
+            padding: 12px 16px;
+            font-size: 14px;
+            font-weight: 600;
+            color: #666;
+            cursor: pointer;
+            position: relative;
+            transition: color 0.3s ease;
+        }
+
+        .tab-btn:hover {
+            color: #C6A906;
+        }
+
+        .tab-btn.active {
+            color: #C6A906;
+        }
+
+        .tab-btn.active::after {
+            content: '';
+            position: absolute;
+            bottom: -2px;
+            left: 0;
+            right: 0;
+            height: 2px;
+            background: #C6A906;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.4s ease-in-out;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .accordion {
+            margin-bottom: 12px;
+        }
+
+        .accordion-header {
+            background: #f9f9f9;
+            border: 1px solid #e0e0e0;
+            padding: 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+            border-radius: 6px;
+            font-weight: 600;
+            color: #333;
+            font-size: 15px;
+            user-select: none;
+        }
+
+        .accordion-header:hover {
+            background: #f5f5f5;
+            border-color: #C6A906;
+        }
+
+        .accordion-icon {
+            font-size: 18px;
+            transition: transform 0.3s ease;
+            color: #C6A906;
+            font-weight: bold;
+        }
+
+        .accordion.open .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-top: none;
+            border-bottom-left-radius: 6px;
+            border-bottom-right-radius: 6px;
+        }
+
+        .accordion.open .accordion-content {
+            max-height: 500px;
+            padding: 16px;
+        }
+
+        .accordion-text {
+            font-size: 14px;
+            line-height: 1.7;
+            color: #555;
+        }
+
+        .accordion-text p {
+            margin-bottom: 12px;
+        }
+
+        .accordion-text p:last-child {
+            margin-bottom: 0;
+        }
+
+        .point-list {
+            list-style: none;
+            margin: 12px 0;
+        }
+
+        .point-list li {
+            padding-left: 24px;
+            position: relative;
+            margin-bottom: 10px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .point-list li:before {
+            content: '▸';
+            position: absolute;
+            left: 0;
+            color: #C6A906;
+            font-weight: bold;
+        }
+
+        .example-box {
+            background: #f0f8ff;
+            border-left: 3px solid #2196F3;
+            padding: 12px 14px;
+            margin: 12px 0;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #444;
+        }
+
+        .example-label {
+            font-weight: 700;
+            color: #2196F3;
+            margin-bottom: 4px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .key-point {
+            background: #fffbf0;
+            border-left: 3px solid #C6A906;
+            padding: 12px 14px;
+            margin: 12px 0;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .key-point strong {
+            color: #333;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 12px 0;
+        }
+
+        .comparison-item {
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+
+        .avoid {
+            background: #ffe8e8;
+            border-left: 3px solid #e74c3c;
+        }
+
+        .seek {
+            background: #e8f5e9;
+            border-left: 3px solid #27ae60;
+        }
+
+        .avoid-label, .seek-label {
+            font-weight: 700;
+            margin-bottom: 6px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .avoid-label {
+            color: #e74c3c;
+        }
+
+        .seek-label {
+            color: #27ae60;
+        }
+
+        .completion-message {
+            background: linear-gradient(135deg, #e8f5e9 0%, #f1f8e9 100%);
+            border: 2px solid #27ae60;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            margin-top: 30px;
+        }
+
+        .completion-message h3 {
+            color: #27ae60;
+            margin-bottom: 8px;
+            font-size: 16px;
+        }
+
+        .completion-message p {
+            color: #555;
+            font-size: 14px;
+            line-height: 1.6;
+        }
+
+        .progress-indicator {
+            display: flex;
+            gap: 6px;
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #e0e0e0;
+            justify-content: center;
+        }
+
+        .progress-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: #e0e0e0;
+            transition: all 0.3s ease;
+        }
+
+        .progress-dot.active {
+            background: #C6A906;
+            transform: scale(1.3);
+        }
+
+        .section-number {
+            font-size: 12px;
+            color: #C6A906;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 640px) {
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .tabs {
+                gap: 4px;
+            }
+
+            .tab-btn {
+                padding: 10px 12px;
+                font-size: 12px;
+            }
+
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .accordion-header {
+                font-size: 14px;
+                padding: 14px;
+            }
+
+            .content {
+                padding: 20px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Interview Performance Skills</h1>
+            <p>Master the communication techniques that create positive interview impressions</p>
+        </div>
+
+        <div class="content">
+            <!-- Tabs -->
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('body-language')">Body Language</button>
+                <button class="tab-btn" onclick="switchTab('verbal')">Verbal Communication</button>
+                <button class="tab-btn" onclick="switchTab('listening')">Active Listening</button>
+                <button class="tab-btn" onclick="switchTab('confidence')">Confidence</button>
+            </div>
+
+            <!-- Tab 1: Body Language -->
+            <div id="body-language" class="tab-content active">
+                <div class="section-number">Section 1 of 4</div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Posture</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Your posture is one of the first things interviewers notice and significantly influences their perception of your confidence and engagement.</p>
+                            
+                            <div class="key-point">
+                                <strong>The Goal:</strong> Sit upright but relaxed, demonstrating confidence and engagement without appearing stiff or uncomfortable.
+                            </div>
+
+                            <div class="comparison-grid">
+                                <div class="comparison-item avoid">
+                                    <div class="avoid-label">❌ Avoid</div>
+                                    Slouching, leaning back heavily in chair, or hunching shoulders forward
+                                </div>
+                                <div class="comparison-item seek">
+                                    <div class="seek-label">✓ Seek</div>
+                                    Upright alignment with shoulders relaxed, appearing both confident and at ease
+                                </div>
+                            </div>
+
+                            <div class="example-box">
+                                <div class="example-label">💡 Why It Matters</div>
+                                Slouched posture suggests lack of engagement, discomfort, or low confidence. Upright posture signals professional composure and genuine interest in the conversation.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Eye Contact</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Eye contact is a powerful non-verbal communication tool that conveys confidence, honesty, and genuine engagement with your interviewer.</p>
+                            
+                            <div class="key-point">
+                                <strong>The Goal:</strong> Maintain appropriate eye contact, particularly when speaking and listening to questions. Natural breaks in eye contact are normal and healthy.
+                            </div>
+
+                            <ul class="point-list">
+                                <li><strong>While speaking:</strong> Make good eye contact to demonstrate confidence in what you're saying</li>
+                                <li><strong>While listening:</strong> Show attentiveness and respect through sustained but natural eye contact</li>
+                                <li><strong>Natural breaks:</strong> Don't maintain constant, unwavering staring—this appears intense or uncomfortable</li>
+                                <li><strong>Multiple interviewers:</strong> Distribute eye contact among all interviewers, not just one</li>
+                            </ul>
+
+                            <div class="example-box">
+                                <div class="example-label">💡 Why It Matters</div>
+                                Appropriate eye contact signals confidence and honesty. Avoiding eye contact suggests nervousness, discomfort, or lack of confidence. However, excessive staring feels uncomfortable and can be off-putting.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Gestures</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Hand gestures can emphasise your points and demonstrate enthusiasm, but they should be intentional and controlled.</p>
+                            
+                            <div class="key-point">
+                                <strong>The Goal:</strong> Use natural, moderate hand gestures to emphasise key points and demonstrate enthusiasm, while keeping overall movement professional and contained.
+                            </div>
+
+                            <div class="comparison-grid">
+                                <div class="comparison-item avoid">
+                                    <div class="avoid-label">❌ Avoid</div>
+                                    Excessive movements, fidgeting, waving arms, tapping fingers or pens, or repetitive distracting movements
+                                </div>
+                                <div class="comparison-item seek">
+                                    <div class="seek-label">✓ Seek</div>
+                                    Natural hand movements that emphasise key points; resting hands on lap or desk when not gesturing
+                                </div>
+                            </div>
+
+                            <div class="example-box">
+                                <div class="example-label">💡 Why It Matters</div>
+                                Excessive gestures distract from your message and suggest nervousness. Controlled, purposeful gestures reinforce your points and demonstrate enthusiasm without appearing unprofessional.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Facial Expressions</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Your face communicates your emotional state and level of engagement throughout the interview.</p>
+                            
+                            <div class="key-point">
+                                <strong>The Goal:</strong> Display appropriate smiling, nodding while listening, and expressive responses that demonstrate engagement and positive demeanour.
+                            </div>
+
+                            <ul class="point-list">
+                                <li><strong>Natural smiling:</strong> Genuine smiles convey warmth and approachability</li>
+                                <li><strong>Nodding:</strong> While listening, nodding shows you're engaged and understanding the question</li>
+                                <li><strong>Expressive responses:</strong> Show genuine interest and enthusiasm through appropriate facial animation</li>
+                                <li><strong>Match the moment:</strong> Avoid excessive smiling or inappropriate responses (laughing at serious topics)</li>
+                            </ul>
+
+                            <div class="example-box">
+                                <div class="example-label">💡 Why It Matters</div>
+                                Appropriate facial expressions signal engagement and positive attitudes. Tight smiles appear forced or anxious; excessive smiling or inappropriate expressions undermine professionalism.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Energy and Enthusiasm</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>The overall energy and enthusiasm you bring to the interview creates a significant impression on your interviewer.</p>
+                            
+                            <div class="key-point">
+                                <strong>The Goal:</strong> Demonstrate appropriate energy levels and genuine enthusiasm for the position, creating positive impressions while remaining professional.
+                            </div>
+
+                            <div class="comparison-grid">
+                                <div class="comparison-item avoid">
+                                    <div class="avoid-label">❌ Avoid</div>
+                                    Low energy, apparent disinterest, or appearing unmotivated about the role
+                                </div>
+                                <div class="comparison-item seek">
+                                    <div class="seek-label">✓ Seek</div>
+                                    Genuine enthusiasm for the opportunity, demonstrated through engaged body language and positive tone
+                                </div>
+                            </div>
+
+                            <div class="example-box">
+                                <div class="example-label">💡 Why It Matters</div>
+                                Low energy suggests lack of motivation or interest. Appropriate energy and genuine enthusiasm create positive impressions and demonstrate that you truly want the role.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 2: Verbal Communication -->
+            <div id="verbal" class="tab-content">
+                <div class="section-number">Section 2 of 4</div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Clarity</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Speaking clearly at a moderate pace ensures your interviewer can easily understand and follow your responses.</p>
+                            
+                            <div class="key-point">
+                                <strong>The Goal:</strong> Speak at a deliberate, moderate pace that allows your message to be understood and processed easily.
+                            </div>
+
+                            <div class="example-box">
+                                <div class="example-label">💡 Common Challenge</div>
+                                Nervous candidates often speak too quickly, causing words to tumble together and become hard to follow. Conscious pacing improves clarity significantly.
+                            </div>
+
+                            <div class="comparison-grid">
+                                <div class="comparison-item avoid">
+                                    <div class="avoid-label">❌ Avoid</div>
+                                    Rapid speech that's hard to follow, or mumbling that requires repeated explanations
+                                </div>
+                                <div class="comparison-item seek">
+                                    <div class="seek-label">✓ Seek</div>
+                                    Deliberate pacing with natural pauses between thoughts, allowing time for processing
+                                </div>
+                            </div>
+
+                            <div class="key-point">
+                                <strong>Pro Tip:</strong> Pausing between thoughts is a sign of confidence and thoughtfulness, not uncertainty. It signals you're considering your response carefully.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Volume</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Your volume communicates confidence and professional presence in the interview setting.</p>
+                            
+                            <div class="key-point">
+                                <strong>The Goal:</strong> Maintain appropriate, consistent volume throughout the interview—audible and clear without being aggressive.
+                            </div>
+
+                            <div class="comparison-grid">
+                                <div class="comparison-item avoid">
+                                    <div class="avoid-label">❌ Avoid</div>
+                                    Speaking too quietly (suggests nervousness or lack of confidence) or excessive volume (appears aggressive)
+                                </div>
+                                <div class="comparison-item seek">
+                                    <div class="seek-label">✓ Seek</div>
+                                    Steady, appropriate volume throughout, with consistency from start to finish
+                                </div>
+                            </div>
+
+                            <div class="example-box">
+                                <div class="example-label">💡 Why It Matters</div>
+                                Volume inconsistency often signals nervousness and poor preparation. Maintaining steady volume demonstrates composure and confidence in your message.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Articulation</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Clear articulation and professional word choice significantly impact how competent and prepared you appear.</p>
+                            
+                            <div class="key-point">
+                                <strong>The Goal:</strong> Speak clearly with professional word choices, minimising filler words ("um," "like," "you know") that undermine credibility.
+                            </div>
+
+                            <ul class="point-list">
+                                <li><strong>Filler words undermine professionalism:</strong> "Um," "like," "you know," and similar words make you appear unprepared or uncertain</li>
+                                <li><strong>Silent pauses are professional:</strong> Pausing to think is far more professional than filling space with filler words</li>
+                                <li><strong>Practice reduces filler word frequency:</strong> Conscious practice before interviews significantly improves articulation</li>
+                                <li><strong>Professional vocabulary:</strong> Use appropriate, industry-relevant terminology without sounding overly formal</li>
+                            </ul>
+
+                            <div class="example-box">
+                                <div class="example-label">💡 Why It Matters</div>
+                                Excessive filler words suggest lack of preparation, confidence issues, or nervousness. Clear articulation conveys competence and professionalism.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Tone</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Your tone of voice communicates your attitude and emotional state, significantly influencing how your words are received.</p>
+                            
+                            <div class="key-point">
+                                <strong>The Goal:</strong> Maintain a professional, friendly tone that balances confidence with respect and approachability.
+                            </div>
+
+                            <ul class="point-list">
+                                <li><strong>Warm and genuine:</strong> Avoid sounding robotic, scripted, or overly formal</li>
+                                <li><strong>Confident without arrogance:</strong> Show conviction in your abilities while respecting the interviewer</li>
+                                <li><strong>Match the conversation:</strong> Adapt your tone appropriately to serious topics vs. lighter moments</li>
+                                <li><strong>Avoid defensive tones:</strong> When discussing challenges, maintain curiosity and openness rather than defensiveness</li>
+                            </ul>
+
+                            <div class="example-box">
+                                <div class="example-label">💡 Why It Matters</div>
+                                Tone communicates your attitude more powerfully than words alone. A warm, professional tone creates connection and trust; defensive or scripted tones create distance.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 3: Active Listening -->
+            <div id="listening" class="tab-content">
+                <div class="section-number">Section 3 of 4</div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>What is Active Listening?</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Active listening means fully engaging with what your interviewer is saying and demonstrating that engagement through your responses and body language.</p>
+                            
+                            <div class="key-point">
+                                <strong>Why It Matters:</strong> Many interview mistakes stem from candidates not truly listening to questions asked. Active listening ensures you understand what's being asked and respond relevantly.
+                            </div>
+
+                            <p>Active listening involves:</p>
+                            <ul class="point-list">
+                                <li>Allowing questions to complete fully before responding</li>
+                                <li>Asking for clarification when needed</li>
+                                <li>Providing thoughtful, relevant responses that directly address questions asked</li>
+                                <li>Referencing earlier conversation points, showing attention and memory</li>
+                                <li>Body language that demonstrates engagement (good eye contact, appropriate nodding, open posture)</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Allowing Questions to Complete</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Interrupting interviewers or responding before they've finished speaking communicates disrespect and poor listening skills.</p>
+                            
+                            <div class="key-point">
+                                <strong>The Goal:</strong> Wait for the complete question before formulating your response, even if you think you know where it's going.
+                            </div>
+
+                            <div class="example-box">
+                                <div class="example-label">💡 Why It Matters</div>
+                                Interrupting suggests you're not genuinely listening—you're waiting for your turn to speak. This undermines rapport and shows lack of respect for the interviewer's inquiry.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Asking for Clarification</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>If a question is unclear, asking for clarification demonstrates active listening and ensures you provide a relevant response.</p>
+                            
+                            <div class="key-point">
+                                <strong>The Goal:</strong> When a question is ambiguous, ask thoughtfully for clarification rather than guessing or providing a tangential response.
+                            </div>
+
+                            <div class="example-box">
+                                <div class="example-label">💡 Example</div>
+                                <strong>Rather than:</strong> "I'm not sure, but I think you're asking about..."<br>
+                                <strong>Try:</strong> "That's a great question. Just to make sure I address what you're asking—are you interested in how I'd approach this specific challenge, or more broadly how I handle similar situations?"
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Relevant, Thoughtful Responses</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>The best indicator of active listening is providing responses that directly and thoughtfully address what's been asked.</p>
+                            
+                            <div class="key-point">
+                                <strong>The Goal:</strong> Ensure every response directly addresses the actual question asked, not a similar question you prepared for.
+                            </div>
+
+                            <div class="comparison-grid">
+                                <div class="comparison-item avoid">
+                                    <div class="avoid-label">❌ Avoid</div>
+                                    Providing prepared responses that tangentially relate to the question but don't directly address what was asked
+                                </div>
+                                <div class="comparison-item seek">
+                                    <div class="seek-label">✓ Seek</div>
+                                    Thoughtful responses that begin by addressing the specific question asked, then expanding with relevant context
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Referencing Earlier Points</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Showing that you've been paying attention by referencing earlier points in the conversation creates connection and demonstrates genuine engagement.</p>
+                            
+                            <div class="key-point">
+                                <strong>The Goal:</strong> When relevant, reference something the interviewer mentioned earlier, connecting it to your current response.
+                            </div>
+
+                            <div class="example-box">
+                                <div class="example-label">💡 Example</div>
+                                <strong>Interviewer mentioned:</strong> "We're working on expanding our social media presence..."<br>
+                                <strong>Later reference:</strong> "As you mentioned earlier, I'd be excited to contribute to building out the social media strategy by..."
+                            </div>
+
+                            <p>This demonstrates that you've been actively listening throughout the conversation and are genuinely interested in the specific role and organization.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Tab 4: Confidence Without Arrogance -->
+            <div id="confidence" class="tab-content">
+                <div class="section-number">Section 4 of 4</div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>The Balance</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Balancing confidence and humility represents one of the greatest interview challenges. Confident candidates believe in their capabilities without dismissing others or appearing arrogant.</p>
+                            
+                            <div class="key-point">
+                                <strong>The Challenge:</strong> Appearing too confident can seem arrogant; appearing too humble suggests lack of belief in your abilities. The sweet spot is genuine, grounded confidence.
+                            </div>
+
+                            <p>Achieving this balance involves:</p>
+                            <ul class="point-list">
+                                <li>Acknowledging achievements and strengths genuinely</li>
+                                <li>Showing enthusiasm without desperation</li>
+                                <li>Accepting compliments graciously without excessive modesty or boasting</li>
+                                <li>Admitting knowledge limitations honestly while demonstrating willingness to learn</li>
+                                <li>Respecting interviewers and the process throughout</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Acknowledging Achievements</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Being able to discuss your accomplishments without downplaying them or excessive false modesty is crucial for interview success.</p>
+                            
+                            <div class="key-point">
+                                <strong>The Goal:</strong> Speak about your achievements with genuine pride and ownership, using concrete examples and specific results.
+                            </div>
+
+                            <div class="comparison-grid">
+                                <div class="comparison-item avoid">
+                                    <div class="avoid-label">❌ Avoid</div>
+                                    Downplaying achievements ("It was just luck," "The team did all the work") or over-exaggerating your role
+                                </div>
+                                <div class="comparison-item seek">
+                                    <div class="seek-label">✓ Seek</div>
+                                    Genuine ownership: "I led this project and achieved X result" or "I contributed Y to the team's success"
+                                </div>
+                            </div>
+
+                            <div class="example-box">
+                                <div class="example-label">💡 Example</div>
+                                <strong>Rather than:</strong> "Oh, anyone could have done it..."<br>
+                                <strong>Try:</strong> "I'm proud of that project. I developed the strategy and implemented it, resulting in a 30% improvement in client retention."
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Enthusiasm Without Desperation</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Showing genuine enthusiasm for a role is valuable, but appearing desperate or overly eager can undermine your position.</p>
+                            
+                            <div class="key-point">
+                                <strong>The Goal:</strong> Demonstrate genuine interest and enthusiasm while maintaining the perspective that you're evaluating the role too.
+                            </div>
+
+                            <div class="comparison-grid">
+                                <div class="comparison-item avoid">
+                                    <div class="avoid-label">❌ Avoid</div>
+                                    Appearing desperate, too eager to please, or like you'll accept anything just to get hired
+                                </div>
+                                <div class="comparison-item seek">
+                                    <div class="seek-label">✓ Seek</div>
+                                    Genuine enthusiasm paired with thoughtful questions that show you're evaluating fit
+                                </div>
+                            </div>
+
+                            <div class="key-point">
+                                <strong>Professional Perspective:</strong> A successful interview is mutual—you're assessing whether the role aligns with your goals as much as they're assessing your fit.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Handling Compliments</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>How you respond to compliments reveals your confidence level and self-awareness.</p>
+                            
+                            <div class="key-point">
+                                <strong>The Goal:</strong> Accept compliments graciously with genuine thanks, without excessive modesty or boasting.
+                            </div>
+
+                            <div class="example-box">
+                                <div class="example-label">💡 Examples</div>
+                                <strong>Interview says:</strong> "That's impressive experience in social media marketing."<br>
+                                <strong>Rather than:</strong> "Oh, it's really not that impressive..." or "Yeah, I'm basically an expert..."<br>
+                                <strong>Try:</strong> "Thank you, I'm really proud of the results I've achieved in that area. I genuinely enjoy the work."
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Admitting Limitations</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Honestly acknowledging knowledge gaps while demonstrating willingness to learn shows maturity and growth mindset.</p>
+                            
+                            <div class="key-point">
+                                <strong>The Goal:</strong> When asked about something unfamiliar, admit honestly while showing enthusiasm to learn and develop in that area.
+                            </div>
+
+                            <div class="example-box">
+                                <div class="example-label">💡 Example</div>
+                                <strong>Interview asks:</strong> "Do you have experience with HubSpot?"<br>
+                                <strong>Honest approach:</strong> "I haven't worked with HubSpot specifically, but I have strong experience with similar CRM platforms. I'm very comfortable learning new software quickly—I've successfully picked up several new systems in my previous roles."
+                            </div>
+
+                            <p>This approach shows confidence in your ability to learn, not weakness in your current knowledge.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="accordion">
+                    <div class="accordion-header" onclick="toggleAccordion(this)">
+                        <span>Respecting the Process</span>
+                        <span class="accordion-icon">▼</span>
+                    </div>
+                    <div class="accordion-content">
+                        <div class="accordion-text">
+                            <p>Genuinely respecting the interviewer and the interview process is fundamental to demonstrating appropriate confidence without arrogance.</p>
+                            
+                            <div class="key-point">
+                                <strong>The Goal:</strong> Treat the interviewer and process with genuine respect, recognizing their expertise and value in the decision-making process.
+                            </div>
+
+                            <ul class="point-list">
+                                <li>Listen attentively rather than waiting for your turn to speak</li>
+                                <li>Respect their time—answer questions directly without unnecessary tangents</li>
+                                <li>Ask thoughtful questions that show interest in their perspective and the role</li>
+                                <li>Acknowledge their insights and expertise when appropriate</li>
+                                <li>Follow up appropriately after the interview</li>
+                            </ul>
+
+                            <div class="example-box">
+                                <div class="example-label">💡 Why It Matters</div>
+                                Respect is a cornerstone of professional relationships. Demonstrating genuine respect signals maturity and the kind of colleague who elevates team dynamics rather than undermining them.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="progress-indicator" id="progressIndicator"></div>
+        </div>
+    </div>
+
+    <script>
+        // Tab switching
+        function switchTab(tabName) {
+            // Hide all tabs
+            document.querySelectorAll('.tab-content').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active from all buttons
+            document.querySelectorAll('.tab-btn').forEach(btn => {
+                btn.classList.remove('active');
+            });
+
+            // Show selected tab
+            document.getElementById(tabName).classList.add('active');
+
+            // Activate corresponding button
+            event.target.classList.add('active');
+
+            // Reset accordions
+            document.querySelectorAll('.accordion').forEach(acc => {
+                acc.classList.remove('open');
+            });
+
+            // Update progress dots
+            updateProgressDots();
+
+            // Scroll to top
+            document.querySelector('.content').scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Accordion toggle
+        function toggleAccordion(header) {
+            const accordion = header.parentElement;
+            accordion.classList.toggle('open');
+        }
+
+        // Progress indicator dots
+        function updateProgressDots() {
+            const tabBtns = document.querySelectorAll('.tab-btn');
+            const indicator = document.getElementById('progressIndicator');
+            indicator.innerHTML = '';
+
+            tabBtns.forEach((btn, index) => {
+                const dot = document.createElement('div');
+                dot.className = 'progress-dot';
+                if (btn.classList.contains('active')) {
+                    dot.classList.add('active');
+                }
+                indicator.appendChild(dot);
+            });
+        }
+
+        // Initialize
+        updateProgressDots();
+    </script>
+</body>
+</html>
