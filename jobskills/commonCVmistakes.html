@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html style="background: #f8f9fa;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Common CV Errors</title>
+<style>
+* {box-sizing: border-box; margin: 0; padding: 0;}
+html, body {background: #f8f9fa; min-height: 100vh;}
+body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; opacity: 1; visibility: visible;}
+.container {max-width: 1200px; margin: 0 auto;}
+.cover-screen {background: linear-gradient(135deg, #C6A906 0%, #e0c040 100%); border-radius: 12px; padding: 80px 40px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.15); cursor: pointer; transition: all 0.3s ease; min-height: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center;}
+.cover-screen:hover {transform: translateY(-5px); box-shadow: 0 8px 30px rgba(0,0,0,0.2);}
+.cover-screen.hidden {display: none;}
+.cover-icon {font-size: 120px; margin-bottom: 30px;}
+.cover-title {font-size: 42px; font-weight: 700; color: white; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);}
+.cover-subtitle {font-size: 20px; color: white; margin-bottom: 40px; opacity: 0.95; line-height: 1.6; max-width: 650px;}
+.cover-button {background: white; color: #C6A906; padding: 18px 50px; border-radius: 30px; font-size: 18px; font-weight: 700; border: none; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;}
+.cover-button:hover {transform: scale(1.05); box-shadow: 0 4px 15px rgba(0,0,0,0.3);}
+.main-content {display: none;}
+.main-content.visible {display: block;}
+.intro-section {background: white; border-radius: 12px; padding: 25px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); margin-bottom: 25px; text-align: center;}
+.intro-title {font-size: 28px; font-weight: 700; color: #333; margin-bottom: 12px;}
+.intro-text {font-size: 16px; line-height: 1.7; color: #666;}
+.cards-grid {display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 25px; margin-top: 20px;}
+.flip-card {background: transparent; perspective: 1000px; height: 280px;}
+.flip-card-inner {position: relative; width: 100%; height: 100%; text-align: center; transition: transform 0.6s; transform-style: preserve-3d;}
+.flip-card:hover .flip-card-inner {transform: rotateY(180deg);}
+.flip-card-front, .flip-card-back {position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px; padding: 25px; display: flex; flex-direction: column; justify-content: center; align-items: center; box-shadow: 0 4px 12px rgba(0,0,0,0.15);}
+.flip-card-front {background: linear-gradient(135deg, #C6A906, #e0c040); color: white;}
+.flip-card-back {background: white; border: 3px solid #C6A906; transform: rotateY(180deg); justify-content: flex-start; padding-top: 20px; overflow-y: auto;}
+.card-icon {font-size: 60px; margin-bottom: 20px;}
+.card-number {font-size: 14px; font-weight: 700; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px; opacity: 0.9;}
+.card-title {font-size: 22px; font-weight: 700; margin-bottom: 10px;}
+.card-subtitle {font-size: 14px; opacity: 0.9; margin-top: 15px;}
+.back-error-type {font-size: 13px; font-weight: 700; color: #C6A906; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px;}
+.back-title {font-size: 20px; font-weight: 700; color: #333; margin-bottom: 15px; text-align: center;}
+.back-content {text-align: left; width: 100%;}
+.back-section {margin-bottom: 15px;}
+.back-label {font-size: 13px; font-weight: 700; color: #C6A906; margin-bottom: 5px; text-transform: uppercase;}
+.back-text {font-size: 14px; line-height: 1.7; color: #555;}
+.solution-box {background: #f8f9fa; border-left: 4px solid #C6A906; padding: 12px; border-radius: 6px; margin-top: 12px;}
+.solution-text {font-size: 13px; line-height: 1.6; color: #333; font-weight: 600;}
+@media (max-width: 768px) {
+.cards-grid {grid-template-columns: 1fr;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="cover-screen" onclick="showContent()">
+<div class="cover-icon">❌</div>
+<div class="cover-title">Common CV Errors</div>
+<div class="cover-subtitle">Learn the mistakes that undermine CV effectiveness and how to avoid them</div>
+<button class="cover-button">View Common Errors →</button>
+</div>
+<div class="main-content">
+<div class="intro-section">
+<div class="intro-title">6 Critical CV Errors to Avoid</div>
+<div class="intro-text">Several common errors undermine CV effectiveness and can lead employers to discard applications immediately. Hover over each card to learn about these mistakes and how to prevent them.</div>
+</div>
+<div class="cards-grid">
+<!-- Error 1: Spelling and Grammar -->
+<div class="flip-card">
+<div class="flip-card-inner">
+<div class="flip-card-front">
+<div class="card-icon">✏️</div>
+<div class="card-number">Error #1</div>
+<div class="card-title">Spelling & Grammar Errors</div>
+<div class="card-subtitle">Hover to learn more</div>
+</div>
+<div class="flip-card-back">
+<div class="back-error-type">Critical Error</div>
+<div class="back-title">Spelling & Grammar</div>
+<div class="back-content">
+<div class="back-section">
+<div class="back-label">The Problem</div>
+<div class="back-text">Spelling mistakes, grammatical errors, and typos create immediately negative impressions suggesting carelessness, poor attention to detail, and unprofessionalism. Multiple errors may lead employers to discard CVs without further consideration.</div>
+</div>
+<div class="solution-box">
+<div class="solution-text">✓ Solution: Proofread meticulously multiple times, ideally by additional people. Read your CV aloud to identify awkward phrasing or errors missed during silent reading.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Error 2: Unexplained Gaps -->
+<div class="flip-card">
+<div class="flip-card-inner">
+<div class="flip-card-front">
+<div class="card-icon">📅</div>
+<div class="card-number">Error #2</div>
+<div class="card-title">Unexplained Gaps</div>
+<div class="card-subtitle">Hover to learn more</div>
+</div>
+<div class="flip-card-back">
+<div class="back-error-type">Red Flag</div>
+<div class="back-title">Employment Gaps</div>
+<div class="back-content">
+<div class="back-section">
+<div class="back-label">The Problem</div>
+<div class="back-text">Significant unexplained gaps in employment history create concern and questions for employers. Gaps occur for legitimate reasons but addressing them prevents speculation.</div>
+</div>
+<div class="solution-box">
+<div class="solution-text">✓ Solution: Address gaps briefly and honestly. Examples: "Career break for family care" or "Travelled while completing fitness qualifications" provide context without extensive detail.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Error 3: Generic Content -->
+<div class="flip-card">
+<div class="flip-card-inner">
+<div class="flip-card-front">
+<div class="card-icon">💬</div>
+<div class="card-number">Error #3</div>
+<div class="card-title">Generic, Non-Specific Content</div>
+<div class="card-subtitle">Hover to learn more</div>
+</div>
+<div class="flip-card-back">
+<div class="back-error-type">Weak Impact</div>
+<div class="back-title">Generic Content</div>
+<div class="back-content">
+<div class="back-section">
+<div class="back-label">The Problem</div>
+<div class="back-text">Vague descriptions such as "good communicator," "hard worker," or "team player" without supporting evidence fail to differentiate candidates. These claims are applicable to any candidate.</div>
+</div>
+<div class="solution-box">
+<div class="solution-text">✓ Solution: Use specific examples, quantified achievements, and concrete skill demonstrations. Prove claims with evidence rather than making generic statements.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Error 4: Irrelevant Information -->
+<div class="flip-card">
+<div class="flip-card-inner">
+<div class="flip-card-front">
+<div class="card-icon">🗑️</div>
+<div class="card-number">Error #4</div>
+<div class="card-title">Irrelevant Information</div>
+<div class="card-subtitle">Hover to learn more</div>
+</div>
+<div class="flip-card-back">
+<div class="back-error-type">Diluted Impact</div>
+<div class="back-title">Irrelevant Details</div>
+<div class="back-content">
+<div class="back-section">
+<div class="back-label">The Problem</div>
+<div class="back-text">Including excessive personal information, irrelevant hobbies, primary school education (beyond secondary school), or unrelated work experience from distant past dilutes CV impact.</div>
+</div>
+<div class="solution-box">
+<div class="solution-text">✓ Solution: Every piece of information should serve the purpose of demonstrating suitability for target roles. Remove anything that doesn't add value.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Error 5: Dishonesty -->
+<div class="flip-card">
+<div class="flip-card-inner">
+<div class="flip-card-front">
+<div class="card-icon">⚠️</div>
+<div class="card-number">Error #5</div>
+<div class="card-title">Dishonesty or Exaggeration</div>
+<div class="card-subtitle">Hover to learn more</div>
+</div>
+<div class="flip-card-back">
+<div class="back-error-type">Serious Violation</div>
+<div class="back-title">Dishonesty</div>
+<div class="back-content">
+<div class="back-section">
+<div class="back-label">The Problem</div>
+<div class="back-text">Fabricating qualifications, employment dates, or responsibilities represents serious ethical violations that can result in employment termination if discovered. Employers commonly verify qualifications and may contact previous employers.</div>
+</div>
+<div class="solution-box">
+<div class="solution-text">✓ Solution: Present experience positively and emphasise strengths, but never fabricate information. Discrepancies between CVs and reality will surface.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<!-- Error 6: Poor Contact Info -->
+<div class="flip-card">
+<div class="flip-card-inner">
+<div class="flip-card-front">
+<div class="card-icon">📧</div>
+<div class="card-number">Error #6</div>
+<div class="card-title">Poor Contact Information</div>
+<div class="card-subtitle">Hover to learn more</div>
+</div>
+<div class="flip-card-back">
+<div class="back-error-type">Missed Opportunity</div>
+<div class="back-title">Contact Details</div>
+<div class="back-content">
+<div class="back-section">
+<div class="back-label">The Problem</div>
+<div class="back-text">Unprofessional email addresses, incorrect phone numbers, or outdated contact information prevent employers from reaching interested candidates.</div>
+</div>
+<div class="solution-box">
+<div class="solution-text">✓ Solution: Ensure accurate, professional contact details are fundamental. Use a professional email format (firstname.lastname@email.com) and verify all numbers are current.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+(function() {
+document.documentElement.style.visibility = 'visible';
+document.body.style.visibility = 'visible';
+})();
+window.showContent = function() {
+document.querySelector('.cover-screen').classList.add('hidden');
+document.querySelector('.main-content').classList.add('visible');
+};
+</script>
+</body>
+</html>
