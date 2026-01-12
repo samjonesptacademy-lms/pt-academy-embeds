@@ -79,11 +79,65 @@
         .nav-btn-primary:hover:not(:disabled) { background: #a88c05; }
         .btn-reset { padding: 10px 20px; border-radius: 8px; font-size: 14px; font-weight: 600; cursor: pointer; border: none; background: #e9ecef; color: #666; }
         .btn-reset:hover { background: #d4d8db; }
+
+        /* Test Section Styles */
+        .test-section { display: none; padding: 30px; }
+        .test-section.active { display: block; }
+        .test-header { text-align: center; margin-bottom: 25px; }
+        .test-title { font-size: 20px; font-weight: 700; color: #333; margin-bottom: 10px; }
+        .test-subtitle { font-size: 14px; color: #666; font-style: italic; }
         
+        .test-intro { background: #f0f8ff; border-left: 4px solid #2196F3; padding: 14px; margin-bottom: 20px; border-radius: 6px; font-size: 13px; line-height: 1.6; color: #444; }
+        
+        .test-activity-grid { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 14px; margin-bottom: 20px; }
+        .test-column { display: flex; flex-direction: column; }
+        .test-column-title { font-size: 12px; font-weight: 700; text-transform: uppercase; color: white; letter-spacing: 0.5px; padding: 10px; border-radius: 6px 6px 0 0; text-align: center; }
+        .test-column.available .test-column-title { background: #666; }
+        .test-column.responsibility .test-column-title { background: #e74c3c; }
+        .test-column.achievement .test-column-title { background: #27ae60; }
+        
+        .test-drop-zone { background: #f9f9f9; border: 2px dashed #ddd; border-radius: 0 0 6px 6px; padding: 12px; min-height: 250px; display: flex; flex-direction: column; gap: 8px; }
+        .test-column.responsibility .test-drop-zone { border-color: #e74c3c; background: #ffe8e8; }
+        .test-column.achievement .test-drop-zone { border-color: #27ae60; background: #e8f5e9; }
+        .test-drop-zone.dragover { background-color: #fff3cd; border-color: #C6A906; border-style: solid; }
+        
+        .test-drag-item { background: white; border: 2px solid #e0e0e0; padding: 10px; border-radius: 4px; cursor: grab; font-size: 12px; color: #333; font-weight: 500; line-height: 1.4; transition: all 0.2s ease; user-select: none; box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1); }
+        .test-drag-item:hover { box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15); border-color: #C6A906; }
+        .test-drag-item.dragging { opacity: 0.5; cursor: grabbing; transform: scale(0.95); }
+        .test-drag-item.placed { border-left: 4px solid #27ae60; background: #f0fff4; }
+        .test-drag-item.incorrect { border-left: 4px solid #e74c3c; background: #fff5f5; }
+        
+        .test-item-number { display: inline-block; background: #C6A906; color: white; width: 20px; height: 20px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; margin-right: 6px; flex-shrink: 0; }
+        
+        .test-action-buttons { display: flex; gap: 10px; margin-bottom: 15px; justify-content: center; }
+        .test-btn-check { padding: 10px 24px; border: none; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; background: #C6A906; color: white; transition: all 0.3s ease; }
+        .test-btn-check:hover { background: #a68905; }
+        .test-btn-reset { padding: 10px 20px; border: none; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; background: #f0f0f0; color: #333; }
+        .test-btn-reset:hover { background: #e8e8e8; }
+        
+        .test-feedback { padding: 14px; border-radius: 6px; margin-bottom: 15px; font-size: 13px; line-height: 1.5; display: none; }
+        .test-feedback.show { display: block; animation: slideIn 0.3s ease-out; }
+        .test-feedback.success { background: #e8f5e9; border-left: 4px solid #27ae60; color: #1b5e20; }
+        .test-feedback.partial { background: #fff3cd; border-left: 4px solid #ffc107; color: #856404; }
+        .test-feedback.error { background: #ffe8e8; border-left: 4px solid #e74c3c; color: #a93226; }
+        .test-feedback-title { font-weight: 700; margin-bottom: 6px; }
+        .test-feedback-detail { font-size: 12px; margin-top: 6px; padding-top: 6px; border-top: 1px solid rgba(0, 0, 0, 0.1); }
+        
+        .test-navigation { text-align: center; padding-top: 15px; border-top: 1px solid #e9ecef; }
+        .test-btn-back { padding: 10px 20px; border: 2px solid #C6A906; background: white; color: #C6A906; border-radius: 6px; font-weight: 600; font-size: 13px; cursor: pointer; transition: all 0.3s ease; }
+        .test-btn-back:hover { background: #C6A906; color: white; }
+        
+        .test-button { background: #C6A906; color: white; padding: 12px 30px; border-radius: 8px; font-size: 15px; font-weight: 600; border: none; cursor: pointer; transition: all 0.3s ease; display: block; margin: 20px auto 0; }
+        .test-button:hover { background: #a88c05; transform: translateY(-2px); box-shadow: 0 4px 12px rgba(198, 169, 6, 0.3); }
+        
+        @keyframes slideIn { from { opacity: 0; transform: translateY(-10px); } to { opacity: 1; transform: translateY(0); } }
+
         @media (max-width: 768px) {
             .comparison-grid { grid-template-columns: 1fr; }
             .navigation-bar { flex-wrap: wrap; }
             .nav-btn { flex: 1; min-width: 120px; }
+            .test-activity-grid { grid-template-columns: 1fr; }
+            .test-action-buttons { flex-wrap: wrap; }
         }
     </style>
 </head>
@@ -155,6 +209,45 @@
                     <button class="nav-btn" id="prevBtn" onclick="previousCard()" disabled>← Previous</button>
                     <button class="btn-reset" onclick="resetToStart()">Start Over</button>
                     <button class="nav-btn nav-btn-primary" id="nextBtn" onclick="nextCard()" disabled>Next →</button>
+                    <button class="test-button" id="testBtn" style="display: none; margin: 0;" onclick="showTest()">Test Your Knowledge →</button>
+                </div>
+            </div>
+
+            <!-- Test Your Knowledge (Drag & Drop) -->
+            <div class="test-section" id="testSection">
+                <div class="test-header">
+                    <h2 class="test-title">Test Your Knowledge</h2>
+                    <p class="test-subtitle">Now it's your turn! Drag each CV bullet point into the correct category.</p>
+                </div>
+
+                <div class="test-intro">
+                    <strong>Instructions:</strong> Drag each bullet point into either Responsibility or Achievement. Remember: Responsibility describes tasks you performed. Achievement demonstrates measurable results, outcomes, or recognition.
+                </div>
+
+                <div class="test-activity-grid">
+                    <div class="test-column available">
+                        <div class="test-column-title">📋 Bullet Points</div>
+                        <div class="test-drop-zone" id="testAvailableZone"></div>
+                    </div>
+                    <div class="test-column responsibility">
+                        <div class="test-column-title">❌ Responsibility</div>
+                        <div class="test-drop-zone" id="testResponsibilityZone"></div>
+                    </div>
+                    <div class="test-column achievement">
+                        <div class="test-column-title">✓ Achievement</div>
+                        <div class="test-drop-zone" id="testAchievementZone"></div>
+                    </div>
+                </div>
+
+                <div class="test-action-buttons">
+                    <button class="test-btn-check" onclick="checkTestAnswers()">Check Answers</button>
+                    <button class="test-btn-reset" onclick="resetTest()">Reset Activity</button>
+                </div>
+
+                <div class="test-feedback" id="testFeedback"></div>
+                
+                <div class="test-navigation">
+                    <button class="test-btn-back" onclick="backToCards()">← Back to Examples</button>
                 </div>
             </div>
         </div>
@@ -214,6 +307,15 @@
             }
         ];
 
+        const testItems = [
+            { id: 1, text: 'Delivered personal training sessions to clients.', correct: 'responsibility' },
+            { id: 2, text: 'Achieved 90% client satisfaction rating across 20 weekly sessions.', correct: 'achievement' },
+            { id: 3, text: 'Sold gym memberships to new members.', correct: 'responsibility' },
+            { id: 4, text: 'Exceeded monthly PT sales targets by 23% through consultative selling.', correct: 'achievement' },
+            { id: 5, text: 'Assisted members on gym floor.', correct: 'responsibility' },
+            { id: 6, text: 'Recognised as "Staff Member of the Month" for service excellence.', correct: 'achievement' }
+        ];
+
         let currentIndex = 0;
         let reviewedCards = new Set();
         let currentCardFlipped = false;
@@ -236,10 +338,8 @@
             document.getElementById('techniqueText').textContent = card.technique;
             document.getElementById('currentNum').textContent = index + 1;
             
-            // Reset flip
             document.getElementById('flipCard').classList.remove('flipped');
             
-            // Update navigation
             updateNavigation();
         }
 
@@ -248,7 +348,6 @@
             flipCard.classList.toggle('flipped');
             currentCardFlipped = flipCard.classList.contains('flipped');
             
-            // Enable next button once flipped
             if (currentCardFlipped) {
                 reviewedCards.add(currentIndex);
                 updateProgress();
@@ -270,8 +369,16 @@
 
         function updateNavigation() {
             document.getElementById('prevBtn').disabled = currentIndex === 0;
-            // Next button only enabled if current card has been flipped
-            document.getElementById('nextBtn').disabled = !currentCardFlipped || currentIndex === conversions.length - 1;
+            const testBtn = document.getElementById('testBtn');
+            
+            if (reviewedCards.size === conversions.length) {
+                testBtn.style.display = 'block';
+                document.getElementById('nextBtn').style.display = 'none';
+            } else {
+                testBtn.style.display = 'none';
+                document.getElementById('nextBtn').style.display = 'block';
+                document.getElementById('nextBtn').disabled = !currentCardFlipped || currentIndex === conversions.length - 1;
+            }
         }
 
         function updateProgress() {
@@ -285,8 +392,160 @@
                 currentCardFlipped = false;
                 document.getElementById('staticInfo').classList.remove('hidden');
                 document.getElementById('cardView').classList.remove('active');
+                document.getElementById('testSection').classList.remove('active');
                 updateProgress();
             }
+        }
+
+        function showTest() {
+            document.getElementById('cardView').classList.remove('active');
+            document.getElementById('testSection').classList.add('active');
+            initializeTest();
+        }
+
+        function backToCards() {
+            document.getElementById('testSection').classList.remove('active');
+            document.getElementById('cardView').classList.add('active');
+        }
+
+        function initializeTest() {
+            const availableZone = document.getElementById('testAvailableZone');
+            availableZone.innerHTML = '';
+
+            const shuffled = [...testItems].sort(() => Math.random() - 0.5);
+
+            shuffled.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'test-drag-item';
+                div.draggable = true;
+                div.dataset.id = item.id;
+                div.dataset.correct = item.correct;
+                div.innerHTML = `
+                    <span class="test-item-number">${item.id}</span>${item.text}
+                `;
+
+                div.addEventListener('dragstart', handleTestDragStart);
+                div.addEventListener('dragend', handleTestDragEnd);
+
+                availableZone.appendChild(div);
+            });
+
+            document.getElementById('testResponsibilityZone').innerHTML = '';
+            document.getElementById('testAchievementZone').innerHTML = '';
+
+            ['testAvailableZone', 'testResponsibilityZone', 'testAchievementZone'].forEach(zoneId => {
+                const zone = document.getElementById(zoneId);
+                zone.addEventListener('dragover', handleTestDragOver);
+                zone.addEventListener('drop', handleTestDrop);
+                zone.addEventListener('dragleave', handleTestDragLeave);
+            });
+        }
+
+        function handleTestDragStart(e) {
+            e.dataTransfer.effectAllowed = 'move';
+            e.target.classList.add('dragging');
+            e.dataTransfer.setData('text/html', e.currentTarget.innerHTML);
+        }
+
+        function handleTestDragEnd(e) {
+            e.target.classList.remove('dragging');
+            document.querySelectorAll('.test-drop-zone').forEach(zone => {
+                zone.classList.remove('dragover');
+            });
+        }
+
+        function handleTestDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            this.classList.add('dragover');
+        }
+
+        function handleTestDragLeave(e) {
+            if (e.target === this) {
+                this.classList.remove('dragover');
+            }
+        }
+
+        function handleTestDrop(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.classList.remove('dragover');
+
+            const draggedItem = document.querySelector('.test-drag-item.dragging');
+            if (draggedItem) {
+                const clone = draggedItem.cloneNode(true);
+                clone.draggable = true;
+                clone.classList.remove('dragging');
+                clone.addEventListener('dragstart', handleTestDragStart);
+                clone.addEventListener('dragend', handleTestDragEnd);
+
+                this.appendChild(clone);
+                draggedItem.remove();
+            }
+        }
+
+        function checkTestAnswers() {
+            const feedback = document.getElementById('testFeedback');
+            const responsibilityZone = document.getElementById('testResponsibilityZone');
+            const achievementZone = document.getElementById('testAchievementZone');
+
+            let correct = 0;
+            let incorrect = 0;
+
+            responsibilityZone.querySelectorAll('.test-drag-item').forEach(item => {
+                if (item.dataset.correct === 'responsibility') {
+                    item.classList.remove('incorrect');
+                    item.classList.add('placed');
+                    correct++;
+                } else {
+                    item.classList.remove('placed');
+                    item.classList.add('incorrect');
+                    incorrect++;
+                }
+            });
+
+            achievementZone.querySelectorAll('.test-drag-item').forEach(item => {
+                if (item.dataset.correct === 'achievement') {
+                    item.classList.remove('incorrect');
+                    item.classList.add('placed');
+                    correct++;
+                } else {
+                    item.classList.remove('placed');
+                    item.classList.add('incorrect');
+                    incorrect++;
+                }
+            });
+
+            feedback.classList.add('show');
+
+            if (incorrect === 0 && correct === 6) {
+                feedback.className = 'test-feedback success show';
+                feedback.innerHTML = `
+                    <div class="test-feedback-title">✓ Perfect! All sorted correctly!</div>
+                    <div>You've mastered the difference between responsibility and achievement statements. You're now ready to write powerful CV bullet points that demonstrate real impact!</div>
+                `;
+            } else if (correct >= 4) {
+                feedback.className = 'test-feedback partial show';
+                feedback.innerHTML = `
+                    <div class="test-feedback-title">Good progress! You got ${correct} out of 6 correct.</div>
+                    <div class="test-feedback-detail">
+                        Look at the items highlighted in red. Responsibility statements describe tasks, while achievement statements show results or recognition. Try again to get them all!
+                    </div>
+                `;
+            } else {
+                feedback.className = 'test-feedback error show';
+                feedback.innerHTML = `
+                    <div class="test-feedback-title">Keep trying! You got ${correct} out of 6 correct.</div>
+                    <div class="test-feedback-detail">
+                        Remember: Responsibility describes WHAT YOU DID. Achievement shows THE IMPACT YOU HAD. Look for percentages, numbers, ratings, or recognition in achievement statements!
+                    </div>
+                `;
+            }
+        }
+
+        function resetTest() {
+            document.getElementById('testFeedback').classList.remove('show');
+            initializeTest();
         }
 
         function hideLoader() {
