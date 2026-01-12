@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html style="background: #f8f9fa;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Professional Communication</title>
+<style>
+* {box-sizing: border-box; margin: 0; padding: 0;}
+html, body {background: #f8f9fa; min-height: 100vh;}
+body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; opacity: 1; visibility: visible;}
+.container {max-width: 900px; margin: 0 auto;}
+.tabs-container {background: white; border-radius: 12px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); overflow: hidden;}
+.tabs {display: flex; border-bottom: 2px solid #e9ecef;}
+.tab {flex: 1; padding: 20px; text-align: center; font-size: 16px; font-weight: 700; color: #666; cursor: pointer; transition: all 0.3s ease; border-bottom: 3px solid transparent;}
+.tab:hover {background: #f8f9fa; color: #333;}
+.tab.active {color: #C6A906; border-bottom-color: #C6A906; background: white;}
+.tab-content {display: none; padding: 20px;}
+.tab-content.active {display: block;}
+.accordion-grid {display: grid; gap: 12px;}
+.accordion-item {background: white; border: 2px solid #e9ecef; border-radius: 8px; overflow: hidden; cursor: pointer; transition: all 0.3s ease;}
+.accordion-item:hover {border-color: #C6A906;}
+.accordion-header {padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; background: #f8f9fa;}
+.accordion-header-left {display: flex; align-items: center; gap: 12px;}
+.accordion-icon {font-size: 28px;}
+.accordion-title {font-size: 18px; font-weight: 700; color: #C6A906;}
+.expand-icon {font-size: 20px; color: #C6A906; transition: transform 0.3s ease;}
+.accordion-item.active .expand-icon {transform: rotate(180deg);}
+.accordion-content {max-height: 0; overflow: hidden; transition: max-height 0.4s ease;}
+.accordion-content-inner {padding: 20px;}
+.accordion-text {font-size: 15px; line-height: 1.7; color: #555; margin-bottom: 15px;}
+@media (max-width: 768px) {
+.tabs {flex-direction: column;}
+.accordion-icon {font-size: 24px;}
+.accordion-title {font-size: 16px;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="tabs-container">
+<div class="tabs">
+<div class="tab active" onclick="switchTab(0)">Client Communication</div>
+<div class="tab" onclick="switchTab(1)">Professional Communication</div>
+</div>
+<div class="tab-content active">
+<div class="accordion-grid">
+<div class="accordion-item active" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">💡</div>
+<div class="accordion-title">Clarity and Accessibility</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">Explaining exercises, principles, and concepts in clear, jargon-free language accessible to clients regardless of fitness knowledge level. Overly technical explanations alienate clients and create barriers to understanding.</div>
+</div>
+</div>
+</div>
+<div class="accordion-item" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">🎯</div>
+<div class="accordion-title">Instruction and Cueing</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">Providing clear, concise exercise instructions and coaching cues that enable clients to perform movements safely and effectively. Effective cueing combines visual demonstration, verbal explanation, and tactile feedback where appropriate.</div>
+</div>
+</div>
+</div>
+<div class="accordion-item" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">💪</div>
+<div class="accordion-title">Motivation and Encouragement</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">Using language that motivates, encourages, and builds client confidence rather than criticising, pressuring, or creating anxiety. Positive communication frameworks focus on progress, capability, and achievement rather than deficits or failures.</div>
+</div>
+</div>
+</div>
+<div class="accordion-item" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">📊</div>
+<div class="accordion-title">Feedback Delivery</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">Providing constructive feedback about technique, effort, or adherence in ways that promote improvement without damaging confidence or motivation. Effective feedback balances recognition of positive elements with specific, actionable guidance for development.</div>
+</div>
+</div>
+</div>
+<div class="accordion-item" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">❓</div>
+<div class="accordion-title">Questioning and Information Gathering</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">Asking appropriate questions to understand client needs, concerns, goals, and circumstances. Open-ended questions generate richer information than closed yes/no questions, enabling more personalised service delivery.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="tab-content">
+<div class="accordion-grid">
+<div class="accordion-item active" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">🤝</div>
+<div class="accordion-title">Colleague Interaction</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">Collaborating effectively with other trainers, reception staff, management, and support personnel. Professional respect, information sharing, and cooperative problem-solving create positive work environments and operational efficiency.</div>
+</div>
+</div>
+</div>
+<div class="accordion-item" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">💼</div>
+<div class="accordion-title">Management Communication</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">Updating managers appropriately regarding operational issues, client concerns, facility problems, or personal circumstances. Effective upward communication includes being proactive rather than reactive, providing relevant context and information, offering potential solutions alongside problem identification, and following established communication protocols and chains of command.</div>
+</div>
+</div>
+</div>
+<div class="accordion-item" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">📝</div>
+<div class="accordion-title">Documentation</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">Maintaining accurate, professional records including client notes, incident reports, equipment maintenance logs, and administrative documentation. Written records should be clear, objective, factual, and free from inappropriate subjective commentary.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+(function() {
+document.documentElement.style.visibility = 'visible';
+document.body.style.visibility = 'visible';
+})();
+window.switchTab = function(index) {
+const tabs = document.querySelectorAll('.tab');
+const contents = document.querySelectorAll('.tab-content');
+tabs.forEach((tab, i) => {
+if (i === index) {
+tab.classList.add('active');
+contents[i].classList.add('active');
+} else {
+tab.classList.remove('active');
+contents[i].classList.remove('active');
+}
+});
+setTimeout(function() {
+const activeContent = contents[index];
+const firstAccordion = activeContent.querySelector('.accordion-item');
+if (firstAccordion) {
+const firstContent = firstAccordion.querySelector('.accordion-content');
+firstContent.style.maxHeight = firstContent.scrollHeight + 'px';
+}
+}, 100);
+};
+window.toggleAccordion = function(item) {
+const content = item.querySelector('.accordion-content');
+const isActive = item.classList.contains('active');
+if (isActive) {
+item.classList.remove('active');
+content.style.maxHeight = null;
+} else {
+item.classList.add('active');
+content.style.maxHeight = content.scrollHeight + 'px';
+}
+};
+setTimeout(function() {
+const firstAccordion = document.querySelector('.accordion-item');
+const firstContent = firstAccordion.querySelector('.accordion-content');
+firstContent.style.maxHeight = firstContent.scrollHeight + 'px';
+}, 100);
+</script>
+</body>
+</html>
