@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Responsibility vs Achievement - Drag & Drop Activity</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #C6A906 0%, #a68905 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 30px 20px;
+        }
+
+        .intro-section {
+            background: #f0f8ff;
+            border-left: 4px solid #2196F3;
+            padding: 16px;
+            margin-bottom: 24px;
+            border-radius: 6px;
+            font-size: 14px;
+            line-height: 1.6;
+            color: #444;
+        }
+
+        .tip-box {
+            background: #fffbf0;
+            border-left: 4px solid #C6A906;
+            padding: 14px;
+            margin-bottom: 20px;
+            border-radius: 6px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .tip-box strong {
+            color: #333;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .activity-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 16px;
+            margin-bottom: 20px;
+        }
+
+        .column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .column-title {
+            font-size: 13px;
+            font-weight: 700;
+            text-transform: uppercase;
+            color: white;
+            letter-spacing: 1px;
+            padding: 12px;
+            border-radius: 6px 6px 0 0;
+            text-align: center;
+        }
+
+        .column.available .column-title {
+            background: #666;
+        }
+
+        .column.responsibility .column-title {
+            background: #e74c3c;
+        }
+
+        .column.achievement .column-title {
+            background: #27ae60;
+        }
+
+        .drop-zone {
+            background: #f9f9f9;
+            border: 2px dashed #ddd;
+            border-radius: 0 0 6px 6px;
+            padding: 16px;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+
+        .column.responsibility .drop-zone {
+            border-color: #e74c3c;
+            background: #ffe8e8;
+        }
+
+        .column.achievement .drop-zone {
+            border-color: #27ae60;
+            background: #e8f5e9;
+        }
+
+        .column.available .drop-zone {
+            background: #f5f5f5;
+            border-color: #999;
+        }
+
+        .drop-zone.dragover {
+            background-color: #fff3cd;
+            border-color: #C6A906;
+            border-style: solid;
+        }
+
+        .drag-item {
+            background: white;
+            border: 2px solid #e0e0e0;
+            padding: 12px;
+            border-radius: 6px;
+            cursor: grab;
+            font-size: 13px;
+            color: #333;
+            font-weight: 500;
+            line-height: 1.5;
+            transition: all 0.2s ease;
+            user-select: none;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+        }
+
+        .drag-item:hover {
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+            border-color: #C6A906;
+        }
+
+        .drag-item.dragging {
+            opacity: 0.5;
+            cursor: grabbing;
+            transform: scale(0.95);
+        }
+
+        .drag-item.placed {
+            border-left: 4px solid #27ae60;
+            background: #f0fff4;
+        }
+
+        .drag-item.incorrect {
+            border-left: 4px solid #e74c3c;
+            background: #fff5f5;
+        }
+
+        .item-number {
+            display: inline-block;
+            background: #C6A906;
+            color: white;
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            font-weight: 700;
+            margin-right: 8px;
+            flex-shrink: 0;
+        }
+
+        .item-content {
+            flex: 1;
+        }
+
+        .empty-state {
+            color: #999;
+            text-align: center;
+            padding: 20px 10px;
+            font-size: 13px;
+            font-style: italic;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 20px;
+            justify-content: center;
+        }
+
+        button {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-check {
+            background: #C6A906;
+            color: white;
+        }
+
+        .btn-check:hover {
+            background: #a68905;
+        }
+
+        .btn-reset {
+            background: #f0f0f0;
+            color: #333;
+            border: 2px solid #ddd;
+        }
+
+        .btn-reset:hover {
+            background: #e8e8e8;
+        }
+
+        .feedback {
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .feedback.show {
+            display: block;
+            animation: slideIn 0.3s ease-out;
+        }
+
+        @keyframes slideIn {
+            from { opacity: 0; transform: translateY(-10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .feedback.success {
+            background: #e8f5e9;
+            border-left: 4px solid #27ae60;
+            color: #1b5e20;
+        }
+
+        .feedback.partial {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+            color: #856404;
+        }
+
+        .feedback.error {
+            background: #ffe8e8;
+            border-left: 4px solid #e74c3c;
+            color: #a93226;
+        }
+
+        .feedback-title {
+            font-weight: 700;
+            margin-bottom: 8px;
+        }
+
+        .feedback-detail {
+            font-size: 13px;
+            margin-top: 8px;
+            padding-top: 8px;
+            border-top: 1px solid rgba(0, 0, 0, 0.1);
+        }
+
+        @media (max-width: 768px) {
+            .activity-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .content {
+                padding: 20px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Responsibility vs Achievement</h1>
+            <p>Learn to write achievement-focused CV content that stands out</p>
+        </div>
+
+        <div class="content">
+            <div class="intro-section">
+                <strong>Activity Instructions:</strong> Drag each CV bullet point into the correct category. Responsibility bullets describe tasks you performed. Achievement bullets demonstrate measurable results, outcomes, or recognition beyond simply completing tasks. There's no time limit—think carefully about each one!
+            </div>
+
+            <div class="tip-box">
+                <strong>💡 Quick Guide:</strong>
+                <strong>Responsibility:</strong> "Delivered sessions", "Assisted members", "Managed...". These describe what you did.<br>
+                <strong>Achievement:</strong> "Achieved 90% satisfaction", "Exceeded targets by 23%", "Recognised as...". These show measurable impact or recognition.
+            </div>
+
+            <div class="feedback" id="feedback"></div>
+
+            <div class="activity-grid">
+                <!-- Available Items -->
+                <div class="column available">
+                    <div class="column-title">📋 Bullet Points</div>
+                    <div class="drop-zone" id="availableZone"></div>
+                </div>
+
+                <!-- Responsibility Column -->
+                <div class="column responsibility">
+                    <div class="column-title">❌ Responsibility</div>
+                    <div class="drop-zone" id="responsibilityZone"></div>
+                </div>
+
+                <!-- Achievement Column -->
+                <div class="column achievement">
+                    <div class="column-title">✓ Achievement</div>
+                    <div class="drop-zone" id="achievementZone"></div>
+                </div>
+            </div>
+
+            <div class="action-buttons">
+                <button class="btn-check" onclick="checkAnswers()">Check Answers</button>
+                <button class="btn-reset" onclick="resetActivity()">Reset Activity</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const items = [
+            { id: 1, text: 'Delivered personal training sessions to clients.', correct: 'responsibility' },
+            { id: 2, text: 'Achieved 90% client satisfaction rating across 20 weekly sessions.', correct: 'achievement' },
+            { id: 3, text: 'Sold gym memberships to new members.', correct: 'responsibility' },
+            { id: 4, text: 'Exceeded monthly PT sales targets by 23% through consultative selling.', correct: 'achievement' },
+            { id: 5, text: 'Assisted members on gym floor.', correct: 'responsibility' },
+            { id: 6, text: 'Recognised as "Staff Member of the Month" for service excellence.', correct: 'achievement' }
+        ];
+
+        function initializeActivity() {
+            const availableZone = document.getElementById('availableZone');
+            availableZone.innerHTML = '';
+
+            // Shuffle items for variety
+            const shuffled = [...items].sort(() => Math.random() - 0.5);
+
+            shuffled.forEach(item => {
+                const div = document.createElement('div');
+                div.className = 'drag-item';
+                div.draggable = true;
+                div.dataset.id = item.id;
+                div.dataset.correct = item.correct;
+                div.innerHTML = `
+                    <div style="display: flex; gap: 8px;">
+                        <span class="item-number">${item.id}</span>
+                        <div class="item-content">${item.text}</div>
+                    </div>
+                `;
+
+                div.addEventListener('dragstart', handleDragStart);
+                div.addEventListener('dragend', handleDragEnd);
+
+                availableZone.appendChild(div);
+            });
+
+            // Clear other zones
+            document.getElementById('responsibilityZone').innerHTML = '';
+            document.getElementById('achievementZone').innerHTML = '';
+
+            // Add dragover and drop listeners to zones
+            ['availableZone', 'responsibilityZone', 'achievementZone'].forEach(zoneId => {
+                const zone = document.getElementById(zoneId);
+                zone.addEventListener('dragover', handleDragOver);
+                zone.addEventListener('drop', handleDrop);
+                zone.addEventListener('dragleave', handleDragLeave);
+            });
+        }
+
+        function handleDragStart(e) {
+            e.dataTransfer.effectAllowed = 'move';
+            e.target.classList.add('dragging');
+            e.dataTransfer.setData('text/html', e.currentTarget.innerHTML);
+        }
+
+        function handleDragEnd(e) {
+            e.target.classList.remove('dragging');
+            document.querySelectorAll('.drop-zone').forEach(zone => {
+                zone.classList.remove('dragover');
+            });
+        }
+
+        function handleDragOver(e) {
+            e.preventDefault();
+            e.dataTransfer.dropEffect = 'move';
+            this.classList.add('dragover');
+        }
+
+        function handleDragLeave(e) {
+            if (e.target === this) {
+                this.classList.remove('dragover');
+            }
+        }
+
+        function handleDrop(e) {
+            e.preventDefault();
+            e.stopPropagation();
+            this.classList.remove('dragover');
+
+            const draggedItem = document.querySelector('.drag-item.dragging');
+            if (draggedItem) {
+                const clone = draggedItem.cloneNode(true);
+                clone.draggable = true;
+                clone.classList.remove('dragging');
+                clone.addEventListener('dragstart', handleDragStart);
+                clone.addEventListener('dragend', handleDragEnd);
+
+                this.appendChild(clone);
+
+                // Remove from original location
+                draggedItem.remove();
+            }
+        }
+
+        function checkAnswers() {
+            const feedback = document.getElementById('feedback');
+            const responsibilityZone = document.getElementById('responsibilityZone');
+            const achievementZone = document.getElementById('achievementZone');
+
+            let correct = 0;
+            let incorrect = 0;
+
+            // Check responsibility zone
+            responsibilityZone.querySelectorAll('.drag-item').forEach(item => {
+                if (item.dataset.correct === 'responsibility') {
+                    item.classList.remove('incorrect');
+                    item.classList.add('placed');
+                    correct++;
+                } else {
+                    item.classList.remove('placed');
+                    item.classList.add('incorrect');
+                    incorrect++;
+                }
+            });
+
+            // Check achievement zone
+            achievementZone.querySelectorAll('.drag-item').forEach(item => {
+                if (item.dataset.correct === 'achievement') {
+                    item.classList.remove('incorrect');
+                    item.classList.add('placed');
+                    correct++;
+                } else {
+                    item.classList.remove('placed');
+                    item.classList.add('incorrect');
+                    incorrect++;
+                }
+            });
+
+            // Show feedback
+            feedback.classList.add('show');
+
+            if (incorrect === 0 && correct === 6) {
+                feedback.className = 'feedback success show';
+                feedback.innerHTML = `
+                    <div class="feedback-title">✓ Perfect! All sorted correctly!</div>
+                    <div>You've identified the key differences between responsibility and achievement statements. Notice how achievement statements include measurable results (percentages, ratings, recognition) that demonstrate real impact—exactly what employers want to see on CVs.</div>
+                `;
+            } else if (correct >= 4) {
+                feedback.className = 'feedback partial show';
+                feedback.innerHTML = `
+                    <div class="feedback-title">Good progress! You got ${correct} out of 6 correct.</div>
+                    <div class="feedback-detail">
+                        Look at the items highlighted in red. Responsibility statements describe tasks, while achievement statements show results or recognition. For example: "Delivered sessions" (task) vs "Achieved 90% satisfaction" (outcome).
+                    </div>
+                `;
+            } else {
+                feedback.className = 'feedback error show';
+                feedback.innerHTML = `
+                    <div class="feedback-title">Keep trying! You got ${correct} out of 6 correct.</div>
+                    <div class="feedback-detail">
+                        Remember: Responsibility describes WHAT YOU DID. Achievement shows THE IMPACT YOU HAD. Look for percentages, numbers, ratings, or recognition in achievement statements. Try again—you'll spot the pattern!
+                    </div>
+                `;
+            }
+        }
+
+        function resetActivity() {
+            document.getElementById('feedback').classList.remove('show');
+            initializeActivity();
+        }
+
+        // Initialize on load
+        initializeActivity();
+    </script>
+</body>
+</html>
