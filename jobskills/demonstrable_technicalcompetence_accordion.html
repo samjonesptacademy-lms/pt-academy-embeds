@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html style="background: #f8f9fa;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Technical Competencies</title>
+<style>
+* {box-sizing: border-box; margin: 0; padding: 0;}
+html, body {background: #f8f9fa; min-height: 100vh;}
+body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; opacity: 1; visibility: visible;}
+.container {max-width: 900px; margin: 0 auto;}
+.accordion-container {background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.1);}
+.accordion-grid {display: grid; gap: 12px;}
+.accordion-item {background: white; border: 2px solid #e9ecef; border-radius: 8px; overflow: hidden; cursor: pointer; transition: all 0.3s ease;}
+.accordion-item:hover {border-color: #C6A906;}
+.accordion-header {padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; background: #f8f9fa;}
+.accordion-header-left {display: flex; align-items: center; gap: 12px;}
+.accordion-icon {font-size: 28px;}
+.accordion-title {font-size: 18px; font-weight: 700; color: #C6A906;}
+.expand-icon {font-size: 20px; color: #C6A906; transition: transform 0.3s ease;}
+.accordion-item.active .expand-icon {transform: rotate(180deg);}
+.accordion-content {max-height: 0; overflow: hidden; transition: max-height 0.4s ease;}
+.accordion-content-inner {padding: 20px;}
+.accordion-text {font-size: 15px; line-height: 1.7; color: #555; margin-bottom: 15px;}
+@media (max-width: 768px) {
+.accordion-icon {font-size: 24px;}
+.accordion-title {font-size: 16px;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="accordion-container">
+<div class="accordion-grid">
+<div class="accordion-item active" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">🏋️</div>
+<div class="accordion-title">Exercise Knowledge</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">Understanding proper technique, biomechanics, progressions/regressions, and contraindications for exercises across training modalities.</div>
+</div>
+</div>
+</div>
+<div class="accordion-item" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">📋</div>
+<div class="accordion-title">Programme Design</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">Creating appropriate, effective training programmes aligned with client goals, abilities, and circumstances.</div>
+</div>
+</div>
+</div>
+<div class="accordion-item" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">🛡️</div>
+<div class="accordion-title">Safety Management</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">Identifying and managing risks, ensuring client safety, and responding appropriately to incidents or emergencies.</div>
+</div>
+</div>
+</div>
+<div class="accordion-item" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">📊</div>
+<div class="accordion-title">Assessment Skills</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">Conducting appropriate client assessments including health screening, movement analysis, and fitness testing where relevant.</div>
+</div>
+</div>
+</div>
+<div class="accordion-item" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">⚙️</div>
+<div class="accordion-title">Equipment Proficiency</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">Competent use of gym equipment including resistance machines, free weights, cardiovascular equipment, and functional training tools.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+(function() {
+document.documentElement.style.visibility = 'visible';
+document.body.style.visibility = 'visible';
+})();
+window.toggleAccordion = function(item) {
+const content = item.querySelector('.accordion-content');
+const isActive = item.classList.contains('active');
+if (isActive) {
+item.classList.remove('active');
+content.style.maxHeight = null;
+} else {
+item.classList.add('active');
+content.style.maxHeight = content.scrollHeight + 'px';
+}
+};
+setTimeout(function() {
+const firstAccordion = document.querySelector('.accordion-item');
+const firstContent = firstAccordion.querySelector('.accordion-content');
+firstContent.style.maxHeight = firstContent.scrollHeight + 'px';
+}, 100);
+</script>
+</body>
+</html>
