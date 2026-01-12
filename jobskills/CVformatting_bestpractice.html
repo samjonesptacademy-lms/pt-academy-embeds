@@ -1,0 +1,465 @@
+<!DOCTYPE html>
+<html style="background: #f8f9fa;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>CV Formatting Best Practices</title>
+<style>
+* {box-sizing: border-box; margin: 0; padding: 0;}
+html, body {background: #f8f9fa; min-height: 100vh;}
+body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; opacity: 1; visibility: visible;}
+.container {max-width: 900px; margin: 0 auto;}
+.cover-screen {background: linear-gradient(135deg, #C6A906 0%, #e0c040 100%); border-radius: 12px; padding: 80px 40px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.15); cursor: pointer; transition: all 0.3s ease; min-height: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center;}
+.cover-screen:hover {transform: translateY(-5px); box-shadow: 0 8px 30px rgba(0,0,0,0.2);}
+.cover-screen.hidden {display: none;}
+.cover-icon {font-size: 120px; margin-bottom: 30px;}
+.cover-title {font-size: 42px; font-weight: 700; color: white; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);}
+.cover-subtitle {font-size: 20px; color: white; margin-bottom: 40px; opacity: 0.95; line-height: 1.6; max-width: 650px;}
+.cover-button {background: white; color: #C6A906; padding: 18px 50px; border-radius: 30px; font-size: 18px; font-weight: 700; border: none; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;}
+.cover-button:hover {transform: scale(1.05); box-shadow: 0 4px 15px rgba(0,0,0,0.3);}
+.main-content {display: none;}
+.main-content.visible {display: block;}
+.intro-section {background: white; border-radius: 12px; padding: 25px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); margin-bottom: 25px;}
+.intro-title {font-size: 28px; font-weight: 700; color: #333; margin-bottom: 12px;}
+.intro-text {font-size: 16px; line-height: 1.7; color: #666;}
+.accordion-container {background: white; border-radius: 12px; padding: 20px; box-shadow: 0 2px 12px rgba(0,0,0,0.1);}
+.accordion-grid {display: grid; gap: 12px;}
+.accordion-item {background: white; border: 2px solid #e9ecef; border-radius: 8px; overflow: hidden; cursor: pointer; transition: all 0.3s ease;}
+.accordion-item:hover {border-color: #C6A906;}
+.accordion-header {padding: 18px 20px; display: flex; justify-content: space-between; align-items: center; background: #f8f9fa;}
+.accordion-header-left {display: flex; align-items: center; gap: 12px;}
+.accordion-icon {font-size: 28px;}
+.accordion-title {font-size: 18px; font-weight: 700; color: #C6A906;}
+.expand-icon {font-size: 20px; color: #C6A906; transition: transform 0.3s ease;}
+.accordion-item.active .expand-icon {transform: rotate(180deg);}
+.accordion-content {max-height: 0; overflow: hidden; transition: max-height 0.4s ease;}
+.accordion-content-inner {padding: 20px;}
+.accordion-text {font-size: 15px; line-height: 1.7; color: #555; margin-bottom: 15px;}
+.tip-box {background: #fff8e1; border-left: 4px solid #C6A906; padding: 15px; border-radius: 6px; margin-top: 15px;}
+.tip-title {font-size: 14px; font-weight: 700; color: #C6A906; margin-bottom: 5px;}
+.tip-text {font-size: 14px; line-height: 1.6; color: #856404;}
+.example-box {background: #f8f9fa; border: 2px solid #e9ecef; padding: 15px; border-radius: 6px; margin-top: 12px;}
+.example-title {font-size: 13px; font-weight: 700; color: #333; margin-bottom: 8px; text-transform: uppercase;}
+.example-text {font-size: 14px; line-height: 1.6; color: #555;}
+.good-practice {color: #2e7d32;}
+.bad-practice {color: #c62828;}
+.continue-btn {background: linear-gradient(135deg, #C6A906, #e0c040); color: white; padding: 15px 40px; border-radius: 25px; font-size: 16px; font-weight: 700; border: none; cursor: pointer; transition: all 0.3s ease;}
+.continue-btn:hover {transform: translateY(-2px); box-shadow: 0 4px 15px rgba(198,169,6,0.3);}
+.comparison-section {background: white; border-radius: 12px; padding: 30px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); margin-top: 25px; display: none;}
+.comparison-section.visible {display: block;}
+.comparison-header {text-align: center; margin-bottom: 25px;}
+.comparison-title {font-size: 28px; font-weight: 700; color: #333; margin-bottom: 12px;}
+.comparison-subtitle {font-size: 16px; line-height: 1.7; color: #666;}
+.comparison-tabs {display: flex; gap: 10px; justify-content: center; margin-bottom: 25px;}
+.comparison-tab {padding: 12px 30px; border-radius: 8px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; border: 2px solid #e9ecef; background: white; color: #666;}
+.comparison-tab.active {background: #C6A906; color: white; border-color: #C6A906;}
+.comparison-tab:hover {border-color: #C6A906;}
+.cv-container {display: none;}
+.cv-container.active {display: block;}
+.cv-example {display: grid; gap: 20px;}
+.cv-paper {background: white; border: 1px solid #ddd; padding: 30px; border-radius: 8px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); font-size: 11px; line-height: 1.6;}
+.cv-paper.bad {background: #fff8f8;}
+.cv-header-good {text-align: center; padding-bottom: 15px; border-bottom: 2px solid #333; margin-bottom: 20px;}
+.cv-name {font-size: 24px; font-weight: 700; color: #333; margin-bottom: 5px;}
+.cv-contact {font-size: 10px; color: #666;}
+.cv-header-bad {text-align: center; padding-bottom: 10px; margin-bottom: 15px; border-bottom: 3px dotted #C6A906;}
+.cv-name-bad {font-size: 28px; font-weight: 700; color: #C6A906; margin-bottom: 5px; font-family: 'Comic Sans MS', cursive;}
+.cv-contact-bad {font-size: 9px; color: #666; margin-bottom: 8px;}
+.cv-photo-placeholder {background: #f0f0f0; border: 2px dashed #999; padding: 20px; margin: 10px auto; width: 80px; text-align: center; font-size: 30px;}
+.cv-section {margin-bottom: 18px;}
+.cv-section-bad {margin-bottom: 12px;}
+.cv-section-title {font-size: 13px; font-weight: 700; color: #333; margin-bottom: 10px; text-transform: uppercase; letter-spacing: 0.5px;}
+.cv-section-title-bad {font-size: 14px; font-weight: 700; color: #333; margin-bottom: 8px;}
+.cv-text {font-size: 11px; line-height: 1.7; color: #333;}
+.cv-text-dense {font-size: 11px; line-height: 1.3; color: #333; text-align: justify;}
+.cv-item {margin-bottom: 12px;}
+.cv-item-header {display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 3px;}
+.cv-item-title {font-size: 11px; font-weight: 700; color: #333;}
+.cv-item-date {font-size: 10px; color: #666;}
+.cv-item-detail {font-size: 10px; color: #666; margin-bottom: 5px;}
+.cv-bullets {margin-top: 5px;}
+.cv-bullet {font-size: 11px; line-height: 1.6; color: #333; margin-bottom: 3px;}
+.analysis-box {padding: 20px; border-radius: 8px; margin-top: 20px;}
+.analysis-good {background: #e8f5e9; border: 2px solid #4caf50;}
+.analysis-bad {background: #ffebee; border: 2px solid #e74c3c;}
+.analysis-title {font-size: 18px; font-weight: 700; margin-bottom: 15px;}
+.analysis-good .analysis-title {color: #2e7d32;}
+.analysis-bad .analysis-title {color: #c62828;}
+.analysis-points {display: grid; gap: 8px;}
+.analysis-point {font-size: 14px; line-height: 1.6; color: #333;}
+@media (max-width: 768px) {
+.accordion-icon {font-size: 24px;}
+.accordion-title {font-size: 16px;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="cover-screen" onclick="showContent()">
+<div class="cover-icon">📄</div>
+<div class="cover-title">CV Formatting Best Practices</div>
+<div class="cover-subtitle">Professional formatting creates positive first impressions and ensures your CV is read and understood</div>
+<button class="cover-button">View Best Practices →</button>
+</div>
+<div class="main-content">
+<div class="intro-section">
+<div class="intro-title">Professional CV Formatting</div>
+<div class="intro-text">Proper formatting ensures your CV is professional, readable, and easy for employers to navigate. Click each section below to learn formatting best practices.</div>
+</div>
+<div class="accordion-container">
+<div class="accordion-grid">
+<div class="accordion-item active" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">📏</div>
+<div class="accordion-title">Length</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">For fitness professionals with limited experience, CVs should typically be <strong>1-2 pages</strong>. Recently qualified trainers can effectively present credentials on single pages, whilst experienced professionals with extensive relevant experience might extend to two pages.</div>
+<div class="accordion-text">CVs exceeding two pages risk losing employer attention unless extraordinary circumstances justify length.</div>
+<div class="tip-box">
+<div class="tip-title">💡 Quick Guide</div>
+<div class="tip-text"><strong>New trainers:</strong> 1 page | <strong>Experienced professionals:</strong> 1-2 pages | <strong>Senior specialists:</strong> Maximum 2 pages</div>
+</div>
+</div>
+</div>
+</div>
+<div class="accordion-item" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">🔤</div>
+<div class="accordion-title">Font and Typography</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">Professional, readable fonts such as <strong>Arial, Calibri, or Times New Roman</strong> in <strong>10-12 point size</strong> ensure readability. Avoid decorative or highly stylised fonts appearing unprofessional or difficult to read.</div>
+<div class="accordion-text">Consistent font usage throughout maintains professional appearance.</div>
+<div class="example-box">
+<div class="example-title good-practice">✓ Good Practice</div>
+<div class="example-text">Arial 11pt for body text, Arial 14pt bold for section headings</div>
+</div>
+<div class="example-box">
+<div class="example-title bad-practice">✗ Avoid</div>
+<div class="example-text">Comic Sans, cursive fonts, decorative scripts, or mixing multiple font families</div>
+</div>
+</div>
+</div>
+</div>
+<div class="accordion-item" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">⬜</div>
+<div class="accordion-title">White Space and Layout</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">Adequate white space prevents overwhelming, cramped appearance and aids readability. Appropriate margins (typically <strong>2cm minimum</strong>), spacing between sections, and avoiding dense text blocks improve visual appeal and information processing.</div>
+<div class="tip-box">
+<div class="tip-title">💡 Layout Tips</div>
+<div class="tip-text">Use consistent spacing: 1 line between items within sections, 1.5-2 lines between major sections. Don't fill every millimeter—white space is professional.</div>
+</div>
+</div>
+</div>
+</div>
+<div class="accordion-item" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">•</div>
+<div class="accordion-title">Bullet Points</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">Using bullet points for responsibility and achievement lists aids scanning and comprehension compared to dense paragraphs. Bullets should be <strong>concise (1-2 lines typically)</strong> whilst containing meaningful information.</div>
+<div class="example-box">
+<div class="example-title good-practice">✓ Good Practice</div>
+<div class="example-text">• Delivered 150+ personal training sessions monthly, achieving 95% client retention<br>• Designed tailored programmes for 40+ clients with diverse goals and abilities</div>
+</div>
+<div class="example-box">
+<div class="example-title bad-practice">✗ Avoid</div>
+<div class="example-text">I was responsible for delivering personal training sessions to clients on a regular basis and I also designed training programmes that were customized to meet their individual needs and goals which varied widely depending on each person's fitness level and objectives.</div>
+</div>
+</div>
+</div>
+</div>
+<div class="accordion-item" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">✓</div>
+<div class="accordion-title">Consistency</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">Maintaining consistent formatting throughout—including consistent date formats, bullet point styles, heading styles, and spacing—creates polished, professional appearance.</div>
+<div class="accordion-text">Inconsistent formatting appears careless and unprofessional.</div>
+<div class="example-box">
+<div class="example-title good-practice">✓ Good Practice</div>
+<div class="example-text">All dates: "January 2022 - Present"<br>All headings: Bold, 14pt<br>All bullets: Same style throughout</div>
+</div>
+<div class="example-box">
+<div class="example-title bad-practice">✗ Avoid</div>
+<div class="example-text">Mixed dates: "Jan 2022", "01/2023", "March 24"<br>Random heading sizes and styles<br>Switching between bullet styles (•, -, ►)</div>
+</div>
+</div>
+</div>
+</div>
+<div class="accordion-item" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">📑</div>
+<div class="accordion-title">Section Headings</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">Clear, prominent section headings enable quick navigation and information location. Subtle formatting (bold, slightly larger font) distinguishes headings without excessive decoration.</div>
+<div class="tip-box">
+<div class="tip-title">💡 Standard Sections</div>
+<div class="tip-text">Common sections: Professional Profile | Qualifications | Professional Experience | Key Skills | Education | Professional Development</div>
+</div>
+<div class="example-box">
+<div class="example-title good-practice">✓ Good Practice</div>
+<div class="example-text"><strong>PROFESSIONAL EXPERIENCE</strong> (14pt bold)<br>Clear, scannable, professional</div>
+</div>
+<div class="example-box">
+<div class="example-title bad-practice">✗ Avoid</div>
+<div class="example-text">Experience: (same size/weight as body text)<br>⭐ MY WORK HISTORY ⭐ (excessive decoration)<br>***JOBS I'VE HAD*** (unprofessional)</div>
+</div>
+</div>
+</div>
+</div>
+<div class="accordion-item" onclick="toggleAccordion(this)">
+<div class="accordion-header">
+<div class="accordion-header-left">
+<div class="accordion-icon">⚠️</div>
+<div class="accordion-title">Common Formatting Mistakes</div>
+</div>
+<div class="expand-icon">▼</div>
+</div>
+<div class="accordion-content">
+<div class="accordion-content-inner">
+<div class="accordion-text">Several formatting choices significantly reduce CV effectiveness:</div>
+<div class="example-box">
+<div class="example-title bad-practice">✗ Avoid These Mistakes</div>
+<div class="example-text">• Excessive colour or graphics (unless applying for creative visual roles)<br>• Photos (UK CVs typically exclude photos unless specifically requested)<br>• Dense, unbroken text blocks without adequate spacing or structure<br>• Font size below 10pt or above 12pt for body text<br>• Inconsistent or decorative bullet point styles<br>• Tables or complex formatting that may not display correctly</div>
+</div>
+<div class="tip-box">
+<div class="tip-title">💡 ATS Compatibility</div>
+<div class="tip-text">Many employers use Applicant Tracking Systems (ATS) scanning CVs for keywords before human review. Complex formatting, tables, graphics, or unusual layouts may not parse correctly through these systems, potentially resulting in qualified candidates being filtered out incorrectly. <strong>Simple, clean formatting ensures both human and system readability.</strong></div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div style="text-align: center; margin-top: 25px;">
+<button class="continue-btn" onclick="revealComparison()">View CV Examples →</button>
+</div>
+<div class="comparison-section" id="comparisonSection">
+<div class="comparison-header">
+<div class="comparison-title">Good CV vs Bad CV</div>
+<div class="comparison-subtitle">Review these example CVs to see formatting principles in action. Click the tabs to switch between examples.</div>
+</div>
+<div class="comparison-tabs">
+<div class="comparison-tab active" onclick="switchCV(0)">✓ Good CV</div>
+<div class="comparison-tab" onclick="switchCV(1)">✗ Bad CV</div>
+</div>
+<div class="cv-container active" id="goodCV">
+<div class="cv-example">
+<div class="cv-paper">
+<div class="cv-header-good">
+<div class="cv-name">Sarah Mitchell</div>
+<div class="cv-contact">07789 123 456 | sarah.mitchell@email.com | London, UK</div>
+</div>
+<div class="cv-section">
+<div class="cv-section-title">PROFESSIONAL PROFILE</div>
+<div class="cv-text">Level 3 qualified Personal Trainer with 2 years' experience delivering tailored fitness programmes. Specialist in weight management and functional training with proven track record of client retention and goal achievement.</div>
+</div>
+<div class="cv-section">
+<div class="cv-section-title">QUALIFICATIONS</div>
+<div class="cv-item">
+<div class="cv-item-title">Level 3 Diploma in Personal Training</div>
+<div class="cv-item-detail">Active IQ | September 2022</div>
+</div>
+<div class="cv-item">
+<div class="cv-item-title">Level 2 Certificate in Fitness Instructing</div>
+<div class="cv-item-detail">Active IQ | March 2022</div>
+</div>
+</div>
+<div class="cv-section">
+<div class="cv-section-title">PROFESSIONAL EXPERIENCE</div>
+<div class="cv-item">
+<div class="cv-item-header">
+<div class="cv-item-title">Personal Trainer</div>
+<div class="cv-item-date">Jan 2023 - Present</div>
+</div>
+<div class="cv-item-detail">PureGym, Manchester</div>
+<div class="cv-bullets">
+<div class="cv-bullet">• Manage caseload of 25 regular clients achieving 92% retention rate</div>
+<div class="cv-bullet">• Deliver 120+ PT sessions monthly with diverse client demographics</div>
+<div class="cv-bullet">• Design evidence-based programmes for weight loss, strength, and functional fitness</div>
+<div class="cv-bullet">• Conduct comprehensive health screenings and fitness assessments</div>
+<div class="cv-bullet">• Maintain detailed client records and progress tracking systems</div>
+</div>
+</div>
+<div class="cv-item">
+<div class="cv-item-header">
+<div class="cv-item-title">Fitness Instructor</div>
+<div class="cv-item-date">Mar 2022 - Dec 2022</div>
+</div>
+<div class="cv-item-detail">David Lloyd Club, Manchester</div>
+<div class="cv-bullets">
+<div class="cv-bullet">• Delivered group fitness classes including HIIT, circuit training, and strength conditioning</div>
+<div class="cv-bullet">• Provided gym floor support and equipment demonstrations to 100+ members weekly</div>
+<div class="cv-bullet">• Assisted with member inductions and personalized programme design</div>
+<div class="cv-bullet">• Maintained equipment safety and cleanliness standards</div>
+</div>
+</div>
+</div>
+<div class="cv-section">
+<div class="cv-section-title">KEY SKILLS</div>
+<div class="cv-text">Programme Design • Functional Training • Weight Management • Client Communication • Health Screening • Exercise Modification • Progress Tracking • Motivational Coaching • Injury Prevention • Nutrition Awareness</div>
+</div>
+<div class="cv-section">
+<div class="cv-section-title">CONTINUING PROFESSIONAL DEVELOPMENT</div>
+<div class="cv-item">
+<div class="cv-item-title">Advanced Nutrition for Exercise & Health</div>
+<div class="cv-item-detail">Sport England | June 2023</div>
+</div>
+<div class="cv-item">
+<div class="cv-item-title">Functional Training Workshop</div>
+<div class="cv-item-detail">Perform Better | April 2023</div>
+</div>
+<div class="cv-item">
+<div class="cv-item-title">First Aid at Work Certificate</div>
+<div class="cv-item-detail">St John Ambulance | February 2023</div>
+</div>
+</div>
+<div class="cv-section">
+<div class="cv-section-title">PROFESSIONAL MEMBERSHIPS</div>
+<div class="cv-text">CIMSPA Member (Professional Practice) | REPs Registered Level 3</div>
+</div>
+</div>
+<div class="analysis-box analysis-good">
+<div class="analysis-title">✓ Why This Works</div>
+<div class="analysis-points">
+<div class="analysis-point">• <strong>Clean layout:</strong> Adequate white space, clear sections, easy to scan</div>
+<div class="analysis-point">• <strong>Professional fonts:</strong> Simple, readable font at 11pt</div>
+<div class="analysis-point">• <strong>Clear headings:</strong> Bold, uppercase section titles stand out</div>
+<div class="analysis-point">• <strong>Consistent formatting:</strong> Dates, bullets, spacing all uniform</div>
+<div class="analysis-point">• <strong>Concise bullets:</strong> 1-2 lines with specific achievements</div>
+<div class="analysis-point">• <strong>Quantified results:</strong> Numbers demonstrate impact (92% retention, 120+ sessions)</div>
+<div class="analysis-point">• <strong>ATS-friendly:</strong> Simple structure, no tables, no graphics</div>
+</div>
+</div>
+</div>
+</div>
+<div class="cv-container" id="badCV">
+<div class="cv-example">
+<div class="cv-paper bad">
+<div class="cv-header-bad">
+<div class="cv-name-bad">✨ SARAH MITCHELL ✨</div>
+<div class="cv-contact-bad">sarahcutie123@email.com | 07789123456</div>
+<div class="cv-photo-placeholder">📷 PHOTO</div>
+</div>
+<div class="cv-section-bad">
+<div class="cv-section-title-bad">About Me!!!</div>
+<div class="cv-text-dense">Hi! I'm Sarah and I'm a personal trainer who loves fitness and helping people. I've been training for 2 years now and I really enjoy it. I work with lots of different clients and I'm good at what I do. I have my level 3 qualification and I'm passionate about health and wellness. I think I would be a great addition to your team because I'm a hard worker and good communicator and team player.</div>
+</div>
+<div class="cv-section-bad">
+<div class="cv-section-title-bad">★ Qualifications & Experience ★</div>
+<div class="cv-text-dense">Level 3 Personal Training Diploma (Sept 22) and Level 2 Fitness Instructing (March 2022) both from Active IQ. I've worked at PureGym since Jan 2023 doing personal training with clients which has been really good and I've learned a lot. I train about 25 people regularly and do around 120 sessions per month. Before that I worked in retail at Next for 3 years (2019-2022) as a sales assistant where I was responsible for helping customers and working the till. I also did some babysitting in 2018 and worked in a cafe for a few months in 2019. I went to Manchester High School (2012-2017) where I got my GCSEs including English and Maths and I also did PE A-level.</div>
+</div>
+<div class="cv-section-bad">
+<div class="cv-section-title-bad">SKILLS</div>
+<div class="cv-text-dense">Good communicator, hard worker, team player, friendly, organized, motivated, passionate about fitness, reliable, punctual, good with people, computer skills, social media, Microsoft Office, good listener, problem solver, flexible, enthusiastic</div>
+</div>
+<div class="cv-section-bad">
+<div class="cv-section-title-bad">More Stuff About Me</div>
+<div class="cv-text-dense">I've done some courses like nutrition and functional training and first aid. I'm a member of CIMSPA and REPs. I really love fitness and helping people achieve their goals! I think fitness is so important for everyone and I try to inspire my clients every day. I'm always learning new things and staying up to date with the latest trends. I use Instagram to promote my services and I have about 500 followers!</div>
+</div>
+<div class="cv-section-bad">
+<div class="cv-section-title-bad">hobbies</div>
+<div class="cv-text-dense">Going to the gym, travelling, spending time with friends and family, cooking healthy meals, reading fitness magazines, watching Netflix, listening to podcasts, going for walks, trying new restaurants, shopping</div>
+</div>
+<div class="cv-section-bad">
+<div class="cv-section-title-bad">References</div>
+<div class="cv-text-dense">Available on request but I can give you my manager's number if you want to call them</div>
+</div>
+</div>
+<div class="analysis-box analysis-bad">
+<div class="analysis-title">✗ What's Wrong</div>
+<div class="analysis-points">
+<div class="analysis-point">• <strong>Unprofessional email:</strong> "sarahcutie123" is inappropriate for job applications</div>
+<div class="analysis-point">• <strong>Excessive decoration:</strong> Stars, emojis, and decorative elements are unprofessional</div>
+<div class="analysis-point">• <strong>Photo placeholder:</strong> UK CVs don't need photos; wastes space</div>
+<div class="analysis-point">• <strong>Dense paragraphs:</strong> No white space, difficult to scan or read</div>
+<div class="analysis-point">• <strong>Inconsistent formatting:</strong> Headings vary in style and capitalization</div>
+<div class="analysis-point">• <strong>Generic claims:</strong> "Hard worker," "good communicator" with no evidence</div>
+<div class="analysis-point">• <strong>Irrelevant information:</strong> Retail job, high school, hobbies don't add value</div>
+<div class="analysis-point">• <strong>No quantification:</strong> No numbers showing achievements or impact</div>
+<div class="analysis-point">• <strong>Informal tone:</strong> "Hi!", exclamation marks inappropriate for CVs</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+(function() {
+document.documentElement.style.visibility = 'visible';
+document.body.style.visibility = 'visible';
+})();
+window.showContent = function() {
+document.querySelector('.cover-screen').classList.add('hidden');
+document.querySelector('.main-content').classList.add('visible');
+setTimeout(function() {
+const firstAccordion = document.querySelector('.accordion-item');
+const firstContent = firstAccordion.querySelector('.accordion-content');
+firstContent.style.maxHeight = firstContent.scrollHeight + 'px';
+}, 100);
+};
+window.toggleAccordion = function(item) {
+const content = item.querySelector('.accordion-content');
+const isActive = item.classList.contains('active');
+if (isActive) {
+item.classList.remove('active');
+content.style.maxHeight = null;
+} else {
+item.classList.add('active');
+content.style.maxHeight = content.scrollHeight + 'px';
+}
+};
+window.switchCV = function(index) {
+const tabs = document.querySelectorAll('.comparison-tab');
+const containers = document.querySelectorAll('.cv-container');
+tabs.forEach((tab, i) => {
+if (i === index) {
+tab.classList.add('active');
+containers[i].classList.add('active');
+} else {
+tab.classList.remove('active');
+containers[i].classList.remove('active');
+}
+});
+};
+window.revealComparison = function() {
+document.getElementById('comparisonSection').classList.add('visible');
+document.getElementById('comparisonSection').scrollIntoView({ behavior: 'smooth', block: 'start' });
+};
+</script>
+</body>
+</html>
