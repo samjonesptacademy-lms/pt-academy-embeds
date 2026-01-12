@@ -481,54 +481,76 @@
     <script>
         let reviewedCVs = new Set();
 
+        let currentCVIndex = 0;
+
         const sectionCommentary = {
             'Professional Profile': {
-                title: 'Professional Profile/Summary',
-                commentary: 'This 3-5 sentence overview immediately tells employers your qualification level, relevant experience, and career focus. It\'s tailored to the specific role and demonstrates genuine interest through specificity.',
-                guidance: [
-                    'States qualification level upfront (Level 3, etc.)',
-                    'Mentions relevant experience (how long, in what setting)',
-                    'Shows specialisation or focus area',
-                    'Demonstrates passion/genuine interest in the field',
-                    'Tailored to the specific role/facility—not generic'
-                ]
+                title: 'Professional Profile/Summary'
             },
             'Professional Experience': {
-                title: 'Professional Experience',
-                commentary: 'This section demonstrates your actual achievements and value. Notice how each role includes specific outcomes—retention percentages, revenue generated, member improvements—rather than just listing duties. This shows impact, not just activity.',
-                guidance: [
-                    'Reverse chronological order (most recent first)',
-                    'Includes job title, company, and dates',
-                    'Each bullet is achievement-focused, not responsibility-focused',
-                    'Includes quantified results (percentages, numbers, outcomes)',
-                    'Shows progression and skill development',
-                    '3-6 bullets per role (most important achievements)'
-                ]
+                title: 'Professional Experience'
             },
             'Professional Qualifications': {
-                title: 'Professional Qualifications',
-                commentary: 'Fitness qualifications are presented clearly with awarding bodies and dates. This enables employers to verify credentials instantly. Professional body registration (CIMSPA) demonstrates commitment to standards and continuing development.',
-                guidance: [
-                    'Qualification title clearly stated',
-                    'Awarding body included (CIMSPA, REPS, St John, etc.)',
-                    'Date obtained (month/year)',
-                    'Professional body registration status shown',
-                    'Validity dates for time-sensitive qualifications (First Aid)',
-                    'Higher qualifications and specialist certs highlighted'
-                ]
+                title: 'Professional Qualifications'
             },
             'Key Skills': {
-                title: 'Key Skills',
-                commentary: 'Skills are categorised and specific rather than generic. Notice how they\'re organised into technical, interpersonal, and professional groups. This helps employers quickly identify relevant capabilities they\'re seeking.',
-                guidance: [
-                    'Grouped into categories (Technical, Interpersonal, Professional)',
-                    'Specific, not generic ("Periodisation principles" not "Good trainer")',
-                    'Aligned with job requirements and industry standards',
-                    'Include both hard and soft skills',
-                    'Reflect actual experience demonstrated earlier in CV',
-                    'Ordered by relevance to target role'
-                ]
+                title: 'Key Skills'
             }
+        };
+
+        const cvSpecificCommentary = {
+            0: { // Recently Qualified PT
+                'Professional Profile': 'This profile clearly states Level 3 qualification, mentions the gym placement experience, and references the retail background as relevant customer service. It\'s tailored to a facility-based role and shows genuine interest in strength training.',
+                'Professional Experience': 'Notice how even the short gym placement includes a quantified achievement (25% improvement in adherence). The retail role demonstrates transferable customer service skills relevant to fitness facilities.',
+                'Professional Qualifications': 'As a newly qualified trainer, this CV includes the essential Level 2 and 3, CIMSPA registration, and First Aid with validity dates. No specialist certifications yet, which is typical at this career stage.',
+                'Key Skills': 'Skills are foundational but specific—movement screening, form assessment, client induction. These reflect the practical skills developed during the gym placement and what recently qualified trainers typically can deliver.'
+            },
+            1: { // Experienced PT
+                'Professional Profile': 'This profile emphasizes 18 months of experience, specialist focus (strength and body composition), and the concrete achievement (88% retention rate). It shows progression from the recently qualified example.',
+                'Professional Experience': 'See how achievements are more developed—quantified retention rates, specific programme outcomes (15-20% strength gains), and additional responsibilities like social media and mentoring. This demonstrates career progression.',
+                'Professional Qualifications': 'Now includes a specialist qualification (Strength and Conditioning) in addition to core credentials. This shows commitment to ongoing professional development beyond the minimum requirements.',
+                'Key Skills': 'Skills have expanded to include specialized areas (periodisation, corrective exercise, behaviour change support, team mentoring). They reflect broader responsibility and deeper expertise compared to the recently qualified example.'
+            },
+            2: { // Senior PT
+                'Professional Profile': 'This profile leads with senior status, business acumen (£48,000+ revenue), specialist areas (pre/post-natal, injury rehab), and team impact. It\'s a clear progression showing leadership and commercial contribution.',
+                'Professional Experience': 'Notice the progression across three roles, each building on previous experience. The current role emphasizes team leadership, revenue generation, service expansion, and quality improvement—not just client work.',
+                'Professional Qualifications': 'Multiple specialist certifications (Pre/Post-Natal, Injury Rehabilitation) show ongoing professional development. The longer registration history demonstrates sustained commitment to professional standards.',
+                'Key Skills': 'Skills now emphasize senior-level responsibilities: team leadership, business development, quality assurance, advanced software proficiency. These reflect a progression from individual contributor to leader.'
+            }
+        };
+
+        const generalGuidance = {
+            'Professional Profile': [
+                'States qualification level upfront (Level 3, etc.)',
+                'Mentions relevant experience (how long, in what setting)',
+                'Shows specialisation or focus area',
+                'Demonstrates passion/genuine interest in the field',
+                'Tailored to the specific role/facility—not generic'
+            ],
+            'Professional Experience': [
+                'Reverse chronological order (most recent first)',
+                'Includes job title, company, and dates',
+                'Each bullet is achievement-focused, not responsibility-focused',
+                'Includes quantified results (percentages, numbers, outcomes)',
+                'Shows progression and skill development',
+                '3-6 bullets per role (most important achievements)'
+            ],
+            'Professional Qualifications': [
+                'Qualification title clearly stated',
+                'Awarding body included (CIMSPA, REPS, St John, etc.)',
+                'Date obtained (month/year)',
+                'Professional body registration status shown',
+                'Validity dates for time-sensitive qualifications (First Aid)',
+                'Higher qualifications and specialist certs highlighted'
+            ],
+            'Key Skills': [
+                'Grouped into categories (Technical, Interpersonal, Professional)',
+                'Specific, not generic ("Periodisation principles" not "Good trainer")',
+                'Aligned with job requirements and industry standards',
+                'Include both hard and soft skills',
+                'Reflect actual experience demonstrated earlier in CV',
+                'Ordered by relevance to target role'
+            ]
         };
 
         const cvExamples = [
@@ -717,6 +739,8 @@
             const example = cvExamples[index];
             const data = example.data;
 
+            currentCVIndex = index;
+
             reviewedCVs.add(index);
             const allReviewed = reviewedCVs.size === cvExamples.length;
 
@@ -778,17 +802,19 @@
 
         function showSpotlight(sectionName) {
             const spotlight = document.getElementById('sectionSpotlight');
-            const commentary = sectionCommentary[sectionName];
+            const section = sectionCommentary[sectionName];
+            const specificCommentary = cvSpecificCommentary[currentCVIndex][sectionName];
+            const guidance = generalGuidance[sectionName];
 
             let html = `
                 <div class="spotlight-content">
-                    <div class="spotlight-title">📋 ${commentary.title}</div>
+                    <div class="spotlight-title">📋 ${section.title}</div>
                     <div class="spotlight-commentary">
-                        <strong>Why this section matters:</strong><br>
-                        ${commentary.commentary}
+                        <strong>What's shown in this CV:</strong><br>
+                        ${specificCommentary}
                     </div>
-                    <div style="font-size: 12px; font-weight: 700; color: #2196F3; margin-bottom: 8px;">✓ What to include:</div>
-                    ${commentary.guidance.map(point => `<div class="spotlight-section">${point}</div>`).join('')}
+                    <div style="font-size: 12px; font-weight: 700; color: #2196F3; margin-bottom: 8px;">✓ Best practices:</div>
+                    ${guidance.map(point => `<div class="spotlight-section">${point}</div>`).join('')}
                 </div>
             `;
 
