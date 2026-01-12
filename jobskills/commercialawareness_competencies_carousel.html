@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html style="background: #f8f9fa;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Commercial Awareness</title>
+<style>
+* {box-sizing: border-box; margin: 0; padding: 0;}
+html, body {background: #f8f9fa; min-height: 100vh;}
+body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; opacity: 1; visibility: visible;}
+.container {max-width: 900px; margin: 0 auto;}
+.cover-screen {background: linear-gradient(135deg, #C6A906 0%, #e0c040 100%); border-radius: 12px; padding: 80px 40px; text-align: center; box-shadow: 0 4px 20px rgba(0,0,0,0.15); cursor: pointer; transition: all 0.3s ease; min-height: 500px; display: flex; flex-direction: column; align-items: center; justify-content: center;}
+.cover-screen:hover {transform: translateY(-5px); box-shadow: 0 8px 30px rgba(0,0,0,0.2);}
+.cover-screen.hidden {display: none;}
+.cover-icon {font-size: 120px; margin-bottom: 30px;}
+.cover-title {font-size: 42px; font-weight: 700; color: white; margin-bottom: 20px; text-shadow: 2px 2px 4px rgba(0,0,0,0.2);}
+.cover-subtitle {font-size: 20px; color: white; margin-bottom: 40px; opacity: 0.95; line-height: 1.6; max-width: 700px;}
+.cover-button {background: white; color: #C6A906; padding: 18px 50px; border-radius: 30px; font-size: 18px; font-weight: 700; border: none; cursor: pointer; transition: all 0.3s ease; text-transform: uppercase; letter-spacing: 1px;}
+.cover-button:hover {transform: scale(1.05); box-shadow: 0 4px 15px rgba(0,0,0,0.3);}
+.main-content {display: none;}
+.main-content.visible {display: block;}
+.carousel-container {background: white; border-radius: 12px; padding: 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); position: relative;}
+.carousel-slide {display: none; min-height: 480px;}
+.carousel-slide.active {display: block; animation: fadeIn 0.5s ease;}
+@keyframes fadeIn {
+from {opacity: 0; transform: translateX(20px);}
+to {opacity: 1; transform: translateX(0);}
+}
+.slide-header {text-align: center; margin-bottom: 30px;}
+.slide-number {font-size: 14px; font-weight: 700; color: #C6A906; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;}
+.slide-icon {font-size: 72px; margin-bottom: 15px;}
+.slide-title {font-size: 28px; font-weight: 700; color: #333; margin-bottom: 20px;}
+.slide-content {font-size: 17px; line-height: 1.8; color: #555; text-align: center; max-width: 700px; margin: 0 auto;}
+.carousel-nav {display: flex; justify-content: space-between; align-items: center; margin-top: 40px; padding-top: 30px; border-top: 2px solid #e9ecef;}
+.nav-button {background: linear-gradient(135deg, #C6A906, #e0c040); color: white; border: none; padding: 12px 30px; border-radius: 25px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 8px;}
+.nav-button:hover:not(:disabled) {transform: translateY(-2px); box-shadow: 0 4px 15px rgba(198,169,6,0.3);}
+.nav-button:disabled {background: #ccc; cursor: not-allowed;}
+.carousel-dots {display: flex; gap: 10px;}
+.dot {width: 12px; height: 12px; border-radius: 50%; background: #e9ecef; cursor: pointer; transition: all 0.3s ease;}
+.dot.active {background: #C6A906; width: 30px; border-radius: 6px;}
+.dot:hover {background: #ddd;}
+@media (max-width: 768px) {
+.carousel-container {padding: 30px 20px;}
+.slide-title {font-size: 24px;}
+.slide-content {font-size: 16px;}
+.nav-button {padding: 10px 20px; font-size: 14px;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="cover-screen" onclick="showContent()">
+<div class="cover-icon">💼</div>
+<div class="cover-title">Commercial Awareness</div>
+<div class="cover-subtitle">Understanding how your role contributes to business success</div>
+<button class="cover-button">Explore Key Areas →</button>
+</div>
+<div class="main-content">
+<div class="carousel-container">
+<!-- Slide 1 -->
+<div class="carousel-slide active">
+<div class="slide-header">
+<div class="slide-number">Area 1 of 5</div>
+<div class="slide-icon">💰</div>
+<div class="slide-title">Sales and Business Development</div>
+</div>
+<div class="slide-content">
+Contributing to membership sales, personal training sales, class bookings, and other revenue streams. Whilst not all positions involve direct sales responsibilities, understanding that facility sustainability depends on revenue generation and supporting these efforts appropriately demonstrates business awareness.
+<div style="background: #fff8e1; border-left: 4px solid #C6A906; padding: 15px; border-radius: 6px; margin-top: 20px; text-align: left;">
+<div style="font-size: 14px; font-weight: 700; color: #C6A906; margin-bottom: 8px;">💡 EXAMPLES</div>
+<div style="font-size: 15px; line-height: 1.6; color: #333;">
+• Proactively introducing gym tour opportunities to members bringing guests<br>
+• Highlighting class offerings when clients mention specific fitness goals<br>
+• Supporting membership campaigns by distributing promotional materials<br>
+• Sharing positive facility experiences when members express satisfaction
+</div>
+</div>
+</div>
+</div>
+<!-- Slide 2 -->
+<div class="carousel-slide">
+<div class="slide-header">
+<div class="slide-number">Area 2 of 5</div>
+<div class="slide-icon">🔄</div>
+<div class="slide-title">Client Retention</div>
+</div>
+<div class="slide-content">
+Recognising that retaining existing clients proves more cost-effective than acquiring new ones, and implementing practices that enhance retention including excellent service delivery, relationship building, and proactive engagement with members.
+<div style="background: #fff8e1; border-left: 4px solid #C6A906; padding: 15px; border-radius: 6px; margin-top: 20px; text-align: left;">
+<div style="font-size: 14px; font-weight: 700; color: #C6A906; margin-bottom: 8px;">💡 EXAMPLES</div>
+<div style="font-size: 15px; line-height: 1.6; color: #333;">
+• Greeting regular members by name and asking about their progress<br>
+• Following up with clients who've been absent for several weeks<br>
+• Celebrating client milestones and achievements publicly (with permission)<br>
+• Addressing complaints promptly and escalating issues appropriately
+</div>
+</div>
+</div>
+</div>
+<!-- Slide 3 -->
+<div class="carousel-slide">
+<div class="slide-header">
+<div class="slide-number">Area 3 of 5</div>
+<div class="slide-icon">⚡</div>
+<div class="slide-title">Efficiency and Productivity</div>
+</div>
+<div class="slide-content">
+Managing time effectively, maximising productive activity, and contributing to operational efficiency. Self-directed productivity without requiring constant supervision demonstrates professionalism and business contribution.
+<div style="background: #fff8e1; border-left: 4px solid #C6A906; padding: 15px; border-radius: 6px; margin-top: 20px; text-align: left;">
+<div style="font-size: 14px; font-weight: 700; color: #C6A906; margin-bottom: 8px;">💡 EXAMPLES</div>
+<div style="font-size: 15px; line-height: 1.6; color: #333;">
+• Using gaps between client sessions to complete administrative tasks<br>
+• Preparing session equipment in advance to maximise training time<br>
+• Combining equipment cleaning with gym floor presence and member support<br>
+• Identifying and addressing facility issues proactively without prompting
+</div>
+</div>
+</div>
+</div>
+<!-- Slide 4 -->
+<div class="carousel-slide">
+<div class="slide-header">
+<div class="slide-number">Area 4 of 5</div>
+<div class="slide-icon">📦</div>
+<div class="slide-title">Resource Management</div>
+</div>
+<div class="slide-content">
+Using facility resources (equipment, materials, utilities) responsibly and efficiently, recognising that waste and carelessness impact business profitability.
+<div style="background: #fff8e1; border-left: 4px solid #C6A906; padding: 15px; border-radius: 6px; margin-top: 20px; text-align: left;">
+<div style="font-size: 14px; font-weight: 700; color: #C6A906; margin-bottom: 8px;">💡 EXAMPLES</div>
+<div style="font-size: 15px; line-height: 1.6; color: #333;">
+• Turning off equipment and lights in unused areas<br>
+• Using appropriate quantities of cleaning products rather than excessive amounts<br>
+• Reporting equipment faults early to prevent costly major repairs<br>
+• Sharing resources with colleagues rather than hoarding supplies unnecessarily
+</div>
+</div>
+</div>
+</div>
+<!-- Slide 5 -->
+<div class="carousel-slide">
+<div class="slide-header">
+<div class="slide-number">Area 5 of 5</div>
+<div class="slide-icon">🏢</div>
+<div class="slide-title">Brand Representation</div>
+</div>
+<div class="slide-content">
+Understanding that employee conduct, communication, and presentation reflect on employer brands both within facilities and in public forums including social media.
+<div style="background: #fff8e1; border-left: 4px solid #C6A906; padding: 15px; border-radius: 6px; margin-top: 20px; text-align: left;">
+<div style="font-size: 14px; font-weight: 700; color: #C6A906; margin-bottom: 8px;">💡 EXAMPLES</div>
+<div style="font-size: 15px; line-height: 1.6; color: #333;">
+• Maintaining professional appearance consistent with facility standards<br>
+• Avoiding public criticism of employer, colleagues, or clients on social media<br>
+• Responding to member complaints professionally even outside work hours<br>
+• Representing facility values in all professional interactions and communications
+</div>
+</div>
+</div>
+</div>
+<div class="carousel-nav">
+<button class="nav-button" id="prevBtn" onclick="changeSlide(-1)">
+<span>←</span> Previous
+</button>
+<div class="carousel-dots">
+<div class="dot active" onclick="goToSlide(0)"></div>
+<div class="dot" onclick="goToSlide(1)"></div>
+<div class="dot" onclick="goToSlide(2)"></div>
+<div class="dot" onclick="goToSlide(3)"></div>
+<div class="dot" onclick="goToSlide(4)"></div>
+</div>
+<button class="nav-button" id="nextBtn" onclick="changeSlide(1)">
+Next <span>→</span>
+</button>
+</div>
+</div>
+</div>
+</div>
+<script>
+(function() {
+document.documentElement.style.visibility = 'visible';
+document.body.style.visibility = 'visible';
+})();
+let currentSlide = 0;
+const totalSlides = 5;
+window.showContent = function() {
+document.querySelector('.cover-screen').classList.add('hidden');
+document.querySelector('.main-content').classList.add('visible');
+};
+window.changeSlide = function(direction) {
+const slides = document.querySelectorAll('.carousel-slide');
+const dots = document.querySelectorAll('.dot');
+slides[currentSlide].classList.remove('active');
+dots[currentSlide].classList.remove('active');
+currentSlide += direction;
+if (currentSlide >= totalSlides) currentSlide = 0;
+if (currentSlide < 0) currentSlide = totalSlides - 1;
+slides[currentSlide].classList.add('active');
+dots[currentSlide].classList.add('active');
+updateButtons();
+};
+window.goToSlide = function(index) {
+const slides = document.querySelectorAll('.carousel-slide');
+const dots = document.querySelectorAll('.dot');
+slides[currentSlide].classList.remove('active');
+dots[currentSlide].classList.remove('active');
+currentSlide = index;
+slides[currentSlide].classList.add('active');
+dots[currentSlide].classList.add('active');
+updateButtons();
+};
+function updateButtons() {
+document.getElementById('prevBtn').disabled = false;
+document.getElementById('nextBtn').disabled = false;
+}
+</script>
+</body>
+</html>
