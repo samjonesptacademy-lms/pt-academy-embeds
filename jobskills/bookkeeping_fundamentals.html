@@ -1,0 +1,733 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Introduction to Bookkeeping for Personal Trainers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #C6A906 0%, #a68905 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .tabs-wrapper {
+            border-bottom: 2px solid #e0e0e0;
+            overflow-x: auto;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 4px;
+            padding: 0 20px;
+            min-width: min-content;
+        }
+
+        .tab {
+            padding: 14px 18px;
+            background: white;
+            border: none;
+            border-bottom: 3px solid transparent;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            color: #666;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+
+        .tab:hover {
+            color: #C6A906;
+        }
+
+        .tab.active {
+            color: #C6A906;
+            border-bottom-color: #C6A906;
+        }
+
+        .content {
+            padding: 30px 20px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease-in;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .tab-title {
+            font-size: 18px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 14px;
+            padding-bottom: 10px;
+            border-bottom: 3px solid #C6A906;
+        }
+
+        .intro-box {
+            background: #f0f8ff;
+            border-left: 4px solid #2196F3;
+            padding: 14px;
+            margin-bottom: 16px;
+            border-radius: 6px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #444;
+        }
+
+        .section {
+            margin-bottom: 18px;
+        }
+
+        .section-heading {
+            font-size: 14px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .text {
+            font-size: 13px;
+            line-height: 1.7;
+            color: #555;
+            margin-bottom: 12px;
+        }
+
+        .text p {
+            margin-bottom: 12px;
+        }
+
+        .text ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .text li {
+            margin-bottom: 8px;
+            color: #555;
+        }
+
+        .example-box {
+            background: white;
+            border-left: 4px solid #2196F3;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 4px;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .example-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #2196F3;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .tip-box {
+            background: #e8f5e9;
+            border-left: 4px solid #27ae60;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 4px;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .tip-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #27ae60;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .warning-box {
+            background: #fff5f5;
+            border-left: 4px solid #e74c3c;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 4px;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .warning-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #e74c3c;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .calculation-box {
+            background: white;
+            border: 2px solid #C6A906;
+            padding: 12px;
+            border-radius: 4px;
+            font-size: 12px;
+            line-height: 1.6;
+            margin: 12px 0;
+        }
+
+        .calc-title {
+            font-weight: 700;
+            color: #C6A906;
+            margin-bottom: 10px;
+            font-size: 12px;
+        }
+
+        .calc-line {
+            display: flex;
+            justify-content: space-between;
+            padding: 6px 0;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .calc-line:last-child {
+            border-bottom: none;
+            font-weight: 700;
+            color: #C6A906;
+            padding-top: 8px;
+            border-top: 2px solid #e0e0e0;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 10px;
+            margin: 12px 0;
+        }
+
+        .comparison-box {
+            background: white;
+            padding: 10px;
+            border-radius: 4px;
+            border-left: 3px solid #C6A906;
+            font-size: 12px;
+        }
+
+        .comp-label {
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 4px;
+            font-size: 11px;
+        }
+
+        .comp-text {
+            font-size: 12px;
+            color: #555;
+        }
+
+        .checklist {
+            list-style: none;
+            padding: 0;
+            margin: 12px 0;
+        }
+
+        .checklist li {
+            padding: 6px 0;
+            font-size: 12px;
+            color: #555;
+        }
+
+        .checklist li:before {
+            content: "✓ ";
+            color: #27ae60;
+            font-weight: 700;
+            margin-right: 6px;
+        }
+
+        @media (max-width: 768px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .tabs {
+                gap: 0;
+            }
+
+            .tab {
+                padding: 12px 14px;
+                font-size: 12px;
+            }
+
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .content {
+                padding: 20px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Introduction to Bookkeeping</h1>
+            <p>For Personal Trainers: Recording, Organizing, and Tracking Financial Transactions</p>
+        </div>
+
+        <div class="tabs-wrapper">
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('overview')">📋 Overview</button>
+                <button class="tab" onclick="switchTab('income')">💷 Income</button>
+                <button class="tab" onclick="switchTab('expenses')">📊 Expenses</button>
+                <button class="tab" onclick="switchTab('profit')">📈 Profit</button>
+                <button class="tab" onclick="switchTab('cashflow')">💰 Cash Flow</button>
+                <button class="tab" onclick="switchTab('recording')">📝 Recording</button>
+                <button class="tab" onclick="switchTab('invoicing')">📄 Invoicing</button>
+            </div>
+        </div>
+
+        <div class="content">
+
+            <!-- Overview Tab -->
+            <div id="overview" class="tab-content active">
+                <div class="tab-title">📋 Bookkeeping Overview</div>
+
+                <div class="intro-box">
+                    Bookkeeping represents the systematic recording, organising, and tracking of all financial transactions within a business. For self-employed personal trainers, effective bookkeeping provides the foundation for accurate tax returns, enables informed business decision-making, demonstrates financial position to lenders or investors, ensures legal compliance with tax obligations, and supports business growth through financial insight.
+                </div>
+
+                <div class="section">
+                    <div class="section-heading">Why Bookkeeping Matters</div>
+                    <div class="text">
+                        <p>Many newly self-employed trainers underestimate bookkeeping importance, viewing it as an administrative burden rather than a business management tool. However, poor bookkeeping creates serious problems:</p>
+                    </div>
+                    <div class="warning-box">
+                        <div class="warning-label">❌ Consequences of Poor Bookkeeping:</div>
+                        <ul style="margin: 0; padding-left: 20px; font-size: 12px; color: #555;">
+                            <li>Estimated tax calculations rather than accurate figures</li>
+                            <li>Missed expense claims resulting in overpaid tax</li>
+                            <li>Cash flow problems from lack of financial visibility</li>
+                            <li>Compliance failures and potential HMRC penalties</li>
+                            <li>Inability to assess business profitability and performance</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-heading">Benefits of Effective Bookkeeping</div>
+                    <div class="tip-box">
+                        <div class="tip-label">✓ What Good Bookkeeping Provides:</div>
+                        <ul style="margin: 0; padding-left: 20px; font-size: 12px; color: #1b5e20;">
+                            <li>Calculate accurate tax and National Insurance payments</li>
+                            <li>Claim all allowable business expenses</li>
+                            <li>Understand your cash position at any time</li>
+                            <li>Make informed business decisions based on real data</li>
+                            <li>Demonstrate compliance during HMRC checks</li>
+                            <li>Identify business growth and profitability trends</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Income Tab -->
+            <div id="income" class="tab-content">
+                <div class="tab-title">💷 Income (Revenue)</div>
+
+                <div class="intro-box">
+                    Income represents all money received by the business from trading activities. For personal trainers, income comes from multiple sources beyond just one-to-one sessions.
+                </div>
+
+                <div class="section">
+                    <div class="section-heading">Types of Income</div>
+                    <div class="text">
+                        <p>Personal trainers can earn income from:</p>
+                        <ul>
+                            <li>One-to-one training sessions</li>
+                            <li>Group classes or bootcamps</li>
+                            <li>Online coaching subscriptions</li>
+                            <li>Digital product sales (programs, guides, templates)</li>
+                            <li>Consultation or assessment services</li>
+                            <li>Nutritional guidance (where qualified)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-heading">Recording Income Accurately</div>
+                    <div class="text">
+                        <p>Accurate income recording requires documenting:</p>
+                        <ul>
+                            <li>The date payment was received</li>
+                            <li>The amount received</li>
+                            <li>The client or payer name</li>
+                            <li>The service provided</li>
+                            <li>The payment method</li>
+                        </ul>
+                    </div>
+                    <div class="example-box">
+                        <div class="example-label">Example:</div>
+                        <p style="margin: 0;">A trainer earns £2,000 from one-to-one sessions, £500 from group classes, and £300 from an online course. <strong>Total income = £2,800.</strong> All amounts must be recorded separately.</p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-heading">Tax Compliance</div>
+                    <div class="warning-box">
+                        <div class="warning-label">⚠️ Important:</div>
+                        <p style="margin: 0;">Even when operating cash businesses, all income must be declared for tax purposes. Failing to declare cash income constitutes tax evasion regardless of whether transactions are formally documented.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expenses Tab -->
+            <div id="expenses" class="tab-content">
+                <div class="tab-title">📊 Expenses (Costs)</div>
+
+                <div class="intro-box">
+                    Expenses represent money spent on business operations. Only allowable business expenses reduce taxable profit, so comprehensive tracking ensures maximum tax relief and cost visibility.
+                </div>
+
+                <div class="section">
+                    <div class="section-heading">Recording Expenses</div>
+                    <div class="text">
+                        <p>Expense records should include:</p>
+                        <ul>
+                            <li>Date payment was made</li>
+                            <li>Amount paid</li>
+                            <li>Supplier or payee name</li>
+                            <li>What was purchased and its business purpose</li>
+                            <li>Payment method</li>
+                            <li>Receipt or invoice as evidence</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-heading">Common Expense Categories</div>
+                    <div class="comparison-grid">
+                        <div class="comparison-box">
+                            <div class="comp-label">Equipment & Supplies</div>
+                            <p class="comp-text" style="margin: 0;">Dumbbells, resistance bands, mats, software</p>
+                        </div>
+                        <div class="comparison-box">
+                            <div class="comp-label">Professional Development</div>
+                            <p class="comp-text" style="margin: 0;">Certifications, courses, memberships</p>
+                        </div>
+                        <div class="comparison-box">
+                            <div class="comp-label">Facilities & Premises</div>
+                            <p class="comp-text" style="margin: 0;">Studio rental, utilities, insurance, maintenance</p>
+                        </div>
+                        <div class="comparison-box">
+                            <div class="comp-label">Marketing & Advertising</div>
+                            <p class="comp-text" style="margin: 0;">Website, social media, flyers, business cards</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-heading">Business Purpose Records</div>
+                    <div class="tip-box">
+                        <div class="tip-label">💡 Key Point:</div>
+                        <p style="margin: 0;">Maintaining clear records of business purposes for expenses demonstrates legitimacy if HMRC requests evidence during compliance checks.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Profit Tab -->
+            <div id="profit" class="tab-content">
+                <div class="tab-title">📈 Profit and Loss</div>
+
+                <div class="intro-box">
+                    Profit represents the difference between income and expenses over a specified period (monthly, quarterly, or annually). Understanding profit is essential for tax calculation, business viability, and operational decisions.
+                </div>
+
+                <div class="section">
+                    <div class="section-heading">Profit Calculation Formula</div>
+                    <div class="calculation-box">
+                        <div class="calc-title">How Profit is Calculated:</div>
+                        <div class="calc-line">
+                            <span>Total Income</span>
+                            <span>£45,000</span>
+                        </div>
+                        <div class="calc-line">
+                            <span>Less: Total Allowable Expenses</span>
+                            <span>-£8,000</span>
+                        </div>
+                        <div class="calc-line">
+                            <span>Profit</span>
+                            <span>£37,000</span>
+                        </div>
+                    </div>
+                    <div class="text">
+                        <p>In this example, the trainer earned £45,000 in fees with £8,000 in allowable expenses, generating £37,000 profit. <strong>This £37,000 forms the basis for tax and National Insurance calculations</strong>, not the gross £45,000.</p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-heading">Profit Analysis Benefits</div>
+                    <div class="text">
+                        <p>Profit analysis enables you to:</p>
+                        <ul>
+                            <li>Understand whether your business is financially sustainable</li>
+                            <li>Identify high-cost areas requiring attention</li>
+                            <li>Assess whether pricing adequately covers costs and generates reasonable income</li>
+                            <li>Track performance trends over time</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-heading">Remember</div>
+                    <div class="tip-box">
+                        <div class="tip-label">💡 Key Insight:</div>
+                        <p style="margin: 0;">You pay tax on profit, not on gross income. Accurate expense recording directly reduces your tax liability.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Cash Flow Tab -->
+            <div id="cashflow" class="tab-content">
+                <div class="tab-title">💰 Cash Flow</div>
+
+                <div class="intro-box">
+                    Cash flow represents the movement of money in and out of your business over time. Cash flow differs from profit because timing of payments affects your cash position even when businesses are profitable.
+                </div>
+
+                <div class="section">
+                    <div class="section-heading">Profit vs Cash Flow - Why They're Different</div>
+                    <div class="text">
+                        <p>Here's a critical example showing how profit and cash flow can differ dramatically:</p>
+                    </div>
+
+                    <div class="calculation-box">
+                        <div class="calc-title">Profit Calculation:</div>
+                        <div class="calc-line">
+                            <span>Training packages sold</span>
+                            <span>£3,000</span>
+                        </div>
+                        <div class="calc-line">
+                            <span>Less: Expenses</span>
+                            <span>-£2,000</span>
+                        </div>
+                        <div class="calc-line">
+                            <span>Profit</span>
+                            <span>£1,000</span>
+                        </div>
+                    </div>
+
+                    <div class="calculation-box">
+                        <div class="calc-title">Cash Flow Calculation:</div>
+                        <div class="calc-line">
+                            <span>Cash received from clients</span>
+                            <span>£1,500</span>
+                        </div>
+                        <div class="calc-line">
+                            <span>Less: Cash paid for expenses</span>
+                            <span>-£2,000</span>
+                        </div>
+                        <div class="calc-line">
+                            <span>Net Cash Position</span>
+                            <span>-£500</span>
+                        </div>
+                    </div>
+
+                    <div class="text">
+                        <p style="margin-top: 12px;">In this scenario, profit is £1,000 but cash flow is -£500. <strong>The business is profitable on paper but has negative cash in the bank!</strong></p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-heading">Common Cash Flow Challenges</div>
+                    <div class="text">
+                        <p>Self-employed trainers often face:</p>
+                        <ul>
+                            <li>Significant tax payments due in January (lump sum for previous year)</li>
+                            <li>Irregular client payment patterns (some pay upfront, others monthly)</li>
+                            <li>Advance payment of annual insurance premiums or memberships</li>
+                            <li>Unexpected expenses such as equipment replacement</li>
+                        </ul>
+                    </div>
+                    <div class="warning-box">
+                        <div class="warning-label">⚠️ Critical Point:</div>
+                        <p style="margin: 0;">Poor cash flow prevents paying necessary expenses even when businesses are theoretically profitable. Always monitor cash flow separately from profit.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Recording Tab -->
+            <div id="recording" class="tab-content">
+                <div class="tab-title">📝 Transaction Recording Best Practices</div>
+
+                <div class="intro-box">
+                    Systematic transaction recording forms the foundation of effective bookkeeping. Whether using manual systems or software, trainers should establish consistent recording processes.
+                </div>
+
+                <div class="section">
+                    <div class="section-heading">1. Record Transactions As You Go</div>
+                    <div class="text">
+                        <p>Record transactions as they occur rather than allowing backlog accumulation. Weekly recording sessions prove more manageable than attempting months of retrospective record creation, and reduce risk of forgotten transactions or lost receipts.</p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-heading">2. Maintain Separate Finances</div>
+                    <div class="text">
+                        <p>Maintain separate business and personal finances wherever possible. Dedicated business bank accounts simplify record-keeping and demonstrate clear separation between business and personal finances. When business and personal finances commingle (such as using personal cards for business expenses), careful categorisation becomes essential.</p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-heading">3. Retain All Receipts</div>
+                    <div class="text">
+                        <p>Retain all receipts and invoices for minimum seven years as HMRC may request evidence of transactions during compliance checks. Digital storage through photographing receipts or scanning documents provides secure, accessible record keeping.</p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-heading">4. Categorise Transactions Consistently</div>
+                    <div class="text">
+                        <p>Categorise transactions consistently using standardised expense categories aligned with Self Assessment tax return classifications. Common categories include:</p>
+                        <ul>
+                            <li>Travel</li>
+                            <li>Marketing</li>
+                            <li>Equipment</li>
+                            <li>Premises costs</li>
+                            <li>Professional fees</li>
+                            <li>Insurance</li>
+                            <li>Utilities</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-heading">5. Reconcile Records Regularly</div>
+                    <div class="text">
+                        <p>Reconcile records regularly against bank statements to ensure all transactions are captured accurately. Bank reconciliation identifies missing transactions, duplicate entries, or recording errors before they compound.</p>
+                    </div>
+                    <div class="tip-box">
+                        <div class="tip-label">💡 Best Practice:</div>
+                        <p style="margin: 0;">Reconcile your records monthly against bank statements to catch errors early.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Invoicing Tab -->
+            <div id="invoicing" class="tab-content">
+                <div class="tab-title">📄 Invoicing and Payment Tracking</div>
+
+                <div class="intro-box">
+                    Self-employed trainers should issue invoices documenting services provided, amounts due, and payment terms. Professional invoicing improves payment likelihood and provides transaction evidence.
+                </div>
+
+                <div class="section">
+                    <div class="section-heading">What Invoices Must Include</div>
+                    <div class="text">
+                        <p>Your invoices should contain:</p>
+                    </div>
+                    <ul class="checklist">
+                        <li>Unique invoice number</li>
+                        <li>Issue date</li>
+                        <li>Your business name and contact details</li>
+                        <li>Client name and contact details</li>
+                        <li>Itemised services provided with amounts</li>
+                        <li>Total amount due</li>
+                        <li>Payment terms and due dates</li>
+                        <li>Payment methods accepted</li>
+                    </ul>
+                </div>
+
+                <div class="section">
+                    <div class="section-heading">Tracking Invoice Status</div>
+                    <div class="text">
+                        <p>Tracking invoice status (sent, paid, overdue) enables proactive payment follow-up and reveals which clients consistently delay payment. Outstanding invoices represent income earned but not yet received, affecting cash flow even though profit calculations include these amounts.</p>
+                    </div>
+                    <div class="example-box">
+                        <div class="example-label">Invoice Tracking Example:</div>
+                        <ul style="margin: 0; padding-left: 20px; font-size: 12px;">
+                            <li>Invoice #001 to Client A: £500 - <strong>PAID</strong> on 1st Jan</li>
+                            <li>Invoice #002 to Client B: £300 - <strong>UNPAID</strong> (due 8th Jan, now 20th Jan)</li>
+                            <li>Invoice #003 to Client C: £400 - <strong>PAID</strong> on 15th Jan</li>
+                        </ul>
+                        <p style="margin-top: 8px; font-size: 12px; color: #555;"><strong>Summary:</strong> Total earned: £1,200. Cash received: £900. Outstanding: £300 from Client B (follow-up needed).</p>
+                    </div>
+                </div>
+
+                <div class="section">
+                    <div class="section-heading">Pro Tip</div>
+                    <div class="tip-box">
+                        <div class="tip-label">💡 Improve Cash Flow:</div>
+                        <p style="margin: 0;">Consider offering early payment discounts (e.g., 2% off if paid within 7 days) to improve cash flow for clients who commit upfront.</p>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function switchTab(tabName) {
+            // Hide all tab contents
+            const tabContents = document.querySelectorAll('.tab-content');
+            tabContents.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected tab content
+            document.getElementById(tabName).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+        }
+    </script>
+</body>
+</html>
