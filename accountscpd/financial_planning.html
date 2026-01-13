@@ -332,6 +332,9 @@ title.classList.add('correct');
 title.textContent = '✗ Not Quite';
 title.classList.add('incorrect');
 }
+// Show completion message after answering
+const completionMsg = document.getElementById('completionMsg');
+completionMsg.classList.add('active');
 };
 
 let currentSlide = 0;
@@ -351,7 +354,7 @@ const completionMsg = document.getElementById('completionMsg');
 prevBtn.disabled = currentSlide === 0;
 if (currentSlide === totalSlides - 1) {
 nextBtn.style.display = 'none';
-completionMsg.classList.add('active');
+// Don't show completion message immediately - wait for quiz answer
 } else {
 nextBtn.style.display = 'flex';
 nextBtn.disabled = false;
