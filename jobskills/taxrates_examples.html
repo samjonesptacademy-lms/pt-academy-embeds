@@ -1,0 +1,582 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Examples</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #C6A906 0%, #a68905 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 30px 20px;
+        }
+
+        .disclaimer {
+            background: #fffbf0;
+            border-left: 4px solid #C6A906;
+            padding: 14px;
+            margin-bottom: 25px;
+            border-radius: 6px;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .disclaimer strong {
+            color: #333;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .example-card {
+            background: #f9f9f9;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            padding: 0;
+            margin-bottom: 16px;
+            overflow: hidden;
+        }
+
+        .example-header {
+            background: linear-gradient(135deg, #C6A906 0%, #a68905 100%);
+            color: white;
+            padding: 16px;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .example-header:hover {
+            box-shadow: 0 4px 12px rgba(198, 169, 6, 0.3);
+        }
+
+        .example-header-left {
+            flex: 1;
+        }
+
+        .example-title {
+            font-size: 14px;
+            font-weight: 700;
+            margin-bottom: 4px;
+        }
+
+        .example-type {
+            font-size: 12px;
+            opacity: 0.9;
+        }
+
+        .example-income {
+            text-align: right;
+            white-space: nowrap;
+        }
+
+        .income-label {
+            font-size: 11px;
+            opacity: 0.9;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .income-value {
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        .toggle-icon {
+            font-size: 16px;
+            margin-left: 12px;
+            transition: transform 0.3s ease;
+        }
+
+        .example-header.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .example-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .example-content.expanded {
+            max-height: 2000px;
+        }
+
+        .breakdown {
+            padding: 16px;
+        }
+
+        .breakdown-item {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            padding: 12px;
+            background: white;
+            border-radius: 4px;
+            border-left: 3px solid #C6A906;
+            margin-bottom: 10px;
+        }
+
+        .item-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #C6A906;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+        }
+
+        .item-value {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .item-explanation {
+            font-size: 12px;
+            color: #666;
+            line-height: 1.5;
+        }
+
+        .learning-box {
+            background: #e8f5e9;
+            border-left: 4px solid #27ae60;
+            padding: 12px;
+            border-radius: 4px;
+            margin-top: 12px;
+        }
+
+        .learning-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #27ae60;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .learning-text {
+            font-size: 12px;
+            color: #1b5e20;
+            line-height: 1.5;
+            margin: 0;
+        }
+
+        .expand-all {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .expand-all button {
+            background: #C6A906;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .expand-all button:hover {
+            background: #a68905;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .example-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .example-income {
+                text-align: left;
+                margin-top: 10px;
+            }
+
+            .breakdown-item {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Tax Examples</h1>
+            <p>Real-world scenarios showing how tax and National Insurance are calculated</p>
+        </div>
+
+        <div class="content">
+            <div class="disclaimer">
+                <strong>⚠️ Educational Examples Only:</strong>
+                These are simplified scenarios for learning purposes. Actual tax liabilities depend on personal circumstances, relief claims, and other factors. Always verify at www.gov.uk and consult HMRC or a tax professional for accurate calculations.
+            </div>
+
+            <div class="expand-all">
+                <button onclick="expandAll()">Expand All Examples</button>
+            </div>
+
+            <div id="examplesContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        const examples = [
+            {
+                title: "Sarah: Recently Qualified PT Employee",
+                type: "Employee (PAYE)",
+                income: 28000,
+                breakdown: [
+                    { 
+                        label: "Annual Salary", 
+                        value: "£28,000", 
+                        explanation: "Gross income before any deductions" 
+                    },
+                    { 
+                        label: "Personal Allowance", 
+                        value: "£12,570", 
+                        explanation: "Tax-free amount—no tax on this portion" 
+                    },
+                    { 
+                        label: "Taxable Income", 
+                        value: "£15,430", 
+                        explanation: "£28,000 - £12,570 = £15,430" 
+                    },
+                    { 
+                        label: "Income Tax (20%)", 
+                        value: "£3,086", 
+                        explanation: "20% of £15,430 = £3,086 (approximately £257/month)" 
+                    },
+                    { 
+                        label: "National Insurance (8%)", 
+                        value: "£1,234.40", 
+                        explanation: "8% on £12,571-£50,270 band = (£28,000 - £12,570) × 0.08" 
+                    },
+                    { 
+                        label: "Total Deductions", 
+                        value: "£4,320.40", 
+                        explanation: "Income tax + National Insurance combined" 
+                    },
+                    { 
+                        label: "Annual Take-Home", 
+                        value: "£23,679.60", 
+                        explanation: "£28,000 - £4,320.40 = £23,679.60 (approximately £1,973/month)" 
+                    }
+                ],
+                learning: "Sarah is in the basic rate tax band (20%) and pays standard employee NI (8%) on her earnings above the threshold. She doesn't yet reach the Higher Rate."
+            },
+            {
+                title: "James: Experienced PT Manager",
+                type: "Employee (PAYE)",
+                income: 42000,
+                breakdown: [
+                    { 
+                        label: "Annual Salary", 
+                        value: "£42,000", 
+                        explanation: "Gross income before deductions" 
+                    },
+                    { 
+                        label: "Personal Allowance", 
+                        value: "£12,570", 
+                        explanation: "Still tax-free at this income level" 
+                    },
+                    { 
+                        label: "Taxable Income", 
+                        value: "£29,430", 
+                        explanation: "£42,000 - £12,570 = £29,430" 
+                    },
+                    { 
+                        label: "Income Tax (20%)", 
+                        value: "£5,886", 
+                        explanation: "20% of £29,430 = £5,886 annually" 
+                    },
+                    { 
+                        label: "National Insurance (8%)", 
+                        value: "£2,354.40", 
+                        explanation: "8% on £42,000 - £12,570 = (£29,430 × 0.08)" 
+                    },
+                    { 
+                        label: "Total Deductions", 
+                        value: "£8,240.40", 
+                        explanation: "Income tax + National Insurance combined" 
+                    },
+                    { 
+                        label: "Annual Take-Home", 
+                        value: "£33,759.60", 
+                        explanation: "£42,000 - £8,240.40 = £33,759.60 (approximately £2,813/month)" 
+                    }
+                ],
+                learning: "Still in basic rate tax band, but National Insurance becomes a more significant deduction at higher salaries. Take-home is approximately 80% of gross salary."
+            },
+            {
+                title: "Maria: Self-Employed PT",
+                type: "Self-Employed",
+                income: 30000,
+                breakdown: [
+                    { 
+                        label: "Annual Trading Profits", 
+                        value: "£30,000", 
+                        explanation: "Business profit after business expenses" 
+                    },
+                    { 
+                        label: "Personal Allowance", 
+                        value: "£12,570", 
+                        explanation: "Same tax-free amount as employed individuals" 
+                    },
+                    { 
+                        label: "Taxable Income", 
+                        value: "£17,430", 
+                        explanation: "£30,000 - £12,570 = £17,430" 
+                    },
+                    { 
+                        label: "Income Tax (20%)", 
+                        value: "£3,486", 
+                        explanation: "20% of £17,430 = £3,486 annually" 
+                    },
+                    { 
+                        label: "Class 2 NI", 
+                        value: "£0", 
+                        explanation: "Not payable when profits exceed £12,570" 
+                    },
+                    { 
+                        label: "Class 4 NI (6%)", 
+                        value: "£1,045.80", 
+                        explanation: "6% on profits between £12,570-£50,270 = (£30,000 - £12,570) × 0.06" 
+                    },
+                    { 
+                        label: "Total Deductions", 
+                        value: "£4,531.80", 
+                        explanation: "Income tax + Class 4 NI combined" 
+                    },
+                    { 
+                        label: "Annual Take-Home", 
+                        value: "£25,468.20", 
+                        explanation: "£30,000 - £4,531.80 = £25,468.20 (approximately £2,122/month)" 
+                    }
+                ],
+                learning: "Self-employed individuals pay Class 4 NI (6%) instead of employee NI. No Class 2 is due above £12,570. Self-employed tax is calculated through Self Assessment, paid in January and July."
+            },
+            {
+                title: "David: Senior PT - Higher Rate Taxpayer",
+                type: "Employee (PAYE)",
+                income: 65000,
+                breakdown: [
+                    { 
+                        label: "Annual Salary", 
+                        value: "£65,000", 
+                        explanation: "Gross income before deductions" 
+                    },
+                    { 
+                        label: "Personal Allowance", 
+                        value: "£12,570", 
+                        explanation: "Tax-free portion" 
+                    },
+                    { 
+                        label: "Basic Rate Band", 
+                        value: "£37,700", 
+                        explanation: "£50,270 - £12,570 = £37,700 taxed at 20%" 
+                    },
+                    { 
+                        label: "Higher Rate Band", 
+                        value: "£14,730", 
+                        explanation: "£65,000 - £50,270 = £14,730 taxed at 40%" 
+                    },
+                    { 
+                        label: "Income Tax", 
+                        value: "£7,546", 
+                        explanation: "(£37,700 × 20%) + (£14,730 × 40%) = £7,546" 
+                    },
+                    { 
+                        label: "NI on Basic Band", 
+                        value: "£3,017.60", 
+                        explanation: "(£50,270 - £12,570) × 0.08 = £3,017.60" 
+                    },
+                    { 
+                        label: "NI on Higher Band", 
+                        value: "£294.60", 
+                        explanation: "(£65,000 - £50,270) × 0.02 = £294.60 (only 2% above £50,270)" 
+                    },
+                    { 
+                        label: "Total Deductions", 
+                        value: "£10,858.20", 
+                        explanation: "Income tax + National Insurance combined" 
+                    },
+                    { 
+                        label: "Annual Take-Home", 
+                        value: "£54,141.80", 
+                        explanation: "£65,000 - £10,858.20 = £54,141.80 (approximately £4,512/month)" 
+                    }
+                ],
+                learning: "Above £50,270, David enters the Higher Rate tax band (40%). His NI also drops to 2% on earnings above £50,270. This is where multiple tax bands and different NI rates apply together."
+            },
+            {
+                title: "Amanda: Very High Earner",
+                type: "Employee (PAYE)",
+                income: 130000,
+                breakdown: [
+                    { 
+                        label: "Annual Salary", 
+                        value: "£130,000", 
+                        explanation: "Gross income before deductions" 
+                    },
+                    { 
+                        label: "Personal Allowance", 
+                        value: "£0", 
+                        explanation: "Tapered away - she earns above £125,140 threshold" 
+                    },
+                    { 
+                        label: "Basic Rate Band", 
+                        value: "£37,700", 
+                        explanation: "£12,571-£50,270 = £37,700 taxed at 20%" 
+                    },
+                    { 
+                        label: "Higher Rate Band", 
+                        value: "£74,870", 
+                        explanation: "£50,271-£125,140 = £74,870 taxed at 40%" 
+                    },
+                    { 
+                        label: "Additional Rate Band", 
+                        value: "£4,860", 
+                        explanation: "£125,141-£130,000 = £4,860 taxed at 45%" 
+                    },
+                    { 
+                        label: "Income Tax", 
+                        value: "£33,424", 
+                        explanation: "(£37,700 × 20%) + (£74,870 × 40%) + (£4,860 × 45%) = £33,424" 
+                    },
+                    { 
+                        label: "National Insurance", 
+                        value: "£2,316.40", 
+                        explanation: "(£37,700 × 0.08) + (£92,300 × 0.02) = £2,316.40" 
+                    },
+                    { 
+                        label: "Total Deductions", 
+                        value: "£35,740.40", 
+                        explanation: "Income tax + National Insurance combined" 
+                    },
+                    { 
+                        label: "Annual Take-Home", 
+                        value: "£94,259.60", 
+                        explanation: "£130,000 - £35,740.40 = £94,259.60 (approximately £7,855/month)" 
+                    }
+                ],
+                learning: "At very high incomes, Amanda pays into all three tax bands (20%, 40%, 45%) and her Personal Allowance has been completely removed. Tax complexity increases significantly above £125,140."
+            }
+        ];
+
+        function initializeExamples() {
+            const container = document.getElementById('examplesContainer');
+            let html = '';
+
+            examples.forEach((example, index) => {
+                html += `
+                    <div class="example-card">
+                        <div class="example-header" onclick="toggleExample(${index})">
+                            <div class="example-header-left">
+                                <div class="example-title">${example.title}</div>
+                                <div class="example-type">${example.type}</div>
+                            </div>
+                            <div class="example-income">
+                                <div class="income-label">Annual Income</div>
+                                <div class="income-value">£${example.income.toLocaleString()}</div>
+                            </div>
+                            <span class="toggle-icon">▼</span>
+                        </div>
+                        <div class="example-content" id="content${index}">
+                            <div class="breakdown">
+                `;
+
+                example.breakdown.forEach(item => {
+                    html += `
+                        <div class="breakdown-item">
+                            <div>
+                                <div class="item-label">${item.label}</div>
+                                <div class="item-value">${item.value}</div>
+                            </div>
+                            <div class="item-explanation">${item.explanation}</div>
+                        </div>
+                    `;
+                });
+
+                html += `
+                                <div class="learning-box">
+                                    <div class="learning-label">💡 Learning Point</div>
+                                    <p class="learning-text">${example.learning}</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
+            });
+
+            container.innerHTML = html;
+        }
+
+        function toggleExample(index) {
+            const header = event.currentTarget;
+            const content = document.getElementById(`content${index}`);
+            
+            header.classList.toggle('expanded');
+            content.classList.toggle('expanded');
+        }
+
+        function expandAll() {
+            document.querySelectorAll('.example-header').forEach(header => {
+                header.classList.add('expanded');
+            });
+            document.querySelectorAll('.example-content').forEach(content => {
+                content.classList.add('expanded');
+            });
+        }
+
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', initializeExamples);
+    </script>
+</body>
+</html>
