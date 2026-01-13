@@ -1,0 +1,616 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cover Letter Examples - Before & After</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #C6A906 0%, #a68905 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 30px 20px;
+        }
+
+        .example-selector {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            justify-content: center;
+        }
+
+        .example-btn {
+            padding: 12px 20px;
+            border: 2px solid #e0e0e0;
+            background: white;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 13px;
+            transition: all 0.3s ease;
+        }
+
+        .example-btn:hover {
+            border-color: #C6A906;
+            background: #fffbf0;
+        }
+
+        .example-btn.active {
+            background: #C6A906;
+            color: white;
+            border-color: #C6A906;
+        }
+
+        .comparison-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 30px;
+        }
+
+        .letter-column {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .column-header {
+            font-size: 14px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 12px 16px;
+            border-radius: 6px 6px 0 0;
+            text-align: center;
+            color: white;
+            margin-bottom: 0;
+        }
+
+        .column-header.before {
+            background: #e74c3c;
+        }
+
+        .column-header.after {
+            background: #27ae60;
+        }
+
+        .letter-box {
+            background: #f9f9f9;
+            border: 2px solid #e0e0e0;
+            border-radius: 0 0 6px 6px;
+            padding: 20px;
+            font-size: 12px;
+            line-height: 1.7;
+            color: #333;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .letter-box.before {
+            border-color: #e74c3c;
+            background: #fff8f8;
+        }
+
+        .letter-box.after {
+            border-color: #27ae60;
+            background: #f8fff9;
+        }
+
+        .letter-text {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+        }
+
+        .annotation {
+            position: absolute;
+            background: rgba(198, 169, 6, 0.95);
+            color: white;
+            padding: 10px 12px;
+            border-radius: 4px;
+            font-size: 11px;
+            font-weight: 600;
+            max-width: 150px;
+            z-index: 10;
+            line-height: 1.4;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+        }
+
+        .annotation-line {
+            position: relative;
+            background: rgba(198, 169, 6, 0.1);
+            padding: 2px 4px;
+            border-left: 3px solid #C6A906;
+            margin: 6px 0;
+        }
+
+        .improvements-section {
+            background: #f0f8ff;
+            border-left: 4px solid #2196F3;
+            padding: 16px;
+            border-radius: 6px;
+            margin-bottom: 30px;
+        }
+
+        .improvements-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #2196F3;
+            margin-bottom: 12px;
+        }
+
+        .improvements-list {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .improvement-item {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            border-left: 3px solid #2196F3;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        .improvement-label {
+            font-weight: 700;
+            color: #2196F3;
+            margin-bottom: 4px;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .key-differences {
+            background: #fffbf0;
+            border-left: 4px solid #C6A906;
+            padding: 16px;
+            border-radius: 6px;
+            margin-top: 20px;
+        }
+
+        .key-differences-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #C6A906;
+            margin-bottom: 12px;
+        }
+
+        .difference-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+        }
+
+        .difference-item {
+            background: white;
+            padding: 12px;
+            border-radius: 6px;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #555;
+        }
+
+        .difference-item strong {
+            color: #333;
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        @media (max-width: 968px) {
+            .comparison-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .improvements-list {
+                grid-template-columns: 1fr;
+            }
+
+            .difference-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Cover Letter Examples: Before & After</h1>
+            <p>See how effective techniques transform a good letter into a great one</p>
+        </div>
+
+        <div class="content">
+            <div class="example-selector">
+                <button class="example-btn active" onclick="showExample(0)">Example 1: Recently Qualified</button>
+                <button class="example-btn" onclick="showExample(1)">Example 2: Experienced</button>
+                <button class="example-btn" onclick="showExample(2)">Example 3: Career Change</button>
+            </div>
+
+            <div id="exampleContent">
+                <div id="beforeView"></div>
+                <div id="afterView" style="display: none;"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const examples = [
+            {
+                title: "Recently Qualified Personal Trainer",
+                before: `TO:
+XYZ Fitness
+123 Main Street
+Anytown
+
+Dear Hiring Manager
+
+I am writing to apply for the Personal Trainer position at XYZ Fitness. I am a newly qualified Level 3 Personal Trainer and I am interested in working for your facility. I have just completed my qualification and I am excited about starting my career in fitness.
+
+I have experience working in a gym and I enjoy helping people with their fitness. I have worked with various clients and I am good at explaining exercises. I think I would be a good fit for your team because I am hardworking and enthusiastic about fitness.
+
+I would like to work for XYZ Fitness and I hope you will consider my application. Thank you for your time.
+
+Yours faithfully
+Sarah Thompson`,
+
+                after: `TO:
+XYZ Fitness
+123 Main Street
+Anytown
+
+Dear [Hiring Manager Name]
+
+I am writing to apply for the Personal Trainer position at XYZ Fitness, as advertised on your website. As a newly qualified Level 3 Personal Trainer passionate about evidence-based strength training and functional fitness, I am excited by the opportunity to contribute to your facility's reputation for personalised client programming and exceptional member experience.
+
+During my recent practical placement at ABC Gym, I gained hands-on experience designing and delivering personal training programmes for diverse clients ranging from beginners to experienced trainees. I particularly enjoyed working with clients new to resistance training, helping them build confidence and capability through progressive programming and patient coaching. This experience developed my ability to assess movement quality, design appropriate progressions, and communicate technical concepts accessibly—skills directly applicable to supporting XYZ Fitness's diverse membership base. Additionally, my customer service background in retail equipped me with the communication and interpersonal skills essential for building strong client relationships.
+
+I would welcome the opportunity to discuss how my qualifications, genuine passion for helping others achieve fitness goals, and commitment to evidence-based practice could contribute to XYZ Fitness's team. I am available for interview at your convenience and look forward to hearing from you. Thank you for considering my application.
+
+Yours sincerely
+Sarah Thompson`,
+
+                improvements: [
+                    {
+                        title: "Specific Position & Research",
+                        before: "Generic 'Dear Hiring Manager'",
+                        after: "Names specific facility, references website, shows genuine interest"
+                    },
+                    {
+                        title: "Strong Opening",
+                        before: "Generic interest statement",
+                        after: "Demonstrates knowledge of facility's values and positioning"
+                    },
+                    {
+                        title: "Detailed Experience",
+                        before: "Vague 'worked in a gym, good at explaining'",
+                        after: "Specific examples: client types, skills developed, evidence-based approach"
+                    },
+                    {
+                        title: "Relevance & Context",
+                        before: "General claims about suitability",
+                        after: "Explains HOW experience translates to THIS facility's needs"
+                    },
+                    {
+                        title: "Confident Closing",
+                        before: "Passive 'hope you'll consider'",
+                        after: "Confident but respectful, welcomes discussion"
+                    },
+                    {
+                        title: "Professional Tone",
+                        before: "Weak, lacks polish",
+                        after: "Professional, credible, demonstrates communication skills"
+                    }
+                ]
+            },
+
+            {
+                title: "Experienced Personal Trainer",
+                before: `TO:
+Premium Fitness
+456 Fitness Drive
+City
+
+Dear Hiring Manager
+
+I am writing to apply for the Senior Personal Trainer position at Premium Fitness. I have been working as a Personal Trainer for 3 years and I have lots of experience. I think I would be good for this role.
+
+I have delivered personal training sessions to many clients and I have worked with different types of clients. I am qualified and I have completed some additional training courses. I am a good trainer and I work hard.
+
+I would be happy to work for Premium Fitness. Please let me know if you need any more information.
+
+Yours faithfully
+James Wilson`,
+
+                after: `TO:
+Premium Fitness
+456 Fitness Drive
+City
+
+Dear [Hiring Manager Name]
+
+I am writing to apply for the Senior Personal Trainer position at Premium Fitness. With three years of progressive personal training experience and a proven track record of delivering measurable client results, I am excited by the opportunity to join your team and contribute to your facility's commitment to evidence-based programming and client-centred fitness solutions.
+
+In my current role at ABC Fitness Centre, I manage a diverse client base of 25+ concurrent clients with an 88% retention rate, generating substantial revenue through consultative sales approaches. I have designed individualised strength training programmes using evidence-based periodisation, consistently achieving 15-20% client strength improvements over 12-week cycles. Beyond direct client work, I have actively mentored two junior trainers, contributed to social media content that increased facility visibility by 35%, and spearheaded operational improvements including a revised induction protocol that enhanced new member retention from 78% to 85%.
+
+My professional development reflects my commitment to continuous improvement: I hold specialist certifications in Strength and Conditioning and am currently completing Level 4 Nutrition Coaching. I would welcome the opportunity to discuss how my experience in client programme design, team leadership, and revenue generation could contribute to Premium Fitness's continued growth. I am available for interview at your convenience and look forward to exploring this exciting opportunity.
+
+Yours sincerely
+James Wilson`,
+
+                improvements: [
+                    {
+                        title: "Quantified Experience",
+                        before: "'3 years' with no metrics",
+                        after: "3 years + 25+ clients, 88% retention, £X revenue"
+                    },
+                    {
+                        title: "Demonstrated Impact",
+                        before: "'worked with different types'",
+                        after: "Specific outcomes: 15-20% strength gains, retention rates, revenue"
+                    },
+                    {
+                        title: "Beyond Client Work",
+                        before: "No mention of wider contributions",
+                        after: "Mentoring, social media, operational improvements with metrics"
+                    },
+                    {
+                        title: "Professional Development",
+                        before: "'completed some training courses'",
+                        after: "Names specific certifications and current study (continuous learner)"
+                    },
+                    {
+                        title: "Business Awareness",
+                        before: "No mention of business impact",
+                        after: "Emphasizes revenue, member retention, facility growth contribution"
+                    },
+                    {
+                        title: "Confidence & Polish",
+                        before: "Weak closing, lacks authority",
+                        after: "Strong, confident, demonstrates senior-level thinking"
+                    }
+                ]
+            },
+
+            {
+                title: "Career Change into Fitness",
+                before: `TO:
+Wellness Hub
+789 Health Street
+Town
+
+Dear Hiring Manager
+
+I am writing to apply for the Personal Trainer position at Wellness Hub. I have recently completed my Level 3 Personal Training qualification and I am looking to start a new career in fitness. I have worked in different jobs before but now I want to become a Personal Trainer.
+
+I think fitness is important and I would like to help people get fit. I have done some voluntary work at a local community gym and I helped with some classes. I am a friendly person and I learn quickly so I think I would be good at this job.
+
+I hope you will give me a chance to work for your organisation. I am available to start immediately.
+
+Yours faithfully
+Marcus Brown`,
+
+                after: `TO:
+Wellness Hub
+789 Health Street
+Town
+
+Dear [Hiring Manager Name]
+
+I am writing to apply for the Personal Trainer position at Wellness Hub, as advertised on your website. After successfully completing my Level 3 Personal Training qualification, I am excited to transition into fitness—a field that aligns with my long-held commitment to health and wellbeing. Your facility's inclusive approach to community fitness and commitment to accessible, evidence-based programming resonates strongly with my own values and career aspirations.
+
+My career transition is supported by relevant experience: during my practical placement, I gained hands-on experience designing progressive training programmes and delivering group fitness instruction to mixed-ability classes of 15-20 participants. I developed proficiency in movement assessment, exercise modification for different fitness levels, and clear technical communication—skills directly applicable to supporting Wellness Hub's diverse community membership. Furthermore, my previous career in customer service equipped me with strong interpersonal abilities, patience, and genuine interest in supporting individuals to overcome barriers to fitness—qualities essential for working with beginners and individuals returning to exercise.
+
+I am committed to continuous professional development and am currently exploring specialist certifications in functional movement assessment and training older adults. I would welcome the opportunity to discuss how my qualification, community-focused mindset, and enthusiasm for evidence-based fitness could contribute to Wellness Hub's mission. I am available for interview at your convenience and look forward to hearing from you.
+
+Yours sincerely
+Marcus Brown`,
+
+                improvements: [
+                    {
+                        title: "Frame the Career Change Positively",
+                        before: "'want to start a new career'",
+                        after: "'aligns with long-held commitment'—shows genuine interest, not impulse"
+                    },
+                    {
+                        title: "Connect to Employer Values",
+                        before: "Generic 'think it's important'",
+                        after: "References facility's specific approach and values"
+                    },
+                    {
+                        title: "Highlight Transferable Skills",
+                        before: "Vague 'friendly, learn quickly'",
+                        after: "Specific: customer service, interpersonal skills, communication, patience"
+                    },
+                    {
+                        title: "Demonstrate Practical Experience",
+                        before: "'helped with some classes'",
+                        after: "Specific outcomes: designed programmes, taught 15-20 mixed-ability participants"
+                    },
+                    {
+                        title: "Show Future Commitment",
+                        before: "No mention of development",
+                        after: "Exploring specialist certifications—demonstrates ongoing investment"
+                    },
+                    {
+                        title: "Professional Confidence",
+                        before: "'hope you'll give me a chance'",
+                        after: "Confident, clear value proposition, shows respect for employer"
+                    }
+                ]
+            }
+        ];
+
+        function showExample(index) {
+            // Update active button
+            document.querySelectorAll('.example-btn').forEach((btn, i) => {
+                btn.classList.toggle('active', i === index);
+            });
+
+            const example = examples[index];
+            
+            // Show Before view
+            showBeforeView(example);
+            
+            // Hide After view and reset
+            document.getElementById('afterView').style.display = 'none';
+            document.getElementById('beforeView').style.display = 'block';
+        }
+
+        function showBeforeView(example) {
+            const beforeContent = document.getElementById('beforeView');
+
+            let html = `
+                <div style="margin-bottom: 30px;">
+                    <div class="column-header before" style="margin-bottom: 0; border-radius: 6px 6px 0 0;">❌ Before: Generic & Weak</div>
+                    <div class="letter-box before" style="border-radius: 0 0 6px 6px;">
+                        <div class="letter-text">${escapeHtml(example.before)}</div>
+                    </div>
+                </div>
+
+                <div class="improvements-section">
+                    <div class="improvements-title">Improvements Needed:</div>
+                    <div class="improvements-list">
+            `;
+
+            example.improvements.forEach(improvement => {
+                html += `
+                    <div class="improvement-item">
+                        <div class="improvement-label">${improvement.title}</div>
+                        <p style="margin: 0; color: #c0392b; font-size: 12px;"><strong>Current issue:</strong> ${improvement.before}</p>
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button onclick="revealAfter(${examples.indexOf(example)})" style="padding: 14px 40px; background: #C6A906; color: white; border: none; border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.3s ease;">
+                        See the Improved Version →
+                    </button>
+                </div>
+            `;
+
+            beforeContent.innerHTML = html;
+        }
+
+        function revealAfter(index) {
+            const example = examples[index];
+            const afterContent = document.getElementById('afterView');
+
+            let html = `
+                <div style="margin-bottom: 30px;">
+                    <div class="column-header after" style="margin-bottom: 0; border-radius: 6px 6px 0 0;">✓ After: Strong & Effective</div>
+                    <div class="letter-box after" style="border-radius: 0 0 6px 6px;">
+                        <div class="letter-text">${escapeHtml(example.after)}</div>
+                    </div>
+                </div>
+
+                <div class="improvements-section">
+                    <div class="improvements-title">Key Improvements Made:</div>
+                    <div class="improvements-list">
+            `;
+
+            example.improvements.forEach(improvement => {
+                html += `
+                    <div class="improvement-item">
+                        <div class="improvement-label">${improvement.title}</div>
+                        <p style="margin: 0; color: #27ae60; font-size: 12px;"><strong>Improved to:</strong> ${improvement.after}</p>
+                    </div>
+                `;
+            });
+
+            html += `
+                    </div>
+                </div>
+
+                <div class="key-differences">
+                    <div class="key-differences-title">💡 Why the Improved Version Works Better:</div>
+                    <div class="difference-grid">
+                        <div class="difference-item">
+                            <strong>Personalisation:</strong> Named facility, researched values, demonstrates genuine interest. Not a template letter.
+                        </div>
+                        <div class="difference-item">
+                            <strong>Specificity:</strong> Concrete examples with measurable outcomes instead of vague claims. Evidence trumps assertions.
+                        </div>
+                        <div class="difference-item">
+                            <strong>Relevance:</strong> Every sentence connects experience to THIS role's requirements. Shows understanding of employer needs.
+                        </div>
+                        <div class="difference-item">
+                            <strong>Professional Tone:</strong> Confident without arrogance. Demonstrates communication skills through the writing itself.
+                        </div>
+                    </div>
+                </div>
+
+                <div style="text-align: center; margin-top: 30px;">
+                    <button onclick="hideAfter()" style="padding: 14px 40px; background: #666; color: white; border: none; border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.3s ease;">
+                        ← Back to Before Version
+                    </button>
+                </div>
+            `;
+
+            document.getElementById('beforeView').style.display = 'none';
+            afterContent.innerHTML = html;
+            afterContent.style.display = 'block';
+        }
+
+        function hideAfter() {
+            document.getElementById('afterView').style.display = 'none';
+            document.getElementById('beforeView').style.display = 'block';
+        }
+
+        function escapeHtml(text) {
+            const map = {
+                '&': '&amp;',
+                '<': '&lt;',
+                '>': '&gt;',
+                '"': '&quot;',
+                "'": '&#039;'
+            };
+            return text.replace(/[&<>"']/g, m => map[m]);
+        }
+
+        // Show first example on load
+        showExample(0);
+    </script>
+</body>
+</html>
