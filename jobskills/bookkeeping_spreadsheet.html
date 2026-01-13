@@ -1,0 +1,661 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bookkeeping Spreadsheet Template - Personal Trainers</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Arial', 'Helvetica', sans-serif;
+            background: #f0f0f0;
+            padding: 10px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 4px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+
+        .spreadsheet-header {
+            background: #f8f9fa;
+            border-bottom: 1px solid #d0d0d0;
+            padding: 12px 16px;
+            display: flex;
+            align-items: center;
+            gap: 16px;
+        }
+
+        .file-name {
+            font-size: 14px;
+            font-weight: 500;
+            color: #202124;
+            flex: 1;
+        }
+
+        .sheet-tabs-container {
+            display: flex;
+            gap: 4px;
+            padding: 8px 16px;
+            border-bottom: 1px solid #d0d0d0;
+            background: white;
+            overflow-x: auto;
+        }
+
+        .sheet-tab {
+            padding: 8px 16px;
+            background: #f8f9fa;
+            border: 1px solid #d0d0d0;
+            border-bottom: 2px solid #d0d0d0;
+            cursor: pointer;
+            font-size: 13px;
+            color: #5f6368;
+            white-space: nowrap;
+            transition: all 0.2s;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .sheet-tab:hover {
+            background: #f0f0f0;
+        }
+
+        .sheet-tab.active {
+            background: white;
+            color: #1f73e6;
+            border-bottom-color: #1f73e6;
+            border-bottom: 3px solid #1f73e6;
+        }
+
+        .add-sheet-btn {
+            padding: 8px 12px;
+            background: transparent;
+            border: none;
+            cursor: pointer;
+            font-size: 18px;
+            color: #5f6368;
+        }
+
+        .spreadsheet-content {
+            flex: 1;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .toolbar {
+            background: white;
+            border-bottom: 1px solid #d0d0d0;
+            padding: 8px 16px;
+            display: flex;
+            gap: 12px;
+            align-items: center;
+            flex-wrap: wrap;
+        }
+
+        .toolbar-btn {
+            padding: 6px 12px;
+            background: white;
+            border: 1px solid #dadce0;
+            border-radius: 2px;
+            cursor: pointer;
+            font-size: 12px;
+            color: #3c4043;
+            transition: all 0.2s;
+        }
+
+        .toolbar-btn:hover {
+            background: #f8f9fa;
+            border-color: #8ab4f8;
+        }
+
+        .add-row-btn {
+            background: #1f73e6;
+            color: white;
+            border: none;
+        }
+
+        .add-row-btn:hover {
+            background: #1457b0;
+            border-color: #1457b0;
+        }
+
+        .sheet {
+            display: none;
+            flex: 1;
+            overflow: auto;
+        }
+
+        .sheet.active {
+            display: block;
+        }
+
+        .sheet-wrapper {
+            padding: 16px;
+        }
+
+        .spreadsheet-table {
+            border-collapse: collapse;
+            background: white;
+            font-size: 12px;
+            font-family: 'Arial', sans-serif;
+        }
+
+        .row-header {
+            background: #f8f9fa;
+            color: #5f6368;
+            text-align: center;
+            padding: 6px;
+            border: 1px solid #d0d0d0;
+            width: 32px;
+            font-weight: 500;
+            user-select: none;
+        }
+
+        .col-header {
+            background: #f8f9fa;
+            color: #5f6368;
+            padding: 8px 6px;
+            border: 1px solid #d0d0d0;
+            border-bottom: 2px solid #d0d0d0;
+            font-weight: 500;
+            text-align: left;
+            min-width: 80px;
+        }
+
+        th {
+            background: #f8f9fa;
+            border: 1px solid #d0d0d0;
+            padding: 8px 6px;
+            font-weight: 500;
+            color: #5f6368;
+            text-align: left;
+            min-width: 80px;
+        }
+
+        td {
+            border: 1px solid #d0d0d0;
+            padding: 0;
+            background: white;
+        }
+
+        td input,
+        td select {
+            width: 100%;
+            height: 28px;
+            border: none;
+            padding: 4px 6px;
+            font-size: 12px;
+            font-family: 'Arial', sans-serif;
+            background: white;
+        }
+
+        td input:focus,
+        td select:focus {
+            outline: none;
+            background: #e8f0fe;
+            box-shadow: inset 0 0 0 1px #4285f4;
+        }
+
+        tbody tr:nth-child(odd) {
+            background: white;
+        }
+
+        tbody tr:nth-child(even) {
+            background: #f8f9fa;
+        }
+
+        tbody tr:hover {
+            background: #f0f7ff;
+        }
+
+        .total-row {
+            background: #fffbf0;
+            font-weight: 600;
+            border-top: 2px solid #d0d0d0;
+        }
+
+        .total-row td {
+            padding: 6px;
+            color: #202124;
+        }
+
+        .delete-btn {
+            background: #f8f9fa;
+            border: none;
+            color: #d33827;
+            cursor: pointer;
+            padding: 4px 8px;
+            border-radius: 2px;
+            font-size: 11px;
+            font-weight: 500;
+            transition: all 0.2s;
+        }
+
+        .delete-btn:hover {
+            background: #fce4e4;
+        }
+
+        .summary-section {
+            padding: 16px;
+        }
+
+        .summary-title {
+            font-size: 14px;
+            font-weight: 600;
+            color: #202124;
+            margin-bottom: 12px;
+        }
+
+        .summary-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+
+        .summary-card {
+            border: 1px solid #dadce0;
+            border-radius: 4px;
+            padding: 12px;
+            background: white;
+        }
+
+        .summary-label {
+            font-size: 11px;
+            color: #5f6368;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 4px;
+            font-weight: 600;
+        }
+
+        .summary-value {
+            font-size: 20px;
+            font-weight: 600;
+            color: #1f73e6;
+        }
+
+        .summary-card.expense .summary-value {
+            color: #d33827;
+        }
+
+        .summary-card.profit .summary-value {
+            color: #188038;
+        }
+
+        .info-box {
+            background: #e8f0fe;
+            border: 1px solid #c5cae9;
+            border-left: 4px solid #1f73e6;
+            padding: 10px 12px;
+            margin-bottom: 12px;
+            border-radius: 2px;
+            font-size: 12px;
+            line-height: 1.5;
+            color: #1f3a93;
+        }
+
+        .table-wrapper {
+            overflow: auto;
+            border: 1px solid #d0d0d0;
+            border-radius: 4px;
+            margin-bottom: 16px;
+        }
+
+        @media (max-width: 768px) {
+            .spreadsheet-header {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .summary-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .toolbar {
+                flex-direction: column;
+                align-items: stretch;
+            }
+
+            .toolbar-btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="spreadsheet-header">
+            <div class="file-name">📊 Personal Trainer Bookkeeping Template</div>
+        </div>
+
+        <!-- Sheet Tabs -->
+        <div class="sheet-tabs-container">
+            <button class="sheet-tab active" onclick="switchSheet('income')">💷 Income</button>
+            <button class="sheet-tab" onclick="switchSheet('expenses')">📊 Expenses</button>
+            <button class="sheet-tab" onclick="switchSheet('summary')">📈 Summary</button>
+        </div>
+
+        <!-- Spreadsheet Content -->
+        <div class="spreadsheet-content">
+
+            <!-- Income Sheet -->
+            <div id="income" class="sheet active">
+                <div class="toolbar">
+                    <button class="toolbar-btn add-row-btn" onclick="addIncomeRow()">+ Add Row</button>
+                </div>
+                <div class="sheet-wrapper">
+                    <div class="info-box">
+                        Record all income from training services. All income must be declared for tax purposes.
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="spreadsheet-table" id="incomeTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px;">Date</th>
+                                    <th style="width: 140px;">Client Name</th>
+                                    <th style="width: 150px;">Service Type</th>
+                                    <th style="width: 100px;">Amount (£)</th>
+                                    <th style="width: 130px;">Payment Method</th>
+                                    <th style="width: 150px;">Notes</th>
+                                    <th style="width: 60px;">Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody id="incomeBody">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="text-align: right; font-size: 13px; font-weight: 600; margin-top: 12px; padding: 8px; background: #f8f9fa; border-radius: 4px;">
+                        Total Income: <span id="totalIncome" style="color: #1f73e6;">£0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Expenses Sheet -->
+            <div id="expenses" class="sheet">
+                <div class="toolbar">
+                    <button class="toolbar-btn add-row-btn" onclick="addExpenseRow()">+ Add Row</button>
+                </div>
+                <div class="sheet-wrapper">
+                    <div class="info-box">
+                        Record all business expenses. Only allowable expenses reduce your taxable profit. Keep receipts for 7 years.
+                    </div>
+                    <div class="table-wrapper">
+                        <table class="spreadsheet-table" id="expenseTable">
+                            <thead>
+                                <tr>
+                                    <th style="width: 100px;">Date</th>
+                                    <th style="width: 140px;">Supplier/Payee</th>
+                                    <th style="width: 150px;">Category</th>
+                                    <th style="width: 100px;">Amount (£)</th>
+                                    <th style="width: 180px;">Business Purpose</th>
+                                    <th style="width: 130px;">Payment Method</th>
+                                    <th style="width: 60px;">Delete</th>
+                                </tr>
+                            </thead>
+                            <tbody id="expenseBody">
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="text-align: right; font-size: 13px; font-weight: 600; margin-top: 12px; padding: 8px; background: #f8f9fa; border-radius: 4px;">
+                        Total Expenses: <span id="totalExpenses" style="color: #d33827;">£0.00</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Sheet -->
+            <div id="summary" class="sheet">
+                <div class="sheet-wrapper">
+                    <div class="info-box">
+                        Your financial summary is calculated automatically from the Income and Expense sheets. Review your profit/loss and expense breakdown.
+                    </div>
+
+                    <div class="summary-title">Financial Summary</div>
+                    <div class="summary-grid">
+                        <div class="summary-card">
+                            <div class="summary-label">Total Income</div>
+                            <div class="summary-value" id="summaryIncome">£0.00</div>
+                        </div>
+                        <div class="summary-card expense">
+                            <div class="summary-label">Total Expenses</div>
+                            <div class="summary-value" id="summaryExpenses">£0.00</div>
+                        </div>
+                        <div class="summary-card profit">
+                            <div class="summary-label">Profit/Loss</div>
+                            <div class="summary-value" id="summaryProfit">£0.00</div>
+                        </div>
+                    </div>
+
+                    <div class="summary-title" style="margin-top: 20px;">Expenses by Category</div>
+                    <div class="table-wrapper">
+                        <table class="spreadsheet-table">
+                            <thead>
+                                <tr>
+                                    <th style="width: 200px;">Category</th>
+                                    <th style="width: 120px;">Total (£)</th>
+                                    <th style="width: 120px;">% of Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="categoryBody">
+                                <tr>
+                                    <td colspan="3" style="text-align: center; color: #5f6368; padding: 12px;">No expense data yet</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        const expenseCategories = [
+            'Equipment & Supplies',
+            'Professional Development',
+            'Facilities & Premises',
+            'Marketing & Advertising',
+            'Insurance',
+            'Travel & Transport',
+            'Utilities',
+            'Other'
+        ];
+
+        const paymentMethods = [
+            'Bank Transfer',
+            'Card',
+            'Cash',
+            'Cheque',
+            'Other'
+        ];
+
+        const serviceTypes = [
+            'One-to-one session',
+            'Group class',
+            'Online coaching',
+            'Assessment/Consultation',
+            'Other'
+        ];
+
+        // Sample data
+        const sampleIncome = [
+            { date: '2025-01-06', client: 'Client A', service: 'One-to-one session', amount: 60, method: 'Bank Transfer', notes: 'Week 1' },
+            { date: '2025-01-08', client: 'Client B', service: 'One-to-one session', amount: 60, method: 'Cash', notes: '' },
+            { date: '2025-01-10', client: 'Group Class', service: 'Group class', amount: 50, method: 'Bank Transfer', notes: 'Friday evening' },
+            { date: '2025-01-13', client: 'Client A', service: 'One-to-one session', amount: 60, method: 'Bank Transfer', notes: 'Week 2' },
+        ];
+
+        const sampleExpenses = [
+            { date: '2025-01-02', supplier: 'Premium Gym Membership', category: 'Facilities & Premises', amount: 100, purpose: 'Monthly studio rental', method: 'Bank Transfer' },
+            { date: '2025-01-05', supplier: 'Amazon', category: 'Equipment & Supplies', amount: 45, purpose: 'Resistance bands set', method: 'Card' },
+            { date: '2025-01-12', supplier: 'ISSA', category: 'Professional Development', amount: 80, purpose: 'Continuing education course', method: 'Card' },
+        ];
+
+        function initializeSpreadsheet() {
+            sampleIncome.forEach(item => addIncomeRow(item));
+            sampleExpenses.forEach(item => addExpenseRow(item));
+            updateCalculations();
+        }
+
+        function addIncomeRow(data = null) {
+            const tbody = document.getElementById('incomeBody');
+            const row = document.createElement('tr');
+            
+            const date = data ? data.date : new Date().toISOString().split('T')[0];
+            const client = data ? data.client : '';
+            const service = data ? data.service : '';
+            const amount = data ? data.amount : '';
+            const method = data ? data.method : '';
+            const notes = data ? data.notes : '';
+
+            row.innerHTML = `
+                <td><input type="date" value="${date}" class="income-date" onchange="updateCalculations()"></td>
+                <td><input type="text" value="${client}" class="income-client" placeholder="Client name"></td>
+                <td>
+                    <select class="income-service" onchange="updateCalculations()">
+                        <option>Select service</option>
+                        ${serviceTypes.map(s => `<option ${service === s ? 'selected' : ''}>${s}</option>`).join('')}
+                    </select>
+                </td>
+                <td><input type="number" step="0.01" value="${amount}" class="income-amount" placeholder="0.00" onchange="updateCalculations()" onkeyup="updateCalculations()"></td>
+                <td>
+                    <select class="income-method" onchange="updateCalculations()">
+                        <option>Select method</option>
+                        ${paymentMethods.map(m => `<option ${method === m ? 'selected' : ''}>${m}</option>`).join('')}
+                    </select>
+                </td>
+                <td><input type="text" value="${notes}" class="income-notes" placeholder="Optional notes"></td>
+                <td><button class="delete-btn" onclick="this.parentElement.parentElement.remove(); updateCalculations();">Delete</button></td>
+            `;
+            tbody.appendChild(row);
+        }
+
+        function addExpenseRow(data = null) {
+            const tbody = document.getElementById('expenseBody');
+            const row = document.createElement('tr');
+            
+            const date = data ? data.date : new Date().toISOString().split('T')[0];
+            const supplier = data ? data.supplier : '';
+            const category = data ? data.category : '';
+            const amount = data ? data.amount : '';
+            const purpose = data ? data.purpose : '';
+            const method = data ? data.method : '';
+
+            row.innerHTML = `
+                <td><input type="date" value="${date}" class="expense-date" onchange="updateCalculations()"></td>
+                <td><input type="text" value="${supplier}" class="expense-supplier" placeholder="Supplier name"></td>
+                <td>
+                    <select class="expense-category" onchange="updateCalculations()">
+                        <option>Select category</option>
+                        ${expenseCategories.map(c => `<option ${category === c ? 'selected' : ''}>${c}</option>`).join('')}
+                    </select>
+                </td>
+                <td><input type="number" step="0.01" value="${amount}" class="expense-amount" placeholder="0.00" onchange="updateCalculations()" onkeyup="updateCalculations()"></td>
+                <td><input type="text" value="${purpose}" class="expense-purpose" placeholder="Business purpose"></td>
+                <td>
+                    <select class="expense-method" onchange="updateCalculations()">
+                        <option>Select method</option>
+                        ${paymentMethods.map(m => `<option ${method === m ? 'selected' : ''}>${m}</option>`).join('')}
+                    </select>
+                </td>
+                <td><button class="delete-btn" onclick="this.parentElement.parentElement.remove(); updateCalculations();">Delete</button></td>
+            `;
+            tbody.appendChild(row);
+        }
+
+        function updateCalculations() {
+            // Calculate income
+            const incomeRows = document.querySelectorAll('#incomeBody tr');
+            let totalIncome = 0;
+            incomeRows.forEach(row => {
+                const amount = parseFloat(row.querySelector('.income-amount').value) || 0;
+                totalIncome += amount;
+            });
+
+            // Calculate expenses
+            const expenseRows = document.querySelectorAll('#expenseBody tr');
+            let totalExpenses = 0;
+            const categoryTotals = {};
+            
+            expenseRows.forEach(row => {
+                const amount = parseFloat(row.querySelector('.expense-amount').value) || 0;
+                const category = row.querySelector('.expense-category').value;
+                totalExpenses += amount;
+                
+                if (category && category !== 'Select category') {
+                    categoryTotals[category] = (categoryTotals[category] || 0) + amount;
+                }
+            });
+
+            const profit = totalIncome - totalExpenses;
+
+            // Update totals
+            document.getElementById('totalIncome').textContent = '£' + totalIncome.toFixed(2);
+            document.getElementById('totalExpenses').textContent = '£' + totalExpenses.toFixed(2);
+
+            // Update summary
+            document.getElementById('summaryIncome').textContent = '£' + totalIncome.toFixed(2);
+            document.getElementById('summaryExpenses').textContent = '£' + totalExpenses.toFixed(2);
+            document.getElementById('summaryProfit').textContent = '£' + profit.toFixed(2);
+
+            // Update category breakdown
+            updateCategoryBreakdown(categoryTotals, totalExpenses);
+        }
+
+        function updateCategoryBreakdown(categoryTotals, totalExpenses) {
+            const tbody = document.getElementById('categoryBody');
+            tbody.innerHTML = '';
+
+            if (Object.keys(categoryTotals).length === 0) {
+                tbody.innerHTML = '<tr><td colspan="3" style="text-align: center; color: #5f6368; padding: 12px;">No expense data yet</td></tr>';
+                return;
+            }
+
+            Object.entries(categoryTotals).sort((a, b) => b[1] - a[1]).forEach(([category, amount]) => {
+                const percentage = totalExpenses > 0 ? ((amount / totalExpenses) * 100).toFixed(1) : 0;
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td>${category}</td>
+                    <td style="text-align: right;">£${amount.toFixed(2)}</td>
+                    <td style="text-align: right;">${percentage}%</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function switchSheet(sheetName) {
+            // Hide all sheets
+            document.querySelectorAll('.sheet').forEach(sheet => {
+                sheet.classList.remove('active');
+            });
+
+            // Remove active class from all tabs
+            document.querySelectorAll('.sheet-tab').forEach(tab => {
+                tab.classList.remove('active');
+            });
+
+            // Show selected sheet
+            document.getElementById(sheetName).classList.add('active');
+
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+
+        // Initialize on page load
+        window.addEventListener('load', initializeSpreadsheet);
+    </script>
+</body>
+</html>
