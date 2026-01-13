@@ -1,0 +1,868 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Managing Income Volatility - Scenarios</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 12px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #C6A906 0%, #a68905 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 20px;
+        }
+
+        .intro-box {
+            background: #fffbf0;
+            border-left: 4px solid #C6A906;
+            padding: 14px;
+            margin-bottom: 20px;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1.6;
+            color: #5f4a1a;
+        }
+
+        .section-title {
+            font-size: 16px;
+            font-weight: 700;
+            color: #333;
+            margin: 24px 0 16px;
+            padding-bottom: 8px;
+            border-bottom: 2px solid #C6A906;
+        }
+
+        /* Accordion Styles */
+        .accordion-item {
+            margin-bottom: 16px;
+            border: 1px solid #e0e0e0;
+            border-radius: 6px;
+            overflow: hidden;
+        }
+
+        .accordion-header {
+            background: #f8f9fa;
+            padding: 16px;
+            cursor: pointer;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-weight: 600;
+            font-size: 14px;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        .accordion-header:hover {
+            background: #f0f0f0;
+        }
+
+        .accordion-header.expanded {
+            background: linear-gradient(135deg, #fffbf0, #fff9e6);
+            border-bottom: 2px solid #C6A906;
+        }
+
+        .accordion-icon {
+            font-size: 18px;
+            transition: transform 0.3s ease;
+        }
+
+        .accordion-header.expanded .accordion-icon {
+            transform: rotate(180deg);
+        }
+
+        .accordion-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .accordion-header.expanded + .accordion-content {
+            max-height: 2000px;
+        }
+
+        .accordion-body {
+            padding: 16px;
+            background: white;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        /* Content Text Styles */
+        .content-text {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.7;
+            margin-bottom: 12px;
+        }
+
+        .content-text p {
+            margin-bottom: 12px;
+        }
+
+        .content-list {
+            margin: 12px 0;
+            padding-left: 20px;
+        }
+
+        .content-list li {
+            font-size: 13px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 8px;
+        }
+
+        /* Scenario Card Styles */
+        .scenario-card {
+            background: linear-gradient(135deg, #f0f7ff, #e8f4fd);
+            border: 2px solid #2196F3;
+            border-radius: 6px;
+            padding: 18px;
+            margin: 18px 0;
+        }
+
+        .scenario-title {
+            font-size: 14px;
+            font-weight: 700;
+            color: #1f3a93;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .scenario-description {
+            font-size: 13px;
+            color: #2c3e50;
+            line-height: 1.6;
+            margin-bottom: 14px;
+            padding-bottom: 12px;
+            border-bottom: 1px solid #c5d9f1;
+        }
+
+        .scenario-impact {
+            background: white;
+            border: 1px solid #2196F3;
+            border-radius: 4px;
+            padding: 12px;
+            margin-bottom: 16px;
+            font-size: 12px;
+            color: #1f3a93;
+            font-weight: 600;
+        }
+
+        .scenario-impact-value {
+            color: #e74c3c;
+            font-size: 16px;
+            font-weight: 700;
+        }
+
+        /* Choice Buttons */
+        .choices-container {
+            display: grid;
+            gap: 10px;
+            margin-top: 14px;
+        }
+
+        .choice-btn {
+            background: white;
+            border: 2px solid #2196F3;
+            padding: 12px 14px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            color: #1f3a93;
+            transition: all 0.3s ease;
+            text-align: left;
+        }
+
+        .choice-btn:hover {
+            background: #e3f2fd;
+            border-color: #1976D2;
+        }
+
+        .choice-btn.selected {
+            background: #1f73e6;
+            color: white;
+            border-color: #1f73e6;
+        }
+
+        /* Outcome Reveal */
+        .outcome-container {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, margin-top 0.3s ease;
+        }
+
+        .outcome-container.show {
+            max-height: 500px;
+            margin-top: 14px;
+        }
+
+        .outcome-box {
+            padding: 14px;
+            border-radius: 4px;
+            font-size: 13px;
+            line-height: 1.6;
+            display: none;
+        }
+
+        .outcome-box.show {
+            display: block;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .outcome-mild {
+            background: #e8f5e9;
+            border: 2px solid #27ae60;
+            color: #1b5e20;
+        }
+
+        .outcome-mild .outcome-title {
+            color: #27ae60;
+            font-weight: 700;
+        }
+
+        .outcome-severe {
+            background: #ffebee;
+            border: 2px solid #e74c3c;
+            color: #b71c1c;
+        }
+
+        .outcome-severe .outcome-title {
+            color: #e74c3c;
+            font-weight: 700;
+        }
+
+        .outcome-positive {
+            background: #e3f2fd;
+            border: 2px solid #2196F3;
+            color: #1f3a93;
+        }
+
+        .outcome-positive .outcome-title {
+            color: #1f73e6;
+            font-weight: 700;
+        }
+
+        .outcome-title {
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .outcome-content {
+            font-size: 12px;
+        }
+
+        .outcome-content p {
+            margin-bottom: 8px;
+        }
+
+        .outcome-content strong {
+            display: block;
+            margin-top: 8px;
+        }
+
+        /* Mitigation Tips */
+        .mitigation-tips {
+            background: #fffbf0;
+            border-left: 4px solid #C6A906;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 4px;
+            font-size: 12px;
+            color: #5f4a1a;
+            line-height: 1.6;
+        }
+
+        .mitigation-tips strong {
+            color: #333;
+        }
+
+        @media (max-width: 768px) {
+            .choices-container {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 22px;
+            }
+
+            .scenario-card {
+                padding: 14px;
+            }
+        }
+
+        .scenario-carousel {
+            display: none;
+        }
+
+        .scenario-carousel.active {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .next-scenario-btn {
+            background: #C6A906;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-weight: 600;
+            font-size: 12px;
+            margin-top: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .next-scenario-btn:hover {
+            background: #a68905;
+        }
+
+        .next-scenario-btn.hidden {
+            display: none;
+        }
+
+        .completion-message {
+            background: #e8f5e9;
+            border: 2px solid #27ae60;
+            border-radius: 6px;
+            padding: 24px;
+            text-align: center;
+            display: none;
+        }
+
+        .completion-message.show {
+            display: block;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .completion-message h3 {
+            color: #27ae60;
+            font-size: 18px;
+            margin-bottom: 12px;
+        }
+
+        .completion-message p {
+            color: #1b5e20;
+            font-size: 13px;
+            line-height: 1.6;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <h1>Managing Income Volatility</h1>
+            <p>Understand scenarios and how different strategies protect your income</p>
+        </div>
+
+        <div class="content">
+            <div class="intro-box">
+                Personal training income can fluctuate due to client turnover, seasonality, and economic factors. Explore these scenarios to see how different approaches affect your financial stability when income challenges arise.
+            </div>
+
+            <!-- Sources Section -->
+            <div class="section-title">📊 Sources of Income Volatility</div>
+
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Client Turnover</span>
+                    <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="content-text">
+                            <p>Client turnover naturally occurs as individuals achieve goals, experience life changes, or reassess priorities. Average client retention in personal training typically ranges from 6-18 months, meaning trainers must continuously replace departing clients to maintain stable income. High turnover rates create "income treadmill" dynamics where significant business development effort merely maintains rather than grows revenue.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Seasonal Patterns</span>
+                    <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="content-text">
+                            <p>Seasonal patterns affect fitness demand, with January generating peak interest following New Year resolutions, whilst summer and December experience reduced demand due to holidays and social commitments. Trainers dependent on facility-based or outdoor training may experience weather-related income disruption.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Economic Conditions</span>
+                    <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="content-text">
+                            <p>Economic conditions influence discretionary spending on personal training services. During economic downturns or personal financial difficulties, clients frequently discontinue training or reduce session frequency, creating sudden income reductions for trainers.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Mitigation Section -->
+            <div class="section-title">💪 Mitigation Strategies</div>
+
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Building Emergency Funds</span>
+                    <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="content-text">
+                            <p>Self-employed trainers should maintain 3-6 months of essential expenses in accessible savings accounts, providing financial buffers during low-income periods. Emergency funds enable business continuation without panic decision-making during temporary revenue reductions.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Diversifying Client Bases</span>
+                    <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="content-text">
+                            <p>Dependency on few high-value clients creates vulnerability to individual client loss. Broader client bases with varied demographics, goals, and income levels provide more stable overall revenue even when specific clients leave.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Creating Multiple Revenue Streams</span>
+                    <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="content-text">
+                            <p>Combining in-person training, online coaching, group classes, digital products, and other income sources reduces reliance on single revenue stream vulnerable to disruption.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Implementing Retention Strategies</span>
+                    <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="content-text">
+                            <p>Proactive client retention through quality service delivery, relationship building, progressive programming, and regular communication reduces turnover rates and stabilises income.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <span>Advance Payment Systems</span>
+                    <span class="accordion-icon">▼</span>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="content-text">
+                            <p>Package or programme sales requiring advance payment create more predictable income and reduce payment collection issues. However, trainers must ensure service delivery commitments are fulfilled and refund policies are fair and clear.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Toggle Button -->
+            <div style="text-align: center; margin: 30px 0;">
+                <button onclick="switchView('scenarios')" style="padding: 12px 30px; background: #C6A906; color: white; border: none; border-radius: 6px; font-weight: 600; font-size: 14px; cursor: pointer; transition: all 0.3s; box-shadow: 0 2px 8px rgba(198, 169, 6, 0.3);">
+                    📝 Consolidate Your Knowledge
+                </button>
+                <p style="font-size: 12px; color: #666; margin-top: 10px;">Click to test your understanding with real-world scenarios</p>
+            </div>
+            </div>
+
+            <!-- Scenarios Section (Hidden by default) -->
+            <div id="scenarios-section" style="display: none;">
+            <div style="text-align: center; margin-bottom: 20px;">
+                <button onclick="switchView('knowledge')" style="padding: 10px 20px; background: transparent; color: #C6A906; border: 2px solid #C6A906; border-radius: 4px; font-weight: 600; font-size: 12px; cursor: pointer; transition: all 0.3s;">
+                    ← Back to Learning
+                </button>
+            </div>
+            <div class="section-title">⚡ Interactive Scenarios</div>
+
+            <!-- Scenario 1 -->
+            <div class="scenario-carousel active" id="carousel-1">
+            <div class="scenario-card">
+                <div class="scenario-title">🚨 Scenario 1: Client Cancellation</div>
+                <div class="scenario-description">
+                    A regular client who has been with you for 8 months suddenly decides to cancel their training. This client was doing two 60-minute sessions per week at £60 per session.
+                </div>
+                <div class="scenario-impact">
+                    Monthly Income Loss: <span class="scenario-impact-value">£480</span>
+                </div>
+
+                <div style="font-size: 12px; font-weight: 600; color: #1f3a93; margin-bottom: 10px;">How are you protected? Select your situation:</div>
+
+                <div class="choices-container">
+                    <button class="choice-btn" onclick="showOutcome(this, 'scenario1', 'emergency')">
+                        ✓ I have a 3-6 month emergency fund
+                    </button>
+                    <button class="choice-btn" onclick="showOutcome(this, 'scenario1', 'weekly')">
+                        ✗ I rely on weekly client payments to survive
+                    </button>
+                    <button class="choice-btn" onclick="showOutcome(this, 'scenario1', 'package')">
+                        ✓ I sell packages with advance payment
+                    </button>
+                </div>
+
+                <div class="outcome-container" id="scenario1">
+                    <div class="outcome-box outcome-mild" id="scenario1-emergency">
+                        <div class="outcome-title">🟢 Mild Dip</div>
+                        <div class="outcome-content">
+                            <p>With 3-6 months of expenses saved, this client loss is manageable. You have time to replace this client without financial panic or pressure to make poor business decisions.</p>
+                            <strong>Your advantage:</strong> You can focus on finding quality replacement clients rather than any client at any price.
+                        </div>
+                    </div>
+
+                    <div class="outcome-box outcome-severe" id="scenario1-weekly">
+                        <div class="outcome-title">🔴 Severe Stress</div>
+                        <div class="outcome-content">
+                            <p>Losing £480/month while depending on weekly income creates immediate financial pressure. Your ability to pay rent, bills, and personal expenses is compromised this month.</p>
+                            <strong>The danger:</strong> You may desperation-sell discount packages, take unsuitable clients, or make panic decisions affecting your business long-term.
+                        </div>
+                    </div>
+
+                    <div class="outcome-box outcome-positive" id="scenario1-package">
+                        <div class="outcome-title">🟢 No Immediate Impact</div>
+                        <div class="outcome-content">
+                            <p>If this client was part of a 6-week package paid upfront, you've already received that revenue. Losing them now means you can sell the remaining sessions to a new client or reallocate them.</p>
+                            <strong>Your advantage:</strong> Revenue is already secured. You can focus on service quality without monthly income pressure.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mitigation-tips">
+                    <strong>💡 Takeaway:</strong> The impact of client loss depends entirely on how you've structured your income. Emergency funds and advance payments both create security that weekly income payments cannot provide.
+                </div>
+            </div>
+            </div>
+            <button class="next-scenario-btn hidden" id="next-btn-1" onclick="showScenario(2)">Next Scenario →</button>
+
+            <!-- Scenario 2 -->
+            <div class="scenario-carousel" id="carousel-2">
+            <div class="scenario-card">
+                <div class="scenario-title">📉 Scenario 2: Seasonal Slowdown</div>
+                <div class="scenario-description">
+                    Summer arrives. Normally you have 25 clients generating £1,200/week. In July, only 18 clients continue training due to holidays and summer distractions. Three clients paused, four cancelled entirely.
+                </div>
+                <div class="scenario-impact">
+                    Monthly Income Loss: <span class="scenario-impact-value">£1,344 (28% reduction)</span>
+                </div>
+
+                <div style="font-size: 12px; font-weight: 600; color: #1f3a93; margin-bottom: 10px;">How prepared are you? Select your situation:</div>
+
+                <div class="choices-container">
+                    <button class="choice-btn" onclick="showOutcome(this, 'scenario2', 'diverse')">
+                        ✓ I have online clients &amp; group classes (multiple income streams)
+                    </button>
+                    <button class="choice-btn" onclick="showOutcome(this, 'scenario2', 'single')">
+                        ✗ 95% of my income is one-to-one in-person training
+                    </button>
+                    <button class="choice-btn" onclick="showOutcome(this, 'scenario2', 'broad')">
+                        ✓ I have 50+ diverse clients across different demographics
+                    </button>
+                </div>
+
+                <div class="outcome-container" id="scenario2">
+                    <div class="outcome-box outcome-positive" id="scenario2-diverse">
+                        <div class="outcome-title">🟢 Stable Income</div>
+                        <div class="outcome-content">
+                            <p>Your online clients continue year-round regardless of season. Group classes maintain consistent attendance. Loss from in-person training is offset by these other revenue streams.</p>
+                            <strong>Your advantage:</strong> Diversification protects you from seasonal fluctuations in any single revenue source.
+                        </div>
+                    </div>
+
+                    <div class="outcome-box outcome-severe" id="scenario2-single">
+                        <div class="outcome-title">🔴 Major Income Drop</div>
+                        <div class="outcome-content">
+                            <p>A 28% income reduction hits hard when this is your only revenue source. That's £1,344 less this month with no other income to compensate. Potentially devastating if unexpected.</p>
+                            <strong>The danger:</strong> You'll feel forced to aggressively recruit during normally-slower season or accept unsuitable clients just to maintain income.
+                        </div>
+                    </div>
+
+                    <div class="outcome-box outcome-mild" id="scenario2-broad">
+                        <div class="outcome-title">🟡 Manageable Reduction</div>
+                        <div class="outcome-content">
+                            <p>With 50+ diverse clients across different ages and demographics, you have natural redundancy. Losing 7 clients affects you less than losing 7 clients when you only had 25.</p>
+                            <strong>Your advantage:</strong> No single client departure (or small group departures) creates financial crisis.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mitigation-tips">
+                    <strong>💡 Takeaway:</strong> Seasonal volatility is predictable. The best protection is either expecting it (emergency fund) or diversifying income so you don't feel seasonal dips as severely.
+                </div>
+            </div>
+            </div>
+            <button class="next-scenario-btn hidden" id="next-btn-2" onclick="showScenario(3)">Next Scenario →</button>
+
+            <!-- Scenario 3 -->
+            <div class="scenario-carousel" id="carousel-3">
+            <div class="scenario-card">
+                <div class="scenario-title">💼 Scenario 3: Economic Downturn</div>
+                <div class="scenario-description">
+                    A recession hits. Suddenly you lose 30% of your clients over two months as people cut discretionary spending. You lose 8 clients, reducing weekly income from £1,200 to £840.
+                </div>
+                <div class="scenario-impact">
+                    Monthly Income Loss: <span class="scenario-impact-value">£1,440 (36% reduction)</span>
+                </div>
+
+                <div style="font-size: 12px; font-weight: 600; color: #1f3a93; margin-bottom: 10px;">How secure is your position? Select your situation:</div>
+
+                <div class="choices-container">
+                    <button class="choice-btn" onclick="showOutcome(this, 'scenario3', 'fund')">
+                        ✓ I have 6 months emergency savings
+                    </button>
+                    <button class="choice-btn" onclick="showOutcome(this, 'scenario3', 'employed')">
+                        ✓ I also have part-time employment income
+                    </button>
+                    <button class="choice-btn" onclick="showOutcome(this, 'scenario3', 'exposed')">
+                        ✗ No emergency fund &amp; entirely dependent on PT income
+                    </button>
+                </div>
+
+                <div class="outcome-container" id="scenario3">
+                    <div class="outcome-box outcome-positive" id="scenario3-fund">
+                        <div class="outcome-title">🟢 Protected</div>
+                        <div class="outcome-content">
+                            <p>A 6-month emergency fund means you can sustain this income level for half a year while you rebuild your client base. You have time to adapt your business model, pricing, or service offerings.</p>
+                            <strong>Your advantage:</strong> You stay afloat without emergency decisions. You can ride out the recession strategically.
+                        </div>
+                    </div>
+
+                    <div class="outcome-box outcome-positive" id="scenario3-employed">
+                        <div class="outcome-title">🟢 Cushioned</div>
+                        <div class="outcome-content">
+                            <p>Your part-time employment income covers essential expenses. The PT income loss, while unwelcome, doesn't threaten your ability to pay rent or bills. You maintain stability while rebuilding.</p>
+                            <strong>Your advantage:</strong> Diversified income sources mean no single revenue stream loss crashes your finances.
+                        </div>
+                    </div>
+
+                    <div class="outcome-box outcome-severe" id="scenario3-exposed">
+                        <div class="outcome-title">🔴 Crisis</div>
+                        <div class="outcome-content">
+                            <p>A 36% income reduction with zero savings buffer creates immediate crisis. You can't pay rent next month. You're forced into rapid, potentially poor decisions: discount prices, unsuitable clients, debt.</p>
+                            <strong>The danger:</strong> Financial stress may force you to exit the industry entirely rather than rebuild during a temporary downturn.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mitigation-tips">
+                    <strong>💡 Takeaway:</strong> Economic downturns are unpredictable but inevitable. Either build emergency savings now or create backup income sources before you need them. Don't wait until a crisis forces desperate decisions.
+                </div>
+            </div>
+            </div>
+            <button class="next-scenario-btn hidden" id="next-btn-3" onclick="showCompletion()">View Summary →</button>
+
+            <div class="completion-message" id="completion-message">
+                <h3>✅ Scenario Practice Complete!</h3>
+                <p>You've explored three realistic income volatility scenarios and seen how different financial strategies protect (or expose) your income. The key takeaway: build multiple layers of protection through emergency funds, diversification, and smart business structures.</p>
+                <button onclick="switchView('knowledge')" style="padding: 10px 20px; background: #27ae60; color: white; border: none; border-radius: 4px; font-weight: 600; font-size: 12px; cursor: pointer; margin-top: 16px;">← Back to Learning</button>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function toggleAccordion(header) {
+            header.classList.toggle('expanded');
+        }
+
+        function switchView(view) {
+            const knowledgeSection = document.querySelector('.intro-box').parentElement;
+            const scenariosSection = document.getElementById('scenarios-section');
+            
+            if (view === 'scenarios') {
+                // Hide accordions, show scenarios
+                const allAccordions = document.querySelectorAll('.accordion-item');
+                const toggleButton = document.querySelector('button[onclick*="switchView"]');
+                
+                allAccordions.forEach(item => {
+                    item.style.display = 'none';
+                });
+                
+                // Hide all section titles except in scenarios
+                const sectionTitles = document.querySelectorAll('.section-title');
+                sectionTitles.forEach((title, index) => {
+                    if (index < 2) { // Hide first two section titles (Sources and Mitigation)
+                        title.style.display = 'none';
+                    }
+                });
+                
+                // Hide the toggle button
+                toggleButton.parentElement.style.display = 'none';
+                
+                // Show scenarios section
+                scenariosSection.style.display = 'block';
+                
+                // Scroll to scenarios
+                scenariosSection.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            } else if (view === 'knowledge') {
+                // Show accordions, hide scenarios
+                const allAccordions = document.querySelectorAll('.accordion-item');
+                const toggleButton = document.querySelector('button[onclick*="switchView"]');
+                
+                allAccordions.forEach(item => {
+                    item.style.display = 'block';
+                });
+                
+                // Show all section titles
+                const sectionTitles = document.querySelectorAll('.section-title');
+                sectionTitles.forEach((title, index) => {
+                    if (index < 2) {
+                        title.style.display = 'block';
+                    }
+                });
+                
+                // Show the toggle button
+                toggleButton.parentElement.style.display = 'block';
+                
+                // Hide scenarios section
+                scenariosSection.style.display = 'none';
+                
+                // Scroll back to top
+                document.querySelector('.header').scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function showOutcome(button, scenarioId, outcomeType) {
+            // Remove selected state from all buttons in this scenario
+            const buttons = button.parentElement.querySelectorAll('.choice-btn');
+            buttons.forEach(btn => btn.classList.remove('selected'));
+
+            // Add selected state to clicked button
+            button.classList.add('selected');
+
+            // Hide all outcomes in this scenario
+            const outcomeContainer = document.getElementById(scenarioId);
+            const outcomes = outcomeContainer.querySelectorAll('.outcome-box');
+            outcomes.forEach(outcome => outcome.classList.remove('show'));
+
+            // Show selected outcome
+            const selectedOutcome = document.getElementById(scenarioId + '-' + outcomeType);
+            if (selectedOutcome) {
+                outcomeContainer.classList.add('show');
+                selectedOutcome.classList.add('show');
+            }
+
+            // Show next button for this scenario
+            const scenarioNumber = scenarioId.replace('scenario', '');
+            const nextButton = document.getElementById('next-btn-' + scenarioNumber);
+            if (nextButton) {
+                nextButton.classList.remove('hidden');
+            }
+        }
+
+        function showScenario(scenarioNumber) {
+            // Hide all scenarios
+            document.querySelectorAll('.scenario-carousel').forEach(carousel => {
+                carousel.classList.remove('active');
+            });
+
+            // Hide all next buttons
+            document.querySelectorAll('.next-scenario-btn').forEach(btn => {
+                btn.classList.add('hidden');
+            });
+
+            // Hide completion message
+            document.getElementById('completion-message').classList.remove('show');
+
+            // Show selected scenario
+            const selectedCarousel = document.getElementById('carousel-' + scenarioNumber);
+            if (selectedCarousel) {
+                selectedCarousel.classList.add('active');
+            }
+
+            // Scroll to scenario
+            selectedCarousel.scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function showCompletion() {
+            // Hide all scenarios
+            document.querySelectorAll('.scenario-carousel').forEach(carousel => {
+                carousel.classList.remove('active');
+            });
+
+            // Hide all next buttons
+            document.querySelectorAll('.next-scenario-btn').forEach(btn => {
+                btn.classList.add('hidden');
+            });
+
+            // Show completion message
+            document.getElementById('completion-message').classList.add('show');
+
+            // Scroll to completion
+            document.getElementById('completion-message').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+    </script>
+</body>
+</html>
