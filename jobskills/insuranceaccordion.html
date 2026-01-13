@@ -131,6 +131,83 @@
             margin-bottom: 10px;
         }
 
+        .accordion-columns {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 16px;
+            margin-top: 12px;
+        }
+
+        .accordion-column {
+            padding: 12px;
+            border-radius: 4px;
+        }
+
+        .column-covered {
+            background: #e8f5e9;
+            border-left: 4px solid #27ae60;
+        }
+
+        .column-covered .column-title {
+            color: #27ae60;
+            font-weight: 700;
+        }
+
+        .column-consequence {
+            background: #ffebee;
+            border-left: 4px solid #e74c3c;
+        }
+
+        .column-consequence .column-title {
+            color: #e74c3c;
+            font-weight: 700;
+        }
+
+        .column-title {
+            font-size: 11px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+            font-weight: 700;
+        }
+
+        .column-list {
+            margin: 0;
+            padding: 0;
+            list-style: none;
+            font-size: 12px;
+            color: #333;
+        }
+
+        .column-list li {
+            margin-bottom: 6px;
+            padding-left: 18px;
+            position: relative;
+            line-height: 1.4;
+        }
+
+        .column-covered .column-list li:before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: #27ae60;
+            font-weight: 700;
+        }
+
+        .column-consequence .column-list li:before {
+            content: "✗";
+            position: absolute;
+            left: 0;
+            color: #e74c3c;
+            font-weight: 700;
+        }
+
+        @media (max-width: 768px) {
+            .accordion-columns {
+                grid-template-columns: 1fr;
+            }
+        }
+
         /* Scenario Card Styles */
         .scenario-card {
             background: linear-gradient(135deg, #f0f7ff, #e8f4fd);
@@ -386,7 +463,29 @@
                     </div>
                     <div class="accordion-content">
                         <div class="accordion-body">
-                            <p>Covers claims from third parties (including clients) for injury or property damage caused by training activities. Public liability insurance typically covers legal costs and compensation awards up to policy limits (commonly £6-10 million). This insurance is essential for all personal trainers regardless of employment status and is often required by facilities and professional registration bodies.</p>
+                            <p style="margin-bottom: 12px;">Covers claims from third parties (including clients) for injury or property damage caused by training activities. Policy limits typically £6-10 million.</p>
+                            <div class="accordion-columns">
+                                <div class="accordion-column column-covered">
+                                    <div class="column-title">✓ What's Covered</div>
+                                    <ul class="column-list">
+                                        <li>Client injury claims during training</li>
+                                        <li>Legal defence costs</li>
+                                        <li>Compensation awards (within limits)</li>
+                                        <li>Property damage claims</li>
+                                        <li>Court costs and legal fees</li>
+                                    </ul>
+                                </div>
+                                <div class="accordion-column column-consequence">
+                                    <div class="column-title">✗ Without This Cover</div>
+                                    <ul class="column-list">
+                                        <li>Personal liability for legal costs</li>
+                                        <li>Direct payment of compensation awards</li>
+                                        <li>Financial ruin from single claim</li>
+                                        <li>Business closure risk</li>
+                                        <li>Personal savings depleted</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -398,7 +497,29 @@
                     </div>
                     <div class="accordion-content">
                         <div class="accordion-body">
-                            <p>Covers claims arising from professional advice, programme design, or service delivery alleged to cause client harm, financial loss, or injury. Whilst public liability covers accidents during training, professional indemnity covers allegations of professional negligence or inadequate service.</p>
+                            <p style="margin-bottom: 12px;">Covers claims arising from professional advice, programme design, or service delivery alleged to cause client harm or loss. Covers professional negligence allegations.</p>
+                            <div class="accordion-columns">
+                                <div class="accordion-column column-covered">
+                                    <div class="column-title">✓ What's Covered</div>
+                                    <ul class="column-list">
+                                        <li>Programme design negligence claims</li>
+                                        <li>Professional advice claims</li>
+                                        <li>Inadequate service allegations</li>
+                                        <li>Client financial loss claims</li>
+                                        <li>Legal defence and court costs</li>
+                                    </ul>
+                                </div>
+                                <div class="accordion-column column-consequence">
+                                    <div class="column-title">✗ Without This Cover</div>
+                                    <ul class="column-list">
+                                        <li>Personal liability for negligence claims</li>
+                                        <li>Defence costs fully your responsibility</li>
+                                        <li>Compensation awards from own funds</li>
+                                        <li>Business reputation damage</li>
+                                        <li>Loss of professional standing</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -410,7 +531,29 @@
                     </div>
                     <div class="accordion-content">
                         <div class="accordion-body">
-                            <p>Relevant for trainers providing soft tissue work, sports massage, or other hands-on treatments. This specialised coverage addresses higher risk associated with manual therapy compared to exercise instruction alone.</p>
+                            <p style="margin-bottom: 12px;">Specialised coverage for trainers providing soft tissue work, sports massage, or hands-on treatments. Addresses higher risk from manual therapy versus exercise instruction alone.</p>
+                            <div class="accordion-columns">
+                                <div class="accordion-column column-covered">
+                                    <div class="column-title">✓ What's Covered</div>
+                                    <ul class="column-list">
+                                        <li>Sports massage injury claims</li>
+                                        <li>Soft tissue therapy claims</li>
+                                        <li>Manual therapy complications</li>
+                                        <li>Hands-on treatment incidents</li>
+                                        <li>Therapy-related legal costs</li>
+                                    </ul>
+                                </div>
+                                <div class="accordion-column column-consequence">
+                                    <div class="column-title">✗ Without This Cover</div>
+                                    <ul class="column-list">
+                                        <li>Manual therapy claims not covered by general liability</li>
+                                        <li>High-risk activities uninsured</li>
+                                        <li>Significant personal liability</li>
+                                        <li>Professional registration at risk</li>
+                                        <li>Cannot offer therapy services legally</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -422,7 +565,29 @@
                     </div>
                     <div class="accordion-content">
                         <div class="accordion-body">
-                            <p>Covers business equipment (training tools, technology, portable equipment) against theft, damage, or loss. Particularly relevant for mobile trainers transporting equipment regularly or those with significant equipment investments.</p>
+                            <p style="margin-bottom: 12px;">Covers business equipment against theft, damage, or loss. Particularly relevant for mobile trainers or those with significant equipment investments.</p>
+                            <div class="accordion-columns">
+                                <div class="accordion-column column-covered">
+                                    <div class="column-title">✓ What's Covered</div>
+                                    <ul class="column-list">
+                                        <li>Training tools and equipment theft</li>
+                                        <li>Damage to portable equipment</li>
+                                        <li>Technology and devices</li>
+                                        <li>Transit damage to equipment</li>
+                                        <li>Replacement costs</li>
+                                    </ul>
+                                </div>
+                                <div class="accordion-column column-consequence">
+                                    <div class="column-title">✗ Without This Cover</div>
+                                    <ul class="column-list">
+                                        <li>Stolen equipment not replaced</li>
+                                        <li>Service disruption from equipment loss</li>
+                                        <li>Expensive replacement from pocket</li>
+                                        <li>Mobile trainers at high risk</li>
+                                        <li>Reduced client experience during outages</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -434,7 +599,29 @@
                     </div>
                     <div class="accordion-content">
                         <div class="accordion-body">
-                            <p>Provides replacement income if illness or injury prevents working. Particularly important for self-employed trainers without sick pay entitlement. Policies typically pay percentage of average earnings (often 50-70%) after waiting periods (commonly 4-26 weeks) and continue until return to work or policy term expiry.</p>
+                            <p style="margin-bottom: 12px;">Provides replacement income if illness or injury prevents working. Particularly important for self-employed trainers. Policies typically pay 50-70% of earnings after waiting periods.</p>
+                            <div class="accordion-columns">
+                                <div class="accordion-column column-covered">
+                                    <div class="column-title">✓ What's Covered</div>
+                                    <ul class="column-list">
+                                        <li>Income replacement if unable to work</li>
+                                        <li>Illness or injury cover</li>
+                                        <li>50-70% of average earnings</li>
+                                        <li>Continues until return to work</li>
+                                        <li>Financial security during recovery</li>
+                                    </ul>
+                                </div>
+                                <div class="accordion-column column-consequence">
+                                    <div class="column-title">✗ Without This Cover</div>
+                                    <ul class="column-list">
+                                        <li>No income during illness/injury</li>
+                                        <li>Personal savings depleted quickly</li>
+                                        <li>Unable to cover personal expenses</li>
+                                        <li>Clients lost to other trainers</li>
+                                        <li>Financial crisis during recovery</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -446,7 +633,29 @@
                     </div>
                     <div class="accordion-content">
                         <div class="accordion-body">
-                            <p>Whilst not business insurance per se, life insurance and critical illness coverage protect dependents and personal financial obligations if serious health events prevent working permanently or long-term. Self-employed individuals should carefully consider these protections as they lack employer-provided death-in-service benefits.</p>
+                            <p style="margin-bottom: 12px;">Protects dependents and personal financial obligations if serious health events prevent working permanently or long-term. Self-employed lack employer death-in-service benefits.</p>
+                            <div class="accordion-columns">
+                                <div class="accordion-column column-covered">
+                                    <div class="column-title">✓ What's Covered</div>
+                                    <ul class="column-list">
+                                        <li>Dependents protected if you die</li>
+                                        <li>Mortgage/loan payments covered</li>
+                                        <li>Critical illness lump sum payment</li>
+                                        <li>Family financial security</li>
+                                        <li>Business continuation fund</li>
+                                    </ul>
+                                </div>
+                                <div class="accordion-column column-consequence">
+                                    <div class="column-title">✗ Without This Cover</div>
+                                    <ul class="column-list">
+                                        <li>Dependents financially unprotected</li>
+                                        <li>Mortgage/debt obligations remain</li>
+                                        <li>Family loses primary income</li>
+                                        <li>Business collapses</li>
+                                        <li>No employer death benefits exist</li>
+                                    </ul>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
