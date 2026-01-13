@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interview Preparation Guide</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #C6A906 0%, #a68905 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 30px 20px;
+        }
+
+        .section {
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: white;
+            padding: 14px 16px;
+            background: linear-gradient(135deg, #C6A906 0%, #a68905 100%);
+            border-radius: 6px;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .section-title:hover {
+            box-shadow: 0 4px 12px rgba(198, 169, 6, 0.3);
+            transform: translateX(4px);
+        }
+
+        .toggle-icon {
+            font-size: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .section-title.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .section-content.expanded {
+            max-height: 2000px;
+            padding: 16px;
+        }
+
+        .section-body {
+            background: #f9f9f9;
+            border-left: 4px solid #C6A906;
+            border-radius: 0 6px 6px 0;
+            line-height: 1.7;
+            color: #555;
+        }
+
+        .section-body p {
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+
+        .section-body strong {
+            color: #333;
+        }
+
+        .section-body ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .section-body li {
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .example-box {
+            background: white;
+            border-left: 4px solid #2196F3;
+            padding: 14px;
+            margin: 14px 0;
+            border-radius: 4px;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #444;
+        }
+
+        .example-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #2196F3;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .star-breakdown {
+            background: white;
+            border-left: 4px solid #27ae60;
+            padding: 14px;
+            margin: 14px 0;
+            border-radius: 4px;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .star-item {
+            margin-bottom: 10px;
+        }
+
+        .star-item strong {
+            color: #27ae60;
+            display: block;
+            margin-bottom: 4px;
+            font-size: 11px;
+            text-transform: uppercase;
+        }
+
+        .tip-box {
+            background: #fffbf0;
+            border-left: 4px solid #C6A906;
+            padding: 14px;
+            margin: 14px 0;
+            border-radius: 4px;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .tip-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #C6A906;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .checklist {
+            background: #e8f5e9;
+            border-left: 4px solid #27ae60;
+            padding: 14px;
+            margin: 14px 0;
+            border-radius: 4px;
+        }
+
+        .checklist-title {
+            font-size: 11px;
+            font-weight: 700;
+            color: #27ae60;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .checklist ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+
+        .checklist li {
+            font-size: 12px;
+            color: #1b5e20;
+            margin-bottom: 6px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .content {
+                padding: 20px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Interview Preparation Guide</h1>
+            <p>Prepare strategically for successful fitness industry interviews</p>
+        </div>
+
+        <div class="content">
+            <!-- Employer Research Section -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection(this)">
+                    <span>🔍 Employer Research</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <p><strong>Understanding prospective employers demonstrates genuine interest and enables informed, relevant responses.</strong> Research helps you tailor answers and ask intelligent questions.</p>
+
+                        <p><strong>Key Research Areas:</strong></p>
+                        <ul>
+                            <li>Facility type and positioning (budget, premium, boutique, leisure centre)</li>
+                            <li>Services offered and specialisations</li>
+                            <li>Membership demographics and target markets</li>
+                            <li>Values, mission, and culture</li>
+                            <li>Recent news, developments, or changes</li>
+                            <li>Key personnel including interviewers if known</li>
+                        </ul>
+
+                        <p><strong>Research Sources:</strong></p>
+                        <ul>
+                            <li>Employer websites and social media (Facebook, Instagram, LinkedIn)</li>
+                            <li>Facility visits as members or guests where possible</li>
+                            <li>Online reviews and member feedback (Google, Trustpilot)</li>
+                            <li>Industry publications or news</li>
+                            <li>Networking with current or former employees</li>
+                        </ul>
+
+                        <div class="tip-box">
+                            <div class="tip-label">💡 Pro Tip:</div>
+                            Spend 20-30 minutes researching each employer. Visit the facility if possible—this personal knowledge shines in interviews and demonstrates genuine commitment to the role.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Position Requirements Review Section -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection(this)">
+                    <span>📋 Position Requirements Review</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <p><strong>Re-read job advertisements thoroughly before interviews.</strong> This preparation ensures you understand what employers are seeking and can demonstrate relevant experience.</p>
+
+                        <p><strong>What to Note from Job Ads:</strong></p>
+                        <ul>
+                            <li>Required and desirable qualifications and skills</li>
+                            <li>Key responsibilities and duties</li>
+                            <li>Specific competencies emphasised</li>
+                            <li>Terminology used by the employer</li>
+                        </ul>
+
+                        <p><strong>Your Preparation:</strong></p>
+                        <p>Prepare specific examples from your experience demonstrating each requirement. Link your experience directly to what the job ad emphasises—this shows you've understood their priorities.</p>
+
+                        <div class="example-box">
+                            <div class="example-label">Example:</div>
+                            <p><strong>If job ad requires:</strong> "Experience working with diverse client populations"</p>
+                            <p><strong>Prepare example:</strong> Describe specific client types you've worked with (beginners, older adults, post-injury clients) with concrete outcomes.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Common Question Preparation Section -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection(this)">
+                    <span>❓ Common Question Preparation</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <p><strong>Whilst impossible to predict every interview question, certain questions appear frequently across fitness industry interviews.</strong> Preparing thoughtful responses builds confidence and ensures articulate delivery under pressure.</p>
+
+                        <p><strong>Common Interview Questions Include:</strong></p>
+                        <ul>
+                            <li>"Tell me about yourself"</li>
+                            <li>"Why are you interested in this role/facility?"</li>
+                            <li>"What are your strengths and weaknesses?"</li>
+                            <li>"Tell me about a time you handled a difficult situation"</li>
+                            <li>"Where do you see yourself in 5 years?"</li>
+                            <li>"How do you stay current with fitness industry trends?"</li>
+                            <li>"Describe your approach to client programming"</li>
+                            <li>"How do you handle feedback or criticism?"</li>
+                        </ul>
+
+                        <div class="tip-box">
+                            <div class="tip-label">💡 Pro Tip:</div>
+                            Practice responding to these questions aloud (not in your head). This develops fluency and confidence. Record yourself or practice with a friend for realistic feedback.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- STAR Technique Section -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection(this)">
+                    <span>⭐ STAR Technique Mastery</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <p><strong>The STAR technique (Situation, Task, Action, Result) provides structure for answering behavioural interview questions.</strong> This framework ensures comprehensive, organised responses demonstrating capabilities through concrete examples.</p>
+
+                        <div class="star-breakdown">
+                            <div class="star-item">
+                                <strong>Situation:</strong>
+                                Briefly describe the context or challenge faced
+                            </div>
+                            <div class="star-item">
+                                <strong>Task:</strong>
+                                Explain what needed accomplishing or solving
+                            </div>
+                            <div class="star-item">
+                                <strong>Action:</strong>
+                                Detail specific steps taken or approaches used
+                            </div>
+                            <div class="star-item">
+                                <strong>Result:</strong>
+                                Describe outcomes achieved or lessons learned
+                            </div>
+                        </div>
+
+                        <p><strong>Example Question:</strong> "Tell me about a time you dealt with a difficult client."</p>
+
+                        <div class="example-box">
+                            <div class="example-label">STAR Response:</div>
+                            <p><strong>Situation:</strong> "In my gym instructor role, I encountered a member who repeatedly used equipment unsafely despite previous gentle corrections."</p>
+                            <p><strong>Task:</strong> "I needed to address the behaviour firmly whilst maintaining a positive relationship."</p>
+                            <p><strong>Action:</strong> "I approached the member privately, explained the specific safety concerns, demonstrated proper technique, and offered to supervise their next few sessions to ensure they felt confident with correct form."</p>
+                            <p><strong>Result:</strong> "The member appreciated the private, supportive approach rather than public correction, improved their technique, and actually thanked me later for the help, becoming one of the gym's most engaged members."</p>
+                        </div>
+
+                        <p style="margin-top: 14px;"><strong>This response demonstrates:</strong> communication skills, problem-solving ability, safety awareness, and positive outcome achievement through specific, concrete examples.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Questions for Interviewers Section -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection(this)">
+                    <span>🎤 Questions to Ask Interviewers</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <p><strong>Candidates should prepare thoughtful questions for interviewers demonstrating interest, engagement, and critical thinking.</strong> This also helps you evaluate if the role is right for you.</p>
+
+                        <p><strong>Appropriate Question Topics:</strong></p>
+
+                        <p><strong>Role-Specific Details:</strong></p>
+                        <ul>
+                            <li>What does a typical day look like?</li>
+                            <li>What are the immediate priorities for this role?</li>
+                            <li>How is success measured in this position?</li>
+                            <li>What training and support is provided?</li>
+                        </ul>
+
+                        <p><strong>Facility Operations:</strong></p>
+                        <ul>
+                            <li>What are the membership demographics?</li>
+                            <li>How would you describe your facility culture?</li>
+                            <li>What is the team structure and size?</li>
+                        </ul>
+
+                        <p><strong>Growth and Development:</strong></p>
+                        <ul>
+                            <li>What advancement opportunities exist?</li>
+                            <li>How does the facility support CPD and specialist training?</li>
+                            <li>Are there mentorship opportunities?</li>
+                        </ul>
+
+                        <p><strong>Practical Logistics:</strong></p>
+                        <ul>
+                            <li>What is the scheduling process?</li>
+                            <li>How are clients allocated to trainers?</li>
+                            <li>What administrative responsibilities are involved?</li>
+                        </ul>
+
+                        <div class="tip-box">
+                            <div class="tip-label">⚠️ Important Notes:</div>
+                            <p style="margin: 0;">Avoid premature salary or benefit discussions in initial interviews unless employers raise these topics. Also avoid questions answered by basic employer research (publicly available information about facility services or history).</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Practical Preparations Section -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection(this)">
+                    <span>✓ Practical Interview Preparations</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <p><strong>Beyond interview content, practical preparations ensure a smooth, professional interview experience.</strong></p>
+
+                        <div class="checklist">
+                            <div class="checklist-title">Pre-Interview Checklist:</div>
+                            <ul class="checklist">
+                                <li>✓ Confirm interview time, location, and format (in-person, video, phone)</li>
+                                <li>✓ Plan travel route and timing—aim to arrive 10-15 minutes early</li>
+                                <li>✓ Prepare professional interview attire appropriate for fitness environments</li>
+                                <li>✓ Print multiple CV copies and supporting documents</li>
+                                <li>✓ Prepare 3-5 thoughtful questions to ask interviewers</li>
+                                <li>✓ Practice responses to common questions aloud for fluency</li>
+                                <li>✓ Ensure phone is charged and on silent</li>
+                                <li>✓ Test technology if video interview (camera, microphone, internet)</li>
+                            </ul>
+                        </div>
+
+                        <p style="margin-top: 14px;"><strong>Professional Attire:</strong> In fitness environments, "professional" often means smart casual. Wear clean, well-fitting clothes that reflect the facility's culture. If unsure, err on the side of slightly more formal—you can always be more relaxed once employed.</p>
+
+                        <div class="tip-box">
+                            <div class="tip-label">💡 Pro Tip:</div>
+                            Arrive early enough to visit the bathroom, take a few deep breaths, and settle your nerves. Don't rush into interviews stressed from last-minute travel.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleSection(element) {
+            const title = element;
+            const content = element.nextElementSibling;
+            const isExpanded = title.classList.contains('expanded');
+            
+            // Close all sections
+            document.querySelectorAll('.section-title').forEach(t => {
+                t.classList.remove('expanded');
+            });
+            document.querySelectorAll('.section-content').forEach(c => {
+                c.classList.remove('expanded');
+            });
+            
+            // Open clicked section if it wasn't already open
+            if (!isExpanded) {
+                title.classList.add('expanded');
+                content.classList.add('expanded');
+            }
+        }
+    </script>
+</body>
+</html>
