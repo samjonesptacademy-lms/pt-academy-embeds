@@ -1,1 +1,371 @@
+<!DOCTYPE html>
+<html style="background: #f8f9fa;">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Financial Planning and Professional Sustainability</title>
+<style>
+* {box-sizing: border-box; margin: 0; padding: 0;}
+html, body {background: #f8f9fa; min-height: 100vh;}
+body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px; opacity: 1; visibility: visible;}
+.container {max-width: 1000px; margin: 0 auto;}
+.carousel-wrapper {background: white; border-radius: 12px; padding: 40px; box-shadow: 0 2px 12px rgba(0,0,0,0.1); position: relative;}
+.carousel-header {text-align: center; margin-bottom: 30px; padding-bottom: 20px; border-bottom: 2px solid #e9ecef;}
+.carousel-slide-number {font-size: 14px; font-weight: 700; color: #C6A906; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 10px;}
+.carousel-progress {display: flex; gap: 8px; justify-content: center; margin-bottom: 15px;}
+.progress-dot {width: 10px; height: 10px; border-radius: 50%; background: #e9ecef; transition: all 0.3s ease;}
+.progress-dot.active {background: #C6A906; width: 24px; border-radius: 5px;}
+.section {display: none; min-height: 500px;}
+.section.active {display: block; animation: fadeIn 0.5s ease;}
+@keyframes fadeIn {
+from {opacity: 0; transform: translateX(20px);}
+to {opacity: 1; transform: translateX(0);}
+}
+.carousel-nav {display: flex; justify-content: space-between; align-items: center; margin-top: 40px; padding-top: 30px; border-top: 2px solid #e9ecef;}
+.nav-button {background: linear-gradient(135deg, #C6A906, #e0c040); color: white; border: none; padding: 14px 35px; border-radius: 25px; font-size: 16px; font-weight: 700; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 10px;}
+.nav-button:hover:not(:disabled) {transform: translateY(-2px); box-shadow: 0 4px 15px rgba(198,169,6,0.3);}
+.nav-button:disabled {background: #ccc; cursor: not-allowed; opacity: 0.5;}
+.section-title {font-size: 24px; font-weight: 700; color: #333; margin-bottom: 20px;}
+.section-text {font-size: 15px; line-height: 1.8; color: #555; margin-bottom: 15px;}
+.interactive-card {background: linear-gradient(135deg, #fff8e1 0%, #fffbf0 100%); border: 3px solid #C6A906; border-radius: 12px; padding: 25px; margin: 20px 0; cursor: pointer; transition: all 0.3s ease;}
+.interactive-card:hover {transform: translateY(-2px); box-shadow: 0 4px 15px rgba(198,169,6,0.3);}
+.card-header {display: flex; align-items: center; justify-content: space-between; margin-bottom: 15px;}
+.card-title {font-size: 20px; font-weight: 700; color: #C6A906;}
+.card-icon {font-size: 32px;}
+.card-subtitle {font-size: 15px; color: #666; margin-bottom: 15px; line-height: 1.6;}
+.card-content {display: none; margin-top: 20px;}
+.card-content.active {display: block;}
+.trainer-comparison {display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 20px;}
+.trainer-box {background: white; border: 2px solid #e9ecef; border-radius: 8px; padding: 20px;}
+.trainer-box.revealed {border-color: #C6A906;}
+.trainer-name {font-size: 18px; font-weight: 700; margin-bottom: 10px;}
+.trainer-box-a .trainer-name {color: #e74c3c;}
+.trainer-box-b .trainer-name {color: #4caf50;}
+.trainer-decision {font-size: 14px; color: #666; margin-bottom: 15px;}
+.trainer-decision li {margin-bottom: 5px;}
+.reveal-text {display: none; background: #f8f9fa; padding: 15px; border-radius: 6px; margin-top: 15px; font-size: 14px; line-height: 1.6; color: #333;}
+.reveal-text.active {display: block;}
+.flip-card-container {perspective: 1000px; height: 300px; margin: 20px 0;}
+.flip-card-inner {position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; cursor: pointer;}
+.flip-card-container.flipped .flip-card-inner {transform: rotateY(180deg);}
+.flip-card-front, .flip-card-back {position: absolute; width: 100%; height: 100%; backface-visibility: hidden; border-radius: 12px; padding: 30px; display: flex; flex-direction: column; justify-content: center; align-items: center;}
+.flip-card-front {background: linear-gradient(135deg, #C6A906, #e0c040); color: white;}
+.flip-card-back {background: white; border: 3px solid #C6A906; transform: rotateY(180deg);}
+.flip-title {font-size: 22px; font-weight: 700; margin-bottom: 20px; text-align: center;}
+.flip-scenario {font-size: 16px; line-height: 1.7; margin-bottom: 20px; text-align: center;}
+.flip-instruction {font-size: 14px; opacity: 0.9; margin-top: 20px;}
+.checklist {margin: 20px 0;}
+.checklist-item {background: white; border: 2px solid #e9ecef; border-radius: 8px; padding: 15px 20px; margin-bottom: 10px; cursor: pointer; transition: all 0.3s ease; display: flex; align-items: center; gap: 15px;}
+.checklist-item:hover {border-color: #C6A906;}
+.checklist-item.checked {border-color: #4caf50; background: #e8f5e9;}
+.checkbox {width: 24px; height: 24px; border: 2px solid #ccc; border-radius: 4px; display: flex; align-items: center; justify-content: center; transition: all 0.3s ease; flex-shrink: 0;}
+.checklist-item.checked .checkbox {background: #4caf50; border-color: #4caf50; color: white;}
+.checklist-text {font-size: 15px; color: #333; flex: 1;}
+.score-display {background: linear-gradient(135deg, #C6A906, #e0c040); color: white; padding: 20px; border-radius: 8px; text-align: center; margin: 20px 0;}
+.score-number {font-size: 48px; font-weight: 700; margin-bottom: 5px;}
+.score-label {font-size: 16px; margin-bottom: 15px;}
+.score-feedback {font-size: 15px; line-height: 1.6; background: rgba(255,255,255,0.2); padding: 15px; border-radius: 6px;}
+.steps-container {margin: 20px 0;}
+.step-item {background: white; border: 2px solid #e9ecef; border-radius: 8px; padding: 20px; margin-bottom: 12px; cursor: pointer; transition: all 0.3s ease;}
+.step-item:hover {border-color: #C6A906;}
+.step-item.revealed {border-color: #C6A906; background: #fffbf0;}
+.step-header {display: flex; align-items: center; gap: 15px;}
+.step-number {width: 40px; height: 40px; background: #C6A906; color: white; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex-shrink: 0;}
+.step-title {font-size: 18px; font-weight: 700; color: #333;}
+.step-content {display: none; margin-top: 15px; padding-top: 15px; border-top: 2px solid #e9ecef; font-size: 15px; line-height: 1.7; color: #555;}
+.step-item.revealed .step-content {display: block;}
+.scenario-quiz {margin: 20px 0;}
+.quiz-options {margin: 20px 0;}
+.quiz-option {background: white; border: 2px solid #e9ecef; border-radius: 8px; padding: 18px 20px; margin-bottom: 12px; cursor: pointer; transition: all 0.3s ease; font-size: 15px; color: #333;}
+.quiz-option:hover {border-color: #C6A906;}
+.quiz-option.selected {border-color: #C6A906; background: #fffbf0;}
+.quiz-option.correct {border-color: #4caf50; background: #e8f5e9;}
+.quiz-option.incorrect {border-color: #e74c3c; background: #ffebee;}
+.quiz-feedback {display: none; background: #f8f9fa; padding: 20px; border-radius: 8px; margin-top: 20px;}
+.quiz-feedback.active {display: block;}
+.feedback-title {font-size: 18px; font-weight: 700; margin-bottom: 10px;}
+.feedback-title.correct {color: #2e7d32;}
+.feedback-title.incorrect {color: #c62828;}
+.feedback-text {font-size: 15px; line-height: 1.7; color: #333;}
+@media (max-width: 768px) {
+.trainer-comparison {grid-template-columns: 1fr;}
+}
+</style>
+</head>
+<body>
+<div class="container">
+<div class="carousel-wrapper">
+<div class="carousel-header">
+<div class="carousel-slide-number" id="slideNumber">Section 1 of 5</div>
+<div class="carousel-progress">
+<div class="progress-dot active"></div>
+<div class="progress-dot"></div>
+<div class="progress-dot"></div>
+<div class="progress-dot"></div>
+<div class="progress-dot"></div>
+</div>
+</div>
 
+<!-- Section 1: Retirement Planning -->
+<div class="section active">
+<div class="section-text" style="background: #f8f9fa; padding: 20px; border-radius: 8px; margin-bottom: 25px; border-left: 4px solid #C6A906;">Long-term financial sustainability requires planning beyond immediate income and expenses to address retirement provision, major life events, business growth investment, and professional development funding — especially for self-employed personal trainers.</div>
+<div class="section-title">Retirement Planning for Self-Employed Trainers</div>
+<div class="section-text">Self-employed trainers must establish personal pension arrangements as they receive no employer contributions. The State Pension provides baseline retirement income (currently £221.20 weekly for full State Pension in 2024/25, requiring 35 qualifying years of National Insurance contributions) but rarely proves sufficient for comfortable retirement.</div>
+<div class="section-text">Private pension contributions receive tax relief, reducing immediate tax liability whilst building retirement funds. For example, a basic-rate taxpayer contributing £100 to a pension effectively costs £80 due to 20% tax relief, whilst higher-rate taxpayers receive additional relief through Self Assessment. Self-employed individuals should aim to contribute 10-15% or more of income toward retirement depending on age and retirement expectations.</div>
+<div class="interactive-card" onclick="toggleRetirementCard()">
+<div class="card-header">
+<div class="card-title">💰 Retirement Reality Check</div>
+<div class="card-icon">▼</div>
+</div>
+<div class="card-subtitle">Two personal trainers earn the same income throughout their careers — but make very different retirement decisions. Click to reveal their futures.</div>
+<div class="card-content" id="retirementContent">
+<div class="trainer-comparison">
+<div class="trainer-box trainer-box-a" onclick="event.stopPropagation(); revealTrainer('a')">
+<div class="trainer-name">Trainer A: "I'll Sort It Later"</div>
+<ul class="trainer-decision">
+<li>Makes no private pension contributions</li>
+<li>Relies solely on the State Pension</li>
+</ul>
+<div class="reveal-text" id="revealA">
+<strong>At retirement:</strong> Trainer A receives approximately £11,500 per year from the State Pension (based on current rates). This provides a basic income but offers little flexibility, comfort, or protection against rising living costs.
+</div>
+</div>
+<div class="trainer-box trainer-box-b" onclick="event.stopPropagation(); revealTrainer('b')">
+<div class="trainer-name">Trainer B: "Future Me Matters"</div>
+<ul class="trainer-decision">
+<li>Contributes £250 per month into a private pension</li>
+<li>Receives tax relief on contributions</li>
+</ul>
+<div class="reveal-text" id="revealB">
+<strong>At retirement:</strong> Over a 30-year career, regular £250 monthly contributions (£200 after tax relief) could build a pension pot of approximately £180,000-£220,000 (assuming moderate growth). This could provide an annual retirement income of £9,000-£11,000 in addition to the State Pension — nearly doubling total retirement income compared to Trainer A and providing significantly greater financial security and flexibility.
+</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Section 2: Professional Development -->
+<div class="section">
+<div class="section-title">Professional Development Investment</div>
+<div class="section-text">Ongoing professional development maintains competence, expands service capabilities, and enhances earning potential. Allocating portions of income toward CPD, specialised certifications, and skill development represents investment in business sustainability rather than discretionary expense.</div>
+<div class="flip-card-container" onclick="this.classList.toggle('flipped')">
+<div class="flip-card-inner">
+<div class="flip-card-front">
+<div class="flip-title">Is This Course an Expense or an Investment?</div>
+<div class="flip-scenario">You are considering a £1,200 specialist qualification that allows you to charge an additional £10 per session.<br><br>If you gain just 2 additional sessions per week, how long will it take for this course to pay for itself?</div>
+<div class="flip-instruction">Click to reveal the calculation →</div>
+</div>
+<div class="flip-card-back">
+<div class="flip-title" style="color: #C6A906;">The Numbers</div>
+<div class="flip-scenario" style="color: #333; font-weight: 600;">£10 × 2 sessions × 52 weeks = £1,040 per year<br><br>This means the qualification almost pays for itself within 12 months — before considering long-term income gains.</div>
+<div style="background: #fff8e1; padding: 15px; border-radius: 6px; margin-top: 20px; font-size: 14px; color: #856404;"><strong>Takeaway:</strong> Professional development should be evaluated based on earning potential, not just upfront cost.</div>
+</div>
+</div>
+</div>
+</div>
+
+<!-- Section 3: Personal Financial Management -->
+<div class="section">
+<div class="section-title">Personal Financial Management</div>
+<div class="section-text">Personal trainers should maintain clear separation between business and personal finances, establish personal budgets and spending plans, address personal debt systematically, build emergency funds for personal circumstances, and ensure appropriate personal insurance coverage (health, life, critical illness, income protection).</div>
+<div class="section-text">Financial stress from poor personal money management undermines business focus and decision-making. Holistic financial health encompasses both business financial management and personal financial security.</div>
+<div style="background: #fffbf0; border: 2px solid #C6A906; border-radius: 8px; padding: 20px; margin: 20px 0;">
+<div style="font-size: 20px; font-weight: 700; color: #C6A906; margin-bottom: 15px;">✓ Are Your Personal and Business Finances Actually Separate?</div>
+<div class="checklist">
+<div class="checklist-item" onclick="toggleCheck(this)">
+<div class="checkbox"></div>
+<div class="checklist-text">I use a separate business bank account</div>
+</div>
+<div class="checklist-item" onclick="toggleCheck(this)">
+<div class="checkbox"></div>
+<div class="checklist-text">I pay myself intentionally rather than spending business money casually</div>
+</div>
+<div class="checklist-item" onclick="toggleCheck(this)">
+<div class="checkbox"></div>
+<div class="checklist-text">I have a personal emergency fund</div>
+</div>
+<div class="checklist-item" onclick="toggleCheck(this)">
+<div class="checkbox"></div>
+<div class="checklist-text">I have personal insurance cover beyond business insurance</div>
+</div>
+<div class="checklist-item" onclick="toggleCheck(this)">
+<div class="checkbox"></div>
+<div class="checklist-text">I know my personal monthly living costs</div>
+</div>
+</div>
+<div class="score-display">
+<div class="score-number" id="scoreNumber">0</div>
+<div class="score-label">out of 5 checked</div>
+<div class="score-feedback" id="scoreFeedback">Select items above to assess your financial foundation</div>
+</div>
+<div style="text-align: center; font-size: 15px; color: #666; margin-top: 15px;"><strong>Closing line:</strong> Weak personal financial foundations eventually undermine business performance — even when the business itself is profitable.</div>
+</div>
+</div>
+
+<!-- Section 4: Budgeting -->
+<div class="section">
+<div class="section-title">Budgeting and Financial Forecasting</div>
+<div class="section-text">Proactive budgeting and forecasting enable trainers to anticipate financial challenges, plan for significant expenses, and make informed business decisions based on realistic financial projections.</div>
+<div class="section-text">Annual or quarterly budgets project expected income and expenses, identifying periods requiring particular attention or adjustment.</div>
+<div style="background: #fffbf0; border: 2px solid #C6A906; border-radius: 8px; padding: 20px; margin: 20px 0;">
+<div style="font-size: 20px; font-weight: 700; color: #C6A906; margin-bottom: 20px;">📊 Path to Building a Realistic Trainer Budget</div>
+<div class="steps-container">
+<div class="step-item" onclick="this.classList.toggle('revealed')">
+<div class="step-header">
+<div class="step-number">1</div>
+<div class="step-title">Income Projection</div>
+</div>
+<div class="step-content">Start with current clients, not ideal outcomes. Conservative income projections prevent financial overcommitment. Base projections on current client base, expected retention rates, anticipated new client acquisition, planned pricing changes, and seasonal patterns.</div>
+</div>
+<div class="step-item" onclick="this.classList.toggle('revealed')">
+<div class="step-header">
+<div class="step-number">2</div>
+<div class="step-title">Expense Mapping</div>
+</div>
+<div class="step-content">Identify fixed, variable, and annual costs. Missed expenses create false confidence. Catalogue all business costs including fixed expenses (rent, insurance, memberships), variable expenses (travel, marketing), and periodic expenses (equipment replacement, annual CPD).</div>
+</div>
+<div class="step-item" onclick="this.classList.toggle('revealed')">
+<div class="step-header">
+<div class="step-number">3</div>
+<div class="step-title">Cash Flow Timing</div>
+</div>
+<div class="step-content">Knowing when money leaves your account matters as much as how much. Determine when significant payments occur (tax deadlines, insurance renewals, rent payments) to plan cash availability around these commitments.</div>
+</div>
+<div class="step-item" onclick="this.classList.toggle('revealed')">
+<div class="step-header">
+<div class="step-number">4</div>
+<div class="step-title">Target Setting</div>
+</div>
+<div class="step-content">Budgets without targets are records, not plans. Establish profit targets, savings goals, and investment priorities to provide direction for business decisions and performance assessment.</div>
+</div>
+</div>
+<div style="text-align: center; font-size: 15px; color: #666; margin-top: 20px;"><strong>Final note:</strong> A budget is a planning tool, not a restriction.</div>
+</div>
+</div>
+
+<!-- Section 5: Budget Monitoring -->
+<div class="section">
+<div class="section-title">Monitoring Budget Performance</div>
+<div class="section-text">Regular comparison of actual financial performance against budgeted projections reveals variances requiring attention or adjustment. Significant deviations from projections might indicate opportunities for increased income, areas where costs are higher than expected requiring management, or unrealistic initial assumptions requiring budget revision.</div>
+<div class="section-text">Budget monitoring should occur monthly or quarterly, with annual comprehensive reviews assessing overall business financial health and informing following year's budgets.</div>
+<div class="scenario-quiz">
+<div style="background: #fffbf0; border: 2px solid #C6A906; border-radius: 8px; padding: 20px;">
+<div style="font-size: 20px; font-weight: 700; color: #C6A906; margin-bottom: 15px;">🤔 Is This a Problem — or a Signal?</div>
+<div style="font-size: 16px; color: #333; margin-bottom: 20px; line-height: 1.7;"><strong>Scenario:</strong> Your actual income is 20% higher than budgeted, but your expenses are also significantly higher.</div>
+<div class="quiz-options">
+<div class="quiz-option" onclick="selectAnswer(this, false)">A) This means the budget failed</div>
+<div class="quiz-option" onclick="selectAnswer(this, true)">B) This suggests growth but poor cost control</div>
+<div class="quiz-option" onclick="selectAnswer(this, false)">C) This is always a positive outcome</div>
+</div>
+<div class="quiz-feedback" id="quizFeedback">
+<div class="feedback-title">Correct!</div>
+<div class="feedback-text"><strong>Answer: B — Growth without cost control reduces profitability.</strong><br><br>Variances are not inherently good or bad. They are signals requiring interpretation. Higher income is positive, but uncontrolled expense growth can eliminate the benefit of increased revenue.</div>
+</div>
+</div>
+</div>
+</div>
+</div>
+<script>
+(function() {
+document.documentElement.style.visibility = 'visible';
+document.body.style.visibility = 'visible';
+})();
+
+window.toggleRetirementCard = function() {
+const content = document.getElementById('retirementContent');
+content.classList.toggle('active');
+};
+
+window.revealTrainer = function(trainer) {
+const reveal = document.getElementById('reveal' + trainer.toUpperCase());
+reveal.classList.add('active');
+reveal.parentElement.classList.add('revealed');
+};
+
+let checkedCount = 0;
+window.toggleCheck = function(item) {
+item.classList.toggle('checked');
+const checkbox = item.querySelector('.checkbox');
+if (item.classList.contains('checked')) {
+checkbox.innerHTML = '✓';
+checkedCount++;
+} else {
+checkbox.innerHTML = '';
+checkedCount--;
+}
+updateScore();
+};
+
+function updateScore() {
+document.getElementById('scoreNumber').textContent = checkedCount;
+const feedback = document.getElementById('scoreFeedback');
+if (checkedCount <= 2) {
+feedback.textContent = '⚠️ High financial stress risk — Your personal and business finances may not be adequately separated.';
+} else if (checkedCount <= 4) {
+feedback.textContent = '⚡ Moderate risk — You have some foundations in place but gaps remain.';
+} else {
+feedback.textContent = '✓ Strong financial foundation — You have clear separation between personal and business finances.';
+}
+}
+
+window.selectAnswer = function(option, isCorrect) {
+const options = document.querySelectorAll('.quiz-option');
+options.forEach(opt => {
+opt.style.pointerEvents = 'none';
+opt.classList.remove('selected');
+});
+option.classList.add('selected');
+if (isCorrect) {
+option.classList.add('correct');
+} else {
+option.classList.add('incorrect');
+}
+const feedback = document.getElementById('quizFeedback');
+feedback.classList.add('active');
+const title = feedback.querySelector('.feedback-title');
+if (isCorrect) {
+title.textContent = '✓ Correct!';
+title.classList.add('correct');
+} else {
+title.textContent = '✗ Not Quite';
+title.classList.add('incorrect');
+}
+};
+
+let currentSlide = 0;
+const totalSlides = 5;
+
+window.changeSlide = function(direction) {
+const slides = document.querySelectorAll('.section');
+const dots = document.querySelectorAll('.progress-dot');
+slides[currentSlide].classList.remove('active');
+dots[currentSlide].classList.remove('active');
+currentSlide += direction;
+slides[currentSlide].classList.add('active');
+dots[currentSlide].classList.add('active');
+document.getElementById('slideNumber').textContent = 'Section ' + (currentSlide + 1) + ' of ' + totalSlides;
+const prevBtn = document.getElementById('prevBtn');
+const nextBtn = document.getElementById('nextBtn');
+prevBtn.disabled = currentSlide === 0;
+if (currentSlide === totalSlides - 1) {
+nextBtn.style.display = 'none';
+} else {
+nextBtn.style.display = 'flex';
+nextBtn.disabled = false;
+}
+window.scrollTo(0, 0);
+};
+</script>
+<div class="carousel-nav">
+<button class="nav-button" id="prevBtn" onclick="changeSlide(-1)" disabled>
+<span>←</span> Previous
+</button>
+<button class="nav-button" id="nextBtn" onclick="changeSlide(1)">
+Next <span>→</span>
+</button>
+</div>
+</div>
+</div>
+</body>
+</html>
