@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Tax Rates and Thresholds</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #f5f5f5 0%, #e8e8e8 100%);
+            padding: 20px;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #C6A906 0%, #a68905 100%);
+            color: white;
+            padding: 30px 20px;
+            text-align: center;
+        }
+
+        .header h1 {
+            font-size: 24px;
+            margin-bottom: 8px;
+            font-weight: 600;
+        }
+
+        .header p {
+            font-size: 14px;
+            opacity: 0.95;
+        }
+
+        .content {
+            padding: 30px 20px;
+        }
+
+        .important-note {
+            background: #fffbf0;
+            border-left: 4px solid #C6A906;
+            padding: 14px;
+            margin-bottom: 25px;
+            border-radius: 6px;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #555;
+        }
+
+        .important-note strong {
+            color: #333;
+            display: block;
+            margin-bottom: 6px;
+        }
+
+        .section {
+            margin-bottom: 16px;
+        }
+
+        .section-title {
+            font-size: 15px;
+            font-weight: 700;
+            color: white;
+            padding: 14px 16px;
+            background: linear-gradient(135deg, #C6A906 0%, #a68905 100%);
+            border-radius: 6px;
+            cursor: pointer;
+            user-select: none;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            transition: all 0.3s ease;
+        }
+
+        .section-title:hover {
+            box-shadow: 0 4px 12px rgba(198, 169, 6, 0.3);
+            transform: translateX(4px);
+        }
+
+        .toggle-icon {
+            font-size: 16px;
+            transition: transform 0.3s ease;
+        }
+
+        .section-title.expanded .toggle-icon {
+            transform: rotate(180deg);
+        }
+
+        .section-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease, padding 0.3s ease;
+        }
+
+        .section-content.expanded {
+            max-height: 3000px;
+            padding: 16px;
+        }
+
+        .section-body {
+            background: #f9f9f9;
+            border-left: 4px solid #C6A906;
+            border-radius: 0 6px 6px 0;
+            line-height: 1.7;
+            color: #555;
+        }
+
+        .section-body p {
+            margin-bottom: 12px;
+            font-size: 13px;
+        }
+
+        .section-body strong {
+            color: #333;
+        }
+
+        .section-body ul {
+            margin-left: 20px;
+            margin-bottom: 12px;
+        }
+
+        .section-body li {
+            margin-bottom: 8px;
+            font-size: 13px;
+            color: #555;
+        }
+
+        .table-responsive {
+            overflow-x: auto;
+            margin: 14px 0;
+        }
+
+        .tax-table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+            border-radius: 6px;
+            overflow: hidden;
+            font-size: 12px;
+        }
+
+        .tax-table th {
+            background: #C6A906;
+            color: white;
+            padding: 10px 12px;
+            text-align: left;
+            font-weight: 700;
+        }
+
+        .tax-table td {
+            padding: 10px 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .tax-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+
+        .tax-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .example-box {
+            background: white;
+            border-left: 4px solid #2196F3;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 4px;
+            font-size: 12px;
+            line-height: 1.6;
+            color: #444;
+        }
+
+        .example-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #2196F3;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .example-text {
+            margin: 0;
+        }
+
+        .tip-box {
+            background: #e8f5e9;
+            border-left: 4px solid #27ae60;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 4px;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .tip-label {
+            font-size: 11px;
+            font-weight: 700;
+            color: #27ae60;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 6px;
+        }
+
+        .key-points {
+            background: white;
+            border-left: 4px solid #C6A906;
+            padding: 12px;
+            margin: 12px 0;
+            border-radius: 4px;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+
+        .expand-all {
+            text-align: center;
+            margin-bottom: 25px;
+        }
+
+        .expand-all button {
+            background: #C6A906;
+            color: white;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 6px;
+            font-weight: 600;
+            font-size: 13px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .expand-all button:hover {
+            background: #a68905;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 20px;
+            }
+
+            .content {
+                padding: 20px 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>Tax Rates and Thresholds</h1>
+            <p>2025/26 Tax Year Information</p>
+        </div>
+
+        <div class="content">
+            <div class="important-note">
+                <strong>⚠️ Important Note:</strong>
+                Tax rates, thresholds, and allowances change periodically, usually announced in annual Budget statements. The rates provided below are accurate for the 2025/26 tax year (6 April 2025 to 5 April 2026). Always verify current rates at www.gov.uk/income-tax-rates or consult HMRC guidance before making financial decisions.
+            </div>
+
+            <div class="expand-all">
+                <button onclick="expandAll()">Expand All Sections</button>
+            </div>
+
+            <!-- Personal Allowance Section -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection(this)">
+                    <span>💷 Personal Allowance</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <p><strong>The Personal Allowance for 2025/26 is £12,570</strong>, representing the amount individuals can earn tax-free before income tax applies. This is the same for all UK taxpayers regardless of employment status.</p>
+
+                        <p>Income above this threshold is taxed according to progressive bands. This means you only pay tax on the income that exceeds £12,570.</p>
+
+                        <div class="example-box">
+                            <div class="example-label">Example:</div>
+                            <p class="example-text">A personal trainer earning £35,000 annually would pay no tax on the first £12,570, then 20% tax on the remaining £22,430 (£35,000 - £12,570), resulting in £4,486 income tax liability.</p>
+                        </div>
+
+                        <p><strong>Important note for higher earners:</strong> Individuals earning above £100,000 experience Personal Allowance reduction at a rate of £1 for every £2 earned above this threshold, effectively creating a 60% marginal tax rate between £100,000 and £125,140. The Personal Allowance completely disappears at £125,140.</p>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Income Tax Bands Section -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection(this)">
+                    <span>📊 Income Tax Bands</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <p>Income above the Personal Allowance is taxed according to progressive bands:</p>
+
+                        <div class="table-responsive">
+                            <table class="tax-table">
+                                <thead>
+                                    <tr>
+                                        <th>Tax Band</th>
+                                        <th>Income Range</th>
+                                        <th>Tax Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>Basic Rate</td>
+                                        <td>£12,571 to £50,270</td>
+                                        <td>20%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Higher Rate</td>
+                                        <td>£50,271 to £125,140</td>
+                                        <td>40%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Additional Rate</td>
+                                        <td>Above £125,140</td>
+                                        <td>45%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <p><strong>Progressive taxation means:</strong> You don't jump to a higher rate for all your income. For example, if you earn £55,000, you pay 20% on the portion between £12,571-£50,270, then 40% only on the portion between £50,271-£55,000.</p>
+
+                        <div class="tip-box">
+                            <div class="tip-label">💡 Key Point:</div>
+                            Tax bands are progressive, meaning higher earners pay more tax overall, but only at the higher rate for income that falls into that band.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Scottish Tax Rates Section -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection(this)">
+                    <span>🏴󠁧󠁢󠁳󠁣󠁴󠁿 Scottish Tax Rates</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <p><strong>Scotland operates different income tax rates and bands for Scottish taxpayers</strong>, determined by residency.</p>
+
+                        <p>Scottish rates for the 2025/26 tax year differ from the rest of the UK. If you are a Scottish taxpayer or work with Scottish clients, you should refer to <strong>www.gov.uk/scottish-income-tax</strong> for current rates and thresholds specific to Scotland.</p>
+
+                        <div class="tip-box">
+                            <div class="tip-label">⚠️ Note:</div>
+                            Scottish taxpayers should always check Scottish rates rather than UK rates, as bands and percentages differ significantly.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- National Insurance Section -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection(this)">
+                    <span>🛡️ National Insurance Overview</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <p><strong>National Insurance (NI) represents a separate contribution system funding state benefits including State Pension, unemployment support, and certain health provisions.</strong></p>
+
+                        <p>Unlike income tax, National Insurance operates differently for employed and self-employed individuals. It's important to understand which type applies to your situation.</p>
+
+                        <div class="key-points">
+                            <strong>Key difference:</strong> National Insurance is NOT the same as income tax. It's a separate system with different rates, thresholds, and rules depending on your employment status.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Employee NI Section -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection(this)">
+                    <span>💼 National Insurance for PAYE Employees</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <p><strong>Class 1 National Insurance for employees:</strong></p>
+
+                        <div class="table-responsive">
+                            <table class="tax-table">
+                                <thead>
+                                    <tr>
+                                        <th>Income Range</th>
+                                        <th>Employee NI Rate</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>£0 to £12,570</td>
+                                        <td>0% (below Lower Earnings Limit)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>£12,571 to £50,270</td>
+                                        <td>8%</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Above £50,270</td>
+                                        <td>2%</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <p><strong>Key points about employee NI:</strong></p>
+                        <ul>
+                            <li>Employees pay Class 1 National Insurance at 8% on earnings between £12,570 and £50,270 annually, and 2% on earnings above £50,270</li>
+                            <li>Employers also pay National Insurance on employee earnings (13.8% on earnings above £9,100 annually), though this does not directly affect employee take-home pay</li>
+                            <li>Employee National Insurance is deducted automatically through PAYE alongside income tax, appearing on payslips as "NI" or "National Insurance"</li>
+                            <li>Unlike income tax, no personal allowance exists for National Insurance</li>
+                            <li>Earnings below £12,570 annually (the Lower Earnings Limit) do not attract NI charges, but still count toward State Pension qualification</li>
+                        </ul>
+
+                        <div class="example-box">
+                            <div class="example-label">Example:</div>
+                            <p class="example-text">An employee earning £30,000 would pay 8% National Insurance on £17,430 (£30,000 - £12,570) = £1,394.40 annually, in addition to their income tax.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Self-Employed NI Section -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection(this)">
+                    <span>🏢 National Insurance for Self-Employed</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <p><strong>Self-employed individuals pay two types of National Insurance: Class 2 and Class 4</strong>, depending on trading profits.</p>
+
+                        <div class="table-responsive">
+                            <table class="tax-table">
+                                <thead>
+                                    <tr>
+                                        <th>Annual Trading Profits</th>
+                                        <th>National Insurance Type</th>
+                                        <th>Rate (2025/26)</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td>£0 to £6,844</td>
+                                        <td>Class 2</td>
+                                        <td>£3.50 per week (voluntary)</td>
+                                    </tr>
+                                    <tr>
+                                        <td>£6,845 to £12,569</td>
+                                        <td>Class 2</td>
+                                        <td>£0 per week - you don't need to pay but are counted as making Class 2 contributions to protect your NI record</td>
+                                    </tr>
+                                    <tr>
+                                        <td>£12,570 to £50,270</td>
+                                        <td>Class 4</td>
+                                        <td>6% of profits between £12,570-£50,270</td>
+                                    </tr>
+                                    <tr>
+                                        <td>Over £50,270</td>
+                                        <td>Class 4</td>
+                                        <td>6% of profits between £12,570-£50,270 and 2% of profits above £50,270</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+
+                        <p><strong>Important distinctions:</strong></p>
+                        <ul>
+                            <li><strong>Class 2 NI</strong> is a fixed weekly amount (£3.50/week if £6,845-£12,569 annual profits) that contributes to State Pension eligibility</li>
+                            <li><strong>Class 4 NI</strong> is calculated as a percentage of profits and is charged alongside income tax through Self Assessment</li>
+                            <li>Self-employed National Insurance is calculated through Self Assessment tax returns and paid alongside income tax, typically in January and July following the tax year end</li>
+                            <li>Unlike employees, self-employed individuals do not have employer contributions supplementing their NI</li>
+                            <li>This is reflected in lower overall NI rates for self-employed individuals compared to combined employee and employer contributions</li>
+                        </ul>
+
+                        <div class="example-box">
+                            <div class="example-label">Example:</div>
+                            <p class="example-text">A self-employed person with £30,000 annual trading profits would pay Class 4 NI of 6% on £17,430 (£30,000 - £12,570) = £1,045.80, with no Class 2 due as profits exceed £12,570.</p>
+                        </div>
+
+                        <div class="tip-box">
+                            <div class="tip-label">💡 Key Point:</div>
+                            Self-employed individuals should register with HMRC and complete Self Assessment tax returns to ensure their NI and tax are calculated correctly and to protect their State Pension record.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Summary Section -->
+            <div class="section">
+                <div class="section-title" onclick="toggleSection(this)">
+                    <span>✓ Summary of Key Points</span>
+                    <span class="toggle-icon">▼</span>
+                </div>
+                <div class="section-content">
+                    <div class="section-body">
+                        <ul>
+                            <li><strong>Personal Allowance:</strong> £12,570 tax-free for all UK taxpayers in 2025/26</li>
+                            <li><strong>Basic Rate Tax:</strong> 20% on income between £12,571-£50,270</li>
+                            <li><strong>Higher Rate Tax:</strong> 40% on income between £50,271-£125,140</li>
+                            <li><strong>Additional Rate Tax:</strong> 45% on income above £125,140</li>
+                            <li><strong>Employee NI:</strong> 8% on earnings £12,571-£50,270, then 2% above £50,270</li>
+                            <li><strong>Self-Employed NI:</strong> Class 2 (fixed amount) and Class 4 (6% on profits)</li>
+                            <li><strong>Scottish taxpayers:</strong> Different rates apply - check www.gov.uk/scottish-income-tax</li>
+                            <li><strong>Always verify:</strong> Tax rates change annually - always check current rates before making financial decisions</li>
+                        </ul>
+
+                        <div class="important-note" style="margin-top: 16px;">
+                            <strong>Professional advice:</strong> For accurate tax planning and calculation of your specific tax liability, consult HMRC or a qualified tax advisor. The information here is for learning purposes only.
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function toggleSection(element) {
+            const title = element;
+            const content = element.nextElementSibling;
+            const isExpanded = title.classList.contains('expanded');
+            
+            // Close all sections
+            document.querySelectorAll('.section-title').forEach(t => {
+                t.classList.remove('expanded');
+            });
+            document.querySelectorAll('.section-content').forEach(c => {
+                c.classList.remove('expanded');
+            });
+            
+            // Open clicked section if it wasn't already open
+            if (!isExpanded) {
+                title.classList.add('expanded');
+                content.classList.add('expanded');
+            }
+        }
+
+        function expandAll() {
+            document.querySelectorAll('.section-title').forEach(t => {
+                t.classList.add('expanded');
+            });
+            document.querySelectorAll('.section-content').forEach(c => {
+                c.classList.add('expanded');
+            });
+        }
+    </script>
+</body>
+</html>
