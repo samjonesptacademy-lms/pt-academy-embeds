@@ -4,25 +4,71 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Tax Compliance Risks & Mitigations</title>
-
 <style>
-* {box-sizing: border-box; margin: 0; padding: 0;}
-html, body {background: #f8f9fa; min-height: 100vh;}
-body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; padding: 20px;}
-.compliance-container {max-width: 1200px; margin: 0 auto;}
-.header {text-align: center; margin-bottom: 40px;}
-.title {font-size: 28px; font-weight: 700; color: #333; margin-bottom: 10px;}
-.subtitle {font-size: 15px; color: #666; line-height: 1.6;}
-.legend {display: flex; justify-content: center; gap: 20px; flex-wrap: wrap; margin-bottom: 30px;}
-.legend-item {display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 600;}
-.legend-badge {width: 20px; height: 20px; border-radius: 4px;}
-.legend-badge.critical {background: #e74c3c;}
+* { 
+  box-sizing: border-box; 
+  margin: 0; 
+  padding: 0; 
+}
 
-.cards-grid {display: grid; grid-template-columns: repeat(3, 1fr); gap: 15px;}
+html, body { 
+  background: #f8f9fa; 
+  min-height: 100vh; 
+}
 
-.compliance-card {perspective: 1000px; cursor: pointer;}
-.card-inner {position: relative; width: 100%; min-height: 380px; transition: transform 0.6s; transform-style: preserve-3d;}
-.compliance-card.flipped .card-inner {transform: rotateY(180deg);}
+body { 
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+  padding: 20px; 
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.header {
+  text-align: center;
+  margin-bottom: 40px;
+}
+
+.title {
+  font-size: 28px;
+  font-weight: 700;
+  color: #333;
+  margin-bottom: 10px;
+}
+
+.subtitle {
+  font-size: 15px;
+  color: #666;
+  line-height: 1.6;
+}
+
+.cards-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px;
+  width: 100%;
+}
+
+.card {
+  width: 100%;
+  height: 380px;
+  cursor: pointer;
+  perspective: 1000px;
+}
+
+.card-inner {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  transition: transform 0.6s;
+  transform-style: preserve-3d;
+}
+
+.card.flipped .card-inner {
+  transform: rotateY(180deg);
+}
 
 .card-front,
 .card-back {
@@ -32,189 +78,274 @@ body {font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-s
   backface-visibility: hidden;
   border-radius: 12px;
   box-shadow: 0 4px 12px rgba(0,0,0,0.15);
-  padding: 20px;
+  padding: 24px;
   display: flex;
   flex-direction: column;
+  justify-content: space-between;
 }
 
-.card-front {background: #fff; border: 3px solid #e9ecef;}
-.card-back {transform: rotateY(180deg);}
-.card-back.critical {background: linear-gradient(135deg, #4caf50, #66bb6a); color: #fff;}
+.card-front {
+  background: white;
+  border: 2px solid #e9ecef;
+  color: #333;
+}
 
-.risk-icon {font-size: 40px; text-align: center; margin-bottom: 15px;}
-.risk-name {font-size: 18px; font-weight: 700; text-align: center; color: #333; margin-bottom: 20px;}
-.risk-description {font-size: 13px; color: #666; text-align: center; margin-bottom: 10px;}
-.click-instruction {font-size: 12px; text-align: center; color: #999; margin-top: auto;}
+.card-back {
+  transform: rotateY(180deg);
+  background: linear-gradient(135deg, #4caf50, #66bb6a);
+  color: white;
+  padding: 20px;
+}
 
-.status-badge {display: inline-block; padding: 6px 12px; border-radius: 12px; font-size: 11px; font-weight: 700; margin-bottom: 12px;}
-.status-badge.critical {background: rgba(255,255,255,0.3);}
+.card-icon {
+  font-size: 48px;
+  text-align: center;
+  margin-bottom: 16px;
+}
 
-.back-content {font-size: 13px; line-height: 1.6; overflow-y: auto;}
-.back-content-section {margin-bottom: 14px;}
-.back-content-title {font-size: 12px; font-weight: 700; margin-bottom: 8px;}
-.back-content ul {list-style: none;}
-.back-content li {padding-left: 18px; position: relative; margin-bottom: 5px; font-size: 12px;}
-.back-content li::before {content: "✓"; position: absolute; left: 0; font-weight: 700;}
+.card-title {
+  font-size: 18px;
+  font-weight: 700;
+  text-align: center;
+  margin-bottom: 16px;
+}
+
+.card-description {
+  font-size: 13px;
+  line-height: 1.6;
+  text-align: center;
+  flex: 1;
+}
+
+.card-hint {
+  font-size: 11px;
+  text-align: center;
+  color: #999;
+  margin-top: 12px;
+}
+
+.mitigation-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.mitigation-list li {
+  padding-left: 18px;
+  position: relative;
+  margin-bottom: 6px;
+}
+
+.mitigation-list li:before {
+  content: "✓";
+  position: absolute;
+  left: 0;
+  font-weight: 700;
+}
+
+.mitigation-title {
+  font-size: 12px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 12px;
+  opacity: 0.95;
+}
 
 @media (max-width: 1024px) {
-  .cards-grid {grid-template-columns: repeat(2, 1fr);}
+  .cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
+
 @media (max-width: 768px) {
-  .cards-grid {grid-template-columns: 1fr;}
+  .cards-grid {
+    grid-template-columns: 1fr;
+  }
+  
+  .card {
+    height: 380px;
+  }
 }
 </style>
 </head>
-
 <body>
-<div class="compliance-container">
+
+<div class="container">
   <div class="header">
     <h1 class="title">Tax Compliance Risks & Mitigations</h1>
     <p class="subtitle">Click each card to reveal how to prevent this risk</p>
   </div>
 
-  <div class="legend">
-    <div class="legend-item">
-      <div class="legend-badge critical"></div>
-      <span>🔴 Paired with Mitigation Strategy</span>
-    </div>
-  </div>
-
   <div class="cards-grid">
 
-    <!-- CARD 1 -->
-    <div class="compliance-card" onclick="this.classList.toggle('flipped')">
+    <!-- Card 1: Missed Deadlines -->
+    <div class="card" onclick="this.classList.toggle('flipped')">
       <div class="card-inner">
         <div class="card-front">
-          <div class="risk-icon">⏰</div>
-          <div class="risk-name">Missed Deadlines</div>
-          <div class="risk-description">Late submission = automatic £100+ penalty</div>
-          <div class="click-instruction">Click to see how to prevent</div>
-        </div>
-        <div class="card-back critical">
-          <div class="status-badge critical">✅ Mitigation Strategy</div>
-          <div class="back-content">
-            <div class="back-content-section">
-              <div class="back-content-title">Setting Personal Deadlines</div>
-              <ul>
-                <li>Set personal deadline: 31 December</li>
-                <li>One-month buffer</li>
-                <li>Calendar reminders</li>
-                <li>Submit early</li>
-              </ul>
-            </div>
+          <div class="card-icon">⏰</div>
+          <div class="card-title">Missed Deadlines</div>
+          <div class="card-description">
+            Late submission = automatic £100+ penalty, plus interest charges on unpaid tax
           </div>
+          <div class="card-hint">Click to see how to prevent</div>
+        </div>
+        <div class="card-back">
+          <div class="mitigation-title">Setting Personal Deadlines</div>
+          <ul class="mitigation-list">
+            <li>Set personal deadline: 31 December (not 31 January)</li>
+            <li>Creates 1-month buffer before official deadline</li>
+            <li>Calendar reminder: 1 November to start</li>
+            <li>Complete draft by 10 December</li>
+            <li>Final review by 20 December</li>
+            <li>Submit by 31 December</li>
+            <li>Set up payment plan before 31 January</li>
+          </ul>
         </div>
       </div>
     </div>
 
-    <!-- CARD 2 -->
-    <div class="compliance-card" onclick="this.classList.toggle('flipped')">
+    <!-- Card 2: Inaccurate Returns -->
+    <div class="card" onclick="this.classList.toggle('flipped')">
       <div class="card-inner">
         <div class="card-front">
-          <div class="risk-icon">❌</div>
-          <div class="risk-name">Inaccurate Returns</div>
-          <div class="risk-description">Errors trigger penalties</div>
-          <div class="click-instruction">Click to see how to prevent</div>
-        </div>
-        <div class="card-back critical">
-          <div class="status-badge critical">✅ Mitigation Strategy</div>
-          <div class="back-content">
-            <ul>
-              <li>Use accounting software</li>
-              <li>Check figures carefully</li>
-              <li>Keep receipts</li>
-            </ul>
+          <div class="card-icon">❌</div>
+          <div class="card-title">Inaccurate Returns</div>
+          <div class="card-description">
+            Errors from poor records, mathematical mistakes, or expense misunderstanding can trigger penalties or investigation
           </div>
+          <div class="card-hint">Click to see how to prevent</div>
+        </div>
+        <div class="card-back">
+          <div class="mitigation-title">Comprehensive Record-Keeping</div>
+          <ul class="mitigation-list">
+            <li>Implement systematic bookkeeping from day one</li>
+            <li>Choose software: Wave, Xero, FreshBooks</li>
+            <li>Automated calculations eliminate math errors</li>
+            <li>Record all income immediately</li>
+            <li>Save every receipt and invoice</li>
+            <li>Double-check all figures before submission</li>
+            <li>Consider accountant review of return</li>
+          </ul>
         </div>
       </div>
     </div>
 
-    <!-- CARD 3 -->
-    <div class="compliance-card" onclick="this.classList.toggle('flipped')">
+    <!-- Card 3: Inadequate Record-Keeping -->
+    <div class="card" onclick="this.classList.toggle('flipped')">
       <div class="card-inner">
         <div class="card-front">
-          <div class="risk-icon">📋</div>
-          <div class="risk-name">Inadequate Records</div>
-          <div class="risk-description">Poor evidence leads to estimates</div>
-          <div class="click-instruction">Click to see how to prevent</div>
-        </div>
-        <div class="card-back critical">
-          <div class="status-badge critical">✅ Mitigation Strategy</div>
-          <div class="back-content">
-            <ul>
-              <li>Store records for 5 years</li>
-              <li>Backup digitally</li>
-              <li>Organise by tax year</li>
-            </ul>
+          <div class="card-icon">📋</div>
+          <div class="card-title">Inadequate Record-Keeping</div>
+          <div class="card-description">
+            HMRC requires records for 5 years. Poor records prevent defending your figures and result in estimated assessments
           </div>
+          <div class="card-hint">Click to see how to prevent</div>
+        </div>
+        <div class="card-back">
+          <div class="mitigation-title">Organize & Maintain Records</div>
+          <ul class="mitigation-list">
+            <li>Keep receipts and invoices for 5+ years</li>
+            <li>Use cloud storage for digital backup</li>
+            <li>Organize records by category and date</li>
+            <li>Monthly reconciliation with bank</li>
+            <li>Annual backup and archive process</li>
+            <li>Keep separate folders for each tax year</li>
+            <li>Consider physical filing system as backup</li>
+          </ul>
         </div>
       </div>
     </div>
 
-    <!-- CARD 4 -->
-    <div class="compliance-card" onclick="this.classList.toggle('flipped')">
+    <!-- Card 4: Failure to Register -->
+    <div class="card" onclick="this.classList.toggle('flipped')">
       <div class="card-inner">
         <div class="card-front">
-          <div class="risk-icon">🔴</div>
-          <div class="risk-name">Failure to Register</div>
-          <div class="risk-description">Late registration causes penalties</div>
-          <div class="click-instruction">Click to see how to prevent</div>
-        </div>
-        <div class="card-back critical">
-          <div class="status-badge critical">✅ Mitigation Strategy</div>
-          <div class="back-content">
-            <ul>
-              <li>Register immediately</li>
-              <li>Mark 5 October deadline</li>
-            </ul>
+          <div class="card-icon">🔴</div>
+          <div class="card-title">Failure to Register</div>
+          <div class="card-description">
+            Must register for Self Assessment by 5 October following tax year of self-employment start. Late registration = penalties
           </div>
+          <div class="card-hint">Click to see how to prevent</div>
+        </div>
+        <div class="card-back">
+          <div class="mitigation-title">Early & Timely Registration</div>
+          <ul class="mitigation-list">
+            <li>Register immediately when self-employment starts</li>
+            <li>Don't wait until tax year-end</li>
+            <li>Mark deadline: 5 October (following tax year)</li>
+            <li>Set calendar reminder 3 months in advance</li>
+            <li>Use online HMRC portal for registration</li>
+            <li>Keep confirmation of registration safely</li>
+            <li>Note Self Assessment deadlines once registered</li>
+          </ul>
         </div>
       </div>
     </div>
 
-    <!-- CARD 5 -->
-    <div class="compliance-card" onclick="this.classList.toggle('flipped')">
+    <!-- Card 5: Cash Flow Crisis -->
+    <div class="card" onclick="this.classList.toggle('flipped')">
       <div class="card-inner">
         <div class="card-front">
-          <div class="risk-icon">💸</div>
-          <div class="risk-name">Cash Flow Crisis</div>
-          <div class="risk-description">No funds for tax bill</div>
-          <div class="click-instruction">Click to see how to prevent</div>
-        </div>
-        <div class="card-back critical">
-          <div class="status-badge critical">✅ Mitigation Strategy</div>
-          <div class="back-content">
-            <ul>
-              <li>Save 25–35% monthly</li>
-              <li>Separate tax account</li>
-            </ul>
+          <div class="card-icon">💸</div>
+          <div class="card-title">Cash Flow Crisis</div>
+          <div class="card-description">
+            Tax bill arrives but funds aren't available. Tempts desperate business decisions or forces personal debt
           </div>
+          <div class="card-hint">Click to see how to prevent</div>
+        </div>
+        <div class="card-back">
+          <div class="mitigation-title">Tax Savings Fund Setup</div>
+          <ul class="mitigation-list">
+            <li>Open separate tax savings account immediately</li>
+            <li>Transfer 25-35% of profit monthly automatically</li>
+            <li>Calculate based on estimated tax liability</li>
+            <li>Use accounting software for tracking</li>
+            <li>Set up automatic monthly transfers</li>
+            <li>Never touch fund for other purposes</li>
+            <li>By January, funds ready for tax payment</li>
+          </ul>
         </div>
       </div>
     </div>
 
-    <!-- CARD 6 -->
-    <div class="compliance-card" onclick="this.classList.toggle('flipped')">
+    <!-- Card 6: Tax Law Changes -->
+    <div class="card" onclick="this.classList.toggle('flipped')">
       <div class="card-inner">
         <div class="card-front">
-          <div class="risk-icon">📚</div>
-          <div class="risk-name">Tax Law Changes</div>
-          <div class="risk-description">Missing updates causes non-compliance</div>
-          <div class="click-instruction">Click to see how to prevent</div>
-        </div>
-        <div class="card-back critical">
-          <div class="status-badge critical">✅ Mitigation Strategy</div>
-          <div class="back-content">
-            <ul>
-              <li>Use an accountant</li>
-              <li>Follow HMRC updates</li>
-            </ul>
+          <div class="card-icon">📚</div>
+          <div class="card-title">Tax Law Changes</div>
+          <div class="card-description">
+            Missing updates on tax allowances, deadlines, or regulations can result in non-compliance or missing relief opportunities
           </div>
+          <div class="card-hint">Click to see how to prevent</div>
+        </div>
+        <div class="card-back">
+          <div class="mitigation-title">Professional & Ongoing Education</div>
+          <ul class="mitigation-list">
+            <li>Find accountant specializing in fitness industry</li>
+            <li>Start relationship in first tax year</li>
+            <li>Budget £300-600 annually for accountant</li>
+            <li>Provide records monthly (not year-end)</li>
+            <li>Discuss tax planning opportunities</li>
+            <li>Read HMRC self-employment guides</li>
+            <li>Follow HMRC updates and bulletins</li>
+          </ul>
         </div>
       </div>
     </div>
 
   </div>
 </div>
+
+<script>
+(function() {
+  document.documentElement.style.visibility = 'visible';
+  document.body.style.visibility = 'visible';
+})();
+</script>
+
 </body>
 </html>
