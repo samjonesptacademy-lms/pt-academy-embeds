@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Awareness vs. Qualification</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8f9fa; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
+        .spinner { width: 50px; height: 50px; border: 4px solid #e9ecef; border-top-color: #C6A906; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { margin-top: 20px; font-size: 16px; color: #666; font-weight: 500; }
+        
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; padding: 20px; background: #f8f9fa; line-height: 1.6; }
+        .container { max-width: 1000px; margin: 0 auto; }
+        
+        .header { text-align: center; margin-bottom: 40px; }
+        .title { font-size: 28px; font-weight: 700; color: #333; margin-bottom: 15px; }
+        .subtitle { font-size: 16px; color: #666; margin-bottom: 20px; }
+        .instruction { font-size: 14px; color: #999; font-style: italic; }
+        
+        .flip-cards-wrapper { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; }
+        
+        .flip-card-container { perspective: 1000px; height: 400px; }
+        .flip-card { position: relative; width: 100%; height: 100%; transition: transform 0.6s; transform-style: preserve-3d; cursor: pointer; }
+        .flip-card-container.flipped .flip-card { transform: rotateY(180deg); }
+        
+        .flip-card-front, .flip-card-back { position: absolute; width: 100%; height: 100%; backface-visibility: hidden; display: flex; flex-direction: column; padding: 30px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); }
+        
+        .flip-card-front { background: linear-gradient(135deg, #C6A906 0%, #d4b815 100%); color: white; justify-content: center; align-items: center; text-align: center; }
+        .flip-card-back { background: white; color: #333; transform: rotateY(180deg); border: 2px solid #C6A906; }
+        
+        .card-title { font-size: 24px; font-weight: 700; margin-bottom: 20px; }
+        .flip-card-front .card-title { color: white; font-size: 28px; margin-bottom: 15px; }
+        .flip-card-back .card-title { color: #C6A906; }
+        
+        .card-front-subtitle { display: none; }
+        .card-front-cta { font-size: 16px; font-weight: 600; }
+        
+        .card-emoji { font-size: 48px; margin-bottom: 10px; }
+        
+        .card-content { flex: 1; overflow-y: auto; font-size: 15px; line-height: 1.7; }
+        .flip-card-front .card-content { display: none; }
+        .flip-card-back .card-content { color: #333; }
+        
+        .content-list { list-style: none; }
+        .content-list li { padding: 8px 0; padding-left: 24px; position: relative; }
+        .content-list li:before { content: "✓"; position: absolute; left: 0; font-weight: 700; }
+        
+        .flip-card-front .content-list li:before { color: rgba(255,255,255,0.9); }
+        .flip-card-back .content-list li:before { color: #C6A906; }
+        
+        .flip-hint { position: absolute; bottom: 15px; left: 0; right: 0; text-align: center; font-size: 13px; opacity: 0.9; font-weight: 500; }
+        .flip-card-front .flip-hint { color: rgba(255,255,255,0.95); }
+        .flip-card-back .flip-hint { color: #999; }
+        
+        @media (max-width: 768px) {
+            .flip-cards-wrapper { grid-template-columns: 1fr; gap: 20px; }
+            .flip-card-container { height: 400px; }
+            .flip-card-front, .flip-card-back { padding: 20px; }
+            .card-title { font-size: 22px; }
+            .card-content { font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading content...</div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Awareness vs. Qualification</h1>
+            <p class="subtitle">Understanding the difference between First Aid Awareness and formal First Aid Qualification</p>
+            <p class="instruction">Click each card to reveal more information</p>
+        </div>
+
+        <div class="flip-cards-wrapper">
+            <!-- Card 1: First Aid Awareness -->
+            <div class="flip-card-container" onclick="toggleFlip(this)">
+                <div class="flip-card">
+                    <!-- Front -->
+                    <div class="flip-card-front">
+                        <div class="card-emoji">⚠️</div>
+                        <h2 class="card-title">First Aid Awareness</h2>
+                        <p class="card-front-subtitle">This Course</p>
+                        <div class="card-front-cta">👆 Click to learn</div>
+                        <div class="flip-hint">Tap to flip</div>
+                    </div>
+                    <!-- Back -->
+                    <div class="flip-card-back">
+                        <h2 class="card-title">First Aid Awareness</h2>
+                        <div class="card-content">
+                            <ul class="content-list">
+                                <li>Understanding common emergencies and their signs/symptoms</li>
+                                <li>Recognising when situations require emergency response</li>
+                                <li>Following organisational emergency action plans</li>
+                                <li>Communicating effectively with emergency services</li>
+                                <li>Understanding legal responsibilities and limitations</li>
+                                <li>Knowing when to escalate situations beyond personal capability</li>
+                            </ul>
+                        </div>
+                        <div class="flip-hint">Tap to flip back</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Card 2: Regulated First Aid Qualification -->
+            <div class="flip-card-container" onclick="toggleFlip(this)">
+                <div class="flip-card">
+                    <!-- Front -->
+                    <div class="flip-card-front">
+                        <div class="card-emoji">🩹</div>
+                        <h2 class="card-title">First Aid Qualification</h2>
+                        <p class="card-front-subtitle">Regulated & Certified</p>
+                        <div class="card-front-cta">👆 Click to learn</div>
+                        <div class="flip-hint">Tap to flip</div>
+                    </div>
+                    <!-- Back -->
+                    <div class="flip-card-back">
+                        <h2 class="card-title">First Aid Qualification</h2>
+                        <div class="card-content">
+                            <ul class="content-list">
+                                <li>Practical hands-on training in first aid techniques</li>
+                                <li>Assessment of competence through practical demonstration</li>
+                                <li>Certification from HSE-approved providers</li>
+                                <li>Legal authority to act as designated workplace first aider</li>
+                                <li>Coverage of specific treatment protocols</li>
+                                <li>Regular re-certification (typically every three years)</li>
+                            </ul>
+                        </div>
+                        <div class="flip-hint">Tap to flip back</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script>
+        function toggleFlip(container) {
+            container.classList.toggle('flipped');
+        }
+
+        function hideLoader() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(function() { overlay.style.display = 'none'; }, 500);
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', hideLoader);
+        } else {
+            hideLoader();
+        }
+        setTimeout(hideLoader, 500);
+    </script>
+</body>
+</html>
