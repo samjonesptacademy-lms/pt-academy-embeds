@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>When to Escalate to Medical Professionals</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8f9fa; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
+        .spinner { width: 50px; height: 50px; border: 4px solid #e9ecef; border-top-color: #C6A906; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { margin-top: 20px; font-size: 16px; color: #666; font-weight: 500; }
+        
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; padding: 20px; background: #f8f9fa; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .title { font-size: 28px; font-weight: 700; color: #333; margin-bottom: 15px; }
+        .description { font-size: 16px; color: #555; line-height: 1.6; max-width: 700px; margin: 0 auto; }
+        
+        .intro-section { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .intro-text { font-size: 15px; color: #333; line-height: 1.8; }
+        .intro-text strong { color: #C6A906; font-weight: 600; }
+        
+        .accordion-container { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }
+        
+        .accordion-item { border-bottom: 2px solid #f8f9fa; }
+        .accordion-item:last-child { border-bottom: none; }
+        
+        .accordion-header { padding: 25px 30px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: all 0.3s ease; background: white; }
+        .accordion-header:active { background: #fffef8; }
+        .accordion-item.active .accordion-header { background: #fffef8; }
+        
+        .accordion-title-wrapper { display: flex; align-items: center; gap: 15px; flex: 1; }
+        .accordion-icon-badge { background: #C6A906; color: white; width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex-shrink: 0; }
+        .accordion-title { font-size: 20px; font-weight: 700; color: #333; }
+        
+        .accordion-toggle { font-size: 24px; color: #C6A906; transition: transform 0.3s ease; flex-shrink: 0; }
+        .accordion-item.active .accordion-toggle { transform: rotate(180deg); }
+        
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+        .accordion-item.active .accordion-content { max-height: 2000px; }
+        
+        .accordion-body { padding: 0 30px 30px 85px; }
+        .accordion-text { font-size: 15px; color: #333; line-height: 1.8; margin-bottom: 15px; }
+        
+        .escalation-list { list-style: none; padding-left: 0; }
+        .escalation-list li { padding: 10px 0; padding-left: 28px; position: relative; font-size: 15px; color: #333; line-height: 1.7; }
+        .escalation-list li:before { content: "●"; position: absolute; left: 0; color: #C6A906; font-weight: 700; }
+        
+        .warning-box { background: #fff3cd; border-left: 4px solid #C6A906; padding: 15px; margin-top: 20px; border-radius: 4px; }
+        .warning-box p { font-size: 14px; color: #333; line-height: 1.6; }
+        .warning-box strong { color: #C6A906; }
+        
+        @media (max-width: 768px) {
+            .accordion-header { padding: 20px; }
+            .accordion-body { padding: 0 20px 25px 20px; }
+            .accordion-title-wrapper { flex-direction: column; align-items: flex-start; gap: 10px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading content...</div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="title">When to Escalate to Medical Professionals</h1>
+            <p class="description">Understanding when situations require immediate escalation to first aiders and emergency services</p>
+        </div>
+
+        <div class="intro-section">
+            <p class="intro-text">Understanding escalation thresholds (when situations exceed personal capability requiring expert intervention) represents a critical professional competency. <strong>Attempting interventions beyond training level can result in harm to casualties, potential liability for responders, and professional consequences.</strong></p>
+        </div>
+
+        <div class="accordion-container">
+            <!-- Section 1: Life-Threatening Emergencies -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title-wrapper">
+                        <div class="accordion-icon-badge">1</div>
+                        <div class="accordion-title">Life-Threatening Emergencies</div>
+                    </div>
+                    <div class="accordion-toggle">▼</div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <p class="accordion-text"><strong>Certain situations always require immediate escalation to designated first aiders (if available) and emergency services:</strong></p>
+                        <ul class="escalation-list">
+                            <li>Cardiac arrest (unconscious, not breathing normally)</li>
+                            <li>Severe difficulty breathing</li>
+                            <li>Unconsciousness or significantly altered consciousness</li>
+                            <li>Severe bleeding</li>
+                            <li>Suspected heart attack</li>
+                            <li>Suspected stroke</li>
+                            <li>Severe allergic reactions</li>
+                            <li>Seizures lasting longer than 5 minutes</li>
+                            <li>Suspected spinal injury</li>
+                        </ul>
+                        <div class="warning-box">
+                            <p><strong>Action:</strong> Call emergency services immediately. Do not delay. If trained first aiders are available on site, alert them immediately.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Uncertain Situations -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title-wrapper">
+                        <div class="accordion-icon-badge">2</div>
+                        <div class="accordion-title">Uncertain Situations</div>
+                    </div>
+                    <div class="accordion-toggle">▼</div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <p class="accordion-text"><strong>When you are unsure, escalate. Professional judgment includes knowing when to seek expert help:</strong></p>
+                        <ul class="escalation-list">
+                            <li>Any situation where you feel uncertain or uncomfortable</li>
+                            <li>Situations where casualty's condition is unclear</li>
+                            <li>When initial response doesn't improve condition</li>
+                            <li>When casualties request ambulances or express serious concern about their condition</li>
+                        </ul>
+                        <div class="warning-box">
+                            <p><strong>Remember:</strong> Escalating when unsure is not a sign of weakness—it's professional practice. It's better to err on the side of caution and involve medical professionals.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAccordion(header) {
+            const item = header.parentElement;
+            item.classList.toggle('active');
+        }
+
+        function hideLoader() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(function() { overlay.style.display = 'none'; }, 500);
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', hideLoader);
+        } else {
+            hideLoader();
+        }
+        setTimeout(hideLoader, 500);
+    </script>
+</body>
+</html>
