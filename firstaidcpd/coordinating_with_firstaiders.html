@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Coordinating with Designated First Aiders</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8f9fa; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
+        .spinner { width: 50px; height: 50px; border: 4px solid #e9ecef; border-top-color: #C6A906; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { margin-top: 20px; font-size: 16px; color: #666; font-weight: 500; }
+        
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; padding: 20px; background: #f8f9fa; line-height: 1.6; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .title { font-size: 28px; font-weight: 700; color: #333; margin-bottom: 15px; }
+        .description { font-size: 16px; color: #555; line-height: 1.6; max-width: 700px; margin: 0 auto; }
+        
+        .accordion-container { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; margin-bottom: 30px; }
+        
+        .accordion-item { border-bottom: 2px solid #f8f9fa; }
+        .accordion-item:last-child { border-bottom: none; }
+        
+        .accordion-header { padding: 25px 30px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: all 0.3s ease; background: white; }
+        .accordion-header:active { background: #fffef8; }
+        .accordion-item.active .accordion-header { background: #fffef8; }
+        
+        .accordion-title-wrapper { display: flex; align-items: center; gap: 15px; flex: 1; }
+        .accordion-icon-badge { background: #C6A906; color: white; width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex-shrink: 0; }
+        .accordion-title { font-size: 20px; font-weight: 700; color: #333; }
+        
+        .accordion-toggle { font-size: 24px; color: #C6A906; transition: transform 0.3s ease; flex-shrink: 0; }
+        .accordion-item.active .accordion-toggle { transform: rotate(180deg); }
+        
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+        .accordion-item.active .accordion-content { max-height: 2000px; }
+        
+        .accordion-body { padding: 0 30px 30px 85px; }
+        
+        .role-section { margin-bottom: 25px; }
+        .role-title { font-size: 16px; font-weight: 700; color: #C6A906; margin-bottom: 12px; }
+        .role-list { list-style: none; padding-left: 0; }
+        .role-list li { padding: 10px 0; padding-left: 28px; position: relative; font-size: 15px; color: #333; line-height: 1.7; }
+        .role-list li:before { content: "→"; position: absolute; left: 0; color: #C6A906; font-weight: 700; }
+        
+        .tip-box { background: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px; margin-top: 20px; border-radius: 4px; }
+        .tip-box p { font-size: 14px; color: #2e7d32; line-height: 1.6; margin: 0; }
+        .tip-box strong { color: #1b5e20; }
+        
+        .warning-box { background: #fff3cd; border-left: 4px solid #fbc02d; padding: 15px; margin-top: 20px; border-radius: 4px; }
+        .warning-box p { font-size: 14px; color: #856404; line-height: 1.6; margin: 0; }
+        .warning-box strong { color: #533f03; }
+        
+        .card-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px; }
+        
+        .info-card { background: white; border: 2px solid #C6A906; border-radius: 12px; padding: 25px; }
+        .card-icon { font-size: 40px; margin-bottom: 15px; }
+        .card-title { font-size: 18px; font-weight: 700; color: #C6A906; margin-bottom: 15px; }
+        .card-text { font-size: 14px; color: #333; line-height: 1.8; }
+        .card-list { list-style: none; padding-left: 0; margin-top: 12px; }
+        .card-list li { padding: 8px 0; padding-left: 24px; position: relative; font-size: 14px; color: #333; }
+        .card-list li:before { content: "•"; position: absolute; left: 0; color: #C6A906; font-weight: 700; }
+        
+        @media (max-width: 768px) {
+            .accordion-header { padding: 20px; }
+            .accordion-body { padding: 0 20px 25px 20px; }
+            .accordion-title-wrapper { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .card-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading content...</div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Coordinating with Designated First Aiders</h1>
+            <p class="description">Understanding roles, responsibilities, and how to work effectively together in emergency situations</p>
+        </div>
+
+        <!-- Roles and Responsibilities Section -->
+        <div class="accordion-container">
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title-wrapper">
+                        <div class="accordion-icon-badge">1</div>
+                        <div class="accordion-title">Roles and Responsibilities</div>
+                    </div>
+                    <div class="accordion-toggle">▼</div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <div class="role-section">
+                            <div class="role-title">👤 Your Responsibilities (Non-First-Aider)</div>
+                            <ul class="role-list">
+                                <li>Recognise emergencies and alert first aiders immediately</li>
+                                <li>Provide initial information about what occurred</li>
+                                <li>Assist first aiders as directed (retrieving equipment, managing bystanders, calling emergency services)</li>
+                                <li>Document incidents as required</li>
+                                <li>Follow up as needed after incidents resolve</li>
+                            </ul>
+                        </div>
+
+                        <div class="role-section">
+                            <div class="role-title">🩹 First Aider Responsibilities</div>
+                            <ul class="role-list">
+                                <li>Conduct casualty assessment</li>
+                                <li>Provide appropriate first aid treatment within their training</li>
+                                <li>Decide whether emergency services are required</li>
+                                <li>Take charge of emergency scenes</li>
+                                <li>Communicate with emergency services</li>
+                                <li>Complete required documentation</li>
+                            </ul>
+                        </div>
+
+                        <div class="tip-box">
+                            <p><strong>Remember:</strong> First aiders have specialist training in emergency response. Your role is to support them and follow their direction while fulfilling your own responsibilities.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Supporting First Aiders Section -->
+        <div class="accordion-container">
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title-wrapper">
+                        <div class="accordion-icon-badge">2</div>
+                        <div class="accordion-title">Supporting First Aiders Effectively</div>
+                    </div>
+                    <div class="accordion-toggle">▼</div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <p style="font-size: 15px; color: #333; line-height: 1.8; margin-bottom: 20px;">When first aiders respond to emergencies, your support is crucial:</p>
+                        
+                        <ul class="role-list">
+                            <li>Provide clear, concise information about what happened and what you've observed</li>
+                            <li>Follow their instructions and requests for assistance</li>
+                            <li>Avoid interfering with assessment or treatment</li>
+                            <li>Manage bystanders to give first aiders space to work</li>
+                            <li>Retrieve requested equipment quickly</li>
+                            <li>Take notes if asked, to assist with documentation</li>
+                            <li>Remain available in case additional help is needed</li>
+                        </ul>
+
+                        <div class="tip-box">
+                            <p><strong>Pro Tip:</strong> First aiders work best when they can focus entirely on the casualty. Give them space, provide information when asked, and handle scene management tasks.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Conflicts or Concerns Section -->
+        <div class="accordion-container">
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title-wrapper">
+                        <div class="accordion-icon-badge">3</div>
+                        <div class="accordion-title">Conflicts or Concerns</div>
+                    </div>
+                    <div class="accordion-toggle">▼</div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <p style="font-size: 15px; color: #333; line-height: 1.8; margin-bottom: 20px;">If you believe first aiders are acting inappropriately or missing critical information:</p>
+                        
+                        <ul class="role-list">
+                            <li>Politely share your concerns: "I noticed she mentioned chest pain earlier, I'm not sure if you heard that"</li>
+                            <li>Provide additional information if asked</li>
+                            <li>If genuinely concerned about safety, you can independently call emergency services (which first aiders should support rather than resist)</li>
+                            <li>Raise concerns with management after incidents resolve, if appropriate</li>
+                        </ul>
+
+                        <div class="warning-box">
+                            <p><strong>Important:</strong> First aiders have authority in emergency situations, but this doesn't prevent others from expressing genuine safety concerns or providing additional relevant information. Patient safety is the priority.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Reference Cards -->
+        <div style="margin-top: 40px;">
+            <h2 style="font-size: 22px; font-weight: 700; color: #333; margin-bottom: 25px;">Quick Reference</h2>
+            
+            <div class="card-grid">
+                <!-- DO Card -->
+                <div class="info-card">
+                    <div class="card-icon">✓</div>
+                    <div class="card-title">What to DO</div>
+                    <ul class="card-list">
+                        <li>Alert first aiders immediately</li>
+                        <li>Provide clear information</li>
+                        <li>Follow their instructions</li>
+                        <li>Manage bystanders</li>
+                        <li>Retrieve equipment quickly</li>
+                        <li>Stay available to help</li>
+                        <li>Share safety concerns politely</li>
+                    </ul>
+                </div>
+
+                <!-- DON'T Card -->
+                <div class="info-card">
+                    <div class="card-icon">✗</div>
+                    <div class="card-title">What NOT to DO</div>
+                    <ul class="card-list">
+                        <li>Delay alerting first aiders</li>
+                        <li>Withhold important information</li>
+                        <li>Interfere with assessment/treatment</li>
+                        <li>Crowd around the casualty</li>
+                        <li>Question their decisions during emergency</li>
+                        <li>Attempt treatments outside your scope</li>
+                        <li>Leave them without support</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAccordion(header) {
+            const item = header.parentElement;
+            item.classList.toggle('active');
+        }
+
+        function hideLoader() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(function() { overlay.style.display = 'none'; }, 500);
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', hideLoader);
+        } else {
+            hideLoader();
+        }
+        setTimeout(hideLoader, 500);
+    </script>
+</body>
+</html>
