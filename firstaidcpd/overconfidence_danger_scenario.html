@@ -1,0 +1,496 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>The Danger of Overconfidence - Interactive Scenario</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8f9fa; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
+        .spinner { width: 50px; height: 50px; border: 4px solid #e9ecef; border-top-color: #C6A906; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { margin-top: 20px; font-size: 16px; color: #666; font-weight: 500; }
+        
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; padding: 20px; background: #f8f9fa; line-height: 1.6; }
+        .container { max-width: 800px; margin: 0 auto; }
+        
+        .header { text-align: center; margin-bottom: 40px; }
+        .title { font-size: 28px; font-weight: 700; color: #333; margin-bottom: 15px; }
+        .subtitle { font-size: 16px; color: #666; margin-bottom: 10px; }
+        
+        .intro-box { background: white; padding: 25px; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); margin-bottom: 30px; }
+        .intro-text { font-size: 15px; color: #333; line-height: 1.8; margin-bottom: 15px; }
+        .intro-text strong { color: #C6A906; }
+        .intro-text:last-child { margin-bottom: 0; }
+        
+        .scenario-container { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }
+        
+        .scenario-content { padding: 30px; }
+        .scenario-title { font-size: 24px; font-weight: 700; color: #C6A906; margin-bottom: 20px; }
+        .scenario-text { font-size: 16px; color: #333; line-height: 1.8; margin-bottom: 20px; background: #f8f9fa; padding: 20px; border-left: 4px solid #C6A906; border-radius: 4px; }
+        
+        .options-wrapper { display: flex; flex-direction: column; gap: 15px; margin-top: 25px; }
+        .option-button { padding: 16px 20px; border: 2px solid #C6A906; background: white; color: #333; cursor: pointer; border-radius: 8px; font-size: 15px; font-weight: 600; text-align: left; transition: all 0.3s ease; }
+        .option-button:active { background: #fffef8; transform: scale(0.98); }
+        .option-button:hover { background: #fffef8; }
+        
+        .option-label { display: none; }
+        .option-text { display: block; font-size: 15px; color: #333; }
+        
+        .outcome-box { padding: 30px; text-align: center; }
+        .outcome-title { font-size: 24px; font-weight: 700; margin-bottom: 20px; }
+        
+        .outcome-good { background: #e8f5e9; border-top: 5px solid #4caf50; }
+        .outcome-good .outcome-title { color: #2e7d32; }
+        .outcome-good-icon { font-size: 64px; margin-bottom: 15px; }
+        
+        .outcome-moderate { background: #fff8e1; border-top: 5px solid #fbc02d; }
+        .outcome-moderate .outcome-title { color: #f57f17; }
+        .outcome-moderate-icon { font-size: 64px; margin-bottom: 15px; }
+        
+        .outcome-poor { background: #ffebee; border-top: 5px solid #f44336; }
+        .outcome-poor .outcome-title { color: #c62828; }
+        .outcome-poor-icon { font-size: 64px; margin-bottom: 15px; }
+        
+        .outcome-message { font-size: 16px; color: #333; line-height: 1.8; margin-bottom: 20px; text-align: left; }
+        .outcome-lesson { background: rgba(198, 169, 6, 0.1); padding: 15px; border-radius: 8px; margin-bottom: 20px; text-align: left; }
+        .outcome-lesson strong { color: #C6A906; }
+        .outcome-lesson p { font-size: 14px; color: #333; line-height: 1.7; margin: 0; }
+        
+        .reset-button { background: #C6A906; color: white; border: none; padding: 14px 30px; font-size: 16px; font-weight: 600; border-radius: 8px; cursor: pointer; transition: all 0.3s ease; }
+        .reset-button:active { transform: scale(0.98); }
+        .reset-button:hover { background: #d4b815; }
+        
+        .hidden { display: none; }
+        
+        @media (max-width: 768px) {
+            .scenario-content { padding: 20px; }
+            .scenario-title { font-size: 20px; }
+            .scenario-text { font-size: 15px; padding: 15px; }
+            .option-button { padding: 14px 16px; font-size: 14px; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading content...</div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="title">The Danger of Overconfidence</h1>
+            <p class="subtitle">Interactive Scenario: What would you do?</p>
+        </div>
+
+        <div class="intro-box">
+            <p class="intro-text"><strong>Overestimating capability and attempting interventions beyond training level</strong> represents dangerous overconfidence that can:</p>
+            <p class="intro-text">• Worsen casualty conditions through inappropriate intervention<br>• Delay appropriate treatment while ineffective actions are attempted<br>• Create legal liability for negligence or practicing beyond scope<br>• Result in injury to responders attempting unsafe actions</p>
+            <p class="intro-text">Work through the scenario below and make decisions at each stage. Your choices will determine the outcome.</p>
+        </div>
+
+        <div class="scenario-container">
+            <!-- Scene 1 -->
+            <div id="scene1" class="scenario-content">
+                <div class="scenario-title">Scene 1: The Situation</div>
+                <div class="scenario-text">
+                    You're running a group fitness class when one member, Sarah, suddenly stops mid-exercise and sits down heavily. She's holding her left arm and shoulder and looks uncomfortable. She says "I think I've pulled something" but she's also slightly out of breath and looks pale.
+                </div>
+                <div class="options-wrapper">
+                    <button class="option-button" onclick="chooseScene('optionA1')">
+                        <span class="option-text">You've seen shoulder tension before. Start massaging her shoulder and arm to help relax the muscles.</span>
+                    </button>
+                    <button class="option-button" onclick="chooseScene('optionB1')">
+                        <span class="option-text">Stop the class and ask Sarah detailed follow-up questions about what she's experiencing.</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Option A Path - Scene 2 -->
+            <div id="optionA1" class="scenario-content hidden">
+                <div class="scenario-title">Scene 2</div>
+                <div class="scenario-text">
+                    You begin massaging Sarah's shoulder. After 30 seconds, she winces and says the pain is actually getting worse. She mentions her chest feels tight and she's struggling to catch her breath. She looks increasingly distressed.
+                </div>
+                <div class="options-wrapper">
+                    <button class="option-button" onclick="chooseScene('optionA2a')">
+                        <span class="option-text">The massage just needs more time to work. You continue, working deeper into her shoulder muscles.</span>
+                    </button>
+                    <button class="option-button" onclick="chooseScene('optionA2b')">
+                        <span class="option-text">Ask Sarah to lie down and rest while you fetch water. You'll give her space to recover.</span>
+                    </button>
+                    <button class="option-button" onclick="chooseScene('optionB2')">
+                        <span class="option-text">Stop. These symptoms sound serious. You should call emergency services right away.</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Option A2a: Continue massage -->
+            <div id="optionA2a" class="scenario-content hidden">
+                <div class="scenario-title">Scene 3</div>
+                <div class="scenario-text">
+                    Sarah becomes more distressed. She says "Please stop, this is making it worse." Her breathing is increasingly laboured and she's now gripping her chest. Other class members are looking worried and asking if she's okay.
+                </div>
+                <div class="options-wrapper">
+                    <button class="option-button" onclick="chooseScene('optionA2aDelayed')">
+                        <span class="option-text">Stop immediately. This is serious. Call emergency services right now.</span>
+                    </button>
+                    <button class="option-button" onclick="chooseScene('optionA3b')">
+                        <span class="option-text">Stop the massage. But maybe she just needs rest and water.</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Delayed escalation branch (for when they've tried one wrong approach but escalate relatively quickly) -->
+            <div id="optionA2aDelayed" class="scenario-content hidden">
+                <div class="scenario-title">Scene 3: Emergency Response</div>
+                <div class="scenario-text">
+                    You've called 999. The dispatcher asks questions and confirms this could be a cardiac event. Emergency services are on their way (ETA 8-10 minutes). However, you've already spent several minutes trying massage before recognising the seriousness. You keep Sarah calm and comfortable while waiting.
+                </div>
+                <div class="options-wrapper">
+                    <button class="option-button" onclick="chooseScene('outcome1b')">
+                        <span class="option-text">Emergency services arrive and take over (continue to outcome)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Option A2b: Rest and water -->
+            <div id="optionA2b" class="scenario-content hidden">
+                <div class="scenario-title">Scene 3</div>
+                <div class="scenario-text">
+                    You help Sarah lie down on a mat and bring her water. She takes a few sips but her breathing doesn't improve. Her chest discomfort seems to be increasing. She's now looking quite pale and mentions she feels "odd" and slightly dizzy. You notice her hand is trembling.
+                </div>
+                <div class="options-wrapper">
+                    <button class="option-button" onclick="chooseScene('optionA3a')">
+                        <span class="option-text">Tell her to keep resting—she just needs time. Continue with the class but keep an eye on her.</span>
+                    </button>
+                    <button class="option-button" onclick="chooseScene('optionA2bDelayed')">
+                        <span class="option-text">This doesn't seem right. Call emergency services immediately.</span>
+                    </button>
+                    <button class="option-button" onclick="chooseScene('optionA3c')">
+                        <span class="option-text">Ask other class members if anyone knows CPR or first aid while you stay with Sarah.</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Delayed escalation from rest/water approach -->
+            <div id="optionA2bDelayed" class="scenario-content hidden">
+                <div class="scenario-title">Scene 3: Emergency Response</div>
+                <div class="scenario-text">
+                    You've called 999. The dispatcher asks questions and confirms this could be a cardiac event. Emergency services are on their way (ETA 8-10 minutes). You've spent several minutes trying rest and hydration before recognising the seriousness, but you're now escalating. You keep Sarah calm and comfortable while waiting.
+                </div>
+                <div class="options-wrapper">
+                    <button class="option-button" onclick="chooseScene('outcome1b')">
+                        <span class="option-text">Emergency services arrive and take over (continue to outcome)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Option A3a: Continue class -->
+            <div id="optionA3a" class="scenario-content hidden">
+                <div class="scenario-title">Scene 4</div>
+                <div class="scenario-text">
+                    You restart the class but keep glancing at Sarah. After 5 minutes, you notice she's no longer moving. You rush over and find her unresponsive. She's not breathing normally. Someone else in the class finally calls 999 for you.
+                </div>
+                <div class="options-wrapper">
+                    <button class="option-button" onclick="chooseScene('outcome1')">
+                        <span class="option-text">Emergency services arrive (continue to outcome)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Option A3b: Ask preference -->
+            <div id="optionA3b" class="scenario-content hidden">
+                <div class="scenario-title">Scene 3b</div>
+                <div class="scenario-text">
+                    Sarah looks uncomfortable and confused. "I think something is really wrong," she says. "I don't know what's happening." You're now aware this isn't just muscle tension—something more serious is occurring. The situation is beyond your knowledge.
+                </div>
+                <div class="options-wrapper">
+                    <button class="option-button" onclick="chooseScene('optionA3bDelayed')">
+                        <span class="option-text">Call emergency services immediately—this is beyond your capability.</span>
+                    </button>
+                    <button class="option-button" onclick="chooseScene('optionA3a')">
+                        <span class="option-text">She seems confused. Maybe she just needs quiet and reassurance. Let her rest more.</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Delayed escalation from A3b -->
+            <div id="optionA3bDelayed" class="scenario-content hidden">
+                <div class="scenario-title">Scene 3: Emergency Response</div>
+                <div class="scenario-text">
+                    You've called 999. The dispatcher asks questions and confirms this could be a cardiac event. Emergency services are on their way (ETA 8-10 minutes). You've spent several minutes trying massage and waiting before finally recognising this is serious, but you're now escalating appropriately. You keep Sarah calm and comfortable.
+                </div>
+                <div class="options-wrapper">
+                    <button class="option-button" onclick="chooseScene('outcome1b')">
+                        <span class="option-text">Emergency services arrive and take over (continue to outcome)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Option A3c: Ask for help -->
+            <div id="optionA3c" class="scenario-content hidden">
+                <div class="scenario-title">Scene 3c</div>
+                <div class="scenario-text">
+                    Two members mention they've done first aid courses. However, without emergency services already on their way, you're now relying on untrained or partially trained people to handle a serious medical emergency. Time is passing. Sarah's condition continues to deteriorate.
+                </div>
+                <div class="options-wrapper">
+                    <button class="option-button" onclick="chooseScene('optionB2')">
+                        <span class="option-text">You need professional help. Call 999 right now, regardless.</span>
+                    </button>
+                    <button class="option-button" onclick="chooseScene('outcome1')">
+                        <span class="option-text">Wait for the other first aiders to give instructions first. (Continue to outcome)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Option B Path - Scene 2 -->
+            <div id="optionB1" class="scenario-content hidden">
+                <div class="scenario-title">Scene 2</div>
+                <div class="scenario-text">
+                    You stop the class and sit with Sarah. When you ask detailed questions, she tells you: "It started as shoulder pain, but now my chest feels tight. I'm struggling to catch my breath. My arm hurts too." You realise these could be signs of a cardiac event.
+                </div>
+                <div class="options-wrapper">
+                    <button class="option-button" onclick="chooseScene('optionB2')">
+                        <span class="option-text">Call 999 immediately and get your designated first aider.</span>
+                    </button>
+                    <button class="option-button" onclick="chooseScene('optionB2alt')">
+                        <span class="option-text">Ask Sarah if she wants you to call an ambulance, but don't call unless she agrees.</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Option B2: Immediate escalation -->
+            <div id="optionB2" class="scenario-content hidden">
+                <div class="scenario-title">Scene 3: Emergency Response</div>
+                <div class="scenario-text">
+                    You've called 999. The dispatcher asks questions and confirms this could be a cardiac event. Emergency services are on their way (ETA 7-8 minutes). You've alerted your workplace first aider, who comes immediately. You keep Sarah calm and comfortable while waiting, monitoring her condition.
+                </div>
+                <div class="options-wrapper">
+                    <button class="option-button" onclick="chooseScene('outcome2')">
+                        <span class="option-text">Emergency services arrive and take over (continue to outcome)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Option B2alt: Wait for permission -->
+            <div id="optionB2alt" class="scenario-content hidden">
+                <div class="scenario-title">Scene 3</div>
+                <div class="scenario-text">
+                    Sarah is confused and distressed. "I don't know... I'm scared... I think something is wrong but I'm not sure if I need an ambulance." She's clearly not in a state to make sound decisions. Time is passing while you wait for her consent. Her breathing is becoming more laboured.
+                </div>
+                <div class="options-wrapper">
+                    <button class="option-button" onclick="chooseScene('optionB2')">
+                        <span class="option-text">This is serious enough. Call 999 now—her condition is the priority.</span>
+                    </button>
+                    <button class="option-button" onclick="chooseScene('outcome3')">
+                        <span class="option-text">Continue asking Sarah what she wants while her condition worsens (continue to outcome)</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- Outcome 1a: Called but delayed significantly -->
+            <div id="outcome1" class="scenario-content outcome-box outcome-poor hidden">
+                <div class="outcome-poor-icon">⚠️</div>
+                <div class="outcome-title">Delayed Response: Harm Occurred</div>
+                <div class="outcome-message">
+                    <p>Sarah was experiencing a heart attack. By the time you called emergency services, critical treatment had been delayed by 10+ minutes. Emergency services arrived but Sarah had already suffered significant cardiac damage.</p>
+                    <p style="margin-top: 15px;"><strong>Consequences:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Sarah experiences permanent heart damage and reduced quality of life</li>
+                        <li>Legal liability for delayed professional response</li>
+                        <li>Investigation into whether you met duty of care obligations</li>
+                        <li>Your facility faces reputational damage</li>
+                        <li>Staff and members question emergency protocols</li>
+                    </ul>
+                </div>
+                <div class="outcome-lesson">
+                    <p><strong>Key Learning:</strong> Recognising the need to escalate is important, but timing matters critically. Each minute of delay in a cardiac emergency reduces survival chances and increases damage. Every assumption you make ("it's probably muscle tension," "rest will help," "let's try massage") costs precious time. When symptoms suggest serious medical emergencies, the first response should always be immediate escalation, not experimentation.</p>
+                </div>
+                <button class="reset-button" onclick="resetScenario()">Try Again</button>
+                <button class="reset-button" style="margin-left: 10px;" onclick="showBestPath()">View Best Path</button>
+            </div>
+
+            <!-- Outcome 1b: Called quickly after recognising seriousness -->
+            <div id="outcome1b" class="scenario-content outcome-box outcome-moderate hidden">
+                <div class="outcome-moderate-icon">⚠️</div>
+                <div class="outcome-title">Mixed Response: Delayed But Recovered</div>
+                <div class="outcome-message">
+                    <p>Sarah was experiencing a heart attack. You eventually recognised something was seriously wrong and called emergency services, but several minutes had passed since her initial symptoms.</p>
+                    <p style="margin-top: 15px;"><strong>What happened:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Emergency services arrived within 10-12 minutes of your call</li>
+                        <li>Sarah suffered some cardiac damage, but survived with treatment</li>
+                        <li>Long-term recovery required but she regains reasonable quality of life</li>
+                        <li>No significant legal liability—you did escalate appropriately once you recognised the seriousness</li>
+                    </ul>
+                </div>
+                <div class="outcome-lesson">
+                    <p><strong>Key Learning:</strong> You eventually made the right call, which is important. However, the delay between symptom onset and your call mattered. Sarah experienced unnecessary harm that might have been prevented with faster recognition. This scenario shows that while escalation is critical, the speed of escalation is equally important. In cardiac emergencies, every 2-3 minutes significantly impacts outcomes. The goal is to recognise warning signs immediately and escalate without delay.</p>
+                </div>
+                <button class="reset-button" onclick="resetScenario()">Try Again</button>
+                <button class="reset-button" style="margin-left: 10px;" onclick="showBestPath()">View Best Path</button>
+            </div>
+
+            <!-- Outcome 2: Appropriate Escalation -->
+            <div id="outcome2" class="scenario-content outcome-box outcome-good hidden">
+                <div class="outcome-good-icon">✓</div>
+                <div class="outcome-title">Professional Response: Positive Outcome</div>
+                <div class="outcome-message">
+                    <p>Sarah was experiencing a heart attack. Emergency services arrived within 8 minutes of your call. Quick medical intervention minimised cardiac damage and Sarah makes a good recovery.</p>
+                    <p style="margin-top: 15px;"><strong>Positive outcomes:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Sarah recovers well with minimal long-term effects</li>
+                        <li>No legal liability—you acted appropriately and within scope</li>
+                        <li>Your facility is recognised for excellent emergency response</li>
+                        <li>Class members and staff trust your professional judgment</li>
+                        <li>You demonstrate what duty of care actually means in practice</li>
+                    </ul>
+                </div>
+                <div class="outcome-lesson">
+                    <p><strong>Key Learning:</strong> Professional competency isn't about doing everything yourself—it's about recognising your boundaries and escalating appropriately. You confidently identified symptoms, recognised the seriousness, and took immediate action. This is exactly what being a professional fitness instructor means.</p>
+                </div>
+                <button class="reset-button" onclick="resetScenario()">Try Again</button>
+                <button class="reset-button" style="margin-left: 10px;" onclick="showBestPath()">View Best Path</button>
+            </div>
+
+            <!-- Outcome 3: Continued Delay -->
+            <div id="outcome3" class="scenario-content outcome-box outcome-poor hidden">
+                <div class="outcome-poor-icon">❌</div>
+                <div class="outcome-title">Hesitation: Serious Consequences</div>
+                <div class="outcome-message">
+                    <p>By waiting for Sarah's decision while her condition deteriorated, critical minutes passed. When emergency services finally arrived (after another member called), Sarah had already lost consciousness. She suffered severe cardiac damage.</p>
+                    <p style="margin-top: 15px;"><strong>Professional and legal impact:</strong></p>
+                    <ul style="margin-left: 20px; margin-top: 10px;">
+                        <li>Investigation into why professional help was delayed</li>
+                        <li>Question of whether you met your duty of care obligations</li>
+                        <li>Potential liability for allowing a preventable deterioration</li>
+                        <li>Impact on your professional reputation and confidence</li>
+                    </ul>
+                </div>
+                <div class="outcome-lesson">
+                    <p><strong>Key Learning:</strong> When someone's condition suggests a serious medical emergency, you have a professional responsibility to escalate—not to ask permission. While respecting autonomy is important, a person in distress experiencing chest pain and breathing difficulty cannot make sound decisions. Professional duty of care means protecting their wellbeing, even if they're unsure about wanting help.</p>
+                </div>
+                <button class="reset-button" onclick="resetScenario()">Try Again</button>
+                <button class="reset-button" style="margin-left: 10px;" onclick="showBestPath()">View Best Path</button>
+            </div>
+
+            <!-- Best Path Walkthrough -->
+            <div id="bestPathWalkthrough" class="scenario-content hidden">
+                <div class="scenario-title" style="color: #4caf50; margin-bottom: 30px;">✓ The Best Response Path</div>
+                
+                <div style="background: #e8f5e9; padding: 20px; border-radius: 8px; margin-bottom: 25px; border-left: 4px solid #4caf50;">
+                    <p style="font-size: 16px; color: #2e7d32; line-height: 1.8; margin: 0;">
+                        The key to handling this scenario is <strong>rapid recognition of serious symptoms and immediate escalation</strong>. Here's the optimal path:
+                    </p>
+                </div>
+
+                <div style="margin-bottom: 30px;">
+                    <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                        <div style="background: #4caf50; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">1</div>
+                        <div>
+                            <p style="font-weight: 700; color: #2e7d32; margin-bottom: 8px;">Scene 1: Sarah stops mid-exercise with shoulder and chest discomfort</p>
+                            <p style="color: #333; line-height: 1.6;"><strong>Best choice:</strong> Ask detailed follow-up questions to understand her symptoms better</p>
+                            <p style="color: #666; font-size: 14px; margin-top: 8px;">This immediately flags that something serious may be happening, rather than assuming it's simple muscle tension.</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 15px; margin-bottom: 20px;">
+                        <div style="background: #4caf50; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">2</div>
+                        <div>
+                            <p style="font-weight: 700; color: #2e7d32; margin-bottom: 8px;">Scene 2: Sarah describes chest tightness and breathing difficulty</p>
+                            <p style="color: #333; line-height: 1.6;"><strong>Best choice:</strong> Call emergency services immediately</p>
+                            <p style="color: #666; font-size: 14px; margin-top: 8px;">These are classic cardiac event symptoms. Chest pain + breathing difficulty + shoulder/arm pain = call 999. Don't wait, don't try other interventions.</p>
+                        </div>
+                    </div>
+
+                    <div style="display: flex; gap: 15px;">
+                        <div style="background: #4caf50; color: white; width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; flex-shrink: 0;">3</div>
+                        <div>
+                            <p style="font-weight: 700; color: #2e7d32; margin-bottom: 8px;">Scene 3: Emergency services are en route</p>
+                            <p style="color: #333; line-height: 1.6;"><strong>Best action:</strong> Keep Sarah calm and comfortable, alert your first aider, monitor her condition until help arrives</p>
+                            <p style="color: #666; font-size: 14px; margin-top: 8px;">You've done everything right. You recognised the emergency, escalated immediately, and now provide appropriate support.</p>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="background: #fff3cd; border-left: 4px solid #fbc02d; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+                    <p style="font-weight: 700; color: #f57f17; margin-bottom: 10px;">Why this path works:</p>
+                    <ul style="color: #333; margin-left: 20px; line-height: 1.8;">
+                        <li>You gather information immediately to make an informed decision</li>
+                        <li>You recognise the symptom cluster that indicates a serious emergency</li>
+                        <li>You escalate without delay, giving emergency services maximum time</li>
+                        <li>You don't attempt interventions beyond your scope</li>
+                        <li>You provide appropriate support while waiting for professionals</li>
+                    </ul>
+                </div>
+
+                <div style="background: #ffebee; border-left: 4px solid #f44336; padding: 20px; border-radius: 8px; margin-bottom: 25px;">
+                    <p style="font-weight: 700; color: #c62828; margin-bottom: 10px;">What NOT to do:</p>
+                    <ul style="color: #333; margin-left: 20px; line-height: 1.8;">
+                        <li>❌ Assume shoulder pain = simple muscle tension</li>
+                        <li>❌ Try massage or physical manipulation without assessment</li>
+                        <li>❌ Suggest rest and hydration as the only response</li>
+                        <li>❌ Continue the class while someone is showing serious symptoms</li>
+                        <li>❌ Ask for permission to call emergency services—call immediately</li>
+                        <li>❌ Rely on other partially-trained people instead of professionals</li>
+                    </ul>
+                </div>
+
+                <button class="reset-button" onclick="resetScenario()">Try Again</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function chooseScene(sceneId) {
+            // Hide all scenes
+            const allScenes = document.querySelectorAll('.scenario-content');
+            allScenes.forEach(scene => scene.classList.add('hidden'));
+            
+            // Show selected scene
+            const selectedScene = document.getElementById(sceneId);
+            if (selectedScene) {
+                selectedScene.classList.remove('hidden');
+                selectedScene.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+
+        function resetScenario() {
+            // Hide all scenes
+            const allScenes = document.querySelectorAll('.scenario-content');
+            allScenes.forEach(scene => scene.classList.add('hidden'));
+            
+            // Show scene 1
+            document.getElementById('scene1').classList.remove('hidden');
+            document.getElementById('scene1').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function showBestPath() {
+            // Hide all scenes
+            const allScenes = document.querySelectorAll('.scenario-content');
+            allScenes.forEach(scene => scene.classList.add('hidden'));
+            
+            // Show best path walkthrough
+            document.getElementById('bestPathWalkthrough').classList.remove('hidden');
+            document.getElementById('bestPathWalkthrough').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
+        function hideLoader() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(function() { overlay.style.display = 'none'; }, 500);
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', hideLoader);
+        } else {
+            hideLoader();
+        }
+        setTimeout(hideLoader, 500);
+    </script>
+</body>
+</html>
