@@ -79,18 +79,39 @@
     </div>
 
     <div class="container">
-        <div class="header">
+        <div class="header" id="mainHeader">
             <h1 class="title">The Danger of Overconfidence</h1>
-            <p class="subtitle">Interactive Scenario: What would you do?</p>
+            <p class="subtitle">Test your response to an emergency situation</p>
         </div>
 
-        <div class="intro-box">
+        <div class="intro-box" id="introBox" style="display: none;">
             <p class="intro-text"><strong>Overestimating capability and attempting interventions beyond training level</strong> represents dangerous overconfidence that can:</p>
             <p class="intro-text">• Worsen casualty conditions through inappropriate intervention<br>• Delay appropriate treatment while ineffective actions are attempted<br>• Create legal liability for negligence or practicing beyond scope<br>• Result in injury to responders attempting unsafe actions</p>
             <p class="intro-text">Work through the scenario below and make decisions at each stage. Your choices will determine the outcome.</p>
         </div>
 
-        <div class="scenario-container">
+        <!-- Cover Page -->
+        <div id="coverPage" class="scenario-container" style="margin-bottom: 20px;">
+            <div class="scenario-content" style="text-align: center; padding: 60px 40px;">
+                <div style="margin-bottom: 40px;">
+                    <div style="font-size: 72px; margin-bottom: 20px;">⚠️</div>
+                    <p style="font-size: 18px; color: #666; margin-bottom: 30px;">Test your response to an emergency situation</p>
+                </div>
+                
+                <div style="background: #f8f9fa; padding: 30px; border-radius: 8px; margin-bottom: 40px; text-align: left; max-width: 600px; margin-left: auto; margin-right: auto;">
+                    <p style="font-size: 15px; color: #333; line-height: 1.8; margin-bottom: 15px;">
+                        In this interactive scenario, you'll face a medical emergency during a fitness class. You'll need to make decisions based on what you observe and the information Sarah provides.
+                    </p>
+                    <p style="font-size: 15px; color: #333; line-height: 1.8;">
+                        <strong>There is no single 'right' answer in the first decision</strong>—different choices lead to different paths and outcomes. Your goal is to recognise when situations require professional help and respond appropriately.
+                    </p>
+                </div>
+
+                <button class="reset-button" style="font-size: 16px; padding: 16px 40px;" onclick="startScenario()">Start Scenario</button>
+            </div>
+        </div>
+
+        <div class="scenario-container" id="scenarioContainer" style="display: none;">
             <!-- Scene 1 -->
             <div id="scene1" class="scenario-content">
                 <div class="scenario-title">Scene 1: The Situation</div>
@@ -444,6 +465,18 @@
     </div>
 
     <script>
+        function startScenario() {
+            // Hide cover page and intro
+            document.getElementById('coverPage').style.display = 'none';
+            document.getElementById('mainHeader').style.display = 'none';
+            
+            // Show scenario container and intro
+            document.getElementById('scenarioContainer').style.display = 'block';
+            document.getElementById('introBox').style.display = 'block';
+            document.getElementById('scene1').classList.remove('hidden');
+            document.getElementById('scene1').scrollIntoView({ behavior: 'smooth', block: 'start' });
+        }
+
         function chooseScene(sceneId) {
             // Hide all scenes
             const allScenes = document.querySelectorAll('.scenario-content');
@@ -458,13 +491,14 @@
         }
 
         function resetScenario() {
-            // Hide all scenes
-            const allScenes = document.querySelectorAll('.scenario-content');
-            allScenes.forEach(scene => scene.classList.add('hidden'));
+            // Hide all scenes and containers
+            document.getElementById('scenarioContainer').style.display = 'none';
+            document.getElementById('introBox').style.display = 'none';
+            document.getElementById('mainHeader').style.display = 'block';
             
-            // Show scene 1
-            document.getElementById('scene1').classList.remove('hidden');
-            document.getElementById('scene1').scrollIntoView({ behavior: 'smooth', block: 'start' });
+            // Show cover page again
+            document.getElementById('coverPage').style.display = 'block';
+            document.getElementById('coverPage').scrollIntoView({ behavior: 'smooth', block: 'start' });
         }
 
         function showBestPath() {
