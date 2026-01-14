@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Social Media Algorithm & Optimisation</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+        
+        .loading-overlay { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: #f8f9fa; display: flex; flex-direction: column; justify-content: center; align-items: center; z-index: 9999; }
+        .spinner { width: 50px; height: 50px; border: 4px solid #e9ecef; border-top-color: #C6A906; border-radius: 50%; animation: spin 0.8s linear infinite; }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { margin-top: 20px; font-size: 16px; color: #666; font-weight: 500; }
+        
+        body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif; padding: 20px; background: #f8f9fa; line-height: 1.6; }
+        .container { max-width: 900px; margin: 0 auto; }
+        .header { text-align: center; margin-bottom: 40px; }
+        .title { font-size: 28px; font-weight: 700; color: #333; margin-bottom: 15px; }
+        .description { font-size: 16px; color: #555; line-height: 1.6; max-width: 800px; margin: 0 auto; }
+        
+        .accordion-container { background: white; border-radius: 12px; box-shadow: 0 2px 8px rgba(0,0,0,0.1); overflow: hidden; }
+        
+        .accordion-item { border-bottom: 2px solid #f8f9fa; }
+        .accordion-item:last-child { border-bottom: none; }
+        
+        .accordion-header { padding: 25px 30px; cursor: pointer; display: flex; align-items: center; justify-content: space-between; transition: all 0.3s ease; background: white; }
+        .accordion-header:active { background: #fffef8; }
+        .accordion-item.active .accordion-header { background: #fffef8; }
+        
+        .accordion-title-wrapper { display: flex; align-items: center; gap: 15px; flex: 1; }
+        .accordion-icon-badge { background: #C6A906; color: white; width: 40px; height: 40px; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 18px; flex-shrink: 0; }
+        .accordion-title { font-size: 20px; font-weight: 700; color: #333; }
+        
+        .accordion-toggle { font-size: 24px; color: #C6A906; transition: transform 0.3s ease; flex-shrink: 0; }
+        .accordion-item.active .accordion-toggle { transform: rotate(180deg); }
+        
+        .accordion-content { max-height: 0; overflow: hidden; transition: max-height 0.4s ease; }
+        .accordion-item.active .accordion-content { max-height: 3000px; }
+        
+        .accordion-body { padding: 0 30px 30px 85px; }
+        .accordion-text { font-size: 15px; color: #333; line-height: 1.8; margin-bottom: 15px; }
+        
+        .factor-section { margin-bottom: 25px; }
+        .factor-title { font-size: 16px; font-weight: 700; color: #C6A906; margin-bottom: 10px; }
+        .factor-description { font-size: 14px; color: #666; margin-bottom: 12px; }
+        
+        .factor-list { list-style: none; padding-left: 0; }
+        .factor-list li { padding: 8px 0; padding-left: 24px; position: relative; font-size: 14px; color: #333; line-height: 1.6; }
+        .factor-list li:before { content: "•"; position: absolute; left: 0; color: #C6A906; font-weight: 700; }
+        
+        .example-box { background: #f8f9fa; border-left: 4px solid #C6A906; padding: 15px; margin: 15px 0; border-radius: 4px; }
+        .example-label { font-size: 12px; text-transform: uppercase; letter-spacing: 0.5px; color: #999; font-weight: 700; margin-bottom: 8px; }
+        .example-text { font-size: 14px; color: #333; line-height: 1.6; margin-bottom: 10px; }
+        .example-text:last-child { margin-bottom: 0; }
+        .example-text strong { color: #C6A906; }
+        
+        .example-pair { display: grid; grid-template-columns: 1fr 1fr; gap: 15px; margin: 15px 0; }
+        .example-bad, .example-good { padding: 12px; border-radius: 4px; font-size: 13px; line-height: 1.6; }
+        .example-bad { background: #ffebee; border-left: 3px solid #f44336; }
+        .example-bad strong { color: #c62828; }
+        .example-good { background: #e8f5e9; border-left: 3px solid #4caf50; }
+        .example-good strong { color: #2e7d32; }
+        
+        .tip-box { background: #e8f5e9; border-left: 4px solid #4caf50; padding: 15px; margin: 15px 0; border-radius: 4px; }
+        .tip-box p { font-size: 14px; color: #2e7d32; line-height: 1.6; margin: 0; }
+        .tip-box strong { color: #1b5e20; }
+        
+        @media (max-width: 768px) {
+            .accordion-header { padding: 20px; }
+            .accordion-body { padding: 0 20px 25px 20px; }
+            .accordion-title-wrapper { flex-direction: column; align-items: flex-start; gap: 10px; }
+            .example-pair { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="spinner"></div>
+        <div class="loading-text">Loading content...</div>
+    </div>
+
+    <div class="container">
+        <div class="header">
+            <h1 class="title">Social Media Algorithm & Optimisation</h1>
+            <p class="description">Understanding what makes content perform and how to optimise your fitness content for social media platforms</p>
+        </div>
+
+        <div class="accordion-container">
+            <!-- Section 1: Key Algorithm Factors -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title-wrapper">
+                        <div class="accordion-icon-badge">1</div>
+                        <div class="accordion-title">Key Algorithm Factors</div>
+                    </div>
+                    <div class="accordion-toggle">▼</div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <p class="accordion-text">Whilst each platform employs proprietary algorithms, several factors consistently influence content performance across Instagram, Facebook, TikTok, and other major platforms.</p>
+                        
+                        <div class="factor-section">
+                            <div class="factor-title">📊 Engagement Rate</div>
+                            <div class="factor-description">The proportion of viewers who interact with content relative to total reach</div>
+                            <p style="font-size: 14px; color: #333; margin-bottom: 12px;">Higher engagement rates signal valuable content worthy of broader distribution.</p>
+                            <div class="example-box">
+                                <div class="example-label">Example</div>
+                                <p class="example-text"><strong>Post A:</strong> 200 likes from 1,000 viewers = <strong>20% engagement rate</strong> (stronger algorithmic promotion)</p>
+                                <p class="example-text"><strong>Post B:</strong> 300 likes from 3,000 viewers = <strong>10% engagement rate</strong> (weaker algorithmic promotion)</p>
+                                <p class="example-text">Post A will typically receive more algorithmic boost despite fewer total likes.</p>
+                            </div>
+                        </div>
+
+                        <div class="factor-section">
+                            <div class="factor-title">▶️ Completion Rate</div>
+                            <div class="factor-description">For video content, the percentage of viewers who watch until completion</div>
+                            <p style="font-size: 14px; color: #333; margin-bottom: 12px;">Videos that retain viewer attention throughout receive preferential treatment compared to videos with high drop-off rates. This incentivises creating engaging content that maintains interest rather than lengthy content that viewers abandon.</p>
+                        </div>
+
+                        <div class="factor-section">
+                            <div class="factor-title">💬 Meaningful Interactions</div>
+                            <div class="factor-description">Substantive engagement beyond simple likes</div>
+                            <p style="font-size: 14px; color: #333; margin-bottom: 12px;">Algorithms increasingly weight comments, shares, saves, and DMs more heavily than simple likes. Content that generates conversation receives more distribution than passive-like content.</p>
+                            <div class="example-box">
+                                <div class="example-label">High-Value Interactions (More Heavily Weighted)</div>
+                                <ul class="factor-list" style="margin-bottom: 12px;">
+                                    <li>Comments and replies</li>
+                                    <li>Shares with followers</li>
+                                    <li>Saves to collections</li>
+                                    <li>Direct messages</li>
+                                </ul>
+                                <div class="example-label">Lower-Value Interactions</div>
+                                <ul class="factor-list">
+                                    <li>Likes</li>
+                                    <li>Views without interaction</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="factor-section">
+                            <div class="factor-title">⏰ Timeliness and Recency</div>
+                            <div class="factor-description">How fresh your content is relative to other content</div>
+                            <p style="font-size: 14px; color: #333; margin-bottom: 12px;">Recent content receives distribution priority over older content. However, content generating strong engagement may receive renewed distribution ("second wave" reach) if engagement signals remain strong.</p>
+                        </div>
+
+                        <div class="factor-section">
+                            <div class="factor-title">🔗 Relationship Strength</div>
+                            <div class="factor-description">Your connection with specific followers</div>
+                            <p style="font-size: 14px; color: #333; margin-bottom: 12px;">Users see more content from accounts they frequently interact with. Building consistent engagement with followers increases the likelihood your content appears in their feeds regularly, creating a positive feedback loop.</p>
+                        </div>
+
+                        <div class="factor-section">
+                            <div class="factor-title">🎬 Content Format Preferences</div>
+                            <div class="factor-description">Algorithmic favouritism toward specific content types</div>
+                            <p style="font-size: 14px; color: #333; margin-bottom: 12px;">Platforms periodically adjust preferences for specific formats to promote new features. Currently, short-form video content (Reels, TikToks, Shorts) receives substantial algorithmic favour across most platforms.</p>
+                            <div class="tip-box">
+                                <p><strong>Action:</strong> Monitor platform announcements and industry analysis to understand current format preferences.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 2: Video Content Optimisation -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title-wrapper">
+                        <div class="accordion-icon-badge">2</div>
+                        <div class="accordion-title">Video Content Optimisation</div>
+                    </div>
+                    <div class="accordion-toggle">▼</div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <p class="accordion-text">Given current algorithmic preferences for video content, fitness professionals should prioritise video creation and optimisation.</p>
+                        
+                        <div class="factor-section">
+                            <div class="factor-title">🎯 Hook Viewers Immediately</div>
+                            <div class="factor-description">Capture attention within first 1-3 seconds to prevent scrolling</div>
+                            <p style="font-size: 14px; color: #333; margin-bottom: 12px;">Opening frames should immediately communicate value or create curiosity.</p>
+                            <div class="example-box">
+                                <div class="example-label">Strong Opening Hooks</div>
+                                <ul class="factor-list">
+                                    <li>"The mistake that's limiting your squat depth"</li>
+                                    <li>"Why your shoulder press feels difficult"</li>
+                                    <li>"Three exercises for stronger running"</li>
+                                    <li>"If you're doing this, you're wasting 30% of the exercise"</li>
+                                </ul>
+                            </div>
+                        </div>
+
+                        <div class="factor-section">
+                            <div class="factor-title">✨ Maintain Engagement Throughout</div>
+                            <div class="factor-description">Keep viewers watching to completion</div>
+                            <ul class="factor-list">
+                                <li>Use movement and dynamic camera angles</li>
+                                <li>Include text overlays highlighting key teaching points</li>
+                                <li>Incorporate b-roll footage providing visual variety</li>
+                                <li>Apply dynamic editing that maintains interest without becoming chaotic</li>
+                            </ul>
+                        </div>
+
+                        <div class="factor-section">
+                            <div class="factor-title">⏱️ Optimise Video Length</div>
+                            <div class="factor-description">Match length to platform preferences and content type</div>
+                            <div class="example-box">
+                                <div class="example-label">Optimal Video Lengths</div>
+                                <p class="example-text"><strong>Quick Tips:</strong> 7-15 seconds (Instagram Reels, TikTok)</p>
+                                <p class="example-text"><strong>Technique Demonstrations:</strong> 20-45 seconds</p>
+                                <p class="example-text"><strong>Longer Content (60+ seconds):</strong> Requires exceptional value to maintain engagement throughout</p>
+                            </div>
+                        </div>
+
+                        <div class="factor-section">
+                            <div class="factor-title">📝 Include Captions</div>
+                            <div class="factor-description">Make content accessible to sound-off viewers</div>
+                            <p style="font-size: 14px; color: #333; margin-bottom: 12px;">Many users watch videos without sound. Text overlays or burned-in captions make content accessible whilst increasing watch time from sound-off viewers.</p>
+                        </div>
+
+                        <div class="factor-section">
+                            <div class="factor-title">🔁 Encourage Replays</div>
+                            <div class="factor-description">Create content worth watching more than once</div>
+                            <ul class="factor-list">
+                                <li>Include multiple teaching points that benefit from re-watching</li>
+                                <li>Use quick transitions that reveal information gradually</li>
+                                <li>Make content information-dense so single viewings don't capture everything</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 3: Caption and Content Optimisation -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title-wrapper">
+                        <div class="accordion-icon-badge">3</div>
+                        <div class="accordion-title">Caption and Content Optimisation</div>
+                    </div>
+                    <div class="accordion-toggle">▼</div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <p class="accordion-text">Captions significantly impact engagement by providing context, encouraging interaction, and extending time spent on posts.</p>
+                        
+                        <div class="factor-section">
+                            <div class="factor-title">📖 Write Engaging Captions</div>
+                            <div class="factor-description">Longer, valuable captions keep users on posts longer</div>
+                            <p style="font-size: 14px; color: #333; margin-bottom: 12px;">Write captions that encourage reading rather than minimal text. Longer captions signal value to algorithms, but should provide genuine substance rather than filler.</p>
+                            <div class="example-pair">
+                                <div class="example-bad">
+                                    <strong>❌ Minimal Caption</strong>
+                                    <p>"Love this exercise."</p>
+                                </div>
+                                <div class="example-good">
+                                    <strong>✓ Engaging Caption</strong>
+                                    <p>"The biggest squat mistake I see is knees collapsing inward. Here's why it happens and exactly how to fix it (hint: it's not just about glute strength)..."</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="factor-section">
+                            <div class="factor-title">🎯 Include Clear Calls-to-Action</div>
+                            <div class="factor-description">Explicitly request specific engagement</div>
+                            <div class="example-box">
+                                <div class="example-label">Effective CTAs</div>
+                                <ul class="factor-list">
+                                    <li>"Comment 'SAVE' to bookmark this"</li>
+                                    <li>"Share this with someone who needs to hear it"</li>
+                                    <li>"What questions do you have about this technique?"</li>
+                                    <li>"Tag someone who always rushes their squats"</li>
+                                </ul>
+                            </div>
+                            <p style="font-size: 14px; color: #333; margin-top: 12px;">Clear CTAs significantly increase engagement likelihood.</p>
+                        </div>
+
+                        <div class="factor-section">
+                            <div class="factor-title">#️⃣ Use Strategic Hashtags</div>
+                            <div class="factor-description">Extend reach beyond existing followers</div>
+                            <p style="font-size: 14px; color: #333; margin-bottom: 12px;">Research suggests 3-5 highly relevant hashtags perform better than excessive usage. Use specific rather than overly broad hashtags to reach targeted audiences more likely to engage.</p>
+                            <div class="example-pair">
+                                <div class="example-bad">
+                                    <strong>❌ Overly Broad</strong>
+                                    <p>#fitness #workout #training #exercise #health</p>
+                                    <p style="font-size: 12px; margin-top: 8px;">(Reaches massive audiences with low relevance)</p>
+                                </div>
+                                <div class="example-good">
+                                    <strong>✓ Targeted & Specific</strong>
+                                    <p>#squattechnique #kneehealth #legday</p>
+                                    <p style="font-size: 12px; margin-top: 8px;">(Smaller but more engaged audiences)</p>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="factor-section">
+                            <div class="factor-title">📌 Front-Load Important Information</div>
+                            <div class="factor-description">Hook readers before caption truncation</div>
+                            <p style="font-size: 14px; color: #333; margin-bottom: 12px;">Instagram truncates captions after 2-3 lines. Opening sentences should hook interest and communicate core value before users must click "more."</p>
+                            <div class="example-box">
+                                <div class="example-label">Structure Your Caption</div>
+                                <p class="example-text" style="font-weight: 700; color: #C6A906;">Lines 1-3 (Pre-Truncation):</p>
+                                <p class="example-text">Hook with your main teaching point or question. Make readers want to click "more."</p>
+                                <p class="example-text" style="margin-top: 15px; font-weight: 700; color: #C6A906;">Lines 4+ (Post-Truncation):</p>
+                                <p class="example-text">Expand on the topic, provide additional context, include your CTA.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Section 4: Post Timing Optimisation -->
+            <div class="accordion-item">
+                <div class="accordion-header" onclick="toggleAccordion(this)">
+                    <div class="accordion-title-wrapper">
+                        <div class="accordion-icon-badge">4</div>
+                        <div class="accordion-title">Post Timing Optimisation</div>
+                    </div>
+                    <div class="accordion-toggle">▼</div>
+                </div>
+                <div class="accordion-content">
+                    <div class="accordion-body">
+                        <p class="accordion-text">Whilst quality outweighs timing, posting when target audiences are most active increases initial engagement likelihood, triggering positive algorithmic signals.</p>
+                        
+                        <div class="factor-section">
+                            <div class="factor-title">📊 Use Your Analytics</div>
+                            <div class="factor-description">Research platform-specific audience activity patterns</div>
+                            <p style="font-size: 14px; color: #333; margin-bottom: 12px;">Instagram and Facebook provide insights showing follower activity patterns by day and hour. Initial testing should explore different posting times, with ongoing strategy informed by performance data.</p>
+                            <div class="tip-box">
+                                <p><strong>Action:</strong> Review your analytics monthly to identify when your specific followers are most active.</p>
+                            </div>
+                        </div>
+
+                        <div class="factor-section">
+                            <div class="factor-title">⏰ Typical Fitness Audience Activity Times</div>
+                            <div class="example-box">
+                                <div class="example-label">Peak Activity Windows</div>
+                                <p class="example-text"><strong>Early Morning (7-9am):</strong> Commute time, pre-workout planning</p>
+                                <p class="example-text"><strong>Lunch Break (12-1pm):</strong> Work break scrolling</p>
+                                <p class="example-text"><strong>Evening (5-7pm):</strong> Post-work wind down, commute home</p>
+                                <p class="example-text"><strong>Late Evening (8-10pm):</strong> Personal time</p>
+                                <p class="example-text"><strong>Weekend Mornings (8-11am):</strong> Weekly planning and weekend exercise</p>
+                            </div>
+                        </div>
+
+                        <div class="factor-section">
+                            <div class="factor-title">💡 Consider Less Competitive Times</div>
+                            <div class="factor-description">Test posting when fewer accounts are active</div>
+                            <p style="font-size: 14px; color: #333; margin-bottom: 12px;">Less competitive posting times (when fewer accounts post) may generate better engagement than peak times despite lower overall platform activity. Testing is essential for determining optimal timing for your specific audience.</p>
+                            <div class="tip-box">
+                                <p><strong>Pro Tip:</strong> Compare engagement on posts made at peak times versus less competitive times. You may find your audience gives you better engagement when there's less competition for attention.</p>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function toggleAccordion(header) {
+            const clickedItem = header.parentElement;
+            const allItems = document.querySelectorAll('.accordion-item');
+            
+            allItems.forEach(item => {
+                if (item !== clickedItem) {
+                    item.classList.remove('active');
+                }
+            });
+            
+            clickedItem.classList.toggle('active');
+        }
+
+        function hideLoader() {
+            const overlay = document.getElementById('loadingOverlay');
+            if (overlay) {
+                overlay.style.opacity = '0';
+                setTimeout(function() { overlay.style.display = 'none'; }, 500);
+            }
+        }
+
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', hideLoader);
+        } else {
+            hideLoader();
+        }
+        setTimeout(hideLoader, 500);
+    </script>
+</body>
+</html>
