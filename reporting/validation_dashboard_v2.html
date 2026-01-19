@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PT Academy - Validation Dashboard</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: #f5f5f5;
+            color: #1a1a1a;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #1a1a1a 0%, #2d2d2d 100%);
+            color: white;
+            padding: 2rem;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .header h1 {
+            font-size: 2rem;
+            margin-bottom: 0.5rem;
+            color: #ffd700;
+        }
+
+        .header p {
+            opacity: 0.9;
+            font-size: 1rem;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 2rem auto;
+            padding: 0 2rem;
+        }
+
+        .loading {
+            text-align: center;
+            padding: 4rem;
+            background: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .spinner {
+            border: 4px solid #f3f3f3;
+            border-top: 4px solid #ffd700;
+            border-radius: 50%;
+            width: 50px;
+            height: 50px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+
+        .stat-card {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border-left: 4px solid #ffd700;
+            transition: transform 0.2s;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+        }
+
+        .stat-label {
+            font-size: 0.875rem;
+            color: #666;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ffd700;
+            margin-bottom: 0.25rem;
+        }
+
+        .stat-detail {
+            font-size: 0.875rem;
+            color: #888;
+        }
+
+        .chart-section {
+            background: white;
+            padding: 2rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .chart-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #1a1a1a;
+        }
+
+        .table-section {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            overflow: hidden;
+        }
+
+        .table-header {
+            padding: 1.5rem;
+            background: #fafafa;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .table-header h2 {
+            font-size: 1.25rem;
+            color: #1a1a1a;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        th, td {
+            padding: 1rem;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        th {
+            background: #1a1a1a;
+            color: #ffd700;
+            font-weight: 600;
+            position: sticky;
+            top: 0;
+            cursor: pointer;
+            user-select: none;
+        }
+
+        th:hover {
+            background: #2d2d2d;
+        }
+
+        tbody tr:hover {
+            background: #fafafa;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+            text-transform: uppercase;
+        }
+
+        .badge-pending {
+            background: #fff3cd;
+            color: #856404;
+        }
+
+        .badge-done {
+            background: #d4edda;
+            color: #155724;
+        }
+
+        .badge-ai {
+            background: #cce5ff;
+            color: #004085;
+        }
+
+        .badge-human {
+            background: #d1ecf1;
+            color: #0c5460;
+        }
+
+        .filters {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            margin-bottom: 2rem;
+        }
+
+        .filter-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-top: 1rem;
+        }
+
+        .filter-group label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+            color: #1a1a1a;
+        }
+
+        select, input {
+            width: 100%;
+            padding: 0.5rem;
+            border: 2px solid #e0e0e0;
+            border-radius: 6px;
+            font-size: 0.875rem;
+            transition: border-color 0.2s;
+        }
+
+        select:focus, input:focus {
+            outline: none;
+            border-color: #ffd700;
+        }
+
+        .btn {
+            padding: 0.75rem 1.5rem;
+            background: #ffd700;
+            color: #1a1a1a;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-size: 0.875rem;
+        }
+
+        .btn:hover {
+            background: #ffed4e;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 8px rgba(255,215,0,0.3);
+        }
+
+        .btn-secondary {
+            background: #6c757d;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #5a6268;
+        }
+
+        .tabs {
+            display: flex;
+            gap: 0.5rem;
+            margin-bottom: 2rem;
+            border-bottom: 2px solid #e0e0e0;
+        }
+
+        .tab {
+            padding: 1rem 1.5rem;
+            background: white;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            color: #666;
+            border-bottom: 3px solid transparent;
+            transition: all 0.2s;
+        }
+
+        .tab:hover {
+            color: #1a1a1a;
+            background: #fafafa;
+        }
+
+        .tab.active {
+            color: #ffd700;
+            border-bottom-color: #ffd700;
+            font-weight: 600;
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 0 1rem;
+            }
+
+            .stats-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .header h1 {
+                font-size: 1.5rem;
+            }
+
+            table {
+                font-size: 0.75rem;
+            }
+
+            th, td {
+                padding: 0.5rem;
+            }
+        }
+
+        .last-updated {
+            text-align: right;
+            color: #888;
+            font-size: 0.875rem;
+            margin-bottom: 1rem;
+        }
+
+        .error-message {
+            background: #f8d7da;
+            color: #721c24;
+            padding: 1rem;
+            border-radius: 8px;
+            border-left: 4px solid #721c24;
+            margin: 1rem 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="header">
+        <div class="container">
+            <h1>📊 PT Academy Validation Dashboard</h1>
+            <p>Track assessor performance and validation queue metrics</p>
+        </div>
+    </div>
+
+    <div class="container">
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>Loading validation data...</p>
+        </div>
+
+        <div id="dashboard" style="display: none;">
+            <div class="last-updated">
+                Last updated: <span id="last-updated-time">-</span>
+            </div>
+
+            <div class="tabs">
+                <button class="tab active" onclick="switchTab('overview')">📊 Overview</button>
+                <button class="tab" onclick="switchTab('assessors')">👥 Assessors</button>
+                <button class="tab" onclick="switchTab('data')">📋 Data Explorer</button>
+            </div>
+
+            <!-- Overview Tab -->
+            <div id="tab-overview" class="tab-content active">
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-label">Total Pending</div>
+                        <div class="stat-value" id="stat-pending">-</div>
+                        <div class="stat-detail">Awaiting validation</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Total Done</div>
+                        <div class="stat-value" id="stat-done">-</div>
+                        <div class="stat-detail">Validated questions</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">AI Marked</div>
+                        <div class="stat-value" id="stat-ai">-</div>
+                        <div class="stat-detail" id="stat-ai-pct">-</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-label">Human Marked</div>
+                        <div class="stat-value" id="stat-human">-</div>
+                        <div class="stat-detail" id="stat-human-pct">-</div>
+                    </div>
+                </div>
+
+                <div class="chart-section">
+                    <div class="chart-title">📈 Questions Marked Over Time</div>
+                    <canvas id="timelineChart"></canvas>
+                </div>
+
+                <div class="chart-section">
+                    <div class="chart-title">👥 Assessor Activity Breakdown</div>
+                    <canvas id="assessorChart"></canvas>
+                </div>
+            </div>
+
+            <!-- Assessors Tab -->
+            <div id="tab-assessors" class="tab-content">
+                <div class="filters">
+                    <h3 style="margin-bottom: 1rem;">Filter Assessors</h3>
+                    <div class="filter-grid">
+                        <div class="filter-group">
+                            <label>Assessor Name</label>
+                            <select id="filter-assessor" onchange="filterAssessors()">
+                                <option value="">All Assessors</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="table-section">
+                    <div class="table-header">
+                        <h2>Assessor Performance</h2>
+                    </div>
+                    <table>
+                        <thead>
+                            <tr>
+                                <th onclick="sortTable('assessors', 0)">Assessor Name</th>
+                                <th onclick="sortTable('assessors', 1)">Pending</th>
+                                <th onclick="sortTable('assessors', 2)">Done</th>
+                                <th onclick="sortTable('assessors', 3)">AI Marked</th>
+                                <th onclick="sortTable('assessors', 4)">Human Marked</th>
+                                <th onclick="sortTable('assessors', 5)">Human %</th>
+                            </tr>
+                        </thead>
+                        <tbody id="assessor-table">
+                            <tr><td colspan="6" style="text-align: center; padding: 2rem;">Loading...</td></tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+            <!-- Data Explorer Tab -->
+            <div id="tab-data" class="tab-content">
+                <div class="filters">
+                    <h3 style="margin-bottom: 1rem;">Filter Data</h3>
+                    <div class="filter-grid">
+                        <div class="filter-group">
+                            <label>Status</label>
+                            <select id="filter-status" onchange="applyDataFilters()">
+                                <option value="">All</option>
+                                <option value="Pending">Pending</option>
+                                <option value="Done">Done</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Marked By</label>
+                            <select id="filter-marked" onchange="applyDataFilters()">
+                                <option value="">All</option>
+                                <option value="AI">AI</option>
+                                <option value="Human">Human</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Assessor</label>
+                            <select id="filter-data-assessor" onchange="applyDataFilters()">
+                                <option value="">All Assessors</option>
+                            </select>
+                        </div>
+                        <div class="filter-group">
+                            <label>Learner</label>
+                            <select id="filter-learner" onchange="applyDataFilters()">
+                                <option value="">All Learners</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div style="margin-top: 1rem; display: flex; gap: 1rem;">
+                        <button class="btn" onclick="applyDataFilters()">Apply Filters</button>
+                        <button class="btn btn-secondary" onclick="resetDataFilters()">Reset</button>
+                        <button class="btn" onclick="exportToCSV()">Export to CSV</button>
+                    </div>
+                </div>
+
+                <div class="table-section">
+                    <div class="table-header">
+                        <h2>Validation Data</h2>
+                        <p style="margin-top: 0.5rem; font-size: 0.875rem; color: #666;">
+                            Showing <span id="filtered-count">0</span> of <span id="total-count">0</span> records
+                        </p>
+                    </div>
+                    <div style="max-height: 600px; overflow-y: auto;">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th onclick="sortTable('data', 0)">Status</th>
+                                    <th onclick="sortTable('data', 1)">Learner</th>
+                                    <th onclick="sortTable('data', 2)">Assessor</th>
+                                    <th onclick="sortTable('data', 3)">Question</th>
+                                    <th onclick="sortTable('data', 4)">Marked By</th>
+                                    <th onclick="sortTable('data', 5)">Date</th>
+                                </tr>
+                            </thead>
+                            <tbody id="data-table">
+                                <tr><td colspan="6" style="text-align: center; padding: 2rem;">Apply filters to view data</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Configuration - UPDATE THESE WITH YOUR GOOGLE SHEET ID
+        const SHEET_ID = '14wIg72mL7kURuuWg060uMdexrd8amYht_KpUJA-03w4';
+        const PENDING_SHEET = 'Raw Pending Data';
+        const DONE_SHEET = 'Raw Done Data';
+
+        // Global data
+        let allData = [];
+        let filteredData = [];
+        let assessorStats = {};
+        
+        // Charts
+        let timelineChart, assessorChart;
+
+        // Load data on page load
+        window.onload = async function() {
+            try {
+                await loadData();
+                document.getElementById('loading').style.display = 'none';
+                document.getElementById('dashboard').style.display = 'block';
+                initializeDashboard();
+            } catch (error) {
+                document.getElementById('loading').innerHTML = `
+                    <div class="error-message">
+                        <strong>Error loading data:</strong> ${error.message}<br><br>
+                        Please ensure:
+                        <ul style="margin-top: 0.5rem; margin-left: 1.5rem;">
+                            <li>The Google Sheet is publicly accessible (Share → Anyone with link → Viewer)</li>
+                            <li>Sheet names match: "${PENDING_SHEET}" and "${DONE_SHEET}"</li>
+                            <li>The SHEET_ID in the code is correct</li>
+                        </ul>
+                    </div>
+                `;
+            }
+        };
+
+        async function loadData() {
+            const pendingUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(PENDING_SHEET)}`;
+            const doneUrl = `https://docs.google.com/spreadsheets/d/${SHEET_ID}/gviz/tq?tqx=out:json&sheet=${encodeURIComponent(DONE_SHEET)}`;
+
+            const [pendingResponse, doneResponse] = await Promise.all([
+                fetch(pendingUrl),
+                fetch(doneUrl)
+            ]);
+
+            const pendingText = await pendingResponse.text();
+            const doneText = await doneResponse.text();
+
+            const pendingData = parseGoogleSheetData(pendingText, 'Pending');
+            const doneData = parseGoogleSheetData(doneText, 'Done');
+
+            allData = [...pendingData, ...doneData];
+            filteredData = [...allData];
+        }
+
+        function parseGoogleSheetData(text, status) {
+            const json = JSON.parse(text.substring(47, text.length - 2));
+            const rows = json.table.rows;
+            
+            // Skip header row
+            return rows.slice(1).map(row => {
+                const cells = row.c || [];
+                return {
+                    submissionId: cells[0]?.v || '',
+                    questionId: cells[1]?.v || '',
+                    questionText: cells[2]?.v || 'Unknown',
+                    learnerId: cells[3]?.v || '',
+                    courseId: cells[4]?.v || '',
+                    attemptId: cells[5]?.v || '',
+                    assessorIds: cells[6]?.v || '',
+                    // Pending has submittedDate/submittedTimestamp
+                    // Done has markedDate/markedTimestamp
+                    date: status === 'Pending' ? (cells[7]?.v || '') : (cells[7]?.v || ''),
+                    timestamp: status === 'Pending' ? (cells[8]?.v || '') : (cells[8]?.v || ''),
+                    markedBy: status === 'Done' ? (cells[10]?.v || '') : '',
+                    success: status === 'Done' ? (cells[11]?.v || '') : '',
+                    status: status
+                };
+            });
+        }
+
+        function initializeDashboard() {
+            updateStats();
+            buildAssessorStats();
+            createTimelineChart();
+            createAssessorChart();
+            populateFilters();
+            updateLastUpdated();
+        }
+
+        function updateStats() {
+            const pending = allData.filter(d => d.status === 'Pending').length;
+            const done = allData.filter(d => d.status === 'Done').length;
+            const doneItems = allData.filter(d => d.status === 'Done');
+            const ai = doneItems.filter(d => d.markedBy === 'AI').length;
+            const human = doneItems.filter(d => d.markedBy === 'Human').length;
+
+            document.getElementById('stat-pending').textContent = pending.toLocaleString();
+            document.getElementById('stat-done').textContent = done.toLocaleString();
+            document.getElementById('stat-ai').textContent = ai.toLocaleString();
+            document.getElementById('stat-human').textContent = human.toLocaleString();
+
+            const aiPct = done > 0 ? ((ai / done) * 100).toFixed(1) : 0;
+            const humanPct = done > 0 ? ((human / done) * 100).toFixed(1) : 0;
+
+            document.getElementById('stat-ai-pct').textContent = `${aiPct}% of done`;
+            document.getElementById('stat-human-pct').textContent = `${humanPct}% of done`;
+        }
+
+        function buildAssessorStats() {
+            assessorStats = {};
+
+            allData.forEach(item => {
+                const assessors = item.assessorIds.split(',').map(a => a.trim()).filter(a => a);
+                
+                assessors.forEach(assessor => {
+                    if (!assessorStats[assessor]) {
+                        assessorStats[assessor] = {
+                            name: assessor,
+                            pending: 0,
+                            done: 0,
+                            ai: 0,
+                            human: 0
+                        };
+                    }
+
+                    if (item.status === 'Pending') {
+                        assessorStats[assessor].pending++;
+                    } else {
+                        assessorStats[assessor].done++;
+                        if (item.markedBy === 'AI') {
+                            assessorStats[assessor].ai++;
+                        } else {
+                            assessorStats[assessor].human++;
+                        }
+                    }
+                });
+            });
+
+            renderAssessorTable(Object.values(assessorStats));
+        }
+
+        function renderAssessorTable(data) {
+            const tbody = document.getElementById('assessor-table');
+            tbody.innerHTML = '';
+
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;">No assessors found</td></tr>';
+                return;
+            }
+
+            data.forEach(assessor => {
+                const humanPct = assessor.done > 0 ? ((assessor.human / assessor.done) * 100).toFixed(1) : 0;
+                
+                const row = document.createElement('tr');
+                row.innerHTML = `
+                    <td><strong>${assessor.name}</strong></td>
+                    <td>${assessor.pending}</td>
+                    <td>${assessor.done}</td>
+                    <td><span class="badge badge-ai">${assessor.ai}</span></td>
+                    <td><span class="badge badge-human">${assessor.human}</span></td>
+                    <td>${humanPct}%</td>
+                `;
+                tbody.appendChild(row);
+            });
+        }
+
+        function createTimelineChart() {
+            const ctx = document.getElementById('timelineChart').getContext('2d');
+            
+            // Group by date
+            const dateGroups = {};
+            allData.forEach(item => {
+                const date = item.date || 'Unknown';
+                if (!dateGroups[date]) {
+                    dateGroups[date] = { pending: 0, done: 0 };
+                }
+                if (item.status === 'Pending') {
+                    dateGroups[date].pending++;
+                } else {
+                    dateGroups[date].done++;
+                }
+            });
+
+            const dates = Object.keys(dateGroups).filter(d => d !== 'Unknown').sort();
+            const pendingCounts = dates.map(d => dateGroups[d].pending);
+            const doneCounts = dates.map(d => dateGroups[d].done);
+
+            timelineChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: dates,
+                    datasets: [{
+                        label: 'Pending',
+                        data: pendingCounts,
+                        backgroundColor: 'rgba(255, 193, 7, 0.7)'
+                    }, {
+                        label: 'Done',
+                        data: doneCounts,
+                        backgroundColor: 'rgba(76, 175, 80, 0.7)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    maintainAspectRatio: true,
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        x: {
+                            stacked: false
+                        },
+                        y: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function createAssessorChart() {
+            const ctx = document.getElementById('assessorChart').getContext('2d');
+            
+            const assessors = Object.values(assessorStats).slice(0, 10); // Top 10
+            const labels = assessors.map(a => a.name);
+            const pendingData = assessors.map(a => a.pending);
+            const doneData = assessors.map(a => a.done);
+
+            assessorChart = new Chart(ctx, {
+                type: 'bar',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        label: 'Pending',
+                        data: pendingData,
+                        backgroundColor: 'rgba(255, 193, 7, 0.7)'
+                    }, {
+                        label: 'Done',
+                        data: doneData,
+                        backgroundColor: 'rgba(76, 175, 80, 0.7)'
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    indexAxis: 'y',
+                    plugins: {
+                        legend: {
+                            position: 'top'
+                        }
+                    },
+                    scales: {
+                        x: {
+                            beginAtZero: true
+                        }
+                    }
+                }
+            });
+        }
+
+        function populateFilters() {
+            // Populate assessor filters
+            const assessors = [...new Set(allData.flatMap(d => d.assessorIds.split(',').map(a => a.trim())).filter(a => a))].sort();
+            const learners = [...new Set(allData.map(d => d.learnerId).filter(l => l))].sort();
+
+            populateSelect('filter-assessor', assessors);
+            populateSelect('filter-data-assessor', assessors);
+            populateSelect('filter-learner', learners);
+        }
+
+        function populateSelect(id, values) {
+            const select = document.getElementById(id);
+            values.forEach(value => {
+                const option = document.createElement('option');
+                option.value = value;
+                option.textContent = value;
+                select.appendChild(option);
+            });
+        }
+
+        function filterAssessors() {
+            const selected = document.getElementById('filter-assessor').value;
+            
+            if (selected === '') {
+                renderAssessorTable(Object.values(assessorStats));
+            } else {
+                const filtered = Object.values(assessorStats).filter(a => a.name === selected);
+                renderAssessorTable(filtered);
+            }
+        }
+
+        function applyDataFilters() {
+            const status = document.getElementById('filter-status').value;
+            const marked = document.getElementById('filter-marked').value;
+            const assessor = document.getElementById('filter-data-assessor').value;
+            const learner = document.getElementById('filter-learner').value;
+
+            filteredData = allData.filter(item => {
+                if (status && item.status !== status) return false;
+                if (marked && item.markedBy !== marked) return false;
+                if (assessor && !item.assessorIds.includes(assessor)) return false;
+                if (learner && item.learnerId !== learner) return false;
+                return true;
+            });
+
+            renderDataTable(filteredData);
+        }
+
+        function renderDataTable(data) {
+            const tbody = document.getElementById('data-table');
+            tbody.innerHTML = '';
+
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" style="text-align: center; padding: 2rem;">No data matches the selected filters</td></tr>';
+            } else {
+                data.slice(0, 100).forEach(item => { // Limit to 100 rows for performance
+                    const row = document.createElement('tr');
+                    row.innerHTML = `
+                        <td><span class="badge badge-${item.status.toLowerCase()}">${item.status}</span></td>
+                        <td>${item.learnerId}</td>
+                        <td>${item.assessorIds}</td>
+                        <td>${item.questionText.substring(0, 50)}${item.questionText.length > 50 ? '...' : ''}</td>
+                        <td>${item.markedBy ? `<span class="badge badge-${item.markedBy.toLowerCase()}">${item.markedBy}</span>` : '-'}</td>
+                        <td>${item.date || '-'}</td>
+                    `;
+                    tbody.appendChild(row);
+                });
+
+                if (data.length > 100) {
+                    const row = document.createElement('tr');
+                    row.innerHTML = `<td colspan="6" style="text-align: center; padding: 1rem; color: #666;">Showing first 100 of ${data.length} records. Export to CSV for full data.</td>`;
+                    tbody.appendChild(row);
+                }
+            }
+
+            document.getElementById('filtered-count').textContent = data.length;
+            document.getElementById('total-count').textContent = allData.length;
+        }
+
+        function resetDataFilters() {
+            document.getElementById('filter-status').value = '';
+            document.getElementById('filter-marked').value = '';
+            document.getElementById('filter-data-assessor').value = '';
+            document.getElementById('filter-learner').value = '';
+            filteredData = [...allData];
+            renderDataTable(filteredData);
+        }
+
+        function exportToCSV() {
+            const headers = ['Status', 'Submission ID', 'Question', 'Learner ID', 'Assessor IDs', 'Marked By', 'Date'];
+            let csv = headers.join(',') + '\n';
+
+            filteredData.forEach(item => {
+                const row = [
+                    item.status,
+                    item.submissionId,
+                    `"${item.questionText.replace(/"/g, '""')}"`,
+                    item.learnerId,
+                    item.assessorIds,
+                    item.markedBy || '',
+                    item.date || ''
+                ];
+                csv += row.join(',') + '\n';
+            });
+
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = window.URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `validation-data-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+        }
+
+        function sortTable(tableType, columnIndex) {
+            // Implement sorting logic based on table type and column
+            console.log(`Sorting ${tableType} by column ${columnIndex}`);
+        }
+
+        function switchTab(tabName) {
+            document.querySelectorAll('.tab-content').forEach(tab => tab.classList.remove('active'));
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+            
+            document.getElementById(`tab-${tabName}`).classList.add('active');
+            event.target.classList.add('active');
+        }
+
+        function updateLastUpdated() {
+            const now = new Date();
+            const timeString = now.toLocaleString('en-GB', { 
+                day: 'numeric',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            document.getElementById('last-updated-time').textContent = timeString;
+        }
+    </script>
+</body>
+</html>
